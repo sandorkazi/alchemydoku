@@ -1,6 +1,6 @@
 {
   "id": "safe-publish-04",
-  "title": "Reading the Mix",
+  "title": "Reading the Signs",
   "description": "A mix result narrows things down, but not all the way. Which aspect should you protect?",
   "difficulty": "medium",
   "clues": [
@@ -64,5 +64,15 @@
       "redundantClues": 0,
       "avgClueDifficulty": 0.95
     }
+  },
+  "complexity": {
+    "score": 1,
+    "raw": 1.252,
+    "avg_clue_strength": 2.696,
+    "chain_depth": 0,
+    "stuck": false,
+    "requires_complement_set": false,
+    "question_requires_enumeration": false,
+    "residual_worlds": 960
   }
 }

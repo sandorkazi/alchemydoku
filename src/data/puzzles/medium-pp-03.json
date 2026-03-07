@@ -1,6 +1,6 @@
 {
   "id": "medium-pp-03",
-  "title": "Three Possibilities",
+  "title": "The Three-Faced Oracle",
   "description": "Three distinct outcomes are consistent with the evidence \u2014 mark them all.",
   "difficulty": "medium",
   "clues": [
@@ -79,5 +79,15 @@
       "level": 3,
       "text": "The answer has 4 potions: B+, B-, G-, R+."
     }
-  ]
+  ],
+  "complexity": {
+    "score": 5,
+    "raw": 2.883,
+    "avg_clue_strength": 2.464,
+    "chain_depth": 0,
+    "stuck": false,
+    "requires_complement_set": false,
+    "question_requires_enumeration": true,
+    "residual_worlds": 240
+  }
 }

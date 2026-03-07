@@ -56,5 +56,15 @@
       "redundantClues": 0,
       "avgClueDifficulty": 0.9
     }
+  },
+  "complexity": {
+    "score": 5,
+    "raw": 3.267,
+    "avg_clue_strength": 1.0,
+    "chain_depth": 0,
+    "stuck": false,
+    "requires_complement_set": false,
+    "question_requires_enumeration": false,
+    "residual_worlds": 10080
   }
 }

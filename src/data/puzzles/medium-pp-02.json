@@ -1,6 +1,6 @@
 {
   "id": "medium-pp-02",
-  "title": "Branching Results",
+  "title": "The Branching River",
   "description": "Cross-reference the sell reports to find which potions are achievable.",
   "difficulty": "medium",
   "clues": [
@@ -98,5 +98,15 @@
       "level": 3,
       "text": "The answer has 4 potions: B+, G-, R+, neutral."
     }
-  ]
+  ],
+  "complexity": {
+    "score": 4,
+    "raw": 2.514,
+    "avg_clue_strength": 2.143,
+    "chain_depth": 0,
+    "stuck": false,
+    "requires_complement_set": false,
+    "question_requires_enumeration": true,
+    "residual_worlds": 24
+  }
 }

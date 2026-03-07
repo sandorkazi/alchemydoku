@@ -1,6 +1,6 @@
 {
   "id": "easy-2000",
-  "title": "Easy Puzzle 1",
+  "title": "The Village Herbalist",
   "description": "Deduce the mixing result from the clues.",
   "difficulty": "easy",
   "clues": [
@@ -73,5 +73,15 @@
       "ingredient1": 1,
       "ingredient2": 4
     }
-  ]
+  ],
+  "complexity": {
+    "score": 1,
+    "raw": 1.203,
+    "avg_clue_strength": 2.825,
+    "chain_depth": 0,
+    "stuck": false,
+    "requires_complement_set": false,
+    "question_requires_enumeration": false,
+    "residual_worlds": 16
+  }
 }

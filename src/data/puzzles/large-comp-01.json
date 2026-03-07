@@ -1,6 +1,6 @@
 {
   "id": "large-comp-01",
-  "title": "Heavy Red",
+  "title": "The Heavy Component",
   "description": "Two mixing results \u2014 one per pair \u2014 are enough to pin which ingredients carry a Large Red component.",
   "difficulty": "hard",
   "clues": [
@@ -95,5 +95,15 @@
       "level": 3,
       "text": "The ingredients with confirmed Large R: ingredient 5, ingredient 6, ingredient 7, ingredient 8."
     }
-  ]
+  ],
+  "complexity": {
+    "score": 4,
+    "raw": 2.472,
+    "avg_clue_strength": 2.217,
+    "chain_depth": 0,
+    "stuck": false,
+    "requires_complement_set": false,
+    "question_requires_enumeration": true,
+    "residual_worlds": 4
+  }
 }

@@ -46,5 +46,15 @@
       "ingredient1": 1,
       "ingredient2": 2
     }
-  ]
+  ],
+  "complexity": {
+    "score": 1,
+    "raw": 1.209,
+    "avg_clue_strength": 2.807,
+    "chain_depth": 0,
+    "stuck": false,
+    "requires_complement_set": false,
+    "question_requires_enumeration": false,
+    "residual_worlds": 5760
+  }
 }

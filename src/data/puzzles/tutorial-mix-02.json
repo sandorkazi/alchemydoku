@@ -1,6 +1,6 @@
 {
   "id": "tutorial-mix-02",
-  "title": "Find the Resolver",
+  "title": "The Resolver's Secret",
   "description": "Ingredient 1 is npN, ingredient 2 is pNn. Find the colour where both signs match but sizes differ.",
   "difficulty": "tutorial",
   "clues": [
@@ -45,5 +45,15 @@
       "ingredient1": 1,
       "ingredient2": 2
     }
-  ]
+  ],
+  "complexity": {
+    "score": 1,
+    "raw": 1.175,
+    "avg_clue_strength": 2.904,
+    "chain_depth": 0,
+    "stuck": false,
+    "requires_complement_set": false,
+    "question_requires_enumeration": false,
+    "residual_worlds": 720
+  }
 }

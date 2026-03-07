@@ -1,6 +1,6 @@
 {
   "id": "tutorial-mix-01",
-  "title": "Opposites Cancel",
+  "title": "The Apprentice's Cauldron",
   "description": "Ingredient 1 is NNN, ingredient 2 is PPP. Every sign is opposite. What potion do you get?",
   "difficulty": "tutorial",
   "clues": [
@@ -45,5 +45,15 @@
       "ingredient1": 1,
       "ingredient2": 2
     }
-  ]
+  ],
+  "complexity": {
+    "score": 1,
+    "raw": 1.175,
+    "avg_clue_strength": 2.904,
+    "chain_depth": 0,
+    "stuck": false,
+    "requires_complement_set": false,
+    "question_requires_enumeration": false,
+    "residual_worlds": 720
+  }
 }

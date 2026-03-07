@@ -1,6 +1,6 @@
 {
   "id": "hard-pp-02",
-  "title": "Open Question",
+  "title": "The Open Verdict",
   "description": "Use every clue \u2014 the remaining ambiguity is the answer.",
   "difficulty": "hard",
   "clues": [
@@ -108,5 +108,15 @@
       "level": 3,
       "text": "The answer has 3 potions: B+, G+, G-."
     }
-  ]
+  ],
+  "complexity": {
+    "score": 5,
+    "raw": 3.179,
+    "avg_clue_strength": 1.749,
+    "chain_depth": 0,
+    "stuck": false,
+    "requires_complement_set": false,
+    "question_requires_enumeration": true,
+    "residual_worlds": 28
+  }
 }

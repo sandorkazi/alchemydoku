@@ -1,6 +1,6 @@
 {
   "id": "easy-2007",
-  "title": "Easy Puzzle 8",
+  "title": "The Mandrake Grove",
   "description": "Deduce the mixing result from the clues.",
   "difficulty": "easy",
   "clues": [
@@ -65,5 +65,15 @@
       "ingredient1": 3,
       "ingredient2": 6
     }
-  ]
+  ],
+  "complexity": {
+    "score": 2,
+    "raw": 1.364,
+    "avg_clue_strength": 2.433,
+    "chain_depth": 0,
+    "stuck": false,
+    "requires_complement_set": false,
+    "question_requires_enumeration": false,
+    "residual_worlds": 256
+  }
 }

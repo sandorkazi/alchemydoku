@@ -1,6 +1,6 @@
 {
   "id": "medium-6005",
-  "title": "Medium 6005",
+  "title": "The Mountain Hermit",
   "description": "Deduce the mixing result from the clues.",
   "difficulty": "medium",
   "clues": [
@@ -81,5 +81,15 @@
     "6": 7,
     "7": 3,
     "8": 6
+  },
+  "complexity": {
+    "score": 2,
+    "raw": 1.387,
+    "avg_clue_strength": 2.383,
+    "chain_depth": 0,
+    "stuck": false,
+    "requires_complement_set": false,
+    "question_requires_enumeration": false,
+    "residual_worlds": 2
   }
 }

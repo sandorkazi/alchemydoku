@@ -1,6 +1,6 @@
 {
   "id": "tutorial-pp-01",
-  "title": "Two Suspects",
+  "title": "The Fog of Possibilities",
   "description": "You know one ingredient exactly. The other has a known aspect. Which potions are still possible?",
   "difficulty": "tutorial",
   "clues": [
@@ -46,5 +46,15 @@
       "level": 3,
       "text": "mix(PPP, R+G\u2212B+) = R+, mix(PPP, R+G\u2212B\u2212) = R+, mix(PPP, R+G+B\u2212) = G+. Answer: R+ and G+. Three suspects \u2014 two possible potions."
     }
-  ]
+  ],
+  "complexity": {
+    "score": 1,
+    "raw": 2.832,
+    "avg_clue_strength": 2.111,
+    "chain_depth": 0,
+    "stuck": false,
+    "requires_complement_set": false,
+    "question_requires_enumeration": true,
+    "residual_worlds": 2160
+  }
 }

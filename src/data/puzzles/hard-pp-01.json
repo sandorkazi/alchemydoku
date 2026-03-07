@@ -1,6 +1,6 @@
 {
   "id": "hard-pp-01",
-  "title": "Elimination Round",
+  "title": "The Narrowing Gauntlet",
   "description": "Systematic deduction leaves exactly two achievable results for this pair.",
   "difficulty": "hard",
   "clues": [
@@ -109,5 +109,15 @@
       "level": 3,
       "text": "The answer has 2 potions: B+, B-."
     }
-  ]
+  ],
+  "complexity": {
+    "score": 5,
+    "raw": 3.246,
+    "avg_clue_strength": 1.749,
+    "chain_depth": 0,
+    "stuck": false,
+    "requires_complement_set": false,
+    "question_requires_enumeration": true,
+    "residual_worlds": 28
+  }
 }

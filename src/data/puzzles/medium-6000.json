@@ -1,6 +1,6 @@
 {
   "id": "medium-6000",
-  "title": "Medium Puzzle 1",
+  "title": "The Alchemist's Rivalry",
   "description": "Multi-step deduction required.",
   "difficulty": "medium",
   "clues": [
@@ -73,5 +73,15 @@
       "ingredient1": 7,
       "ingredient2": 8
     }
-  ]
+  ],
+  "complexity": {
+    "score": 3,
+    "raw": 1.501,
+    "avg_clue_strength": 2.575,
+    "chain_depth": 0,
+    "stuck": false,
+    "requires_complement_set": false,
+    "question_requires_enumeration": false,
+    "residual_worlds": 32
+  }
 }

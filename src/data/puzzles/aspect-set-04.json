@@ -1,6 +1,6 @@
 {
   "id": "aspect-set-04",
-  "title": "The Negatives",
+  "title": "The Negative Aspects",
   "description": "Red negative sign \u2014 derived purely from mixing chains, no direct aspect clues.",
   "difficulty": "hard",
   "clues": [
@@ -110,5 +110,15 @@
       "level": 3,
       "text": "The ingredients with confirmed R\u2212 are: ingredient 2, ingredient 4, ingredient 6, ingredient 7."
     }
-  ]
+  ],
+  "complexity": {
+    "score": 5,
+    "raw": 2.573,
+    "avg_clue_strength": 2.043,
+    "chain_depth": 0,
+    "stuck": false,
+    "requires_complement_set": false,
+    "question_requires_enumeration": true,
+    "residual_worlds": 2
+  }
 }

@@ -1,6 +1,6 @@
 {
   "id": "tutorial-pp-02",
-  "title": "Three Doors",
+  "title": "Three Paths, One Truth",
   "description": "More suspects, more possibilities. One aspect clue leaves three valid alchemicals \u2014 check every door.",
   "difficulty": "tutorial",
   "clues": [
@@ -46,5 +46,15 @@
       "level": 3,
       "text": "mix(R+G\u2212B\u2212, R+G\u2212B+) = G\u2212, mix(R+G\u2212B\u2212, R\u2212G\u2212B+) = neutral, mix(R+G\u2212B\u2212, NNN) = B\u2212. Answer: G\u2212, Neutral, B\u2212."
     }
-  ]
+  ],
+  "complexity": {
+    "score": 1,
+    "raw": 2.832,
+    "avg_clue_strength": 2.111,
+    "chain_depth": 0,
+    "stuck": false,
+    "requires_complement_set": false,
+    "question_requires_enumeration": true,
+    "residual_worlds": 2160
+  }
 }

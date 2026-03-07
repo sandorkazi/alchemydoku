@@ -1,6 +1,6 @@
 {
   "id": "expert-1004",
-  "title": "Expert 1004",
+  "title": "The Elder's Challenge",
   "description": "Use all the evidence to deduce the mixing results.",
   "difficulty": "hard",
   "clues": [
@@ -114,5 +114,15 @@
     "6": 4,
     "7": 7,
     "8": 3
+  },
+  "complexity": {
+    "score": 4,
+    "raw": 2.049,
+    "avg_clue_strength": 1.787,
+    "chain_depth": 0,
+    "stuck": false,
+    "requires_complement_set": false,
+    "question_requires_enumeration": false,
+    "residual_worlds": 2
   }
 }
