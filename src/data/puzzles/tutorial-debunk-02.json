@@ -1,6 +1,6 @@
 {
   "id": "tutorial-debunk-02",
-  "title": "The Failed Attempt",
+  "title": "The Stubborn Scholar",
   "description": "Someone tried to debunk a theory \u2014 and failed. Does a failed debunk tell you anything?",
   "difficulty": "tutorial",
   "clues": [
@@ -54,5 +54,15 @@
       "ingredient1": 1,
       "ingredient2": 2
     }
-  ]
+  ],
+  "complexity": {
+    "score": 1,
+    "raw": 2.103,
+    "avg_clue_strength": 1.602,
+    "chain_depth": 0,
+    "stuck": false,
+    "requires_complement_set": false,
+    "question_requires_enumeration": false,
+    "residual_worlds": 1440
+  }
 }

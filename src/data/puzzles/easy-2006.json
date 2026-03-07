@@ -1,6 +1,6 @@
 {
   "id": "easy-2006",
-  "title": "Easy Puzzle 7",
+  "title": "The Scorpion's Lair",
   "description": "Deduce the mixing result from the clues.",
   "difficulty": "easy",
   "clues": [
@@ -83,5 +83,15 @@
       "ingredient1": 1,
       "ingredient2": 2
     }
-  ]
+  ],
+  "complexity": {
+    "score": 3,
+    "raw": 1.467,
+    "avg_clue_strength": 2.226,
+    "chain_depth": 0,
+    "stuck": false,
+    "requires_complement_set": false,
+    "question_requires_enumeration": false,
+    "residual_worlds": 18
+  }
 }

@@ -1,6 +1,6 @@
 {
   "id": "tutorial-debunk-03",
-  "title": "What They Don't Make",
+  "title": "Proof by Contradiction",
   "description": "A failed debunk tells you what the mix is NOT. Use that, plus the assignment and mixing clues, to nail down the answer.",
   "difficulty": "tutorial",
   "clues": [
@@ -62,5 +62,15 @@
       "ingredient1": 2,
       "ingredient2": 4
     }
-  ]
+  ],
+  "complexity": {
+    "score": 1,
+    "raw": 4.663,
+    "avg_clue_strength": 1.905,
+    "chain_depth": 2,
+    "stuck": true,
+    "requires_complement_set": false,
+    "question_requires_enumeration": false,
+    "residual_worlds": 768
+  }
 }

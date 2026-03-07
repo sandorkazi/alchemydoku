@@ -1,6 +1,6 @@
 {
   "id": "easy-2004",
-  "title": "Easy Puzzle 5",
+  "title": "The Wandering Tinker",
   "description": "Deduce the mixing result from the clues.",
   "difficulty": "easy",
   "clues": [
@@ -75,5 +75,15 @@
       "ingredient1": 2,
       "ingredient2": 3
     }
-  ]
+  ],
+  "complexity": {
+    "score": 1,
+    "raw": 1.219,
+    "avg_clue_strength": 2.782,
+    "chain_depth": 0,
+    "stuck": false,
+    "requires_complement_set": false,
+    "question_requires_enumeration": false,
+    "residual_worlds": 18
+  }
 }

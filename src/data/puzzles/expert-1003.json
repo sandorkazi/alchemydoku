@@ -1,6 +1,6 @@
 {
   "id": "expert-1003",
-  "title": "Market Intelligence",
+  "title": "The Spy in the Market",
   "description": "Two sell outcomes and a debunked theory expose the true Green aspect of ingredient 1.",
   "difficulty": "hard",
   "clues": [
@@ -122,5 +122,15 @@
       "ingredient1": 4,
       "ingredient2": 8
     }
-  ]
+  ],
+  "complexity": {
+    "score": 4,
+    "raw": 1.858,
+    "avg_clue_strength": 1.912,
+    "chain_depth": 0,
+    "stuck": false,
+    "requires_complement_set": false,
+    "question_requires_enumeration": false,
+    "residual_worlds": 1
+  }
 }

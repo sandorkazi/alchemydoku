@@ -1,6 +1,6 @@
 {
   "id": "safe-publish-01",
-  "title": "Hedge Your Bet",
+  "title": "The Prudent Alchemist",
   "description": "You know two aspects of ingredient 1. Which aspect is still uncertain \u2014 safe to hedge?",
   "difficulty": "easy",
   "clues": [
@@ -56,5 +56,15 @@
       "redundantClues": 0,
       "avgClueDifficulty": 0.9
     }
+  },
+  "complexity": {
+    "score": 5,
+    "raw": 3.267,
+    "avg_clue_strength": 1.0,
+    "chain_depth": 0,
+    "stuck": false,
+    "requires_complement_set": false,
+    "question_requires_enumeration": false,
+    "residual_worlds": 10080
   }
 }

@@ -1,6 +1,6 @@
 {
   "id": "tutorial-debunk-01",
-  "title": "The Disproven Theory",
+  "title": "The Disproven Hypothesis",
   "description": "A player's theory about ingredient 1 was publicly debunked. What can you deduce from the card reader's result?",
   "difficulty": "tutorial",
   "clues": [
@@ -54,5 +54,15 @@
       "ingredient1": 1,
       "ingredient2": 2
     }
-  ]
+  ],
+  "complexity": {
+    "score": 1,
+    "raw": 1.842,
+    "avg_clue_strength": 1.936,
+    "chain_depth": 0,
+    "stuck": false,
+    "requires_complement_set": false,
+    "question_requires_enumeration": false,
+    "residual_worlds": 720
+  }
 }

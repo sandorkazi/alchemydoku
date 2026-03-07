@@ -1,6 +1,6 @@
 {
   "id": "expert-1001",
-  "title": "Expert 1001",
+  "title": "The Grand Tournament",
   "description": "Use all the evidence to deduce the mixing results.",
   "difficulty": "hard",
   "clues": [
@@ -105,5 +105,15 @@
     "6": 8,
     "7": 1,
     "8": 3
+  },
+  "complexity": {
+    "score": 4,
+    "raw": 1.775,
+    "avg_clue_strength": 2.186,
+    "chain_depth": 0,
+    "stuck": false,
+    "requires_complement_set": false,
+    "question_requires_enumeration": false,
+    "residual_worlds": 1
   }
 }

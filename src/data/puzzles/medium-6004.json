@@ -1,6 +1,6 @@
 {
   "id": "medium-6004",
-  "title": "Medium 6004",
+  "title": "The Crossroads Merchant",
   "description": "Deduce the mixing result from the clues.",
   "difficulty": "medium",
   "clues": [
@@ -69,5 +69,15 @@
     "6": 7,
     "7": 3,
     "8": 6
+  },
+  "complexity": {
+    "score": 1,
+    "raw": 1.191,
+    "avg_clue_strength": 2.86,
+    "chain_depth": 0,
+    "stuck": false,
+    "requires_complement_set": false,
+    "question_requires_enumeration": false,
+    "residual_worlds": 2
   }
 }

@@ -1,6 +1,6 @@
 {
   "id": "aspect-set-01",
-  "title": "Sign Reading",
+  "title": "The Sign Readers",
   "description": "Mixing results alone reveal which ingredients share a negative Red aspect.",
   "difficulty": "medium",
   "clues": [
@@ -80,5 +80,15 @@
       "level": 3,
       "text": "The ingredients with confirmed R\u2212 are: ingredient 1, ingredient 2, ingredient 3, ingredient 6."
     }
-  ]
+  ],
+  "complexity": {
+    "score": 4,
+    "raw": 2.258,
+    "avg_clue_strength": 2.679,
+    "chain_depth": 0,
+    "stuck": false,
+    "requires_complement_set": false,
+    "question_requires_enumeration": true,
+    "residual_worlds": 24
+  }
 }

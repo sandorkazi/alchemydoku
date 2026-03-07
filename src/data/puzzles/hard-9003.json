@@ -1,6 +1,6 @@
 {
   "id": "hard-9003",
-  "title": "Hard 9003",
+  "title": "The Master's Trial",
   "description": "Use all the evidence to deduce the mixing results.",
   "difficulty": "hard",
   "clues": [
@@ -91,5 +91,15 @@
     "6": 7,
     "7": 3,
     "8": 6
+  },
+  "complexity": {
+    "score": 3,
+    "raw": 1.472,
+    "avg_clue_strength": 2.217,
+    "chain_depth": 0,
+    "stuck": false,
+    "requires_complement_set": false,
+    "question_requires_enumeration": false,
+    "residual_worlds": 4
   }
 }

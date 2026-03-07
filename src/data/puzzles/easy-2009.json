@@ -1,6 +1,6 @@
 {
   "id": "easy-2009",
-  "title": "Easy Puzzle 10",
+  "title": "The Feathered Courier",
   "description": "Deduce the mixing result from the clues.",
   "difficulty": "easy",
   "clues": [
@@ -81,5 +81,15 @@
       "ingredient1": 1,
       "ingredient2": 5
     }
-  ]
+  ],
+  "complexity": {
+    "score": 2,
+    "raw": 1.315,
+    "avg_clue_strength": 2.543,
+    "chain_depth": 0,
+    "stuck": false,
+    "requires_complement_set": false,
+    "question_requires_enumeration": false,
+    "residual_worlds": 6
+  }
 }

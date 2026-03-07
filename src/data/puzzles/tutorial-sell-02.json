@@ -1,6 +1,6 @@
 {
   "id": "tutorial-sell-02",
-  "title": "The Sign Match",
+  "title": "The Picky Herbalist",
   "description": "A player claimed ingredients 1 and 2 make R+. The actual result had the same sign but a different colour. Which ingredient sheet clue narrows down the colour?",
   "difficulty": "tutorial",
   "clues": [
@@ -52,5 +52,15 @@
       "ingredient1": 1,
       "ingredient2": 2
     }
-  ]
+  ],
+  "complexity": {
+    "score": 1,
+    "raw": 2.364,
+    "avg_clue_strength": 1.904,
+    "chain_depth": 0,
+    "stuck": false,
+    "requires_complement_set": false,
+    "question_requires_enumeration": false,
+    "residual_worlds": 2880
+  }
 }

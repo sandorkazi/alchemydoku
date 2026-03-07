@@ -1,6 +1,6 @@
 {
   "id": "medium-6001",
-  "title": "Medium Puzzle 2",
+  "title": "The Crimson Cauldron",
   "description": "Multi-step deduction required.",
   "difficulty": "medium",
   "clues": [
@@ -76,5 +76,15 @@
       "ingredient1": 1,
       "ingredient2": 6
     }
-  ]
+  ],
+  "complexity": {
+    "score": 3,
+    "raw": 1.458,
+    "avg_clue_strength": 2.679,
+    "chain_depth": 0,
+    "stuck": false,
+    "requires_complement_set": false,
+    "question_requires_enumeration": false,
+    "residual_worlds": 24
+  }
 }

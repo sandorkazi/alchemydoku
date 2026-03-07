@@ -1,6 +1,6 @@
 {
   "id": "tutorial-mix-03",
-  "title": "Deduce from Results",
+  "title": "Smoke from the Workshop",
   "description": "You ran two experiments involving ingredient 1. What will mixing ingredient 1 with ingredient 7 (NNN) produce?",
   "difficulty": "tutorial",
   "clues": [
@@ -60,5 +60,15 @@
       "ingredient1": 1,
       "ingredient2": 7
     }
-  ]
+  ],
+  "complexity": {
+    "score": 1,
+    "raw": 1.07,
+    "avg_clue_strength": 3.238,
+    "chain_depth": 0,
+    "stuck": false,
+    "requires_complement_set": false,
+    "question_requires_enumeration": false,
+    "residual_worlds": 48
+  }
 }
