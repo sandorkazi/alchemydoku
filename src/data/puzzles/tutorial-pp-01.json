@@ -1,0 +1,50 @@
+{
+  "id": "tutorial-pp-01",
+  "title": "Two Suspects",
+  "description": "You know one ingredient exactly. The other has a known aspect. Which potions are still possible?",
+  "difficulty": "tutorial",
+  "clues": [
+    {
+      "kind": "assignment",
+      "ingredient": 1,
+      "alchemical": 8
+    },
+    {
+      "kind": "aspect",
+      "ingredient": 2,
+      "color": "R",
+      "sign": "+"
+    }
+  ],
+  "solution": {
+    "1": 8,
+    "2": 2,
+    "3": 1,
+    "4": 3,
+    "5": 4,
+    "6": 5,
+    "7": 6,
+    "8": 7
+  },
+  "questions": [
+    {
+      "kind": "possible-potions",
+      "ingredient1": 1,
+      "ingredient2": 2
+    }
+  ],
+  "hints": [
+    {
+      "level": 1,
+      "text": "Ingredient 1 is fully identified as PPP (all aspects +). Focus on ingredient 2: its R+ aspect tells you which alchemicals it can be."
+    },
+    {
+      "level": 2,
+      "text": "The R+ alchemicals are R+G\u2212B+, R+G\u2212B\u2212, and R+G+B\u2212. But PPP is already taken, so ingredient 2 must be one of the remaining three. Mix each with PPP and collect the distinct results."
+    },
+    {
+      "level": 3,
+      "text": "mix(PPP, R+G\u2212B+) = R+, mix(PPP, R+G\u2212B\u2212) = R+, mix(PPP, R+G+B\u2212) = G+. Answer: R+ and G+. Three suspects \u2014 two possible potions."
+    }
+  ]
+}

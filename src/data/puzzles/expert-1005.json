@@ -1,0 +1,88 @@
+{
+  "id": "expert-1005",
+  "title": "Expert 1005",
+  "description": "Use all the evidence to deduce the mixing results.",
+  "difficulty": "hard",
+  "clues": [
+    {
+      "kind": "mixing",
+      "ingredient1": 6,
+      "ingredient2": 8,
+      "result": {
+        "type": "potion",
+        "color": "B",
+        "sign": "+"
+      }
+    },
+    {
+      "kind": "sell",
+      "ingredient1": 4,
+      "ingredient2": 8,
+      "claimedResult": {
+        "type": "potion",
+        "color": "R",
+        "sign": "+"
+      },
+      "sellResult": "sign_ok"
+    },
+    {
+      "kind": "debunk",
+      "variant": "master",
+      "ingredient1": 1,
+      "ingredient2": 5,
+      "claimedPotion": {
+        "type": "potion",
+        "color": "R",
+        "sign": "-"
+      },
+      "outcome": "success"
+    },
+    {
+      "kind": "mixing",
+      "ingredient1": 1,
+      "ingredient2": 4,
+      "result": {
+        "type": "potion",
+        "color": "G",
+        "sign": "-"
+      }
+    },
+    {
+      "kind": "mixing",
+      "ingredient1": 2,
+      "ingredient2": 3,
+      "result": {
+        "type": "potion",
+        "color": "B",
+        "sign": "-"
+      }
+    }
+  ],
+  "questions": [
+    {
+      "kind": "mixing-result",
+      "ingredient1": 1,
+      "ingredient2": 6
+    },
+    {
+      "kind": "mixing-result",
+      "ingredient1": 1,
+      "ingredient2": 8
+    },
+    {
+      "kind": "mixing-result",
+      "ingredient1": 4,
+      "ingredient2": 5
+    }
+  ],
+  "solution": {
+    "1": 7,
+    "2": 3,
+    "3": 1,
+    "4": 2,
+    "5": 4,
+    "6": 8,
+    "7": 6,
+    "8": 5
+  }
+}

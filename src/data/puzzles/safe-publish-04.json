@@ -1,0 +1,68 @@
+{
+  "id": "safe-publish-04",
+  "title": "Reading the Mix",
+  "description": "A mix result narrows things down, but not all the way. Which aspect should you protect?",
+  "difficulty": "medium",
+  "clues": [
+    {
+      "kind": "mixing",
+      "ingredient1": 3,
+      "ingredient2": 6,
+      "result": {
+        "type": "potion",
+        "color": "B",
+        "sign": "+"
+      }
+    },
+    {
+      "kind": "mixing",
+      "ingredient1": 3,
+      "ingredient2": 5,
+      "result": {
+        "type": "potion",
+        "color": "R",
+        "sign": "+"
+      }
+    }
+  ],
+  "solution": {
+    "1": 3,
+    "2": 7,
+    "3": 2,
+    "4": 1,
+    "5": 8,
+    "6": 5,
+    "7": 6,
+    "8": 4
+  },
+  "hints": [
+    {
+      "level": 1,
+      "text": "The B+ mix result tells you that both ingredients share the same Blue sign, but with different sizes. Combined with G+, how many alchemicals remain for ingredient 1?"
+    },
+    {
+      "level": 2,
+      "text": "Ingredient 1 must have G+ and be part of a pair that produces B+. That narrows it to nPp and PPP \u2014 both have G+ and B+, but they disagree on Red."
+    },
+    {
+      "level": 3,
+      "text": "Hedge Red. The mixing result and aspect clue together confirm G and B, but leave Red ambiguous \u2014 a debunker targeting Red could still catch you out."
+    }
+  ],
+  "questions": [
+    {
+      "kind": "safe-publish",
+      "ingredient": 3
+    }
+  ],
+  "metadata": {
+    "complexityScore": 58,
+    "complexityMetrics": {
+      "minClueSubset": 2,
+      "clueSynergies": 1,
+      "deductionSteps": 2,
+      "redundantClues": 0,
+      "avgClueDifficulty": 0.95
+    }
+  }
+}

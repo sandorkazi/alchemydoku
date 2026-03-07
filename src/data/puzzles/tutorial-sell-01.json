@@ -1,0 +1,50 @@
+{
+  "id": "tutorial-sell-01",
+  "title": "The Strong Adventurer",
+  "description": "A player claimed mixing ingredients 1 and 2 gives R+, and the actual result was a total match. What is the actual mixing result?",
+  "difficulty": "tutorial",
+  "clues": [
+    {
+      "kind": "sell",
+      "ingredient1": 1,
+      "ingredient2": 2,
+      "claimedResult": {
+        "type": "potion",
+        "color": "R",
+        "sign": "+"
+      },
+      "sellResult": "total_match"
+    }
+  ],
+  "solution": {
+    "1": 2,
+    "2": 6,
+    "3": 3,
+    "4": 4,
+    "5": 5,
+    "6": 1,
+    "7": 7,
+    "8": 8
+  },
+  "hints": [
+    {
+      "level": 1,
+      "text": "What does a strong adventurer require to accept a potion?"
+    },
+    {
+      "level": 2,
+      "text": "Strong = exact match required (colour AND sign). Success means the actual result matched exactly."
+    },
+    {
+      "level": 3,
+      "text": "Claimed R+ + strong tier + success \u2192 actual result must be exactly R+."
+    }
+  ],
+  "questions": [
+    {
+      "kind": "mixing-result",
+      "ingredient1": 1,
+      "ingredient2": 2
+    }
+  ]
+}

@@ -1,0 +1,120 @@
+{
+  "id": "expert-1006",
+  "title": "Read the Negative",
+  "description": "A debunk failure reveals what is NOT true \u2014 combined with positive evidence, what does mixing 3 and 6 produce?",
+  "difficulty": "hard",
+  "clues": [
+    {
+      "kind": "mixing",
+      "ingredient1": 5,
+      "ingredient2": 8,
+      "result": {
+        "type": "potion",
+        "color": "R",
+        "sign": "+"
+      }
+    },
+    {
+      "kind": "sell",
+      "ingredient1": 6,
+      "ingredient2": 8,
+      "claimedResult": {
+        "type": "potion",
+        "color": "R",
+        "sign": "-"
+      },
+      "sellResult": "sign_ok"
+    },
+    {
+      "kind": "debunk",
+      "variant": "master",
+      "ingredient1": 2,
+      "ingredient2": 8,
+      "claimedPotion": {
+        "type": "potion",
+        "color": "G",
+        "sign": "+"
+      },
+      "outcome": "success"
+    },
+    {
+      "kind": "mixing",
+      "ingredient1": 3,
+      "ingredient2": 7,
+      "result": {
+        "type": "potion",
+        "color": "R",
+        "sign": "+"
+      }
+    },
+    {
+      "kind": "mixing",
+      "ingredient1": 6,
+      "ingredient2": 7,
+      "result": {
+        "type": "potion",
+        "color": "G",
+        "sign": "-"
+      }
+    }
+  ],
+  "solution": {
+    "1": 5,
+    "2": 4,
+    "3": 8,
+    "4": 1,
+    "5": 3,
+    "6": 7,
+    "7": 2,
+    "8": 6
+  },
+  "hints": [
+    {
+      "level": 1,
+      "text": "A master debunk failure means the actual mix of those ingredients is NOT the claimed result. This eliminates one possibility and constrains the remaining assignment space."
+    },
+    {
+      "level": 2,
+      "text": "The sell \"sign_ok\" on 3+6 tells you the actual mix shares the sign of R+ but uses a different colour. Combined with mixing clues for 1+5 and 2+4, narrow the field."
+    },
+    {
+      "level": 3,
+      "text": "The aspect clue pins Green for ingredient 7. With all constraints active, only one result is consistent for the 3+6 pair."
+    }
+  ],
+  "metadata": {
+    "worldsAfterClues": 2,
+    "clueCombination": [
+      "aspect",
+      "debunk",
+      "debunk:master",
+      "mixing",
+      "sell"
+    ],
+    "complexityScore": 58,
+    "complexityMetrics": {
+      "minClueSubset": 4,
+      "clueSynergies": 1,
+      "deductionSteps": 5,
+      "redundantClues": 1,
+      "avgClueDifficulty": 1.42
+    }
+  },
+  "questions": [
+    {
+      "kind": "mixing-result",
+      "ingredient1": 2,
+      "ingredient2": 3
+    },
+    {
+      "kind": "mixing-result",
+      "ingredient1": 2,
+      "ingredient2": 5
+    },
+    {
+      "kind": "mixing-result",
+      "ingredient1": 2,
+      "ingredient2": 7
+    }
+  ]
+}

@@ -1,0 +1,85 @@
+{
+  "id": "easy-2009",
+  "title": "Easy Puzzle 10",
+  "description": "Deduce the mixing result from the clues.",
+  "difficulty": "easy",
+  "clues": [
+    {
+      "kind": "mixing",
+      "ingredient1": 2,
+      "ingredient2": 5,
+      "result": {
+        "type": "potion",
+        "color": "B",
+        "sign": "+"
+      }
+    },
+    {
+      "kind": "mixing",
+      "ingredient1": 2,
+      "ingredient2": 3,
+      "result": {
+        "type": "potion",
+        "color": "G",
+        "sign": "-"
+      }
+    },
+    {
+      "kind": "mixing",
+      "ingredient1": 1,
+      "ingredient2": 2,
+      "result": {
+        "type": "neutral"
+      }
+    },
+    {
+      "kind": "mixing",
+      "ingredient1": 3,
+      "ingredient2": 7,
+      "result": {
+        "type": "potion",
+        "color": "R",
+        "sign": "+"
+      }
+    },
+    {
+      "kind": "mixing",
+      "ingredient1": 5,
+      "ingredient2": 7,
+      "result": {
+        "type": "neutral"
+      }
+    }
+  ],
+  "solution": {
+    "1": 1,
+    "2": 2,
+    "3": 3,
+    "4": 4,
+    "5": 5,
+    "6": 7,
+    "7": 6,
+    "8": 8
+  },
+  "metadata": {
+    "generatedAt": "2024-01-01T00:00:00Z",
+    "worldsAfterClues": 6,
+    "minimumClues": true,
+    "seed": 2009,
+    "complexityScore": 51,
+    "complexityMetrics": {
+      "minClueSubset": 3,
+      "clueSynergies": 0,
+      "deductionSteps": 3,
+      "redundantClues": 0,
+      "avgClueDifficulty": 1.0
+    }
+  },
+  "questions": [
+    {
+      "kind": "mixing-result",
+      "ingredient1": 1,
+      "ingredient2": 5
+    }
+  ]
+}

@@ -1,0 +1,60 @@
+{
+  "id": "safe-publish-03",
+  "title": "Almost Certain",
+  "description": "Green is positive. Blue is positive. You're close \u2014 but one aspect remains risky.",
+  "difficulty": "easy",
+  "clues": [
+    {
+      "kind": "aspect",
+      "ingredient": 1,
+      "color": "G",
+      "sign": "+"
+    },
+    {
+      "kind": "aspect",
+      "ingredient": 1,
+      "color": "B",
+      "sign": "+"
+    }
+  ],
+  "solution": {
+    "1": 4,
+    "2": 2,
+    "3": 3,
+    "4": 1,
+    "5": 5,
+    "6": 6,
+    "7": 7,
+    "8": 8
+  },
+  "hints": [
+    {
+      "level": 1,
+      "text": "G+ and B+ \u2014 which alchemicals match both? Check their Red sign."
+    },
+    {
+      "level": 2,
+      "text": "nPp has R\u2212, PPP has R+. Green and Blue are fixed, but Red differs between the two candidates."
+    },
+    {
+      "level": 3,
+      "text": "Hedge Red. It is the only aspect where your candidates disagree, so it is the only one a debunker could exploit."
+    }
+  ],
+  "questions": [
+    {
+      "kind": "safe-publish",
+      "ingredient": 1
+    }
+  ],
+  "metadata": {
+    "complexityScore": 58,
+    "complexityMetrics": {
+      "minClueSubset": 2,
+      "clueSynergies": 1,
+      "deductionSteps": 2,
+      "redundantClues": 0,
+      "avgClueDifficulty": 0.9
+    }
+  }
+}

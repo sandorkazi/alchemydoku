@@ -1,0 +1,154 @@
+[
+  {
+    "id": "tutorial-mixing",
+    "title": "Learn to Mix",
+    "description": "Understand how alchemicals combine.",
+    "difficulty": "tutorial",
+    "puzzleIds": [
+      "tutorial-mix-01",
+      "tutorial-mix-02",
+      "tutorial-mix-03"
+    ]
+  },
+  {
+    "id": "tutorial-selling",
+    "title": "Learn to Sell",
+    "description": "Understand what sell results reveal.",
+    "difficulty": "tutorial",
+    "puzzleIds": [
+      "tutorial-sell-01",
+      "tutorial-sell-02"
+    ],
+    "unlockedAfter": "tutorial-mixing"
+  },
+  {
+    "id": "easy-mixing",
+    "title": "First Experiments",
+    "description": "Simple deductions from mixing results.",
+    "difficulty": "easy",
+    "puzzleIds": [
+      "easy-2000",
+      "easy-2001",
+      "easy-2002",
+      "easy-2003",
+      "easy-2004",
+      "easy-2005",
+      "easy-2006",
+      "easy-2007",
+      "easy-2008",
+      "easy-2009"
+    ],
+    "unlockedAfter": "tutorial-mixing"
+  },
+  {
+    "id": "medium-mixing",
+    "title": "Following the Logic",
+    "description": "Multi-step deductions.",
+    "difficulty": "medium",
+    "puzzleIds": [
+      "medium-6003",
+      "medium-6005",
+      "medium-6000",
+      "medium-6002",
+      "medium-6004",
+      "medium-6006",
+      "medium-6001",
+      "medium-6007"
+    ],
+    "unlockedAfter": "easy-mixing"
+  },
+  {
+    "id": "tutorial-possible-outcomes",
+    "title": "Learn Possible Outcomes",
+    "description": "Not every question has a single answer. Sometimes you need to identify all the potions a pair could still produce.",
+    "difficulty": "tutorial",
+    "puzzleIds": [
+      "tutorial-pp-01",
+      "tutorial-pp-02"
+    ],
+    "unlockedAfter": "tutorial-mixing"
+  },
+  {
+    "id": "possible-outcomes",
+    "title": "Possible Outcomes",
+    "description": "The evidence narrows things down \u2014 but not all the way. Mark every potion this pair could still produce.",
+    "difficulty": "medium",
+    "puzzleIds": [
+      "medium-pp-02",
+      "medium-pp-01",
+      "medium-pp-03",
+      "hard-pp-01",
+      "hard-pp-02"
+    ],
+    "unlockedAfter": "medium-mixing"
+  },
+  {
+    "id": "hard-deduction",
+    "title": "Full Deduction",
+    "description": "Identify alchemicals from all clue types.",
+    "difficulty": "hard",
+    "puzzleIds": [
+      "hard-9003",
+      "hard-9000",
+      "hard-9002",
+      "hard-9005",
+      "hard-9001",
+      "hard-9004"
+    ],
+    "unlockedAfter": "medium-mixing"
+  },
+  {
+    "id": "debunking-basics",
+    "title": "Debunking",
+    "description": "Learn how debunking results \u2014 success and failure \u2014 constrain the possible alchemicals.",
+    "difficulty": "tutorial",
+    "puzzleIds": [
+      "tutorial-debunk-01",
+      "tutorial-debunk-02",
+      "tutorial-debunk-03"
+    ],
+    "unlockedAfter": "tutorial-mixing"
+  },
+  {
+    "id": "safe-publish",
+    "title": "Safe Publishing",
+    "description": "Given partial knowledge, which aspect should you hedge on the publication board?",
+    "difficulty": "easy",
+    "puzzleIds": [
+      "safe-publish-01",
+      "safe-publish-02",
+      "safe-publish-03",
+      "safe-publish-04"
+    ],
+    "unlockedAfter": "tutorial-mixing"
+  },
+  {
+    "id": "expert-cross",
+    "title": "All the Evidence",
+    "description": "Puzzles combining mixing, selling, and debunking clues \u2014 every tool at once.",
+    "difficulty": "hard",
+    "puzzleIds": [
+      "expert-1004",
+      "expert-1007",
+      "expert-1002",
+      "expert-1001",
+      "expert-1005",
+      "expert-1003",
+      "expert-1006",
+      "expert-1008"
+    ],
+    "unlockedAfter": "hard-deduction"
+  },
+  {
+    "id": "advanced-deduction",
+    "title": "Advanced Deduction",
+    "description": "Identify which ingredients share a property \u2014 sign or size.",
+    "difficulty": "hard",
+    "puzzleIds": [
+      "aspect-set-01",
+      "aspect-set-04",
+      "large-comp-01"
+    ],
+    "unlockedAfter": "hard-deduction"
+  }
+]

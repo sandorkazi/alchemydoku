@@ -1,0 +1,99 @@
+{
+  "id": "large-comp-01",
+  "title": "Heavy Red",
+  "description": "Two mixing results \u2014 one per pair \u2014 are enough to pin which ingredients carry a Large Red component.",
+  "difficulty": "hard",
+  "clues": [
+    {
+      "kind": "mixing",
+      "ingredient1": 1,
+      "ingredient2": 3,
+      "result": {
+        "type": "potion",
+        "color": "G",
+        "sign": "-"
+      }
+    },
+    {
+      "kind": "mixing",
+      "ingredient1": 4,
+      "ingredient2": 6,
+      "result": {
+        "type": "potion",
+        "color": "R",
+        "sign": "-"
+      }
+    },
+    {
+      "kind": "mixing",
+      "ingredient1": 1,
+      "ingredient2": 2,
+      "result": {
+        "type": "neutral"
+      }
+    },
+    {
+      "kind": "mixing",
+      "ingredient1": 6,
+      "ingredient2": 8,
+      "result": {
+        "type": "potion",
+        "color": "G",
+        "sign": "-"
+      }
+    },
+    {
+      "kind": "mixing",
+      "ingredient1": 2,
+      "ingredient2": 8,
+      "result": {
+        "type": "potion",
+        "color": "R",
+        "sign": "-"
+      }
+    },
+    {
+      "kind": "mixing",
+      "ingredient1": 5,
+      "ingredient2": 8,
+      "result": {
+        "type": "neutral"
+      }
+    }
+  ],
+  "questions": [
+    {
+      "kind": "large-component",
+      "color": "R"
+    }
+  ],
+  "solution": {
+    "1": 3,
+    "2": 4,
+    "3": 2,
+    "4": 1,
+    "5": 6,
+    "6": 7,
+    "7": 8,
+    "8": 5
+  },
+  "metadata": {
+    "worldsAfterClues": 6,
+    "questionType": "large-component",
+    "largeCount": 4
+  },
+  "hints": [
+    {
+      "level": 1,
+      "text": "A R+ mixing result means both ingredients share a R+ sign AND have opposite R sizes. One is Large, one is Small."
+    },
+    {
+      "level": 2,
+      "text": "If ingredient A appears in two R-coloured results with different partners, and both partners are known to be the same size, that pins A's R size."
+    },
+    {
+      "level": 3,
+      "text": "The ingredients with confirmed Large R: ingredient 5, ingredient 6, ingredient 7, ingredient 8."
+    }
+  ]
+}

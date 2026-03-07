@@ -1,0 +1,85 @@
+{
+  "id": "medium-6005",
+  "title": "Medium 6005",
+  "description": "Deduce the mixing result from the clues.",
+  "difficulty": "medium",
+  "clues": [
+    {
+      "kind": "mixing",
+      "ingredient1": 1,
+      "ingredient2": 3,
+      "result": {
+        "type": "potion",
+        "color": "G",
+        "sign": "+"
+      }
+    },
+    {
+      "kind": "mixing",
+      "ingredient1": 4,
+      "ingredient2": 6,
+      "result": {
+        "type": "potion",
+        "color": "G",
+        "sign": "-"
+      }
+    },
+    {
+      "kind": "mixing",
+      "ingredient1": 2,
+      "ingredient2": 6,
+      "result": {
+        "type": "potion",
+        "color": "G",
+        "sign": "-"
+      }
+    },
+    {
+      "kind": "mixing",
+      "ingredient1": 3,
+      "ingredient2": 6,
+      "result": {
+        "type": "potion",
+        "color": "R",
+        "sign": "-"
+      }
+    },
+    {
+      "kind": "mixing",
+      "ingredient1": 1,
+      "ingredient2": 4,
+      "result": {
+        "type": "potion",
+        "color": "R",
+        "sign": "+"
+      }
+    },
+    {
+      "kind": "mixing",
+      "ingredient1": 4,
+      "ingredient2": 5,
+      "result": {
+        "type": "potion",
+        "color": "B",
+        "sign": "+"
+      }
+    }
+  ],
+  "questions": [
+    {
+      "kind": "mixing-result",
+      "ingredient1": 3,
+      "ingredient2": 4
+    }
+  ],
+  "solution": {
+    "1": 8,
+    "2": 5,
+    "3": 1,
+    "4": 2,
+    "5": 4,
+    "6": 7,
+    "7": 3,
+    "8": 6
+  }
+}

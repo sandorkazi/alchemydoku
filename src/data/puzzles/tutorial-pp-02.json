@@ -1,0 +1,50 @@
+{
+  "id": "tutorial-pp-02",
+  "title": "Three Doors",
+  "description": "More suspects, more possibilities. One aspect clue leaves three valid alchemicals \u2014 check every door.",
+  "difficulty": "tutorial",
+  "clues": [
+    {
+      "kind": "assignment",
+      "ingredient": 1,
+      "alchemical": 3
+    },
+    {
+      "kind": "aspect",
+      "ingredient": 2,
+      "color": "G",
+      "sign": "-"
+    }
+  ],
+  "solution": {
+    "1": 3,
+    "2": 2,
+    "3": 1,
+    "4": 4,
+    "5": 5,
+    "6": 6,
+    "7": 7,
+    "8": 8
+  },
+  "questions": [
+    {
+      "kind": "possible-potions",
+      "ingredient1": 1,
+      "ingredient2": 2
+    }
+  ],
+  "hints": [
+    {
+      "level": 1,
+      "text": "Ingredient 1 is R+G\u2212B\u2212 (fully identified). The G\u2212 clue for ingredient 2 tells you its Green aspect is negative. List all alchemicals with G\u2212."
+    },
+    {
+      "level": 2,
+      "text": "G\u2212 alchemicals: R+G\u2212B+, R\u2212G\u2212B+, and NNN. (Alch 3 itself is taken.) Mix each with R+G\u2212B\u2212 and note whether they match or differ on each axis."
+    },
+    {
+      "level": 3,
+      "text": "mix(R+G\u2212B\u2212, R+G\u2212B+) = G\u2212, mix(R+G\u2212B\u2212, R\u2212G\u2212B+) = neutral, mix(R+G\u2212B\u2212, NNN) = B\u2212. Answer: G\u2212, Neutral, B\u2212."
+    }
+  ]
+}

@@ -1,0 +1,77 @@
+{
+  "id": "medium-6000",
+  "title": "Medium Puzzle 1",
+  "description": "Multi-step deduction required.",
+  "difficulty": "medium",
+  "clues": [
+    {
+      "kind": "sell",
+      "ingredient1": 1,
+      "ingredient2": 3,
+      "claimedResult": {
+        "type": "potion",
+        "color": "R",
+        "sign": "+"
+      },
+      "sellResult": "sign_ok"
+    },
+    {
+      "kind": "mixing",
+      "ingredient1": 2,
+      "ingredient2": 4,
+      "result": {
+        "type": "potion",
+        "color": "G",
+        "sign": "+"
+      }
+    },
+    {
+      "kind": "mixing",
+      "ingredient1": 5,
+      "ingredient2": 6,
+      "result": {
+        "type": "potion",
+        "color": "R",
+        "sign": "-"
+      }
+    },
+    {
+      "kind": "mixing",
+      "ingredient1": 7,
+      "ingredient2": 8,
+      "result": {
+        "type": "potion",
+        "color": "G",
+        "sign": "-"
+      }
+    }
+  ],
+  "solution": {
+    "1": 5,
+    "2": 4,
+    "3": 8,
+    "4": 6,
+    "5": 1,
+    "6": 7,
+    "7": 2,
+    "8": 3
+  },
+  "metadata": {
+    "worldsAfterClues": 32,
+    "complexityScore": 54,
+    "complexityMetrics": {
+      "minClueSubset": 3,
+      "clueSynergies": 0,
+      "deductionSteps": 3,
+      "redundantClues": 0,
+      "avgClueDifficulty": 1.4
+    }
+  },
+  "questions": [
+    {
+      "kind": "mixing-result",
+      "ingredient1": 7,
+      "ingredient2": 8
+    }
+  ]
+}

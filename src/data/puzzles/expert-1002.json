@@ -1,0 +1,77 @@
+{
+  "id": "expert-1002",
+  "title": "Expert 1002",
+  "description": "Use all the evidence to deduce the mixing results.",
+  "difficulty": "hard",
+  "clues": [
+    {
+      "kind": "mixing",
+      "ingredient1": 3,
+      "ingredient2": 6,
+      "result": {
+        "type": "potion",
+        "color": "R",
+        "sign": "+"
+      }
+    },
+    {
+      "kind": "mixing",
+      "ingredient1": 6,
+      "ingredient2": 8,
+      "result": {
+        "type": "potion",
+        "color": "B",
+        "sign": "+"
+      }
+    },
+    {
+      "kind": "debunk",
+      "variant": "master",
+      "ingredient1": 1,
+      "ingredient2": 8,
+      "claimedPotion": {
+        "type": "potion",
+        "color": "B",
+        "sign": "+"
+      },
+      "outcome": "success"
+    },
+    {
+      "kind": "mixing",
+      "ingredient1": 3,
+      "ingredient2": 7,
+      "result": {
+        "type": "potion",
+        "color": "G",
+        "sign": "+"
+      }
+    }
+  ],
+  "questions": [
+    {
+      "kind": "mixing-result",
+      "ingredient1": 3,
+      "ingredient2": 8
+    },
+    {
+      "kind": "mixing-result",
+      "ingredient1": 1,
+      "ingredient2": 3
+    },
+    {
+      "kind": "mixing-result",
+      "ingredient1": 1,
+      "ingredient2": 6
+    }
+  ],
+  "solution": {
+    "1": 8,
+    "2": 1,
+    "3": 6,
+    "4": 7,
+    "5": 3,
+    "6": 2,
+    "7": 4,
+    "8": 5
+  }
+}

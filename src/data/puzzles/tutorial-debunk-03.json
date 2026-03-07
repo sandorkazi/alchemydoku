@@ -1,0 +1,66 @@
+{
+  "id": "tutorial-debunk-03",
+  "title": "What They Don't Make",
+  "description": "A failed debunk tells you what the mix is NOT. Use that, plus the assignment and mixing clues, to nail down the answer.",
+  "difficulty": "tutorial",
+  "clues": [
+    {
+      "kind": "assignment",
+      "ingredient": 4,
+      "alchemical": 7
+    },
+    {
+      "kind": "mixing",
+      "ingredient1": 2,
+      "ingredient2": 3,
+      "result": {
+        "type": "potion",
+        "color": "B",
+        "sign": "+"
+      }
+    },
+    {
+      "kind": "debunk",
+      "variant": "master",
+      "ingredient1": 2,
+      "ingredient2": 7,
+      "claimedPotion": {
+        "type": "potion",
+        "color": "G",
+        "sign": "+"
+      },
+      "outcome": "failure"
+    }
+  ],
+  "solution": {
+    "1": 2,
+    "2": 5,
+    "3": 8,
+    "4": 7,
+    "5": 6,
+    "6": 4,
+    "7": 3,
+    "8": 1
+  },
+  "hints": [
+    {
+      "level": 1,
+      "text": "The master debunk outcome is 'failure' \u2014 that means the actual mix of those two ingredients is NOT the claimed potion. List what it could still be."
+    },
+    {
+      "level": 2,
+      "text": "The assignment clue pins one ingredient exactly. The mixing clue pins another pair's result. Together they constrain the world significantly."
+    },
+    {
+      "level": 3,
+      "text": "Once worlds are narrowed, check what mix(2+4) must be in every remaining world."
+    }
+  ],
+  "questions": [
+    {
+      "kind": "mixing-result",
+      "ingredient1": 2,
+      "ingredient2": 4
+    }
+  ]
+}

@@ -1,0 +1,84 @@
+{
+  "id": "aspect-set-01",
+  "title": "Sign Reading",
+  "description": "Mixing results alone reveal which ingredients share a negative Red aspect.",
+  "difficulty": "medium",
+  "clues": [
+    {
+      "kind": "mixing",
+      "ingredient1": 4,
+      "ingredient2": 7,
+      "result": {
+        "type": "potion",
+        "color": "R",
+        "sign": "+"
+      }
+    },
+    {
+      "kind": "mixing",
+      "ingredient1": 1,
+      "ingredient2": 7,
+      "result": {
+        "type": "potion",
+        "color": "G",
+        "sign": "-"
+      }
+    },
+    {
+      "kind": "mixing",
+      "ingredient1": 5,
+      "ingredient2": 7,
+      "result": {
+        "type": "potion",
+        "color": "R",
+        "sign": "+"
+      }
+    },
+    {
+      "kind": "mixing",
+      "ingredient1": 5,
+      "ingredient2": 8,
+      "result": {
+        "type": "potion",
+        "color": "R",
+        "sign": "+"
+      }
+    }
+  ],
+  "questions": [
+    {
+      "kind": "aspect-set",
+      "color": "R",
+      "sign": "-"
+    }
+  ],
+  "solution": {
+    "1": 7,
+    "2": 5,
+    "3": 4,
+    "4": 6,
+    "5": 8,
+    "6": 1,
+    "7": 2,
+    "8": 3
+  },
+  "metadata": {
+    "worldsAfterClues": 24,
+    "questionType": "aspect-set",
+    "confirmedCount": 4
+  },
+  "hints": [
+    {
+      "level": 1,
+      "text": "Look for ingredients that appear in mixing results only involving R\u2212 potions."
+    },
+    {
+      "level": 2,
+      "text": "Cross-reference every mix result that produces a potion of this colour. Both participants share that sign. Ruling out the alternative through a second result pins the ingredient."
+    },
+    {
+      "level": 3,
+      "text": "The ingredients with confirmed R\u2212 are: ingredient 1, ingredient 2, ingredient 3, ingredient 6."
+    }
+  ]
+}

@@ -1,0 +1,103 @@
+{
+  "id": "hard-9000",
+  "title": "Hard 9000",
+  "description": "Use all the evidence to deduce the mixing results.",
+  "difficulty": "hard",
+  "clues": [
+    {
+      "kind": "mixing",
+      "ingredient1": 6,
+      "ingredient2": 8,
+      "result": {
+        "type": "potion",
+        "color": "B",
+        "sign": "-"
+      }
+    },
+    {
+      "kind": "mixing",
+      "ingredient1": 6,
+      "ingredient2": 7,
+      "result": {
+        "type": "potion",
+        "color": "B",
+        "sign": "-"
+      }
+    },
+    {
+      "kind": "mixing",
+      "ingredient1": 4,
+      "ingredient2": 8,
+      "result": {
+        "type": "potion",
+        "color": "R",
+        "sign": "+"
+      }
+    },
+    {
+      "kind": "mixing",
+      "ingredient1": 2,
+      "ingredient2": 3,
+      "result": {
+        "type": "potion",
+        "color": "R",
+        "sign": "-"
+      }
+    },
+    {
+      "kind": "mixing",
+      "ingredient1": 2,
+      "ingredient2": 4,
+      "result": {
+        "type": "potion",
+        "color": "B",
+        "sign": "+"
+      }
+    },
+    {
+      "kind": "mixing",
+      "ingredient1": 5,
+      "ingredient2": 7,
+      "result": {
+        "type": "neutral"
+      }
+    },
+    {
+      "kind": "mixing",
+      "ingredient1": 1,
+      "ingredient2": 3,
+      "result": {
+        "type": "potion",
+        "color": "G",
+        "sign": "+"
+      }
+    }
+  ],
+  "questions": [
+    {
+      "kind": "mixing-result",
+      "ingredient1": 4,
+      "ingredient2": 7
+    },
+    {
+      "kind": "mixing-result",
+      "ingredient1": 7,
+      "ingredient2": 8
+    },
+    {
+      "kind": "mixing-result",
+      "ingredient1": 3,
+      "ingredient2": 4
+    }
+  ],
+  "solution": {
+    "1": 8,
+    "2": 5,
+    "3": 1,
+    "4": 2,
+    "5": 4,
+    "6": 7,
+    "7": 3,
+    "8": 6
+  }
+}

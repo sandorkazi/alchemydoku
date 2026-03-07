@@ -1,0 +1,114 @@
+{
+  "id": "aspect-set-04",
+  "title": "The Negatives",
+  "description": "Red negative sign \u2014 derived purely from mixing chains, no direct aspect clues.",
+  "difficulty": "hard",
+  "clues": [
+    {
+      "kind": "mixing",
+      "ingredient1": 1,
+      "ingredient2": 5,
+      "result": {
+        "type": "potion",
+        "color": "R",
+        "sign": "+"
+      }
+    },
+    {
+      "kind": "mixing",
+      "ingredient1": 7,
+      "ingredient2": 8,
+      "result": {
+        "type": "potion",
+        "color": "B",
+        "sign": "+"
+      }
+    },
+    {
+      "kind": "mixing",
+      "ingredient1": 4,
+      "ingredient2": 7,
+      "result": {
+        "type": "potion",
+        "color": "R",
+        "sign": "-"
+      }
+    },
+    {
+      "kind": "mixing",
+      "ingredient1": 3,
+      "ingredient2": 7,
+      "result": {
+        "type": "potion",
+        "color": "B",
+        "sign": "+"
+      }
+    },
+    {
+      "kind": "mixing",
+      "ingredient1": 4,
+      "ingredient2": 5,
+      "result": {
+        "type": "potion",
+        "color": "G",
+        "sign": "-"
+      }
+    },
+    {
+      "kind": "mixing",
+      "ingredient1": 3,
+      "ingredient2": 5,
+      "result": {
+        "type": "potion",
+        "color": "G",
+        "sign": "-"
+      }
+    },
+    {
+      "kind": "mixing",
+      "ingredient1": 2,
+      "ingredient2": 6,
+      "result": {
+        "type": "potion",
+        "color": "R",
+        "sign": "-"
+      }
+    }
+  ],
+  "questions": [
+    {
+      "kind": "aspect-set",
+      "color": "R",
+      "sign": "-"
+    }
+  ],
+  "solution": {
+    "1": 6,
+    "2": 7,
+    "3": 2,
+    "4": 5,
+    "5": 3,
+    "6": 1,
+    "7": 4,
+    "8": 8
+  },
+  "metadata": {
+    "worldsAfterClues": 6,
+    "questionType": "aspect-set",
+    "confirmedCount": 4
+  },
+  "hints": [
+    {
+      "level": 1,
+      "text": "Look for ingredients that appear in mixing results only involving R\u2212 potions."
+    },
+    {
+      "level": 2,
+      "text": "Cross-reference every mix result that produces a potion of this colour. Both participants share that sign. Ruling out the alternative through a second result pins the ingredient."
+    },
+    {
+      "level": 3,
+      "text": "The ingredients with confirmed R\u2212 are: ingredient 2, ingredient 4, ingredient 6, ingredient 7."
+    }
+  ]
+}

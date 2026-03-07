@@ -1,0 +1,113 @@
+{
+  "id": "hard-pp-01",
+  "title": "Elimination Round",
+  "description": "Systematic deduction leaves exactly two achievable results for this pair.",
+  "difficulty": "hard",
+  "clues": [
+    {
+      "kind": "sell",
+      "ingredient1": 1,
+      "ingredient2": 7,
+      "claimedResult": {
+        "type": "potion",
+        "color": "B",
+        "sign": "-"
+      },
+      "sellResult": "opposite"
+    },
+    {
+      "kind": "sell",
+      "ingredient1": 5,
+      "ingredient2": 6,
+      "claimedResult": {
+        "type": "potion",
+        "color": "B",
+        "sign": "-"
+      },
+      "sellResult": "sign_ok"
+    },
+    {
+      "kind": "mixing",
+      "ingredient1": 1,
+      "ingredient2": 3,
+      "result": {
+        "type": "potion",
+        "color": "G",
+        "sign": "+"
+      }
+    },
+    {
+      "kind": "mixing",
+      "ingredient1": 3,
+      "ingredient2": 8,
+      "result": {
+        "type": "potion",
+        "color": "G",
+        "sign": "+"
+      }
+    },
+    {
+      "kind": "mixing",
+      "ingredient1": 5,
+      "ingredient2": 7,
+      "result": {
+        "type": "neutral"
+      }
+    },
+    {
+      "kind": "sell",
+      "ingredient1": 3,
+      "ingredient2": 7,
+      "claimedResult": {
+        "type": "potion",
+        "color": "G",
+        "sign": "+"
+      },
+      "sellResult": "sign_ok"
+    }
+  ],
+  "questions": [
+    {
+      "kind": "possible-potions",
+      "ingredient1": 1,
+      "ingredient2": 8
+    }
+  ],
+  "solution": {
+    "1": 6,
+    "2": 5,
+    "3": 8,
+    "4": 2,
+    "5": 4,
+    "6": 7,
+    "7": 3,
+    "8": 1
+  },
+  "metadata": {
+    "worldsAfterClues": 28,
+    "questionType": "possible-potions",
+    "possibleCount": 2,
+    "complexityScore": 23,
+    "complexityMetrics": {
+      "minClueSubset": 2,
+      "clueSynergies": 1,
+      "deductionSteps": 3,
+      "redundantClues": 4,
+      "avgClueDifficulty": 1.53
+    }
+  },
+  "hints": [
+    {
+      "level": 1,
+      "text": "There are 2 possible outcomes for this mix. Start by ruling out clearly impossible ones."
+    },
+    {
+      "level": 2,
+      "text": "Each clue constrains the alchemical assignments \u2014 trace which potions survive all constraints."
+    },
+    {
+      "level": 3,
+      "text": "The answer has 2 potions: B+, B-."
+    }
+  ]
+}

@@ -1,0 +1,49 @@
+{
+  "id": "tutorial-mix-02",
+  "title": "Find the Resolver",
+  "description": "Ingredient 1 is npN, ingredient 2 is pNn. Find the colour where both signs match but sizes differ.",
+  "difficulty": "tutorial",
+  "clues": [
+    {
+      "kind": "assignment",
+      "ingredient": 1,
+      "alchemical": 1
+    },
+    {
+      "kind": "assignment",
+      "ingredient": 2,
+      "alchemical": 3
+    }
+  ],
+  "solution": {
+    "1": 1,
+    "2": 3,
+    "3": 2,
+    "4": 4,
+    "5": 5,
+    "6": 6,
+    "7": 7,
+    "8": 8
+  },
+  "hints": [
+    {
+      "level": 1,
+      "text": "Check R: npN has R=small\u2212, pNn has R=small+. Signs differ \u2014 not the resolver."
+    },
+    {
+      "level": 2,
+      "text": "Check G: npN has G=small+, pNn has G=large\u2212. Signs differ \u2014 not the resolver."
+    },
+    {
+      "level": 3,
+      "text": "Check B: npN has B=large\u2212, pNn has B=small\u2212. Signs MATCH (both \u2212), sizes differ \u2192 result is B\u2212."
+    }
+  ],
+  "questions": [
+    {
+      "kind": "mixing-result",
+      "ingredient1": 1,
+      "ingredient2": 2
+    }
+  ]
+}

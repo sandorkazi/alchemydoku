@@ -1,0 +1,49 @@
+{
+  "id": "tutorial-mix-01",
+  "title": "Opposites Cancel",
+  "description": "Ingredient 1 is NNN, ingredient 2 is PPP. Every sign is opposite. What potion do you get?",
+  "difficulty": "tutorial",
+  "clues": [
+    {
+      "kind": "assignment",
+      "ingredient": 1,
+      "alchemical": 7
+    },
+    {
+      "kind": "assignment",
+      "ingredient": 2,
+      "alchemical": 8
+    }
+  ],
+  "solution": {
+    "1": 7,
+    "2": 8,
+    "3": 1,
+    "4": 2,
+    "5": 3,
+    "6": 4,
+    "7": 5,
+    "8": 6
+  },
+  "hints": [
+    {
+      "level": 1,
+      "text": "Compare each colour aspect between the two alchemicals."
+    },
+    {
+      "level": 2,
+      "text": "Every R, G and B aspect has opposite signs. When all signs are opposite, the result is always Neutral."
+    },
+    {
+      "level": 3,
+      "text": "NNN is (\u2212,\u2212,\u2212) and PPP is (+,+,+). All three are opposite \u2192 Neutral."
+    }
+  ],
+  "questions": [
+    {
+      "kind": "mixing-result",
+      "ingredient1": 1,
+      "ingredient2": 2
+    }
+  ]
+}

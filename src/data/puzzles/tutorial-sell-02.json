@@ -1,0 +1,56 @@
+{
+  "id": "tutorial-sell-02",
+  "title": "The Sign Match",
+  "description": "A player claimed ingredients 1 and 2 make R+. The actual result had the same sign but a different colour. Which ingredient sheet clue narrows down the colour?",
+  "difficulty": "tutorial",
+  "clues": [
+    {
+      "kind": "sell",
+      "ingredient1": 1,
+      "ingredient2": 2,
+      "claimedResult": {
+        "type": "potion",
+        "color": "R",
+        "sign": "+"
+      },
+      "sellResult": "sign_ok"
+    },
+    {
+      "kind": "aspect",
+      "ingredient": 1,
+      "color": "G",
+      "sign": "-"
+    }
+  ],
+  "solution": {
+    "1": 5,
+    "2": 8,
+    "3": 1,
+    "4": 2,
+    "5": 3,
+    "6": 4,
+    "7": 6,
+    "8": 7
+  },
+  "hints": [
+    {
+      "level": 1,
+      "text": "A sign-only match means the actual potion had the same sign as the claim, but a different colour."
+    },
+    {
+      "level": 2,
+      "text": "Claimed R+, sign_ok \u2192 actual is G+ or B+. The aspect sheet tells you something about ingredient 1's G aspect."
+    },
+    {
+      "level": 3,
+      "text": "Ingredient 1 has G\u2212, so mixing can only produce G+ if both ingredients have G+. Since i1 has G\u2212, the resolver must be B (both have B+). Answer: B+."
+    }
+  ],
+  "questions": [
+    {
+      "kind": "mixing-result",
+      "ingredient1": 1,
+      "ingredient2": 2
+    }
+  ]
+}

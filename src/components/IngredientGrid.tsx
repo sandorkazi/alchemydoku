@@ -1,0 +1,434 @@
+import { useState, useRef, useEffect, useCallback } from 'react';
+import { INGREDIENTS } from '../data/ingredients';
+import { ALCHEMICALS } from '../data/alchemicals';
+import { useSolver, useIngredient } from '../contexts/SolverContext';
+import { AlchemicalDisplay } from './AlchemicalDisplay';
+import { AlchemicalImage, IngredientIcon } from './GameSprites';
+import type { AlchemicalId, IngredientId, CellState } from '../types';
+
+const BOARD_DISPLAY_ORDER: IngredientId[] = [3, 1, 7, 2, 4, 5, 6, 8];
+const ALCH_IDS: AlchemicalId[] = [1, 2, 3, 4, 5, 6, 7, 8];
+
+const TINT_COLORS = [
+  '#7C3FD4', '#72B800', '#8B6020', '#E8A800',
+  '#2060D8', '#3D8A4A', '#D43020', '#3A7A96',
+];
+
+// ─── Tool types ───────────────────────────────────────────────────────────────
+
+type GridTool = 'mark' | 'question' | 'text';
+const TOOL_CYCLE: GridTool[] = ['mark', 'question', 'text'];
+
+// Per-tool cursor CSS values — shown on the grid wrapper
+const TOOL_CURSOR: Record<GridTool, string> = {
+  mark:     'crosshair',
+  question: 'cell',
+  text:     'text',
+};
+
+// ─── Marker glyphs ────────────────────────────────────────────────────────────
+
+function stroke(c: string) {
+  return `-2px -2px 0 ${c}, 2px -2px 0 ${c}, -2px 2px 0 ${c}, 2px 2px 0 ${c},`
+       + ` 0 -2px 0 ${c}, 0 2px 0 ${c}, -2px 0 0 ${c}, 2px 0 0 ${c}`;
+}
+const MARKER: Record<CellState, { glyph: string; textShadow: string }> = {
+  unknown:    { glyph: '',  textShadow: '' },
+  possible:   { glyph: '?', textShadow: stroke('#6366f1') },
+  eliminated: { glyph: '✗', textShadow: stroke('#ef4444') },
+  confirmed:  { glyph: '✔', textShadow: stroke('#22c55e') },
+};
+
+// ─── Cell ─────────────────────────────────────────────────────────────────────
+
+function Cell({
+  cellState, alchId, tintColor, noteText,
+  activeTool, isEditing,
+  onMouseDown, onStartEdit,
+  ariaLabel,
+}: {
+  cellState:   CellState;
+  alchId:      AlchemicalId;
+  tintColor:   string;
+  noteText:    string;
+  activeTool:  GridTool;
+  isEditing:   boolean;
+  onMouseDown: (e: React.MouseEvent) => void;
+  onStartEdit: () => void;
+  ariaLabel?:  string;
+}) {
+  const { glyph, textShadow } = MARKER[cellState];
+
+  const handleMouseDown = (e: React.MouseEvent) => {
+    // Let modifier-key overrides bubble up first
+    onMouseDown(e);
+  };
+
+  return (
+    <button
+      onMouseDown={handleMouseDown}
+      // Prevent default click so mouseDown is the single source of truth
+      onClick={e => e.preventDefault()}
+      className={`relative w-12 h-12 rounded flex items-center justify-center border transition-all
+        focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-indigo-400
+        ${isEditing
+          ? 'border-indigo-400 ring-2 ring-indigo-300'
+          : 'border-gray-200 hover:border-gray-400'
+        }`}
+      aria-label={ariaLabel ?? cellState}
+      title={ariaLabel ?? cellState}
+    >
+      {/* vibrant column tint */}
+      <span
+        className="absolute inset-0 rounded pointer-events-none"
+        style={{ backgroundColor: tintColor, opacity: 0.28 }}
+      />
+      {/* alchemical watermark */}
+      <span
+        className="absolute inset-0 flex items-center justify-center pointer-events-none"
+        style={{ opacity: 0.45 }}
+      >
+        <AlchemicalImage id={alchId} width={36} />
+      </span>
+
+      {/* Mark glyph — hidden when note text present */}
+      {glyph && !noteText && (
+        <span
+          className="relative z-10 text-xl font-black leading-none select-none"
+          style={{ color: 'white', textShadow }}
+        >
+          {glyph}
+        </span>
+      )}
+
+      {/* Note text overlay */}
+      {noteText && (
+        <span
+          className="relative z-10 text-[11px] font-black leading-none select-none tracking-tight"
+          style={{ color: 'white', textShadow: stroke('#1e1b4b') }}
+        >
+          {noteText}
+        </span>
+      )}
+    </button>
+  );
+}
+
+// ─── Inline text editor ───────────────────────────────────────────────────────
+
+function CellTextEditor({
+  value, onChange, onDone,
+}: {
+  value: string;
+  onChange: (v: string) => void;
+  onDone: () => void;
+}) {
+  const ref = useRef<HTMLInputElement>(null);
+  useEffect(() => { ref.current?.focus(); ref.current?.select(); }, []);
+
+  return (
+    <div className="absolute inset-0 z-20 flex items-center justify-center rounded overflow-hidden">
+      <input
+        ref={ref}
+        type="text"
+        maxLength={3}
+        value={value}
+        onChange={e => onChange(e.target.value.toUpperCase().slice(0, 3))}
+        onBlur={onDone}
+        onKeyDown={e => {
+          if (e.key === 'Enter' || e.key === 'Escape') { e.preventDefault(); onDone(); }
+        }}
+        className="w-full h-full text-center text-[13px] font-black bg-indigo-900/80 text-white
+                   border-0 outline-none tracking-widest rounded"
+        aria-label="Cell note (max 3 characters)"
+      />
+    </div>
+  );
+}
+
+// ─── Auto-deduce confirm modal ────────────────────────────────────────────────
+
+function AutoDeduceModal({ onConfirm, onCancel }: { onConfirm: () => void; onCancel: () => void }) {
+  return (
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 px-4">
+      <div className="bg-white rounded-2xl shadow-xl p-6 max-w-sm w-full space-y-4 animate-fadein">
+        <h3 className="font-bold text-gray-900 text-base">Enable auto-deduce?</h3>
+        <p className="text-sm text-gray-600 leading-relaxed">
+          Auto-deduce will automatically mark cells as{' '}
+          <span className="font-semibold text-red-600">eliminated</span> or{' '}
+          <span className="font-semibold text-green-600">confirmed</span> based on the
+          clues — removing the manual deduction challenge.
+        </p>
+        <p className="text-sm text-amber-700 bg-amber-50 border border-amber-200 rounded-lg px-3 py-2">
+          Recommended only if you're stuck or want to check your reasoning.
+        </p>
+        <div className="flex gap-3 pt-1">
+          <button onClick={onCancel}
+            className="flex-1 py-2 rounded-xl border border-gray-300 text-sm font-medium
+                       text-gray-700 hover:bg-gray-50 transition-colors">
+            Cancel
+          </button>
+          <button onClick={onConfirm}
+            className="flex-1 py-2 rounded-xl bg-indigo-600 text-white text-sm font-semibold
+                       hover:bg-indigo-700 transition-colors">
+            Enable
+          </button>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+// ─── Main component ───────────────────────────────────────────────────────────
+
+export function IngredientGrid({ onRandomize }: { onRandomize?: () => void }) {
+  const { state, dispatch } = useSolver();
+  const notes = state.notes;
+  const setNote = (key: string, value: string) => dispatch({ type: 'SET_NOTE', key, value });
+  const { gridState, autoDeduction, displayMap } = state;
+  const getIngredient = useIngredient();
+  const gridRef = useRef<HTMLDivElement>(null);
+
+  const [showConfirm, setShowConfirm] = useState(false);
+  const [activeTool, setActiveTool] = useState<GridTool>('mark');
+  const [editingCell, setEditingCell] = useState<{ ing: IngredientId; alch: AlchemicalId } | null>(null);
+
+  // ── Spacebar cycles tools ──────────────────────────────────────────────────
+  useEffect(() => {
+    const onKey = (e: KeyboardEvent) => {
+      // Only act when focus is inside the grid or no input is focused
+      const active = document.activeElement;
+      const inInput = active instanceof HTMLInputElement || active instanceof HTMLTextAreaElement;
+      if (inInput) return;
+      if (e.code === 'Space' && !e.ctrlKey && !e.metaKey && !e.altKey) {
+        e.preventDefault();
+        setActiveTool(cur => TOOL_CYCLE[(TOOL_CYCLE.indexOf(cur) + 1) % TOOL_CYCLE.length]);
+        setEditingCell(null);
+      }
+    };
+    window.addEventListener('keydown', onKey);
+    return () => window.removeEventListener('keydown', onKey);
+  }, []);
+
+  // Build inverse displayMap: displayId → slotId
+  const displayToSlot: Record<number, IngredientId> = {};
+  for (let slot = 1; slot <= 8; slot++) {
+    const dispId = displayMap[slot] ?? slot;
+    displayToSlot[dispId] = slot as IngredientId;
+  }
+
+  const colData: Array<{ slotId: IngredientId; tint: string; displayId: number }> =
+    BOARD_DISPLAY_ORDER
+      .map((displayId, i) => ({ slotId: displayToSlot[displayId], tint: TINT_COLORS[i], displayId }))
+      .filter(x => x.slotId != null) as Array<{ slotId: IngredientId; tint: string; displayId: number }>;
+
+  const noteKey = (ing: IngredientId, alch: AlchemicalId) => `${ing}-${alch}`;
+
+  // ── Resolve effective tool from modifier keys ──────────────────────────────
+  // Shift held → always use mark tool, regardless of active tool
+  const resolveEffectiveTool = (e: React.MouseEvent): GridTool => {
+    if (e.shiftKey) return 'mark';
+    return activeTool;
+  };
+
+  // ── Cell mousedown handler ─────────────────────────────────────────────────
+  const handleCellMouseDown = useCallback((
+    e: React.MouseEvent,
+    slotId: IngredientId,
+    alchId: AlchemicalId,
+  ) => {
+    e.preventDefault(); // prevent focus steal / text selection
+    const tool = resolveEffectiveTool(e);
+
+    if (tool === 'text') {
+      setEditingCell({ ing: slotId, alch: alchId });
+      return;
+    }
+    if (tool === 'mark') {
+      dispatch({ type: 'TOGGLE_CELL', ingredient: slotId, alchemical: alchId });
+    } else if (tool === 'question') {
+      const cur = gridState[slotId]?.[alchId] ?? 'unknown';
+      const next: CellState = cur === 'possible' ? 'unknown' : 'possible';
+      dispatch({ type: 'SET_CELL', ingredient: slotId, alchemical: alchId, state: next });
+    }
+  }, [activeTool, gridState, dispatch]);
+
+  // ── Tool bar definitions ───────────────────────────────────────────────────
+  const TOOL_DEFS: { id: GridTool; label: string; title: string }[] = [
+    { id: 'mark',     label: '✗✔',  title: 'Mark tool [Space] — cycle ✗ / ✔ · Shift+click forces this tool' },
+    { id: 'question', label: '?',    title: '? tool [Space] — toggle possible mark' },
+    { id: 'text',     label: 'abc',  title: 'Text tool [Space] — type up to 3 letters per cell' },
+  ];
+
+  return (
+    <>
+      {showConfirm && (
+        <AutoDeduceModal
+          onConfirm={() => { setShowConfirm(false); dispatch({ type: 'TOGGLE_AUTO_DEDUCTION' }); }}
+          onCancel={() => setShowConfirm(false)}
+        />
+      )}
+
+      <div className="space-y-2">
+        <div className="flex items-center justify-end gap-2 flex-wrap">
+          <div className="flex items-center gap-2 flex-wrap">
+
+            {/* Tool selector */}
+            <div className="flex items-center rounded-lg border border-gray-200 overflow-hidden">
+              {TOOL_DEFS.map(({ id, label, title }) => (
+                <button
+                  key={id}
+                  title={title}
+                  aria-pressed={activeTool === id}
+                  onClick={() => { setActiveTool(id); setEditingCell(null); }}
+                  className={`px-2.5 py-1 text-xs font-bold transition-colors focus-visible:outline-none
+                    focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-indigo-400
+                    ${activeTool === id
+                      ? 'bg-indigo-600 text-white'
+                      : 'bg-white text-gray-500 hover:bg-gray-50'
+                    }
+                    ${id === 'mark' ? '' : 'border-l border-gray-200'}
+                  `}
+                >
+                  {label}
+                </button>
+              ))}
+            </div>
+
+            <button
+              onClick={() => { dispatch({ type: 'CLEAR_GRID' }); setEditingCell(null); }}
+              className="text-xs text-gray-400 hover:text-red-500 border border-gray-200
+                         hover:border-red-300 rounded-lg px-2.5 py-1 transition-colors"
+            >
+              ✕ Clear
+            </button>
+
+            {onRandomize && (
+              <button onClick={onRandomize}
+                className="text-xs text-gray-400 hover:text-indigo-600 border border-gray-200
+                           hover:border-indigo-300 rounded-lg px-2.5 py-1 transition-colors">
+                🔀
+              </button>
+            )}
+
+            <label className="flex items-center gap-1.5 text-xs cursor-pointer select-none">
+              <span className={autoDeduction ? 'text-indigo-600 font-semibold' : 'text-gray-500'}>Auto</span>
+              <button
+                role="switch"
+                aria-checked={autoDeduction}
+                onClick={() => { if (!autoDeduction) setShowConfirm(true); else dispatch({ type: 'TOGGLE_AUTO_DEDUCTION' }); }}
+                className={`relative inline-flex h-5 w-9 items-center rounded-full transition-colors
+                  focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-indigo-400
+                  ${autoDeduction ? 'bg-indigo-600' : 'bg-gray-200'}`}
+              >
+                <span className={`inline-block h-3.5 w-3.5 transform rounded-full bg-white shadow
+                  transition-transform ${autoDeduction ? 'translate-x-4' : 'translate-x-1'}`} />
+              </button>
+            </label>
+          </div>
+        </div>
+
+        {/* Grid — cursor + tool indicator badge */}
+        <div
+          ref={gridRef}
+          className="overflow-x-auto -mx-1 px-1 pb-1 flex justify-center relative"
+          style={{ cursor: TOOL_CURSOR[activeTool] }}
+        >
+          {/* Active tool badge — floats top-right of the scroll area */}
+          <div
+            aria-live="polite"
+            aria-atomic="true"
+            className={`absolute top-0 right-1 z-10 flex items-center gap-1 px-2 py-0.5 rounded-full
+              text-[10px] font-bold select-none pointer-events-none transition-all
+              ${activeTool === 'mark'     ? 'bg-gray-800/70 text-white' : ''}
+              ${activeTool === 'question' ? 'bg-indigo-600/80 text-white' : ''}
+              ${activeTool === 'text'     ? 'bg-amber-500/80 text-white' : ''}
+            `}
+          >
+            {activeTool === 'mark'     && <><span>✗✔</span><span>mark</span></>}
+            {activeTool === 'question' && <><span>?</span><span>question</span></>}
+            {activeTool === 'text'     && <><span>abc</span><span>text</span></>}
+            <kbd className="ml-0.5 opacity-60 font-mono text-[9px] border border-current/40 rounded px-0.5">Space</kbd>
+          </div>
+          <table className="border-collapse text-xs">
+            <thead>
+              <tr>
+                <th className="pr-2" />
+                {colData.map(({ slotId, tint, displayId }) => {
+                  const { index } = getIngredient(slotId);
+                  const name = INGREDIENTS[displayId as 1].name;
+                  return (
+                    <th key={slotId} className="px-1 pb-1 text-center align-bottom">
+                      <div className="mx-auto mb-1 rounded-full h-1.5" style={{ backgroundColor: tint, width: 28 }} />
+                      <span title={name} aria-label={name}>
+                        <IngredientIcon index={index} width={48} />
+                      </span>
+                    </th>
+                  );
+                })}
+              </tr>
+            </thead>
+            <tbody>
+              {ALCH_IDS.map(alchId => (
+                <tr key={alchId} className="border-t border-gray-100">
+                  <td className="pr-2 py-0.5">
+                    <div className="flex items-center justify-end">
+                      <AlchemicalDisplay id={alchId} elemWidth={66} />
+                    </div>
+                  </td>
+                  {colData.map(({ slotId, tint }) => {
+                    const key = noteKey(slotId, alchId);
+                    const isEditing = editingCell?.ing === slotId && editingCell?.alch === alchId;
+                    return (
+                      <td key={slotId} className="px-1 py-0.5 text-center">
+                        <div className="relative">
+                          <Cell
+                            cellState={gridState[slotId]?.[alchId] ?? 'unknown'}
+                            alchId={alchId}
+                            tintColor={tint}
+                            noteText={notes[key] ?? ''}
+                            activeTool={activeTool}
+                            isEditing={isEditing}
+                            onMouseDown={e => handleCellMouseDown(e, slotId, alchId)}
+                            onStartEdit={() => setEditingCell({ ing: slotId, alch: alchId })}
+                            ariaLabel={`${INGREDIENTS[getIngredient(slotId).displayId as 1].name} / ${ALCHEMICALS[alchId].code}: ${gridState[slotId]?.[alchId] ?? 'unknown'}`}
+                          />
+                          {isEditing && (
+                            <CellTextEditor
+                              value={notes[key] ?? ''}
+                              onChange={v => setNote(key, v)}
+                              onDone={() => setEditingCell(null)}
+                            />
+                          )}
+                        </div>
+                      </td>
+                    );
+                  })}
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+
+        {/* Contextual legend + keyboard hints */}
+        <p className="text-[10px] text-gray-400">
+          {activeTool === 'mark' && <>
+            Tap to cycle:{' '}
+            <span className="font-mono">· unknown</span>{' → '}
+            <span className="font-mono font-bold text-red-500">✗ eliminated</span>{' → '}
+            <span className="font-mono font-bold text-green-600">✔ confirmed</span>
+            <span className="ml-2 opacity-60">· Space to switch tool</span>
+          </>}
+          {activeTool === 'question' && <>
+            Tap to toggle <span className="font-mono font-bold text-indigo-500">? possible</span> on/off
+            <span className="ml-2 opacity-60">· Space to switch tool · Shift+click for mark</span>
+          </>}
+          {activeTool === 'text' && <>
+            Tap any cell to type a note (max 3 chars)
+            <span className="ml-2 opacity-60">· Space to switch tool · Shift+click for mark</span>
+          </>}
+        </p>
+      </div>
+    </>
+  );
+}

@@ -1,0 +1,69 @@
+{
+  "id": "easy-2001",
+  "title": "Easy Puzzle 2",
+  "description": "Deduce the mixing result from the clues.",
+  "difficulty": "easy",
+  "clues": [
+    {
+      "kind": "mixing",
+      "ingredient1": 1,
+      "ingredient2": 8,
+      "result": {
+        "type": "potion",
+        "color": "R",
+        "sign": "-"
+      }
+    },
+    {
+      "kind": "mixing",
+      "ingredient1": 3,
+      "ingredient2": 4,
+      "result": {
+        "type": "potion",
+        "color": "R",
+        "sign": "-"
+      }
+    },
+    {
+      "kind": "mixing",
+      "ingredient1": 2,
+      "ingredient2": 7,
+      "result": {
+        "type": "potion",
+        "color": "G",
+        "sign": "+"
+      }
+    }
+  ],
+  "solution": {
+    "1": 5,
+    "2": 8,
+    "3": 7,
+    "4": 4,
+    "5": 3,
+    "6": 2,
+    "7": 6,
+    "8": 1
+  },
+  "metadata": {
+    "generatedAt": "2024-01-01T00:00:00Z",
+    "worldsAfterClues": 64,
+    "minimumClues": true,
+    "seed": 2001,
+    "complexityScore": 51,
+    "complexityMetrics": {
+      "minClueSubset": 3,
+      "clueSynergies": 0,
+      "deductionSteps": 3,
+      "redundantClues": 0,
+      "avgClueDifficulty": 1.0
+    }
+  },
+  "questions": [
+    {
+      "kind": "mixing-result",
+      "ingredient1": 6,
+      "ingredient2": 7
+    }
+  ]
+}

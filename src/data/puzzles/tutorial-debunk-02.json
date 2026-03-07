@@ -1,0 +1,58 @@
+{
+  "id": "tutorial-debunk-02",
+  "title": "The Failed Attempt",
+  "description": "Someone tried to debunk a theory \u2014 and failed. Does a failed debunk tell you anything?",
+  "difficulty": "tutorial",
+  "clues": [
+    {
+      "kind": "assignment",
+      "ingredient": 2,
+      "alchemical": 3
+    },
+    {
+      "kind": "aspect",
+      "ingredient": 1,
+      "color": "R",
+      "sign": "+"
+    },
+    {
+      "kind": "debunk",
+      "variant": "apprentice",
+      "ingredient": 1,
+      "color": "G",
+      "sign": "+",
+      "outcome": "failure"
+    }
+  ],
+  "solution": {
+    "1": 6,
+    "2": 3,
+    "3": 1,
+    "4": 2,
+    "5": 4,
+    "6": 5,
+    "7": 7,
+    "8": 8
+  },
+  "hints": [
+    {
+      "level": 1,
+      "text": "A failed debunk means the card reader confirmed the theory \u2014 but you still see the true sign. Failure is not silence: you learn G+ is the true sign for ingredient 1."
+    },
+    {
+      "level": 2,
+      "text": "Ingredient 1 has R+ (from the sheet) and G+ (from the failed debunk). Which alchemicals have both R+ and G+?"
+    },
+    {
+      "level": 3,
+      "text": "R+ and G+ narrows ingredient 1 to Ppn or PPP. Both mix with pNn (ingredient 2) to give R+, so the answer is R+ regardless of which one it is."
+    }
+  ],
+  "questions": [
+    {
+      "kind": "mixing-result",
+      "ingredient1": 1,
+      "ingredient2": 2
+    }
+  ]
+}

@@ -1,0 +1,64 @@
+{
+  "id": "tutorial-mix-03",
+  "title": "Deduce from Results",
+  "description": "You ran two experiments involving ingredient 1. What will mixing ingredient 1 with ingredient 7 (NNN) produce?",
+  "difficulty": "tutorial",
+  "clues": [
+    {
+      "kind": "mixing",
+      "ingredient1": 1,
+      "ingredient2": 3,
+      "result": {
+        "type": "potion",
+        "color": "B",
+        "sign": "-"
+      }
+    },
+    {
+      "kind": "mixing",
+      "ingredient1": 1,
+      "ingredient2": 5,
+      "result": {
+        "type": "potion",
+        "color": "R",
+        "sign": "-"
+      }
+    },
+    {
+      "kind": "assignment",
+      "ingredient": 7,
+      "alchemical": 7
+    }
+  ],
+  "solution": {
+    "1": 1,
+    "2": 2,
+    "3": 3,
+    "4": 4,
+    "5": 5,
+    "6": 6,
+    "7": 7,
+    "8": 8
+  },
+  "hints": [
+    {
+      "level": 1,
+      "text": "What do the B\u2212 and R\u2212 results tell you about ingredient 1?"
+    },
+    {
+      "level": 2,
+      "text": "Ingredient 1 produces B\u2212 with ingredient 3, and R\u2212 with ingredient 5. What alchemical has both B\u2212 and R\u2212 aspects?"
+    },
+    {
+      "level": 3,
+      "text": "Ingredient 1 must be npN: R=small\u2212, B=large\u2212. npN + NNN: B has same signs (both \u2212) but... wait, check R: both \u2212, small vs large \u2192 resolves R\u2212."
+    }
+  ],
+  "questions": [
+    {
+      "kind": "mixing-result",
+      "ingredient1": 1,
+      "ingredient2": 7
+    }
+  ]
+}
