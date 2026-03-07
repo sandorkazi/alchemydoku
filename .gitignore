@@ -120,3 +120,4 @@ app.*.symbols
 
 node_modules
 .DS_Store
+.vite
