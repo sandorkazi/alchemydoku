@@ -33,6 +33,13 @@ function saveFreePlay(v: boolean) {
   try { localStorage.setItem('alch-freeplay', v ? '1' : '0'); } catch { /* ignore */ }
 }
 
+function loadExpanded(): boolean {
+  try { return localStorage.getItem('alch-expanded') === '1'; } catch { return false; }
+}
+function saveExpanded(v: boolean) {
+  try { localStorage.setItem('alch-expanded', v ? '1' : '0'); } catch { /* ignore */ }
+}
+
 function loadCompleted(): Set<string> {
   try {
     const raw = localStorage.getItem('alch-completed');
@@ -248,6 +255,7 @@ export default function App() {
   const [completed, setCompleted]       = useState<Set<string>>(loadCompleted);
   const [freePlay, setFreePlay]         = useState<boolean>(loadFreePlay);
   const [lastPuzzleId, setLastPuzzleId] = useState<string | null>(loadLastPuzzle);
+  const [expanded, setExpanded]         = useState<boolean>(loadExpanded);
   function isCollectionUnlocked(col: Collection): boolean {
     if (freePlay) return true;
     if (!col.unlockedAfter) return true;
@@ -430,6 +438,46 @@ export default function App() {
               />
             </button>
           </div>
+
+          {/* Expanded Rules toggle */}
+          <div className="flex items-center justify-between">
+            <div>
+              <span className="text-xs font-semibold text-gray-600">Expanded rules</span>
+              <p className="text-[10px] text-gray-400 leading-tight mt-0.5">
+                Includes the expansion mechanics
+              </p>
+            </div>
+            <button
+              role="switch"
+              aria-checked={expanded}
+              aria-label="Expanded rules"
+              onClick={() => { const next = !expanded; setExpanded(next); saveExpanded(next); }}
+              className={`relative inline-flex h-6 w-11 shrink-0 cursor-pointer rounded-full border-2
+                border-transparent transition-colors duration-200
+                focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-amber-400
+                ${expanded ? 'bg-amber-500' : 'bg-gray-200'}`}
+            >
+              <span
+                className={`pointer-events-none inline-block h-5 w-5 rounded-full bg-white shadow
+                  ring-0 transition-transform duration-200
+                  ${expanded ? 'translate-x-5' : 'translate-x-0'}`}
+              />
+            </button>
+          </div>
+
+          {/* Under construction banner */}
+          {expanded && (
+            <div className="flex items-start gap-3 bg-amber-50 border border-amber-200
+                           rounded-xl px-4 py-3 text-sm">
+              <span className="text-xl shrink-0" aria-hidden="true">🚧</span>
+              <div>
+                <p className="font-semibold text-amber-800">Under construction</p>
+                <p className="text-amber-700 text-xs mt-0.5">
+                  The expanded puzzle set is not yet implemented. Check back soon!
+                </p>
+              </div>
+            </div>
+          )}
 
           {/* Progress + reset */}
           <div className="flex items-center justify-between">
