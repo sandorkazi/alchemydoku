@@ -1,5 +1,4 @@
-import { useState, useEffect } from 'react';
-import { BrowserRouter, useNavigate, useParams, useLocation } from 'react-router-dom';
+import { useState } from 'react';
 import { ALL_PUZZLES, COLLECTIONS, PUZZLE_MAP } from './data/puzzles/index';
 import { PuzzleSolverPage } from './pages/PuzzleSolverPage';
 import { TutorialPage } from './pages/TutorialPage';
@@ -26,37 +25,41 @@ type View =
 
 // ─── Persistence ──────────────────────────────────────────────────────────────
 
-function loadFreePlay(): boolean {
-  try { return localStorage.getItem('alch-freeplay') === '1'; } catch { return false; }
+function loadMode(): 'base' | 'expanded' {
+  try { return localStorage.getItem('alch-mode') === 'expanded' ? 'expanded' : 'base'; }
+  catch { return 'base'; }
 }
-function saveFreePlay(v: boolean) {
-  try { localStorage.setItem('alch-freeplay', v ? '1' : '0'); } catch { /* ignore */ }
-}
-
-function loadExpanded(): boolean {
-  try { return localStorage.getItem('alch-expanded') === '1'; } catch { return false; }
-}
-function saveExpanded(v: boolean) {
-  try { localStorage.setItem('alch-expanded', v ? '1' : '0'); } catch { /* ignore */ }
+function saveMode(m: 'base' | 'expanded') {
+  try { localStorage.setItem('alch-mode', m); } catch { /* ignore */ }
 }
 
-function loadCompleted(): Set<string> {
+function loadFreePlay(mode: 'base' | 'expanded'): boolean {
+  try { return localStorage.getItem(`alch-freeplay-${mode}`) === '1'; } catch { return false; }
+}
+function saveFreePlay(mode: 'base' | 'expanded', v: boolean) {
+  try { localStorage.setItem(`alch-freeplay-${mode}`, v ? '1' : '0'); } catch { /* ignore */ }
+}
+
+function loadCompleted(mode: 'base' | 'expanded'): Set<string> {
   try {
-    const raw = localStorage.getItem('alch-completed');
+    const raw = localStorage.getItem(`alch-completed-${mode}`);
     return new Set(raw ? JSON.parse(raw) : []);
   } catch { return new Set(); }
 }
-function saveCompleted(ids: Set<string>) {
-  try { localStorage.setItem('alch-completed', JSON.stringify([...ids])); } catch { /* ignore */ }
+function saveCompleted(mode: 'base' | 'expanded', ids: Set<string>) {
+  try { localStorage.setItem(`alch-completed-${mode}`, JSON.stringify([...ids])); } catch { /* ignore */ }
 }
-function clearAllProgress() {
-  try { localStorage.removeItem('alch-completed'); localStorage.removeItem('alch-last-puzzle'); } catch { /* ignore */ }
+function clearAllProgress(mode: 'base' | 'expanded') {
+  try {
+    localStorage.removeItem(`alch-completed-${mode}`);
+    localStorage.removeItem(`alch-last-puzzle-${mode}`);
+  } catch { /* ignore */ }
 }
-function loadLastPuzzle(): string | null {
-  try { return localStorage.getItem('alch-last-puzzle'); } catch { return null; }
+function loadLastPuzzle(mode: 'base' | 'expanded'): string | null {
+  try { return localStorage.getItem(`alch-last-puzzle-${mode}`); } catch { return null; }
 }
-function saveLastPuzzle(id: string) {
-  try { localStorage.setItem('alch-last-puzzle', id); } catch { /* ignore */ }
+function saveLastPuzzle(mode: 'base' | 'expanded', id: string) {
+  try { localStorage.setItem(`alch-last-puzzle-${mode}`, id); } catch { /* ignore */ }
 }
 
 // ─── Style maps ───────────────────────────────────────────────────────────────
@@ -75,28 +78,47 @@ const DIFF_BORDER: Record<string, string> = {
   hard:     'border-red-200    hover:border-red-400',
 };
 
+// ─── Mode switcher (top of every home-level page) ─────────────────────────────
+
+function ModeSwitcher({
+  mode,
+  onChange,
+}: {
+  mode: 'base' | 'expanded';
+  onChange: (m: 'base' | 'expanded') => void;
+}) {
+  return (
+    <div className="flex items-center bg-gray-100 rounded-xl p-1 gap-1 w-full max-w-xs mx-auto">
+      {(['base', 'expanded'] as const).map(m => (
+        <button
+          key={m}
+          onClick={() => onChange(m)}
+          aria-pressed={mode === m}
+          className={`flex-1 py-1.5 px-3 rounded-lg text-sm font-semibold transition-all duration-200
+            focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-indigo-400
+            ${mode === m
+              ? m === 'expanded'
+                ? 'bg-amber-500 text-white shadow-sm'
+                : 'bg-white text-gray-900 shadow-sm'
+              : 'text-gray-500 hover:text-gray-700'
+            }`}
+        >
+          {m === 'base' ? '⚗️ Base game' : '✨ Expanded'}
+        </button>
+      ))}
+    </div>
+  );
+}
 
 // ─── Complexity pips ──────────────────────────────────────────────────────────
-// Shows the puzzle's computed complexity score (0–100) as 5 filled/empty dots.
-// Only rendered when metadata.complexityScore is present.
 
 function ComplexityPips({ score }: { score: number }) {
-  // Map 0–100 to 1–5 pips. Thresholds tuned to the actual score distribution:
-  // easy: 36–58, medium: 23–58, hard: 23–64
   const filled = score <= 35 ? 1 : score <= 45 ? 2 : score <= 52 ? 3 : score <= 58 ? 4 : 5;
   return (
-    <span
-      className="inline-flex items-center gap-0.5"
-      title={`Complexity: ${score}/100`}
-      aria-label={`Complexity ${filled} of 5`}
-    >
+    <span className="inline-flex items-center gap-0.5" title={`Complexity: ${score}/100`}>
       {[1, 2, 3, 4, 5].map(i => (
-        <span
-          key={i}
-          className={`inline-block w-1.5 h-1.5 rounded-full transition-colors ${
-            i <= filled ? 'bg-indigo-400' : 'bg-gray-200'
-          }`}
-        />
+        <span key={i} className={`inline-block w-1.5 h-1.5 rounded-full transition-colors
+          ${i <= filled ? 'bg-indigo-400' : 'bg-gray-200'}`} />
       ))}
     </span>
   );
@@ -105,15 +127,9 @@ function ComplexityPips({ score }: { score: number }) {
 // ─── Collection card ──────────────────────────────────────────────────────────
 
 function CollectionCard({
-  col,
-  completed,
-  locked,
-  onOpen,
+  col, completed, locked, onOpen,
 }: {
-  col: Collection;
-  completed: number;
-  locked: boolean;
-  onOpen: () => void;
+  col: Collection; completed: number; locked: boolean; onOpen: () => void;
 }) {
   const total = col.puzzleIds.length;
   const pct   = total > 0 ? Math.round((completed / total) * 100) : 0;
@@ -175,13 +191,9 @@ function CollectionCard({
 // ─── Puzzle row ───────────────────────────────────────────────────────────────
 
 function PuzzleRow({
-  puzzle,
-  isDone,
-  onPlay,
+  puzzle, isDone, onPlay,
 }: {
-  puzzle: Puzzle;
-  isDone: boolean;
-  onPlay: () => void;
+  puzzle: Puzzle; isDone: boolean; onPlay: () => void;
 }) {
   const [confirmReset, setConfirmReset] = useState(false);
 
@@ -189,7 +201,7 @@ function PuzzleRow({
     e.stopPropagation();
     if (confirmReset) {
       clearPuzzleState(puzzle.id);
-      onPlay(); // navigate straight in after reset
+      onPlay();
       setConfirmReset(false);
     } else {
       setConfirmReset(true);
@@ -248,14 +260,75 @@ const TUTORIAL_STEPS = {
   selling: SELLING_TUTORIAL_STEPS,
 };
 
-// ─── App root ─────────────────────────────────────────────────────────────────
+// ─── Expanded home (under construction) ──────────────────────────────────────
+
+function ExpandedHome({ onModeChange }: { onModeChange: (m: 'base' | 'expanded') => void }) {
+  return (
+    <div className="min-h-screen bg-amber-50 animate-fadein">
+      <div className="max-w-xl mx-auto px-4 py-10 space-y-8">
+
+        {/* Mode switcher */}
+        <ModeSwitcher mode="expanded" onChange={onModeChange} />
+
+        {/* Hero */}
+        <div className="text-center space-y-2">
+          <div className="text-5xl" aria-hidden="true">✨</div>
+          <h1 className="text-3xl font-bold text-gray-900">Expanded Rules</h1>
+          <p className="text-gray-500 text-sm">
+            Advanced alchemists mechanics and new puzzle types.
+          </p>
+        </div>
+
+        {/* Under construction */}
+        <div className="rounded-2xl border-2 border-amber-300 bg-white p-8 text-center space-y-4 shadow-sm">
+          <div className="text-6xl" aria-hidden="true">🚧</div>
+          <div>
+            <h2 className="text-xl font-bold text-amber-800">Under construction</h2>
+            <p className="text-amber-700 text-sm mt-2 max-w-xs mx-auto">
+              The expanded puzzle set is not yet implemented.
+              Check back soon — it will have its own independent progress track.
+            </p>
+          </div>
+          <button
+            onClick={() => onModeChange('base')}
+            className="mt-2 inline-flex items-center gap-2 text-sm font-semibold text-indigo-600
+                       hover:text-indigo-800 transition-colors focus-visible:outline-none
+                       focus-visible:ring-2 focus-visible:ring-indigo-400 rounded"
+          >
+            ← Back to base game
+          </button>
+        </div>
+
+      </div>
+    </div>
+  );
+}
+
+// ─── Base-game App ────────────────────────────────────────────────────────────
 
 export default function App() {
+  const [mode, setMode]                 = useState<'base' | 'expanded'>(loadMode);
   const [view, setView]                 = useState<View>({ kind: 'home' });
-  const [completed, setCompleted]       = useState<Set<string>>(loadCompleted);
-  const [freePlay, setFreePlay]         = useState<boolean>(loadFreePlay);
-  const [lastPuzzleId, setLastPuzzleId] = useState<string | null>(loadLastPuzzle);
-  const [expanded, setExpanded]         = useState<boolean>(loadExpanded);
+  const [completed, setCompleted]       = useState<Set<string>>(() => loadCompleted(loadMode()));
+  const [freePlay, setFreePlay]         = useState<boolean>(() => loadFreePlay(loadMode()));
+  const [lastPuzzleId, setLastPuzzleId] = useState<string | null>(() => loadLastPuzzle(loadMode()));
+
+  // When mode switches, reload per-mode state and reset to home
+  function handleModeChange(m: 'base' | 'expanded') {
+    saveMode(m);
+    setMode(m);
+    setView({ kind: 'home' });
+    setCompleted(loadCompleted(m));
+    setFreePlay(loadFreePlay(m));
+    setLastPuzzleId(loadLastPuzzle(m));
+  }
+
+  // ── Expanded mode: completely separate experience ──────────────────────────
+  if (mode === 'expanded') {
+    return <ExpandedHome onModeChange={handleModeChange} />;
+  }
+
+  // ── Helpers ────────────────────────────────────────────────────────────────
   function isCollectionUnlocked(col: Collection): boolean {
     if (freePlay) return true;
     if (!col.unlockedAfter) return true;
@@ -268,12 +341,12 @@ export default function App() {
     const next = new Set(completed);
     next.add(puzzleId);
     setCompleted(next);
-    saveCompleted(next);
+    saveCompleted('base', next);
   }
 
   function openPuzzle(puzzleId: string, colId: string) {
     setLastPuzzleId(puzzleId);
-    saveLastPuzzle(puzzleId);
+    saveLastPuzzle('base', puzzleId);
     setView({ kind: 'puzzle', puzzleId, colId });
   }
 
@@ -371,6 +444,9 @@ export default function App() {
     <div className="min-h-screen bg-gray-50 animate-fadein">
       <div className="max-w-xl mx-auto px-4 py-10 space-y-8">
 
+        {/* Mode switcher — very top */}
+        <ModeSwitcher mode="base" onChange={handleModeChange} />
+
         {/* Hero */}
         <div className="text-center space-y-2">
           <div className="text-5xl" aria-hidden="true">⚗️</div>
@@ -425,59 +501,21 @@ export default function App() {
               role="switch"
               aria-checked={freePlay}
               aria-label="Unlock all collections"
-              onClick={() => { const next = !freePlay; setFreePlay(next); saveFreePlay(next); }}
+              onClick={() => {
+                const next = !freePlay;
+                setFreePlay(next);
+                saveFreePlay('base', next);
+              }}
               className={`relative inline-flex h-6 w-11 shrink-0 cursor-pointer rounded-full border-2
                 border-transparent transition-colors duration-200
                 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-indigo-400
                 ${freePlay ? 'bg-indigo-600' : 'bg-gray-200'}`}
             >
-              <span
-                className={`pointer-events-none inline-block h-5 w-5 rounded-full bg-white shadow
-                  ring-0 transition-transform duration-200
-                  ${freePlay ? 'translate-x-5' : 'translate-x-0'}`}
-              />
+              <span className={`pointer-events-none inline-block h-5 w-5 rounded-full bg-white shadow
+                ring-0 transition-transform duration-200
+                ${freePlay ? 'translate-x-5' : 'translate-x-0'}`} />
             </button>
           </div>
-
-          {/* Expanded Rules toggle */}
-          <div className="flex items-center justify-between">
-            <div>
-              <span className="text-xs font-semibold text-gray-600">Expanded rules</span>
-              <p className="text-[10px] text-gray-400 leading-tight mt-0.5">
-                Includes the expansion mechanics
-              </p>
-            </div>
-            <button
-              role="switch"
-              aria-checked={expanded}
-              aria-label="Expanded rules"
-              onClick={() => { const next = !expanded; setExpanded(next); saveExpanded(next); }}
-              className={`relative inline-flex h-6 w-11 shrink-0 cursor-pointer rounded-full border-2
-                border-transparent transition-colors duration-200
-                focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-amber-400
-                ${expanded ? 'bg-amber-500' : 'bg-gray-200'}`}
-            >
-              <span
-                className={`pointer-events-none inline-block h-5 w-5 rounded-full bg-white shadow
-                  ring-0 transition-transform duration-200
-                  ${expanded ? 'translate-x-5' : 'translate-x-0'}`}
-              />
-            </button>
-          </div>
-
-          {/* Under construction banner */}
-          {expanded && (
-            <div className="flex items-start gap-3 bg-amber-50 border border-amber-200
-                           rounded-xl px-4 py-3 text-sm">
-              <span className="text-xl shrink-0" aria-hidden="true">🚧</span>
-              <div>
-                <p className="font-semibold text-amber-800">Under construction</p>
-                <p className="text-amber-700 text-xs mt-0.5">
-                  The expanded puzzle set is not yet implemented. Check back soon!
-                </p>
-              </div>
-            </div>
-          )}
 
           {/* Progress + reset */}
           <div className="flex items-center justify-between">
@@ -487,7 +525,7 @@ export default function App() {
             {completed.size > 0 && (
               <button
                 onClick={() => {
-                  clearAllProgress();
+                  clearAllProgress('base');
                   setCompleted(new Set());
                   setLastPuzzleId(null);
                 }}
