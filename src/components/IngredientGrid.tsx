@@ -10,8 +10,8 @@ const BOARD_DISPLAY_ORDER: IngredientId[] = [3, 1, 7, 2, 4, 5, 6, 8];
 const ALCH_IDS: AlchemicalId[] = [1, 2, 3, 4, 5, 6, 7, 8];
 
 const TINT_COLORS = [
-  '#7C3FD4', '#72B800', '#8B6020', '#E8A800',
-  '#2060D8', '#3D8A4A', '#D43020', '#3A7A96',
+  '#6C4FA3', '#8DBF3F', '#6B5A3A', '#D4A437',
+  '#3F6FB6', '#979c91', '#B23A2E', '#23293D',
 ];
 
 // ─── Tool types ───────────────────────────────────────────────────────────────
