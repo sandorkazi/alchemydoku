@@ -48,6 +48,25 @@ function buildGridFilteredWorlds(gridState: Record<number, Record<number, string
   return buf.slice(0, n) as WorldSet;
 }
 
+// ─── Contradiction detector ──────────────────────────────────────────────────
+
+function isGridContradicted(gridState: Record<number, Record<number, string>>): boolean {
+  const confirmedPerCol: Record<number, number> = {};
+  const confirmedPerRow: Record<number, number> = {};
+  for (let s = 1; s <= 8; s++) {
+    for (let a = 1; a <= 8; a++) {
+      if (gridState[s]?.[a] === 'confirmed') {
+        confirmedPerCol[s] = (confirmedPerCol[s] ?? 0) + 1;
+        confirmedPerRow[a] = (confirmedPerRow[a] ?? 0) + 1;
+      }
+    }
+  }
+  return (
+    Object.values(confirmedPerCol).some(n => n > 1) ||
+    Object.values(confirmedPerRow).some(n => n > 1)
+  );
+}
+
 function TruthModeModal({ onConfirm, onCancel }: { onConfirm: () => void; onCancel: () => void }) {
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 px-4">
@@ -95,6 +114,7 @@ export function ExpandedMixSimulator({
 
   const activeWorlds: WorldSet = mode === 'grid' ? gridWorlds : state.worlds;
 
+  const gridContradicted = mode === 'grid' && isGridContradicted(state.gridState);
   const same         = i1 === i2;
   const singleResult = !same ? deduceMixingResult(activeWorlds, i1, i2) : null;
   const possible     = !same ? getPossibleResults(activeWorlds, i1, i2)  : [];
@@ -152,14 +172,23 @@ export function ExpandedMixSimulator({
 
         {same && <p className="text-xs text-amber-600">Choose two different ingredients.</p>}
 
-        {!same && singleResult && (
+        {!same && gridContradicted && (
+          <div className="bg-rose-50 border border-rose-200 rounded-lg px-3 py-2">
+            <p className="text-xs text-rose-700 font-medium">⚠ Grid contradiction</p>
+            <p className="text-xs text-rose-600 mt-0.5">
+              Your grid has conflicting marks (multiple confirmed cells in one column or row).
+              Fix the grid to use simulator in Grid mode.
+            </p>
+          </div>
+        )}
+        {!same && !gridContradicted && singleResult && (
           <div className="flex items-center gap-2 bg-green-50 border border-green-200 rounded-lg px-3 py-2">
             <span className="text-xs text-green-700 font-medium">Determined:</span>
             <PotionImage result={singleResult} width={72} />
           </div>
         )}
 
-        {!same && !singleResult && possible.length > 0 && (
+        {!same && !gridContradicted && !singleResult && possible.length > 0 && (
           <div className="bg-amber-50 border border-amber-200 rounded-lg px-3 py-2 space-y-1">
             <span className="text-xs text-amber-700 font-medium">
               {possible.length} possible result{possible.length > 1 ? 's' : ''}:
@@ -172,7 +201,7 @@ export function ExpandedMixSimulator({
           </div>
         )}
 
-        {!same && possible.length === 0 && (
+        {!same && !gridContradicted && possible.length === 0 && (
           <p className="text-xs text-gray-400">
             {mode === 'grid'
               ? 'No worlds match your current grid marks for this pair.'
