@@ -53,12 +53,11 @@ function loadSolverState(puzzleId: string): { gridState: GridState; notes: Recor
     const raw = localStorage.getItem(`solver-${puzzleId}`);
     if (!raw) return null;
     const parsed = JSON.parse(raw);
-    // Validate basic shape
     if (typeof parsed !== 'object' || !parsed.gridState) return null;
     return {
-      gridState: parsed.gridState as GridState,
-      notes:     (parsed.notes ?? {}) as Record<string,string>,
-      hintLevel: (parsed.hintLevel ?? 0) as number,
+      gridState:  parsed.gridState  as GridState,
+      notes:      (parsed.notes ?? {}) as Record<string,string>,
+      hintLevel:  typeof parsed.hintLevel === 'number' ? parsed.hintLevel : 0,
     };
   } catch { return null; }
 }
@@ -254,16 +253,15 @@ export function SolverProvider({ puzzle, children }: { puzzle: Puzzle; children:
 
   useEffect(() => {
     try {
-      // Don't persist completed puzzles' full grid (saves space; can be replayed)
       if (!state.completed) {
         localStorage.setItem(`solver-${puzzle.id}`, JSON.stringify({
-          gridState: state.gridState,
-          notes:     state.notes,
-          hintLevel: state.hintLevel,
+          gridState:  state.gridState,
+          notes:      state.notes,
+          hintLevel:  state.hintLevel,
         }));
       }
     } catch { /* ignore */ }
-  }, [state.gridState, state.notes, state.hintLevel, state.completed, puzzle.id]);
+  }, [state.gridState, state.notes, state.completed, state.hintLevel, puzzle.id]);
 
   return (
     <SolverContext.Provider value={{ state, dispatch }}>

@@ -53,6 +53,11 @@ function clearAllProgress(mode: 'base' | 'expanded') {
   try {
     localStorage.removeItem(`alch-completed-${mode}`);
     localStorage.removeItem(`alch-last-puzzle-${mode}`);
+    // Also clear per-puzzle state (grid marks, notes, hints)
+    ALL_PUZZLES.forEach(p => {
+      localStorage.removeItem(`solver-${p.id}`);
+      localStorage.removeItem(`display-map-${p.id}`);
+    });
   } catch { /* ignore */ }
 }
 function loadLastPuzzle(mode: 'base' | 'expanded'): string | null {

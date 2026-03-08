@@ -88,7 +88,7 @@ function Cell({
         className="absolute inset-0 flex items-center justify-center pointer-events-none"
         style={{ opacity: 0.45 }}
       >
-        <AlchemicalImage id={alchId} width={36} />
+        <AlchemicalImage id={alchId} width={44} />
       </span>
 
       {/* Mark glyph — hidden when note text present */}
@@ -358,10 +358,10 @@ export function IngredientGrid({ onRandomize }: { onRandomize?: () => void }) {
                   const { index } = getIngredient(slotId);
                   const name = INGREDIENTS[displayId as 1].name;
                   return (
-                    <th key={slotId} className="px-1 pb-1 text-center align-bottom">
-                      <div className="mx-auto mb-1 rounded-full h-1.5" style={{ backgroundColor: tint, width: 28 }} />
+                    <th key={slotId} className="px-0.5 pb-0.5 text-center align-bottom">
+                      <div className="mx-auto mb-0.5 rounded-full h-1" style={{ backgroundColor: tint, width: 20 }} />
                       <span title={name} aria-label={name}>
-                        <IngredientIcon index={index} width={48} />
+                        <IngredientIcon index={index} width={36} />
                       </span>
                     </th>
                   );
@@ -371,16 +371,16 @@ export function IngredientGrid({ onRandomize }: { onRandomize?: () => void }) {
             <tbody>
               {ALCH_IDS.map(alchId => (
                 <tr key={alchId} className="border-t border-gray-100">
-                  <td className="pr-2 py-0.5">
+                  <td className="pr-1 py-0 align-middle">
                     <div className="flex items-center justify-end">
-                      <AlchemicalDisplay id={alchId} elemWidth={66} />
+                      <AlchemicalDisplay id={alchId} elemWidth={48} />
                     </div>
                   </td>
                   {colData.map(({ slotId, tint }) => {
                     const key = noteKey(slotId, alchId);
                     const isEditing = editingCell?.ing === slotId && editingCell?.alch === alchId;
                     return (
-                      <td key={slotId} className="px-1 py-0.5 text-center">
+                      <td key={slotId} className="px-0.5 py-0 text-center align-middle">
                         <div className="relative">
                           <Cell
                             cellState={gridState[slotId]?.[alchId] ?? 'unknown'}

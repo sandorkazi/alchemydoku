@@ -1,48 +1,97 @@
 import React from 'react';
-import { AlchemicalImage, SignedElemImage } from './GameSprites';
+import { AlchemicalImage, IngredientIcon, SignedElemImage } from './GameSprites';
 import { useSolver } from '../contexts/SolverContext';
+import { INGREDIENTS } from '../data/ingredients';
 import type { AlchemicalId, Color, Sign } from '../types';
+import type { DisplayMap } from '../contexts/SolverContext';
 
-type Hint = { level: number; text: string };
-
-// ─── Abbreviation → icon substitution ────────────────────────────────────────
+// ─── Alch code → ID ──────────────────────────────────────────────────────────
 
 const ALCH_CODE_MAP: Record<string, AlchemicalId> = {
   npN: 1, pnP: 2, pNn: 3, nPp: 4, Nnp: 5, Ppn: 6, NNN: 7, PPP: 8,
 };
 
-/**
- * Splits hint text on alchemical codes (npN, PPP …) and colour+sign tokens
- * (G+, R−, B- …) and replaces them with inline sprite icons.
- */
-function renderHint(text: string): React.ReactNode {
-  // Split on: alchemical codes | RGB followed by + or − (ASCII or unicode)
-  const TOKEN = /(NNN|PPP|npN|pnP|pNn|nPp|Nnp|Ppn|[RGB][+\-\u2212])/g;
+// Friendly short labels shown next to alchemical images in hint text
+const ALCH_LABEL: Record<AlchemicalId, string> = {
+  1: 'R−G+B−', 2: 'R+G−B+', 3: 'R+G−B−', 4: 'R−G+B+',
+  5: 'R−G−B+', 6: 'R+G+B−', 7: 'All−',    8: 'All+',
+};
+
+// Friendly color names for potion / sign tokens
+const COLOR_NAME: Record<Color, string> = { R: 'Red', G: 'Green', B: 'Blue' };
+
+// ─── Token rendering ──────────────────────────────────────────────────────────
+
+function renderHint(text: string, displayMap: DisplayMap): React.ReactNode {
+  // Order matters: longer / more specific patterns first
+  const TOKEN = /(ingredient\s+[1-8]|NNN|PPP|npN|pnP|pNn|nPp|Nnp|Ppn|[RGB][+\-\u2212])/gi;
   const parts = text.split(TOKEN);
+
   return (
     <>
       {parts.map((part, i) => {
-        const alchId = ALCH_CODE_MAP[part];
+        // ── Alchemical code ──────────────────────────────────────────────────
+        // Normalise case for lookup (codes are mixed-case)
+        const normalised = part.replace(/nnn/i, 'NNN').replace(/ppp/i, 'PPP')
+          .replace(/npn/i, 'npN').replace(/pnp/i, 'pnP')
+          .replace(/pnn/i, 'pNn').replace(/npp/i, 'nPp')
+          .replace(/nnp/i, 'Nnp').replace(/ppn/i, 'Ppn');
+        const alchId = ALCH_CODE_MAP[normalised];
         if (alchId !== undefined) {
           return (
             <span
               key={i}
-              className="inline-flex align-middle mx-0.5"
-              title={part}
+              className="inline-flex items-center gap-0.5 align-middle mx-0.5
+                         bg-slate-100 border border-slate-200 rounded px-1 py-0.5
+                         text-[11px] font-mono text-slate-700 leading-none"
+              title={ALCH_LABEL[alchId]}
             >
-              <AlchemicalImage id={alchId} width={18} />
+              <AlchemicalImage id={alchId} width={16} />
+              <span>{ALCH_LABEL[alchId]}</span>
             </span>
           );
         }
-        if (/^[RGB][+\-\u2212]$/.test(part)) {
-          const color = part[0] as Color;
-          const sign  = (part[1] === '\u2212' ? '-' : part[1]) as Sign;
+
+        // ── ingredient N ─────────────────────────────────────────────────────
+        const ingMatch = part.match(/^ingredient\s+([1-8])$/i);
+        if (ingMatch) {
+          const slotId    = parseInt(ingMatch[1], 10);
+          const displayId = displayMap[slotId] ?? slotId;
+          const iconIdx   = (displayId - 1) as 0|1|2|3|4|5|6|7;
+          const name      = INGREDIENTS[displayId as keyof typeof INGREDIENTS]?.name ?? `#${slotId}`;
           return (
-            <span key={i} className="inline-flex align-middle mx-0.5">
-              <SignedElemImage color={color} sign={sign} width={18} />
+            <span
+              key={i}
+              className="inline-flex items-center gap-0.5 align-middle mx-0.5
+                         bg-amber-50 border border-amber-200 rounded px-1 py-0.5
+                         text-[11px] font-semibold text-amber-800 leading-none"
+              title={name}
+            >
+              <IngredientIcon index={iconIdx} width={16} />
+              <span>{name}</span>
             </span>
           );
         }
+
+        // ── Color + sign  e.g. R−  G+  B- ───────────────────────────────────
+        if (/^[RGB][+\-\u2212]$/i.test(part)) {
+          const color = part[0].toUpperCase() as Color;
+          const sign  = (part[1] === '\u2212' ? '-' : part[1]) as Sign;
+          const label = `${COLOR_NAME[color]}${sign === '+' ? '+' : '−'}`;
+          return (
+            <span
+              key={i}
+              className="inline-flex items-center gap-0.5 align-middle mx-0.5
+                         bg-white border border-gray-200 rounded px-1 py-0.5
+                         text-[11px] font-semibold text-gray-700 leading-none"
+              title={label}
+            >
+              <SignedElemImage color={color} sign={sign} width={16} />
+              <span>{color}{sign === '-' ? '−' : '+'}</span>
+            </span>
+          );
+        }
+
         return <span key={i}>{part}</span>;
       })}
     </>
@@ -51,9 +100,9 @@ function renderHint(text: string): React.ReactNode {
 
 // ─── Component ────────────────────────────────────────────────────────────────
 
-export function HintDrawer({ hints }: { hints?: Hint[] }) {
+export function HintDrawer({ hints }: { hints?: { level: number; text: string }[] }) {
   const { state, dispatch } = useSolver();
-  const { hintLevel, completed } = state;
+  const { hintLevel, completed, displayMap } = state;
 
   if (!hints || hints.length === 0) return null;
 
@@ -77,7 +126,7 @@ export function HintDrawer({ hints }: { hints?: Hint[] }) {
               <span className="text-xs font-semibold text-amber-500 uppercase tracking-wide mr-2">
                 Hint {h.level}
               </span>
-              {renderHint(h.text)}
+              {renderHint(h.text, displayMap)}
             </div>
           ))}
         </div>
