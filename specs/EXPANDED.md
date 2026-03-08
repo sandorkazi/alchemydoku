@@ -1,0 +1,353 @@
+# Alchemydoku — Expanded Rules: Design Specification
+
+> Status: fully implemented (phase 10d).
+> Golem Project mechanics: explicitly out of scope.
+> Debunking sub-game (question/answer about *how* to debunk): deferred.
+
+---
+
+## 1. Solar / Lunar Classification
+
+### Definition
+
+Every alchemical is either **Solar** or **Lunar**, determined by counting its negative aspects:
+
+| Negative aspects | Class |
+|-----------------|-------|
+| 0               | Solar |
+| 1               | Lunar |
+| 2               | Solar |
+| 3               | Lunar |
+
+Rule of thumb: *two negatives cancel* — even count → Solar, odd → Lunar.
+
+### Canonical table
+
+| Alch | Code | Negatives    | Class |
+|------|------|--------------|-------|
+| 1    | npN  | 2 (R− B−)    | Solar |
+| 2    | pnP  | 1 (G−)       | Lunar |
+| 3    | pNn  | 2 (G− B−)    | Solar |
+| 4    | nPp  | 1 (R−)       | Lunar |
+| 5    | Nnp  | 2 (R− G−)    | Solar |
+| 6    | Ppn  | 1 (B−)       | Lunar |
+| 7    | NNN  | 3            | Lunar |
+| 8    | PPP  | 0            | Solar |
+
+Solar: {1, 3, 5, 8} — Lunar: {2, 4, 6, 7}
+
+### Implementation
+
+`isSolar(alchId)` in `expanded/logic/solarLunar.ts` — pure function, no stored data.
+
+---
+
+## 2. Expanded Clue Types
+
+All expanded clue types live in `expanded/types.ts` and are filtered in
+`expanded/logic/worldSetExpanded.ts`.
+
+### 2a. Book Token (`kind: 'book'`)
+
+**Meaning:** The player privately learned (via the Card Reader action) that a specific
+ingredient's alchemical is Solar or Lunar.
+
+```ts
+{
+  kind: 'book';
+  ingredient: IngredientId;
+  result: 'solar' | 'lunar';
+}
+```
+
+**World filter:** Keep only worlds where `ingredient` maps to an alchemical of `result` class.
+
+**Display:** Ingredient icon + Solar/Lunar badge. Labelled "Book Token".
+
+---
+
+### 2b. Encyclopedia Article — Trusted (`kind: 'encyclopedia'`)
+
+**Meaning:** A published Royal Encyclopedia article. Lists exactly 4 ingredients with their
+true sign on one named aspect. All 4 entries are guaranteed correct.
+
+**Article structure:**
+- One **aspect** (`R`, `G`, or `B`)
+- Exactly **4 entries**, each binding one ingredient to a sign (`+` or `−`) on that aspect
+- The 4 signs can be any combination: all+, all−, 2+/2−, 3+/1−, etc.
+
+```ts
+{
+  kind: 'encyclopedia';
+  aspect: Color;
+  entries: [
+    { ingredient: IngredientId; sign: Sign },
+    { ingredient: IngredientId; sign: Sign },
+    { ingredient: IngredientId; sign: Sign },
+    { ingredient: IngredientId; sign: Sign },
+  ];
+}
+```
+
+**World filter:** Keep only worlds where every entry's ingredient has the stated sign on
+`aspect`.
+
+**Display:** Grid of 4 ingredient+sign pairs under an aspect header. Labelled "Encyclopedia — [Color]".
+
+---
+
+### 2c. Encyclopedia Article — Uncertain (`kind: 'encyclopedia_uncertain'`)
+
+**Meaning:** A published article that has not yet been debunked, but is not fully verified.
+At least 3 of the 4 entries are correct; one may be wrong.
+
+A player may physically hedge one slot with a coloured seal (face-down, hidden from others)
+to protect themselves if exactly that ingredient's entry is proven wrong. **This hedging
+mechanic is physical-only — it has no effect on world-set filtering.**
+
+```ts
+{
+  kind: 'encyclopedia_uncertain';
+  aspect: Color;
+  entries: [EncyclopediaEntry, EncyclopediaEntry, EncyclopediaEntry, EncyclopediaEntry];
+}
+```
+
+**World filter:** Keep only worlds where at least 3 of the 4 entries hold. This is strictly
+weaker than the trusted variant.
+
+**Display:** Same grid layout as trusted, with a note "≥ 3 of 4 entries are correct".
+Labelled "Uncertain Article — [Color]".
+
+---
+
+### 2d. Debunk Clue — Apprentice Variant (`kind: 'debunk_apprentice'`)
+
+**Meaning:** An article was challenged by revealing the **true** aspect sign of one
+ingredient, which directly contradicts the article's claim for that slot.
+
+The `sign` field carries the **truth** — what the ingredient's sign on `aspect` actually is.
+The article claimed the opposite. This truth is always filterable regardless of `successful`.
+
+`successful: true` means the debunk was accepted (the article was removed from the board).
+`successful: false` means the article had a hedge seal covering that slot, so the article
+survives — but the true sign is still public information.
+
+```ts
+{
+  kind: 'debunk_apprentice';
+  ingredient: IngredientId;
+  aspect: Color;
+  sign: Sign;           // the TRUE sign (contradicts the article's entry)
+  successful: boolean;
+}
+```
+
+**World filter:** Apply `sign` as a direct aspect constraint on `ingredient` — identical to
+a base `aspect` clue. Both success and failure cases reveal the same truth.
+
+**Display:** Ingredient icon + aspect icon + sign badge. Labelled "Debunk — Apprentice (truth)".
+Status badge shows "✓ Debunk succeeded" or "⚠ Blocked by hedge".
+
+---
+
+### 2e. Debunk Clue — Master Variant (`kind: 'debunk_master'`)
+
+**Meaning:** An article was challenged by producing a mixing result that contradicts one or
+two entries via the game's potion logic (possibly via the two-colour rule).
+
+Only the **claimed** result is shown — the true result of the mix is not public, especially
+on an unsuccessful attempt. Therefore:
+
+- `successful: true` → the claim was verified; the result is real and can constrain worlds.
+- `successful: false` → the claim was rejected; no world information is extractable.
+
+```ts
+{
+  kind: 'debunk_master';
+  ingredient1: IngredientId;
+  ingredient2: IngredientId;
+  claimed_result: PotionResult;
+  successful: boolean;
+}
+```
+
+**World filter:** If `successful`, keep only worlds where `mix(ingredient1, ingredient2)`
+produces `claimed_result`. If not successful, no filtering is applied.
+
+**Display:** Two ingredient icons + claimed potion label. Labelled "Debunk — Master (claim)".
+Status badge shows "✓ Debunk succeeded" or "✗ Claim rejected".
+
+---
+
+## 3. Expanded Question / Answer Types
+
+### 3a. Fourth Ingredient (`kind: 'encyclopedia_fourth'`)
+
+**Question:** Three entries of an article on `aspect` are known. The fourth slot has sign
+`missing_sign`. Which ingredient fills it?
+
+```ts
+// Question
+{
+  kind: 'encyclopedia_fourth';
+  aspect: Color;
+  known: [EncyclopediaEntry, EncyclopediaEntry, EncyclopediaEntry];
+  missing_sign: Sign;   // the sign the unknown ingredient has on aspect
+}
+
+// Answer: IngredientId (plain number, same representation as base alchemical answers)
+```
+
+**Computation:** Find the unique ingredient (not in `known`) that every remaining world
+agrees has `missing_sign` on `aspect`. Returns `null` if not uniquely determined.
+
+**Answer UI:** Grid of ingredient icons excluding `known` ingredients; click to select one.
+The sign is displayed in the question header — the player only needs to identify the ingredient.
+
+---
+
+### 3b. Which Aspect (`kind: 'encyclopedia_which_aspect'`)
+
+**Question:** These 4 (ingredient, sign) entries are known to form a valid article.
+Which aspect (color) does the article cover?
+
+```ts
+// Question
+{
+  kind: 'encyclopedia_which_aspect';
+  entries: [EncyclopediaEntry, EncyclopediaEntry, EncyclopediaEntry, EncyclopediaEntry];
+}
+
+// Answer
+{ kind: 'aspect_color'; color: Color }
+```
+
+**Computation:** Find the unique Color where every remaining world agrees each entry's
+ingredient has the stated sign on that color.
+
+**Answer UI:** Three colored aspect buttons (R/G/B).
+
+---
+
+### 3c. Solar or Lunar (`kind: 'solar_lunar'`)
+
+**Question:** Is this ingredient's alchemical Solar or Lunar?
+
+```ts
+// Question
+{ kind: 'solar_lunar'; ingredient: IngredientId }
+
+// Answer
+{ kind: 'solar_lunar_answer'; result: 'solar' | 'lunar' }
+```
+
+**Computation:** Check whether every remaining world maps `ingredient` to an alchemical of
+the same Solar/Lunar class.
+
+**Answer UI:** Two buttons: ☀️ Solar (gold) and 🌙 Lunar (blue/silver).
+
+---
+
+## 4. Grid UI Changes
+
+### 4a. Solar/Lunar row striping
+
+All 8 grid rows are visually distinguished by the Solar/Lunar class of their alchemical:
+
+- **Solar rows** (alch 1, 3, 5, 8): amber/gold left border
+- **Lunar rows** (alch 2, 4, 6, 7): blue/indigo left border
+
+The canonical ordering (1=S, 2=L, 3=S, 4=L, 5=S, 6=L, 7=L, 8=S) is not perfectly
+alternating — must be computed via `isSolar`, not assumed.
+
+### 4b. Solar/Lunar column marks
+
+Each ingredient column header gains two small toggle buttons:
+- ☀️ Solar button (gold when active)
+- 🌙 Lunar button (blue when active)
+
+These let the player record that they have deduced an ingredient's Solar/Lunar class.
+
+**State:** `solarLunarMarks: Record<number, 'solar' | 'lunar' | null>` in
+`ExpandedSolverState`. Persisted in the same `exp-solver-${id}` localStorage blob as
+`gridState`.
+
+**Auto-deduction:** When auto-deduction is on, if every remaining world agrees an ingredient
+is Solar (or Lunar), the mark is applied automatically — same pattern as cell auto-deduction.
+
+---
+
+## 5. Isolation Rule
+
+The expanded mode is fully isolated from the base game:
+
+- All expanded files live under `src/expanded/`
+- **Only `App.tsx` imports from `expanded/`** — no base game file imports from it
+- The expanded solver context (`ExpandedSolverProvider`) is entirely separate from the
+  base `SolverProvider` — they cannot be nested or mixed
+- `ExpandedHintDrawer` and `ExpandedMixSimulator` are expanded-specific clones of their
+  base counterparts that use `useExpandedSolver()` instead of `useSolver()`
+
+---
+
+## 6. Data Format — Expanded Puzzle JSON
+
+```jsonc
+{
+  "id": "exp-easy-enc-01",          // must start with "exp-"
+  "mode": "expanded",               // required marker
+  "title": "...",
+  "description": "...",
+  "difficulty": "tutorial" | "easy" | "medium" | "hard",
+  "clues": [ /* AnyClue[] — base clues or expanded clues */ ],
+  "questions": [ /* AnyQuestion[] */ ],
+  "solution": { "1": 3, "2": 6, ... },  // ingredient slot → alchemical id
+  "hints": [
+    { "level": 1, "text": "..." },
+    { "level": 2, "text": "..." }
+  ]
+}
+```
+
+Encyclopedia clue example:
+```jsonc
+{
+  "kind": "encyclopedia",
+  "aspect": "R",
+  "entries": [
+    { "ingredient": 1, "sign": "+" },
+    { "ingredient": 2, "sign": "+" },
+    { "ingredient": 3, "sign": "-" },
+    { "ingredient": 4, "sign": "-" }
+  ]
+}
+```
+
+Encyclopedia fourth question example:
+```jsonc
+{
+  "kind": "encyclopedia_fourth",
+  "aspect": "G",
+  "known": [
+    { "ingredient": 2, "sign": "+" },
+    { "ingredient": 4, "sign": "-" },
+    { "ingredient": 6, "sign": "+" }
+  ],
+  "missing_sign": "+"
+}
+```
+
+---
+
+## 7. Deferred / Out of Scope
+
+- **Golem Project mechanics**: separate expansion, not yet designed
+- **Debunking questions**: e.g. "What mix would successfully debunk this article?" —
+  deferred until question/answer types for debunking are designed
+- **Two-colour rule explanation**: pedagogical content only, no puzzle mechanic yet
+- **Double-trouble**: simultaneous two-article debunk via a single mix — deferred
+- **Uncertain article difficulty scoring**: `analyze_difficulty.py` not yet updated for
+  3-of-4 enumeration complexity
+- **Puzzle authoring validation**: `encyclopedia_which_aspect` questions should be validated
+  for answer uniqueness within the constrained world-set
