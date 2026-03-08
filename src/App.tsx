@@ -7,6 +7,7 @@ import { SELLING_TUTORIAL_STEPS } from './data/tutorials/selling';
 import type { TutorialId } from './contexts/TutorialContext';
 import type { Puzzle } from './types';
 import { clearPuzzleState } from './contexts/SolverContext';
+import { ExpandedHome as ExpandedHomeImpl } from './expanded/ExpandedHome';
 
 type Collection = {
   id: string;
@@ -268,45 +269,7 @@ const TUTORIAL_STEPS = {
 // ─── Expanded home (under construction) ──────────────────────────────────────
 
 function ExpandedHome({ onModeChange }: { onModeChange: (m: 'base' | 'expanded') => void }) {
-  return (
-    <div className="min-h-screen bg-amber-50 animate-fadein">
-      <div className="max-w-xl mx-auto px-4 py-10 space-y-8">
-
-        {/* Mode switcher */}
-        <ModeSwitcher mode="expanded" onChange={onModeChange} />
-
-        {/* Hero */}
-        <div className="text-center space-y-2">
-          <div className="text-5xl" aria-hidden="true">✨</div>
-          <h1 className="text-3xl font-bold text-gray-900">Expanded Rules</h1>
-          <p className="text-gray-500 text-sm">
-            Advanced alchemists mechanics and new puzzle types.
-          </p>
-        </div>
-
-        {/* Under construction */}
-        <div className="rounded-2xl border-2 border-amber-300 bg-white p-8 text-center space-y-4 shadow-sm">
-          <div className="text-6xl" aria-hidden="true">🚧</div>
-          <div>
-            <h2 className="text-xl font-bold text-amber-800">Under construction</h2>
-            <p className="text-amber-700 text-sm mt-2 max-w-xs mx-auto">
-              The expanded puzzle set is not yet implemented.
-              Check back soon — it will have its own independent progress track.
-            </p>
-          </div>
-          <button
-            onClick={() => onModeChange('base')}
-            className="mt-2 inline-flex items-center gap-2 text-sm font-semibold text-indigo-600
-                       hover:text-indigo-800 transition-colors focus-visible:outline-none
-                       focus-visible:ring-2 focus-visible:ring-indigo-400 rounded"
-          >
-            ← Back to base game
-          </button>
-        </div>
-
-      </div>
-    </div>
-  );
+  return <ExpandedHomeImpl onModeChange={onModeChange} />;
 }
 
 // ─── Base-game App ────────────────────────────────────────────────────────────
@@ -317,6 +280,8 @@ export default function App() {
   const [completed, setCompleted]       = useState<Set<string>>(() => loadCompleted(loadMode()));
   const [freePlay, setFreePlay]         = useState<boolean>(() => loadFreePlay(loadMode()));
   const [lastPuzzleId, setLastPuzzleId] = useState<string | null>(() => loadLastPuzzle(loadMode()));
+  /** Incremented on reset to force SolverProvider remount even for same puzzleId */
+  const [resetVersion, setResetVersion] = useState(0);
 
   // When mode switches, reload per-mode state and reset to home
   function handleModeChange(m: 'base' | 'expanded') {
@@ -381,7 +346,7 @@ export default function App() {
     const nextId = getNextPuzzleId(view.puzzleId, view.colId);
     return (
       <PuzzleSolverPage
-        key={view.puzzleId}
+        key={`${view.puzzleId}-${resetVersion}`}
         puzzle={puzzle}
         onBack={() => setView({ kind: 'collection', colId: view.colId })}
         onNext={() => {
@@ -533,11 +498,12 @@ export default function App() {
                   clearAllProgress('base');
                   setCompleted(new Set());
                   setLastPuzzleId(null);
+                  setResetVersion(v => v + 1);
                 }}
                 className="text-xs text-gray-400 hover:text-red-500 transition-colors"
-                title="Clear all solved puzzle marks"
+                title="Clear all base game progress and grid marks"
               >
-                ✕ Reset all progress
+                ✕ Reset base game progress
               </button>
             )}
           </div>
