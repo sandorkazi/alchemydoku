@@ -13,12 +13,12 @@ import { useState, useRef, useEffect, useCallback } from 'react';
 import { INGREDIENTS } from '../../data/ingredients';
 import { ALCHEMICALS } from '../../data/alchemicals';
 import { useExpandedSolver, useExpandedIngredient } from '../contexts/ExpandedSolverContext';
-import type { GolemNotepad } from '../contexts/ExpandedSolverContext';
+import type { GolemNotepad, GolemSlotMark } from '../contexts/ExpandedSolverContext';
 import type { GolemTestClue } from '../types';
 import type { Color, Size } from '../../types';
 import { isSolar } from '../logic/solarLunar';
 import { AlchemicalDisplay } from '../../components/AlchemicalDisplay';
-import { AlchemicalImage, IngredientIcon } from '../../components/GameSprites';
+import { AlchemicalImage, IngredientIcon, ElemImage } from '../../components/GameSprites';
 import type { AlchemicalId, IngredientId, CellState } from '../../types';
 import type { SolarLunarMark } from '../types';
 
@@ -31,7 +31,7 @@ const TINT_COLORS = [
   '#3F6FB6', '#979c91', '#B23A2E', '#23293D',
 ];
 
-type GridTool = 'mark' | 'question' | 'text';
+export type GridTool = 'mark' | 'question' | 'text';
 const TOOL_CURSOR: Record<GridTool, string> = { mark: 'crosshair', question: 'cell', text: 'text' };
 
 function stroke(c: string) {
@@ -178,12 +178,15 @@ function AutoDeduceModal({ onConfirm, onCancel }: { onConfirm: () => void; onCan
 
 // ─── Main grid ────────────────────────────────────────────────────────────────
 
-export function ExpandedIngredientGrid({ onRandomize }: { onRandomize?: () => void }) {
+export function ExpandedIngredientGrid({ onRandomize, activeTool, setActiveTool }: {
+  onRandomize?: () => void;
+  activeTool: GridTool;
+  setActiveTool: (t: GridTool) => void;
+}) {
   const { state, dispatch } = useExpandedSolver();
   const { gridState, notes, autoDeduction, solarLunarMarks } = state;
   const getIngredient = useExpandedIngredient();
 
-  const [activeTool, setActiveTool] = useState<GridTool>('mark');
   const [editingCell, setEditingCell] = useState<{ ing: IngredientId; alch: AlchemicalId } | null>(null);
   const [showConfirm, setShowConfirm] = useState(false);
 
@@ -404,110 +407,249 @@ export function ExpandedIngredientGrid({ onRandomize }: { onRandomize?: () => vo
 
 // ─── Golem Panel ─────────────────────────────────────────────────────────────
 
-const GOLEM_COLORS: Color[] = ['R', 'G', 'B'];
-const GOLEM_SIZES: Size[]   = ['S', 'L'];
-const COLOR_LABEL: Record<string, string>   = { R: 'Red', G: 'Green', B: 'Blue' };
-const SIZE_LABEL: Record<string, string>    = { S: 'Small', L: 'Large' };
+// Alchemical property columns for the bottom grid
+const ALCH_COLS: { color: Color; size: Size }[] = [
+  { color: 'B', size: 'L' }, { color: 'B', size: 'S' },
+  { color: 'G', size: 'L' }, { color: 'G', size: 'S' },
+  { color: 'R', size: 'L' }, { color: 'R', size: 'S' },
+];
 
-function GolemNotePicker({
-  label, value, onChange,
-}: {
-  label: string;
-  value: { color: Color; size: Size } | null;
-  onChange: (v: { color: Color; size: Size } | null) => void;
-}) {
+const GOLEM_EARS_IMG  = '/alchemydoku/images/golem_ears.png';
+const GOLEM_CHEST_IMG = '/alchemydoku/images/golem_chest.png';
+
+function cycleSlotMark(m: GolemSlotMark): GolemSlotMark {
+  if (m === null)      return 'reacts';
+  if (m === 'reacts')  return 'no-react';
+  return null;
+}
+
+function ReactionCell({
+  mark, isClue, onClick,
+}: { mark: GolemSlotMark; isClue?: boolean; onClick?: () => void }) {
+  const base = 'w-12 h-9 flex items-center justify-center border rounded text-sm font-bold transition-all select-none';
+  if (isClue && mark === 'reacts')
+    return <div className={`${base} bg-green-200 border-green-400 text-green-700 cursor-default`}>✓</div>;
+  if (isClue && mark === 'no-react')
+    return <div className={`${base} bg-red-100 border-red-300 text-red-500 cursor-default`}>✗</div>;
+  if (mark === 'reacts')
+    return <button className={`${base} bg-green-100 border-green-400 text-green-700 hover:bg-green-200`} onClick={onClick}>✓</button>;
+  if (mark === 'no-react')
+    return <button className={`${base} bg-red-50 border-red-300 text-red-500 hover:bg-red-100`} onClick={onClick}>✗</button>;
+  return <button className={`${base} bg-white border-gray-200 text-gray-200 hover:border-gray-400`} onClick={onClick}>·</button>;
+}
+
+function AlchPropertyCell({ active, onClick }: { active: boolean; onClick: () => void }) {
   return (
-    <div className="space-y-1">
-      <p className="text-[10px] font-semibold uppercase tracking-wide text-gray-500">{label}</p>
-      <div className="grid grid-cols-3 gap-0.5">
-        {COLORS.map(color => (
-          SIZES.map(size => {
-            const active = value?.color === color && value?.size === size;
-            const colorClass = color === 'R' ? 'text-red-600' : color === 'G' ? 'text-green-600' : 'text-blue-600';
-            return (
-              <button
-                key={`${color}${size}`}
-                onClick={() => onChange(active ? null : { color, size })}
-                className={`px-1.5 py-1 rounded text-[10px] font-semibold border transition-all
-                  ${active
-                    ? 'border-indigo-500 bg-indigo-50 text-indigo-700 shadow-sm scale-105'
-                    : 'border-gray-200 bg-white text-gray-500 hover:border-gray-400'}`}
-                title={`${SIZE_LABEL[size]} ${COLOR_LABEL[color]}`}
-              >
-                <span className={colorClass}>{color}</span>
-                <span className="text-gray-400">{size}</span>
-              </button>
-            );
-          })
-        ))}
-      </div>
-      {value && (
-        <p className="text-[10px] text-indigo-600 font-medium">
-          → {SIZE_LABEL[value.size]} {COLOR_LABEL[value.color]}
-        </p>
-      )}
-    </div>
+    <button
+      onClick={onClick}
+      className={`w-10 h-9 flex items-center justify-center border rounded transition-all
+        ${active
+          ? 'bg-indigo-100 border-indigo-500 shadow-sm scale-105'
+          : 'bg-white border-gray-200 hover:border-gray-400'}`}
+    >
+      {active && <span className="text-indigo-600 font-bold text-sm">✓</span>}
+    </button>
   );
 }
 
-export function GolemPanel() {
+export function GolemPanel({ activeTool }: { activeTool: GridTool }) {
   const { state, dispatch } = useExpandedSolver();
   const { puzzle, golemNotepad } = state;
   const getIngredient = useExpandedIngredient();
 
   if (!puzzle.golem) return null;
 
-  // Find golem_test clues to display
-  const testClues = puzzle.clues.filter(c => c.kind === 'golem_test') as
-    GolemTestClue[];
+  // Ingredient columns in same display order as main grid (with same tints)
+  const displayToSlot: Record<number, IngredientId> = {};
+  for (let slot = 1; slot <= 8; slot++) {
+    const dispId = (state.displayMap[slot] ?? slot) as number;
+    displayToSlot[dispId] = slot as IngredientId;
+  }
+  const ingColumns = BOARD_DISPLAY_ORDER.map((displayId, i) => ({
+    slotId: displayToSlot[displayId] as IngredientId,
+    index:  getIngredient(displayToSlot[displayId] as IngredientId).index,
+    tint:   TINT_COLORS[i],
+  }));
 
-  function Badge({ reacted, label }: { reacted: boolean; label: string }) {
+  // Pre-fill clue reactions per slot
+  const clueMap: Record<number, { chest: GolemSlotMark; ears: GolemSlotMark }> = {};
+  (puzzle.clues.filter(c => c.kind === 'golem_test') as import('../types').GolemTestClue[]).forEach(c => {
+    clueMap[c.ingredient] = {
+      chest: c.chest_reacted ? 'reacts' : 'no-react',
+      ears:  c.ears_reacted  ? 'reacts' : 'no-react',
+    };
+  });
+
+  // Image is 760×400 → AR = 400/760 ≈ 0.526. Explicit height avoids any distortion.
+  const CELL_W = 48;
+  const ROW_H  = Math.round(CELL_W * 400 / 760); // ≈ 25 px
+  const HDR_W  = CELL_W;
+
+  const rows = [
+    { part: 'ears'  as const, img: GOLEM_EARS_IMG,  label: 'Ears'  },
+    { part: 'chest' as const, img: GOLEM_CHEST_IMG, label: 'Chest' },
+  ];
+
+  const { notes } = state;
+
+  function GolemRowHeader({ img, label }: { img: string; label: string }) {
     return (
-      <span className={`inline-flex items-center gap-0.5 px-1.5 py-0.5 rounded-full text-[10px] font-semibold
-        ${reacted
-          ? 'bg-green-100 text-green-700 border border-green-300'
-          : 'bg-gray-100 text-gray-400 border border-gray-200'}`}>
-        {label} {reacted ? '✓' : '✗'}
-      </span>
+      <img src={img} alt={label} title={label} style={{
+        width: HDR_W, height: 'auto', display: 'block',
+        borderRadius: 6, flexShrink: 0, border: '1px solid #e5e7eb',
+      }} />
     );
   }
 
+  function GolemCell({ mark, isClue, img, noteKey, orbColor, orbSize, tint, onMark }: {
+    mark: GolemSlotMark; isClue?: boolean; img: string; noteKey: string;
+    orbColor?: Color; orbSize?: number; tint?: string; onMark: () => void;
+  }) {
+    const [editing, setEditing] = useState(false);
+    const note = notes[noteKey] ?? '';
+    const bgColor =
+      mark === 'reacts'   ? '#dcfce7' :
+      mark === 'no-react' ? '#fef2f2' :
+      mark === 'possible' ? '#fef9c3' : 'white';
+    const borderColor =
+      isClue && mark === 'reacts'   ? '#4ade80' :
+      isClue && mark === 'no-react' ? '#fca5a5' :
+      mark === 'reacts'   ? '#4ade80' :
+      mark === 'no-react' ? '#fca5a5' :
+      mark === 'possible' ? '#fde047' : '#e5e7eb';
+    const symbol =
+      mark === 'reacts'   ? '✓' :
+      mark === 'no-react' ? '✗' :
+      mark === 'possible' ? '?' : '';
+    const symColor =
+      mark === 'reacts'   ? '#16a34a' :
+      mark === 'no-react' ? '#dc2626' :
+      mark === 'possible' ? '#ca8a04' : '#d1d5db';
+    return (
+      <button
+        onClick={() => { if (activeTool === 'text') { setEditing(true); return; } onMark(); }}
+        style={{
+          position: 'relative', width: CELL_W, height: ROW_H, flexShrink: 0,
+          display: 'flex', alignItems: 'center', justifyContent: 'center',
+          borderRadius: 4, overflow: 'hidden',
+          border: `1px solid ${borderColor}`, background: bgColor,
+          cursor: 'pointer', transition: 'all 0.12s', fontWeight: 700, fontSize: 14,
+        }}
+      >
+        <img src={img} alt="" style={{
+          position: 'absolute', inset: 0, width: '100%', height: '100%',
+          objectFit: 'cover', opacity: 0.10, pointerEvents: 'none',
+        }} />
+        {tint && <span style={{ position: 'absolute', inset: 0, borderRadius: 4, backgroundColor: tint, opacity: 0.28, pointerEvents: 'none' }} />}
+        {orbColor != null && orbSize != null && (
+          <span style={{ position: 'absolute', opacity: 0.20, pointerEvents: 'none' }}>
+            <ElemImage color={orbColor} size="L" width={orbSize} />
+          </span>
+        )}
+        {editing ? (
+          <input
+            autoFocus
+            defaultValue={note}
+            maxLength={4}
+            onBlur={e => { dispatch({ type: 'SET_NOTE', key: noteKey, value: e.target.value }); setEditing(false); }}
+            onKeyDown={e => { if (e.key === 'Enter' || e.key === 'Escape') (e.target as HTMLInputElement).blur(); }}
+            onClick={e => e.stopPropagation()}
+            style={{
+              position: 'absolute', inset: 0, width: '100%', height: '100%',
+              background: 'rgba(255,255,240,0.95)', border: 'none', outline: 'none',
+              textAlign: 'center', fontSize: 10, fontWeight: 600, zIndex: 10,
+            }}
+          />
+        ) : note ? (
+          <span style={{ position: 'absolute', bottom: 1, right: 2, fontSize: 8, color: '#6366f1', fontWeight: 700, lineHeight: 1, pointerEvents: 'none' }}>{note}</span>
+        ) : null}
+        {!editing && <span style={{ color: symColor, position: 'relative' }}>{symbol}</span>}
+      </button>
+    );
+  }
+
+  function cycleIngMark(cur: GolemSlotMark): GolemSlotMark {
+    if (activeTool === 'mark')     return cur === null ? 'reacts' : cur === 'reacts' ? 'no-react' : null;
+    if (activeTool === 'question') return cur === 'possible' ? null : 'possible';
+    return cur;
+  }
+
   return (
-    <div className="mt-4 pt-3 border-t border-gray-200 space-y-3">
-      <h3 className="text-xs font-semibold uppercase tracking-widest text-gray-400">🧿 Golem Tests</h3>
+    <div className="px-1 pt-1 space-y-4 flex flex-col items-center">
 
-      {testClues.length > 0 && (
-        <div className="space-y-1.5">
-          {testClues.map((clue, i) => {
-            const { index } = getIngredient(clue.ingredient);
-            return (
-              <div key={i} className="flex items-center gap-2 flex-wrap">
-                <IngredientIcon index={index} width={24} />
-                <Badge reacted={clue.chest_reacted} label="☁️ Chest" />
-                <Badge reacted={clue.ears_reacted}  label="👂 Ears"  />
-              </div>
-            );
-          })}
+      {/* ── Top grid: per-ingredient reactions ─────────────────────────────── */}
+      <div>
+        <div className="flex gap-1 mt-1" style={{ paddingLeft: HDR_W + 4 }}>
+          {ingColumns.map(({ slotId, index, tint }) => (
+            <div key={slotId} style={{ width: CELL_W, flexShrink: 0 }}
+              className="flex flex-col items-center pb-1 gap-0.5">
+              <div className="rounded-full h-1" style={{ width: 20, backgroundColor: tint }} />
+              <IngredientIcon index={index} width={36} />
+            </div>
+          ))}
         </div>
-      )}
-
-      <div className="pt-2 border-t border-gray-100 space-y-3">
-        <p className="text-[10px] text-gray-400 italic">
-          Your deduction — mark which size+color you believe the golem reacts to:
-        </p>
-        <div className="flex gap-4 flex-wrap">
-          <GolemNotePicker
-            label="☁️ Chest reacts to"
-            value={golemNotepad.chest}
-            onChange={v => dispatch({ type: 'SET_GOLEM_NOTEPAD', part: 'chest', value: v })}
-          />
-          <GolemNotePicker
-            label="👂 Ears react to"
-            value={golemNotepad.ears}
-            onChange={v => dispatch({ type: 'SET_GOLEM_NOTEPAD', part: 'ears', value: v })}
-          />
-        </div>
+        {rows.map(({ part, img, label }) => (
+          <div key={part} className="flex gap-1 mt-1">
+            <GolemRowHeader img={img} label={label} />
+            {ingColumns.map(({ slotId, tint }) => {
+              const isClue = clueMap[slotId]?.[part] !== undefined;
+              const mark = golemNotepad.ingredientMarks?.[slotId]?.[part] ?? null;
+              return (
+                <div key={slotId}>
+                  <GolemCell
+                    mark={mark}
+                    isClue={isClue && mark !== null}
+                    img={img}
+                    noteKey={`g1-${slotId}-${part}`}
+                    tint={tint}
+                    onMark={() => dispatch({
+                      type: 'SET_GOLEM_INGREDIENT_MARK',
+                      slot: slotId, part,
+                      mark: cycleIngMark(mark),
+                    })}
+                  />
+                </div>
+              );
+            })}
+          </div>
+        ))}
       </div>
+
+      {/* ── Bottom grid: alch property deduction ───────────────────────────── */}
+      <div>
+        {rows.map(({ part, img, label }) => (
+          <div key={part} className="flex gap-1 mt-1">
+            <GolemRowHeader img={img} label={label} />
+            {ALCH_COLS.map(col => {
+              const current = golemNotepad[part] ?? null;
+              const active = current?.color === col.color && current?.size === col.size;
+              const orbSize = col.size === 'L' ? Math.round(CELL_W * 0.70) : Math.round(CELL_W * 0.25);
+              const colKey = `${col.color}${col.size}`;
+              const qMark = notes[`g2-${part}-${colKey}`] === '?' ? 'possible' as const : null;
+              return (
+                <GolemCell
+                  key={colKey}
+                  mark={active ? 'reacts' : qMark}
+                  img={img}
+                  noteKey={`g2-${part}-${colKey}`}
+                  orbColor={col.color}
+                  orbSize={orbSize}
+                  onMark={() => {
+                    if (activeTool === 'question') {
+                      dispatch({ type: 'SET_NOTE', key: `g2-${part}-${colKey}`, value: qMark ? '' : '?' });
+                    } else {
+                      dispatch({ type: 'SET_GOLEM_NOTEPAD', part, value: active ? null : col });
+                    }
+                  }}
+                />
+              );
+            })}
+          </div>
+        ))}
+      </div>
+
     </div>
   );
 }
+
+

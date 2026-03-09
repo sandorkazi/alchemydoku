@@ -49,8 +49,11 @@ function MobileClueDrawer({ puzzle }: { puzzle: ExpandedPuzzle }) {
 // ─── Collapsible sections ─────────────────────────────────────────────────────
 
 function IngredientGridSection() {
-  const [open, setOpen] = useState(false);
-  const { dispatch } = useExpandedSolver();
+  const { state, dispatch } = useExpandedSolver();
+  const hasGolem = !!state.puzzle.golem;
+  const [open, setOpen] = useState(hasGolem);
+  const [golemOpen, setGolemOpen] = useState(hasGolem);
+  const [activeTool, setActiveTool] = useState<import('../components/ExpandedIngredientGrid').GridTool>('mark');
   return (
     <div className="border-t">
       <button onClick={() => setOpen(v => !v)}
@@ -63,7 +66,25 @@ function IngredientGridSection() {
       </button>
       {open && (
         <div className="pb-2 animate-fadein">
-          <ExpandedIngredientGrid onRandomize={() => dispatch({ type: 'RESHUFFLE' })} />
+          <ExpandedIngredientGrid
+            onRandomize={() => dispatch({ type: 'RESHUFFLE' })}
+            activeTool={activeTool}
+            setActiveTool={setActiveTool}
+          />
+          {hasGolem && (
+            <div className="mt-2 border-t border-gray-100">
+              <button
+                onClick={() => setGolemOpen(v => !v)}
+                className="w-full flex items-center justify-between px-1 py-1.5 text-[11px] font-semibold
+                           uppercase tracking-widest text-gray-400 hover:text-gray-600 transition-colors
+                           focus-visible:outline-none"
+                aria-expanded={golemOpen}>
+                <span>🧿 Golem</span>
+                <span className={`transition-transform duration-200 ${golemOpen ? 'rotate-180' : ''}`}>▾</span>
+              </button>
+              {golemOpen && <GolemPanel activeTool={activeTool} />}
+            </div>
+          )}
         </div>
       )}
     </div>

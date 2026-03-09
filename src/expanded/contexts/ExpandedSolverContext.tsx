@@ -84,12 +84,15 @@ type SavedState = {
   golemNotepad: GolemNotepad;
 };
 
+export type GolemSlotMark = 'reacts' | 'no-react' | 'possible' | null;
+
 export type GolemNotepad = {
   chest: { color: Color; size: Size } | null;
   ears:  { color: Color; size: Size } | null;
+  ingredientMarks: Record<number, { chest: GolemSlotMark; ears: GolemSlotMark }>;
 };
 
-function emptyGolemNotepad(): GolemNotepad { return { chest: null, ears: null }; }
+function emptyGolemNotepad(): GolemNotepad { return { chest: null, ears: null, ingredientMarks: {} }; }
 
 function loadSolverState(puzzleId: string): SavedState | null {
   try {
@@ -139,7 +142,8 @@ export type ExpandedAction =
   | { type: 'CLEAR_GRID' }
   | { type: 'SET_NOTE';            key: string; value: string }
   | { type: 'SET_SOLAR_LUNAR_MARK'; slot: number; mark: SolarLunarMark }
-  | { type: 'SET_GOLEM_NOTEPAD'; part: 'chest' | 'ears'; value: { color: Color; size: Size } | null };
+  | { type: 'SET_GOLEM_NOTEPAD'; part: 'chest' | 'ears'; value: { color: Color; size: Size } | null }
+  | { type: 'SET_GOLEM_INGREDIENT_MARK'; slot: number; part: 'chest' | 'ears'; mark: GolemSlotMark };
 
 // ─── Auto-deduction ───────────────────────────────────────────────────────────
 
@@ -186,13 +190,24 @@ function applyAutoDeduction(state: ExpandedSolverState): ExpandedSolverState {
   }
 
   // Golem notepad auto-deduction
-  let newNotepad = state.golemNotepad;
+  let newNotepad: GolemNotepad = state.golemNotepad ?? emptyGolemNotepad();
   const params = state.puzzle.golem;
   if (params) {
-    // If worlds uniquely constrain the golem params (they always do — params are fixed),
-    // just reflect the puzzle params directly as auto-fill when both remain unknown
+    // Fill chest/ears alch property deduction
     if (!newNotepad.chest) newNotepad = { ...newNotepad, chest: params.chest };
     if (!newNotepad.ears)  newNotepad = { ...newNotepad, ears:  params.ears  };
+    // Fill ingredient reaction marks from golem_test clues
+    const newIngMarks = { ...newNotepad.ingredientMarks };
+    for (const clue of state.puzzle.clues) {
+      if (clue.kind !== 'golem_test') continue;
+      const s = (clue as import('../puzzles/schemaExpanded').GolemTestClue).ingredient;
+      const prev = newIngMarks[s] ?? { chest: null, ears: null };
+      newIngMarks[s] = {
+        chest: prev.chest ?? ((clue as import('../puzzles/schemaExpanded').GolemTestClue).chest_reacted ? 'reacts' : 'no-react'),
+        ears:  prev.ears  ?? ((clue as import('../puzzles/schemaExpanded').GolemTestClue).ears_reacted  ? 'reacts' : 'no-react'),
+      };
+    }
+    newNotepad = { ...newNotepad, ingredientMarks: newIngMarks };
   }
 
   return { ...state, gridState: newGrid, solarLunarMarks: newMarks, golemNotepad: newNotepad };
@@ -298,6 +313,20 @@ function reducer(state: ExpandedSolverState, action: ExpandedAction): ExpandedSo
         golemNotepad: { ...state.golemNotepad, [action.part]: action.value },
       };
 
+    case 'SET_GOLEM_INGREDIENT_MARK': {
+      const prev = state.golemNotepad.ingredientMarks[action.slot] ?? { chest: null, ears: null };
+      return {
+        ...state,
+        golemNotepad: {
+          ...state.golemNotepad,
+          ingredientMarks: {
+            ...state.golemNotepad.ingredientMarks,
+            [action.slot]: { ...prev, [action.part]: action.mark },
+          },
+        },
+      };
+    }
+
     default:
       return state;
   }
@@ -328,6 +357,7 @@ export function ExpandedSolverProvider({ puzzle, children }: { puzzle: ExpandedP
     gridState:       savedState?.gridState       ?? emptyGrid(),
     notes:           savedState?.notes           ?? {},
     solarLunarMarks: savedState?.solarLunarMarks ?? emptySolarLunarMarks(),
+    golemNotepad:    savedState?.golemNotepad    ?? emptyGolemNotepad(),
     autoDeduction:   false,
     hintLevel:       savedState?.hintLevel ?? 0,
     wrongAttempts:   0,
