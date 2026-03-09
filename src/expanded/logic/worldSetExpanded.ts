@@ -9,11 +9,13 @@ import { filterByClue, applyClues } from '../../logic/worldSet';
 import { WORLD_DATA, SIGN_TABLE, COLOR_INDEX, filterWorlds } from '../../logic/worldPack';
 import { deduceMixingResult } from '../../logic/deducer';
 import { isSolar } from './solarLunar';
+import { filterByGolemTest } from './golem';
 import type { WorldSet } from '../../types';
 import type {
   AnyClue, ExpandedClue,
   BookClue, EncyclopediaClue, EncyclopediaUncertainClue,
   DebunkApprenticeClue, DebunkMasterClue,
+  GolemTestClue, GolemParams,
 } from '../types';
 
 // ─── Individual expanded filters ─────────────────────────────────────────────
@@ -88,10 +90,15 @@ function isExpandedClue(clue: AnyClue): clue is ExpandedClue {
     || clue.kind === 'encyclopedia'
     || clue.kind === 'encyclopedia_uncertain'
     || clue.kind === 'debunk_apprentice'
-    || clue.kind === 'debunk_master';
+    || clue.kind === 'debunk_master'
+    || clue.kind === 'golem_test'
+    || clue.kind === 'golem_hint_color'
+    || clue.kind === 'golem_hint_size';
 }
 
-export function filterByAnyClue(worlds: WorldSet, clue: AnyClue): WorldSet {
+export type ClueContext = { golem?: GolemParams };
+
+export function filterByAnyClue(worlds: WorldSet, clue: AnyClue, ctx: ClueContext = {}): WorldSet {
   if (!isExpandedClue(clue)) {
     return filterByClue(worlds, clue as Parameters<typeof filterByClue>[1]);
   }
@@ -101,11 +108,18 @@ export function filterByAnyClue(worlds: WorldSet, clue: AnyClue): WorldSet {
     case 'encyclopedia_uncertain': return filterByEncyclopediaUncertain(worlds, clue);
     case 'debunk_apprentice':      return filterByDebunkApprentice(worlds, clue);
     case 'debunk_master':          return filterByDebunkMaster(worlds, clue);
+    case 'golem_hint_color':       return worlds; // display only
+    case 'golem_hint_size':        return worlds; // display only
+    case 'golem_test': {
+      if (!ctx.golem) return worlds; // no params = can't filter
+      const t = clue as GolemTestClue;
+      return filterByGolemTest(worlds, t.ingredient, t.chest_reacted, t.ears_reacted, ctx.golem);
+    }
   }
 }
 
-export function applyAnyClues(worlds: WorldSet, clues: AnyClue[]): WorldSet {
-  return clues.reduce<WorldSet>((ws, clue) => filterByAnyClue(ws, clue), worlds);
+export function applyAnyClues(worlds: WorldSet, clues: AnyClue[], ctx: ClueContext = {}): WorldSet {
+  return clues.reduce<WorldSet>((ws, clue) => filterByAnyClue(ws, clue, ctx), worlds);
 }
 
 // Re-export base helpers so callers only need this module

@@ -10,35 +10,31 @@
 
 ### Definition
 
-Every alchemical is either **Solar** or **Lunar**, determined by counting its negative aspects:
+Every alchemical is either **Solar** or **Lunar**, determined by its ID:
 
-| Negative aspects | Class |
-|-----------------|-------|
-| 0               | Solar |
-| 1               | Lunar |
-| 2               | Solar |
-| 3               | Lunar |
-
-Rule of thumb: *two negatives cancel* — even count → Solar, odd → Lunar.
+| ID  | Class |
+|-----|-------|
+| odd | Solar |
+| even| Lunar |
 
 ### Canonical table
 
-| Alch | Code | Negatives    | Class |
-|------|------|--------------|-------|
-| 1    | npN  | 2 (R− B−)    | Solar |
-| 2    | pnP  | 1 (G−)       | Lunar |
-| 3    | pNn  | 2 (G− B−)    | Solar |
-| 4    | nPp  | 1 (R−)       | Lunar |
-| 5    | Nnp  | 2 (R− G−)    | Solar |
-| 6    | Ppn  | 1 (B−)       | Lunar |
-| 7    | NNN  | 3            | Lunar |
-| 8    | PPP  | 0            | Solar |
+| Alch | Code | Class |
+|------|------|-------|
+| 1    | npN  | Solar |
+| 2    | pnP  | Lunar |
+| 3    | pNn  | Solar |
+| 4    | nPp  | Lunar |
+| 5    | Nnp  | Solar |
+| 6    | Ppn  | Lunar |
+| 7    | NNN  | Solar |
+| 8    | PPP  | Lunar |
 
-Solar: {1, 3, 5, 8} — Lunar: {2, 4, 6, 7}
+Solar: {1, 3, 5, 7} — Lunar: {2, 4, 6, 8}
 
 ### Implementation
 
-`isSolar(alchId)` in `expanded/logic/solarLunar.ts` — pure function, no stored data.
+`isSolar(alchId)` in `expanded/logic/solarLunar.ts` — `alchId % 2 === 1`.
 
 ---
 

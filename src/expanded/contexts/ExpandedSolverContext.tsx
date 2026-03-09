@@ -21,7 +21,8 @@ import { isSolar } from '../logic/solarLunar';
 import { checkExpandedAnswers, computeAllExpandedAnswers } from '../puzzles/schemaExpanded';
 import { WORLD_DATA } from '../../logic/worldPack';
 import type { CellState, WorldSet, AlchemicalId } from '../../types';
-import type { ExpandedPuzzle, AnyAnswer, SolarLunarMark, SolarLunarMarks } from '../types';
+import type { ExpandedPuzzle, AnyAnswer, SolarLunarMark, SolarLunarMarks, GolemParams } from '../types';
+import type { Color, Size } from '../../types';
 
 // ─── Display map (identical logic to base) ────────────────────────────────────
 
@@ -80,7 +81,15 @@ type SavedState = {
   notes: Record<string, string>;
   hintLevel: number;
   solarLunarMarks: SolarLunarMarks;
+  golemNotepad: GolemNotepad;
 };
+
+export type GolemNotepad = {
+  chest: { color: Color; size: Size } | null;
+  ears:  { color: Color; size: Size } | null;
+};
+
+function emptyGolemNotepad(): GolemNotepad { return { chest: null, ears: null }; }
 
 function loadSolverState(puzzleId: string): SavedState | null {
   try {
@@ -93,6 +102,7 @@ function loadSolverState(puzzleId: string): SavedState | null {
       notes:           (p.notes ?? {})  as Record<string, string>,
       hintLevel:       typeof p.hintLevel === 'number' ? p.hintLevel : 0,
       solarLunarMarks: (p.solarLunarMarks ?? emptySolarLunarMarks()) as SolarLunarMarks,
+      golemNotepad: (p.golemNotepad ?? emptyGolemNotepad()) as GolemNotepad,
     };
   } catch { return null; }
 }
@@ -110,6 +120,7 @@ export type ExpandedSolverState = {
   wrongAttempts:   number;
   answers:         (AnyAnswer | null)[];
   solarLunarMarks: SolarLunarMarks;
+  golemNotepad:    GolemNotepad;
   completed:       boolean;
   showSolution:    boolean;
 };
@@ -127,7 +138,8 @@ export type ExpandedAction =
   | { type: 'RESHUFFLE' }
   | { type: 'CLEAR_GRID' }
   | { type: 'SET_NOTE';            key: string; value: string }
-  | { type: 'SET_SOLAR_LUNAR_MARK'; slot: number; mark: SolarLunarMark };
+  | { type: 'SET_SOLAR_LUNAR_MARK'; slot: number; mark: SolarLunarMark }
+  | { type: 'SET_GOLEM_NOTEPAD'; part: 'chest' | 'ears'; value: { color: Color; size: Size } | null };
 
 // ─── Auto-deduction ───────────────────────────────────────────────────────────
 
@@ -173,7 +185,17 @@ function applyAutoDeduction(state: ExpandedSolverState): ExpandedSolverState {
     if (autoMarks[s] !== null) newMarks[s] = autoMarks[s];
   }
 
-  return { ...state, gridState: newGrid, solarLunarMarks: newMarks };
+  // Golem notepad auto-deduction
+  let newNotepad = state.golemNotepad;
+  const params = state.puzzle.golem;
+  if (params) {
+    // If worlds uniquely constrain the golem params (they always do — params are fixed),
+    // just reflect the puzzle params directly as auto-fill when both remain unknown
+    if (!newNotepad.chest) newNotepad = { ...newNotepad, chest: params.chest };
+    if (!newNotepad.ears)  newNotepad = { ...newNotepad, ears:  params.ears  };
+  }
+
+  return { ...state, gridState: newGrid, solarLunarMarks: newMarks, golemNotepad: newNotepad };
 }
 
 // ─── Reducer ──────────────────────────────────────────────────────────────────
@@ -232,6 +254,7 @@ function reducer(state: ExpandedSolverState, action: ExpandedAction): ExpandedSo
         displayMap:      newMap,
         gridState:       emptyGrid(),
         solarLunarMarks: emptySolarLunarMarks(),
+        golemNotepad:    emptyGolemNotepad(),
         hintLevel:       0,
         wrongAttempts:   0,
         answers:         state.puzzle.questions.map(() => null),
@@ -252,6 +275,7 @@ function reducer(state: ExpandedSolverState, action: ExpandedAction): ExpandedSo
         ...state,
         gridState:       emptyGrid(),
         solarLunarMarks: emptySolarLunarMarks(),
+        golemNotepad:    emptyGolemNotepad(),
         notes:           {},
       });
 
@@ -266,6 +290,12 @@ function reducer(state: ExpandedSolverState, action: ExpandedAction): ExpandedSo
       return {
         ...state,
         solarLunarMarks: { ...state.solarLunarMarks, [action.slot]: action.mark },
+      };
+
+    case 'SET_GOLEM_NOTEPAD':
+      return {
+        ...state,
+        golemNotepad: { ...state.golemNotepad, [action.part]: action.value },
       };
 
     default:

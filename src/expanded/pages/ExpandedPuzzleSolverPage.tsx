@@ -9,7 +9,7 @@
 import { useState } from 'react';
 import { ExpandedSolverProvider, useExpandedSolver } from '../contexts/ExpandedSolverContext';
 import { ExpandedCluePanel } from '../components/ExpandedCluePanel';
-import { ExpandedIngredientGrid } from '../components/ExpandedIngredientGrid';
+import { ExpandedIngredientGrid, GolemPanel } from '../components/ExpandedIngredientGrid';
 import { ExpandedAnswerPanel } from '../components/ExpandedAnswerPanel';
 import { ExpandedMixSimulator } from '../components/ExpandedMixSimulator';
 import { ExpandedHintDrawer } from '../components/ExpandedHintDrawer';

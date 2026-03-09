@@ -4,14 +4,16 @@
  * Never imported by base-game code.
  */
 
-import expTutorialBook01  from './puzzles/exp-tutorial-book-01.json';
-import expTutorialEnc01   from './puzzles/exp-tutorial-enc-01.json';
-import expEasyEnc01       from './puzzles/exp-easy-enc-01.json';
-import expEasySolar01     from './puzzles/exp-easy-solar-01.json';
+import expTutorialBook01    from './puzzles/exp-tutorial-book-01.json';
+import expTutorialEnc01     from './puzzles/exp-tutorial-enc-01.json';
+import expEasyEnc01         from './puzzles/exp-easy-enc-01.json';
+import expEasySolar01       from './puzzles/exp-easy-solar-01.json';
+import expGolemTutorial01   from './puzzles/exp-golem-tutorial-01.json';
 import type { ExpandedPuzzle } from '../types';
 
 export const ALL_EXPANDED_PUZZLES: ExpandedPuzzle[] =
-  [expTutorialBook01, expTutorialEnc01, expEasyEnc01, expEasySolar01] as unknown as ExpandedPuzzle[];
+  [expTutorialBook01, expTutorialEnc01, expEasyEnc01, expEasySolar01,
+   expGolemTutorial01] as unknown as ExpandedPuzzle[];
 
 export const EXPANDED_PUZZLE_MAP: Record<string, ExpandedPuzzle> =
   Object.fromEntries(ALL_EXPANDED_PUZZLES.map(p => [p.id, p]));
@@ -35,5 +37,11 @@ export const EXPANDED_COLLECTIONS: ExpandedCollection[] = [
     title: 'First Articles',
     description: 'Apply Solar/Lunar classification and encyclopedia reasoning in short puzzles.',
     puzzleIds: ['exp-easy-solar-01', 'exp-easy-enc-01'],
+  },
+  {
+    id: 'exp-golem',
+    title: 'The Golem Project',
+    description: 'Test ingredients on the royal golem. Deduce what it reacts to, then identify the two that will bring it to life.',
+    puzzleIds: ['exp-golem-tutorial-01'],
   },
 ];

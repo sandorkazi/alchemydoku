@@ -1,0 +1,49 @@
+{
+  "id": "tutorial-two-color-02",
+  "title": "Red Matches, Green Wins",
+  "description": "Both ingredients share Red+ again. The two-colour rule says Red or Green \u2014 but which one?",
+  "difficulty": "tutorial",
+  "clues": [
+    {
+      "kind": "assignment",
+      "ingredient": 1,
+      "alchemical": 2
+    },
+    {
+      "kind": "assignment",
+      "ingredient": 2,
+      "alchemical": 3
+    }
+  ],
+  "questions": [
+    {
+      "kind": "mixing-result",
+      "ingredient1": 1,
+      "ingredient2": 2
+    }
+  ],
+  "solution": {
+    "1": 2,
+    "2": 3,
+    "3": 1,
+    "4": 4,
+    "5": 5,
+    "6": 6,
+    "7": 7,
+    "8": 8
+  },
+  "hints": [
+    {
+      "level": 1,
+      "text": "Two-colour rule: pnP has R+, pNn has R+. Red signs match \u2192 result is Red or Green. Blue is still impossible."
+    },
+    {
+      "level": 2,
+      "text": "Check if Red resolves: pnP has R+Small, pNn has R+Small. Signs match but sizes are BOTH Small \u2014 same size means Red cannot resolve. Move to Green."
+    },
+    {
+      "level": 3,
+      "text": "Green: pnP has G-Small, pNn has G-Large. Signs match (both \u2212), sizes differ \u2192 G\u2212 is the result. The two-colour rule was right: Red or Green. Red couldn't resolve, so Green took over."
+    }
+  ]
+}

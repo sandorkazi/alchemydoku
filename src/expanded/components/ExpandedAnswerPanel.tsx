@@ -10,13 +10,13 @@
 
 import { useState } from 'react';
 import { ALCHEMICALS } from '../../data/alchemicals';
-import { PotionImage, AlchemicalImage, ElemImage, CorrectIcon, IncorrectIcon, IngredientIcon } from '../../components/GameSprites';
+import { PotionImage, AlchemicalImage, ElemImage, CorrectIcon, IncorrectIcon, IngredientIcon, SignedElemImage } from '../../components/GameSprites';
 import { useExpandedSolver, useExpandedIngredient, computeAllExpandedAnswers } from '../contexts/ExpandedSolverContext';
 import { INGREDIENTS } from '../../data/ingredients';
 import type { PotionResult, AlchemicalId, Color, IngredientId } from '../../types';
 import type {
   AnyQuestion, AnyAnswer,
-  AspectColorAnswer, SolarLunarAnswer,
+  AspectColorAnswer, SolarLunarAnswer, IngredientSetAnswer,
 } from '../types';
 
 // ─── Helpers ──────────────────────────────────────────────────────────────────
@@ -92,11 +92,16 @@ function QuestionHeader({ q }: { q: AnyQuestion }) {
 
   // Expanded types
   if (q.kind === 'encyclopedia_fourth') {
-    const knownStr = q.known.map(e => `${ingName(e.ingredient, getIngredient)}(${e.sign})`).join(', ');
     return (
       <span className="inline-flex items-center gap-1.5 flex-wrap text-xs">
         <span className="font-semibold text-emerald-600">📜 {colorLabel(q.aspect)} article:</span>
-        <span className="text-gray-600">{knownStr} — name the 4th entry</span>
+        {q.known.map((e, i) => (
+          <span key={i} className="inline-flex items-center gap-0.5">
+            <Ing slotId={e.ingredient} size={20} />
+            <SignedElemImage color={q.aspect as Color} sign={e.sign as '+' | '-'} width={16} />
+          </span>
+        ))}
+        <span className="text-gray-500">— name the 4th entry</span>
       </span>
     );
   }
@@ -110,6 +115,49 @@ function QuestionHeader({ q }: { q: AnyQuestion }) {
             <span className={`text-[10px] font-bold ${e.sign==='+'?'text-green-600':'text-red-500'}`}>{e.sign}</span>
           </span>
         ))}
+      </span>
+    );
+  }
+  if (q.kind === 'golem_group') {
+    const labels: Record<string, string> = {
+      animators: 'animate the golem', chest_only: 'trigger only the chest',
+      ears_only: 'trigger only the ears', non_reactive: 'trigger no reaction',
+      any_reactive: 'trigger any reaction',
+    };
+    return (
+      <span className="text-xs font-semibold text-violet-600">
+        🧿 Which ingredients {labels[q.group]}?
+      </span>
+    );
+  }
+  if (q.kind === 'golem_animate_potion') return (
+    <span className="text-xs font-semibold text-violet-600">
+      🧿 What potion do the two golem animators produce?
+    </span>
+  );
+  if (q.kind === 'golem_mix_potion') {
+    const t = q.target;
+    const potStr = t.type === 'neutral' ? 'Neutral' : `${t.color}${t.sign === '+' ? '+' : '−'}`;
+    const grpLabel: Record<string, string> = {
+      animators: 'animators', chest_only: 'chest-only reactors',
+      ears_only: 'ears-only reactors', non_reactive: 'non-reactive',
+      any_reactive: 'reactive ingredients',
+    };
+    return (
+      <span className="text-xs font-semibold text-violet-600">
+        🧿 Which ingredients can produce {potStr} with the {grpLabel[q.with_group]}?
+      </span>
+    );
+  }
+  if (q.kind === 'golem_possible_potions') {
+    const grpLabel: Record<string, string> = {
+      animators: 'animators', chest_only: 'chest-only reactors',
+      ears_only: 'ears-only reactors', non_reactive: 'non-reactive ingredients',
+      any_reactive: 'reactive ingredients',
+    };
+    return (
+      <span className="text-xs font-semibold text-violet-600">
+        🧿 What potions can the {grpLabel[q.group]} produce{q.partner ? ' with a fixed partner' : ' among themselves'}?
       </span>
     );
   }
@@ -140,7 +188,7 @@ function RevealedAnswer({ q, answer }: { q: AnyQuestion; answer: AnyAnswer }) {
       const r = (answer as SolarLunarAnswer).result;
       return (
         <span className={`inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-xs font-bold
-          ${r==='solar'?'bg-amber-100 text-amber-800':'bg-blue-100 text-blue-800'}`}>
+          ${r==='solar'?'bg-orange-100 text-orange-800':'bg-gray-100 text-gray-500'}`}>
           {r==='solar'?'☀️ Solar':'🌙 Lunar'}
         </span>
       );
@@ -160,6 +208,10 @@ function RevealedAnswer({ q, answer }: { q: AnyQuestion; answer: AnyAnswer }) {
       const ids = (answer as { ingredients: number[] }).ingredients;
       return <span className="inline-flex flex-wrap gap-1.5">{ids.map(id => <IngredientIcon key={id} index={(id-1) as 0|1|2|3|4|5|6|7} width={32} />)}{ids.length===0&&<span className="text-xs text-gray-400 italic">None</span>}</span>;
     }
+  }
+  if (typeof answer === 'object' && answer !== null && 'kind' in answer && (answer as {kind:string}).kind === 'ingredient_set') {
+    const ids = (answer as IngredientSetAnswer).ingredients;
+    return <span className="inline-flex flex-wrap gap-1.5">{ids.map(id => <IngredientIcon key={id} index={(id-1) as 0|1|2|3|4|5|6|7} width={32} />)}{ids.length===0&&<span className="text-xs text-gray-400 italic">None</span>}</span>;
   }
   if (typeof answer === 'number') return <AlchemicalImage id={answer as AlchemicalId} width={40} />;
   if (typeof answer === 'object' && 'type' in (answer as object)) return <PotionImage result={answer as PotionResult} width={36} />;
@@ -289,7 +341,7 @@ function SolarLunarPicker({ selected, onSelect }: {
       {(['solar','lunar'] as const).map(val => (
         <button key={val} role="radio" aria-checked={selected===val} onClick={() => onSelect(val)}
           className={`flex flex-col items-center gap-1 px-4 py-2 rounded-xl border-2 transition-all
-            ${selected===val?(val==='solar'?'border-amber-500 bg-amber-50':'border-blue-500 bg-blue-50'):'border-transparent bg-gray-100 hover:bg-gray-200'}`}>
+            ${selected===val?(val==='solar'?'border-orange-500 bg-orange-50':'border-gray-400 bg-gray-100'):'border-transparent bg-gray-100 hover:bg-gray-200'}`}>
           <span className="text-2xl">{val==='solar'?'☀️':'🌙'}</span>
           <span className="text-xs font-semibold capitalize">{val}</span>
         </button>
@@ -403,6 +455,62 @@ function QuestionRow({ q, index, total, value, onChange, correctAnswer, showSolu
               onSelect={v => onChange({ kind:'solar_lunar_answer', result:v } satisfies SolarLunarAnswer)}
             />
           )}
+          {/* Golem pickers — ingredient multi-select */}
+          {(q.kind==='golem_group' || q.kind==='golem_mix_potion') && (() => {
+            const cur = new Set<number>((value as IngredientSetAnswer|null)?.ingredients ?? []);
+            const toggle = (id: number) => {
+              const next = new Set(cur);
+              if (next.has(id)) next.delete(id); else next.add(id);
+              const sorted = [...next].sort((a,b)=>a-b) as IngredientId[];
+              onChange(sorted.length===0 ? null : { kind:'ingredient_set', ingredients:sorted } satisfies IngredientSetAnswer);
+            };
+            return <IngredientSetPicker selected={cur} onToggle={toggle} />;
+          })()}
+          {/* Golem animate potion — single potion picker */}
+          {q.kind==='golem_animate_potion' && (() => {
+            const cur = value as PotionResult | null;
+            const key = (p: PotionResult) => p.type==='neutral'?'neutral':`${p.color}${p.sign}`;
+            return (
+              <div className="flex flex-wrap gap-1.5">
+                {LOGICAL_POTIONS.map(p => {
+                  const k = key(p); const active = cur ? key(cur)===k : false;
+                  return (
+                    <button key={k} aria-pressed={active} onClick={() => onChange(active ? null : p)}
+                      className={`flex flex-col items-center gap-0.5 px-2 pt-1.5 pb-1 rounded-xl border-2 transition-all
+                        ${active?'border-indigo-500 bg-indigo-50 shadow-md scale-105':'border-transparent bg-gray-100 hover:bg-gray-200'}`}>
+                      <PotionImage result={p} width={36} />
+                      <span className={`text-[9px] font-bold h-2.5 ${active?'text-indigo-600':'text-transparent'}`}>✓</span>
+                    </button>
+                  );
+                })}
+              </div>
+            );
+          })()}
+          {/* Golem possible potions — multi potion picker */}
+          {q.kind==='golem_possible_potions' && (() => {
+            const key = (p: PotionResult) => p.type==='neutral'?'neutral':`${p.color}${p.sign}`;
+            const cur = new Set<string>((value as {kind:string;potions:string[]}|null)?.potions ?? []);
+            const toggle = (k: string) => {
+              const next = new Set(cur);
+              if (next.has(k)) next.delete(k); else next.add(k);
+              onChange(next.size===0 ? null : { kind:'possible-potions', potions:[...next].sort() });
+            };
+            return (
+              <div className="flex flex-wrap gap-1.5">
+                {LOGICAL_POTIONS.map(p => {
+                  const k = key(p); const active = cur.has(k);
+                  return (
+                    <button key={k} aria-pressed={active} onClick={() => toggle(k)}
+                      className={`flex flex-col items-center gap-0.5 px-2 pt-1.5 pb-1 rounded-xl border-2 transition-all
+                        ${active?'border-indigo-500 bg-indigo-50 shadow-md scale-105':'border-transparent bg-gray-100 hover:bg-gray-200'}`}>
+                      <PotionImage result={p} width={36} />
+                      <span className={`text-[9px] font-bold h-2.5 ${active?'text-indigo-600':'text-transparent'}`}>✓</span>
+                    </button>
+                  );
+                })}
+              </div>
+            );
+          })()}
         </>
       )}
     </div>

@@ -8,11 +8,12 @@
 
 import { useExpandedIngredient } from '../contexts/ExpandedSolverContext';
 import { INGREDIENTS } from '../../data/ingredients';
-import { IngredientIcon, ElemImage } from '../../components/GameSprites';
+import { IngredientIcon, ElemImage, SignedElemImage } from '../../components/GameSprites';
 import type {
   AnyClue, EncyclopediaClue, EncyclopediaUncertainClue,
   DebunkApprenticeClue, DebunkMasterClue,
   BookClue, EncyclopediaEntry,
+  GolemTestClue, GolemHintColorClue, GolemHintSizeClue,
 } from '../types';
 import type { Color } from '../../types';
 
@@ -51,6 +52,29 @@ function Ing({ slotId }: { slotId: number }) {
   return <span title={name} aria-label={name} className="inline-flex shrink-0"><IngredientIcon index={index} width={ING_W} /></span>;
 }
 
+const BADGE_W = 22;
+
+function IngBadge({ slotId, color, sign }: { slotId: number; color: Color; sign: '+' | '-' }) {
+  const getIngredient = useExpandedIngredient();
+  const { displayId, index } = getIngredient(slotId);
+  const name = INGREDIENTS[displayId as 1]?.name ?? `#${slotId}`;
+  const colorNames: Record<Color, string> = { R: 'Red', G: 'Green', B: 'Blue' };
+  const badgeTitle = `${colorNames[color]} ${sign === '+' ? 'positive' : 'negative'}`;
+  return (
+    <div
+      className="relative inline-block"
+      style={{ paddingTop: BADGE_W / 2 }}
+      title={`${name}: ${badgeTitle}`}
+      aria-label={`${name}: ${badgeTitle}`}
+    >
+      <div className="absolute left-1/2 -translate-x-1/2 z-10 drop-shadow" style={{ top: 0 }}>
+        <SignedElemImage color={color} sign={sign} width={BADGE_W} />
+      </div>
+      <IngredientIcon index={index} width={ING_W} />
+    </div>
+  );
+}
+
 function SignBadge({ sign }: { sign: '+' | '-' }) {
   return (
     <span className={`inline-flex items-center justify-center w-5 h-5 rounded font-black text-sm leading-none
@@ -70,10 +94,9 @@ function EntryGrid({ aspect, entries }: { aspect: Color; entries: EncyclopediaEn
   return (
     <div className="flex flex-wrap gap-x-3 gap-y-1 mt-1">
       {entries.map((e, i) => (
-        <span key={i} className="inline-flex items-center gap-0.5">
+        <span key={i} className="inline-flex items-center gap-1">
           <Ing slotId={e.ingredient} />
-          <AspectIcon color={aspect} />
-          <SignBadge sign={e.sign} />
+          <SignedElemImage color={aspect} sign={e.sign} width={20} />
         </span>
       ))}
     </div>
@@ -93,7 +116,7 @@ function BookClueCard({ clue }: { clue: BookClue }) {
         <span title={name}><IngredientIcon index={index} width={ING_W} /></span>
         <span className="text-xs font-semibold">is</span>
         <span className={`inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-xs font-bold
-          ${isSolar ? 'bg-amber-100 text-amber-800 border border-amber-300' : 'bg-blue-100 text-blue-800 border border-blue-300'}`}>
+          ${isSolar ? 'bg-orange-100 text-orange-800 border border-orange-300' : 'bg-gray-100 text-gray-500 border border-gray-300'}`}>
           {isSolar ? '☀️ Solar' : '🌙 Lunar'}
         </span>
       </div>
@@ -103,7 +126,8 @@ function BookClueCard({ clue }: { clue: BookClue }) {
 
 function EncyclopediaClueCard({ clue }: { clue: EncyclopediaClue }) {
   return (
-    <Card icon="📜" label={`Encyclopedia — ${COLOR_LABEL[clue.aspect]}`} accent="green">
+    <Card icon="📜" label={`Verified Publication — ${COLOR_LABEL[clue.aspect]}`} accent="green">
+      <p className="text-[10px] opacity-60 mb-0.5">All entries guaranteed correct</p>
       <EntryGrid aspect={clue.aspect} entries={[...clue.entries]} />
     </Card>
   );
@@ -191,15 +215,8 @@ function ExpandedBaseClueCard({ clue }: { clue: AnyClue }) {
   }
   if (clue.kind === 'aspect') {
     return (
-      <Card icon="🔮" label="Aspect" accent="blue">
-        <div className="flex items-center gap-1.5">
-          {ingIcon(clue.ingredient)}
-          <span className="text-xs">has</span>
-          <span className={`font-bold text-xs px-1.5 py-0.5 rounded
-            ${clue.color === 'R' ? 'bg-red-100 text-red-700' : clue.color === 'G' ? 'bg-green-100 text-green-700' : 'bg-blue-100 text-blue-700'}`}>
-            {clue.color}{clue.sign}
-          </span>
-        </div>
+      <Card icon="📋" label="Known Component" accent="blue">
+        <IngBadge slotId={clue.ingredient} color={clue.color as Color} sign={clue.sign} />
       </Card>
     );
   }
@@ -226,6 +243,59 @@ function ExpandedBaseClueCard({ clue }: { clue: AnyClue }) {
   return null;
 }
 
+// ─── Golem clue cards ────────────────────────────────────────────────────────
+
+function GolemTestCard({ clue }: { clue: GolemTestClue }) {
+  function Badge({ reacted, label }: { reacted: boolean; label: string }) {
+    return (
+      <span className={`inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-xs font-semibold
+        ${reacted
+          ? 'bg-green-100 text-green-700 border border-green-300'
+          : 'bg-gray-100 text-gray-400 border border-gray-200'}`}>
+        {label} {reacted ? '✓' : '✗'}
+      </span>
+    );
+  }
+  return (
+    <Card icon="🧿" label="Golem Test" accent="blue">
+      <div className="flex items-center gap-2 flex-wrap">
+        <Ing slotId={clue.ingredient} />
+        <div className="flex gap-1.5">
+          <Badge reacted={clue.chest_reacted} label="☁️ Chest" />
+          <Badge reacted={clue.ears_reacted}  label="👂 Ears"  />
+        </div>
+      </div>
+    </Card>
+  );
+}
+
+function GolemHintColorCard({ clue }: { clue: GolemHintColorClue }) {
+  const partLabel = clue.part === 'chest' ? '☁️ Chest' : '👂 Ears';
+  const colorLabel = { R: 'Red', G: 'Green', B: 'Blue' }[clue.color];
+  const colorClass = { R: 'text-red-600', G: 'text-green-600', B: 'text-blue-600' }[clue.color];
+  return (
+    <Card icon="🔬" label="Golem Research" accent="blue">
+      <p className="text-xs">
+        {partLabel} reacts to a{' '}
+        <span className={`font-bold ${colorClass}`}>{colorLabel}</span>{' '}
+        aspect.
+      </p>
+    </Card>
+  );
+}
+
+function GolemHintSizeCard({ clue }: { clue: GolemHintSizeClue }) {
+  const partLabel = clue.part === 'chest' ? '☁️ Chest' : '👂 Ears';
+  const sizeLabel = clue.size === 'L' ? 'Large' : 'Small';
+  return (
+    <Card icon="🔬" label="Golem Research" accent="blue">
+      <p className="text-xs">
+        {partLabel} reacts to a <span className="font-bold">{sizeLabel}</span> aspect.
+      </p>
+    </Card>
+  );
+}
+
 // ─── Dispatcher ───────────────────────────────────────────────────────────────
 
 export function ExpandedClueCard({ clue }: { clue: AnyClue }) {
@@ -235,6 +305,9 @@ export function ExpandedClueCard({ clue }: { clue: AnyClue }) {
     case 'encyclopedia_uncertain': return <EncyclopediaUncertainClueCard clue={clue} />;
     case 'debunk_apprentice':      return <DebunkApprenticeCard clue={clue} />;
     case 'debunk_master':          return <DebunkMasterCard clue={clue} />;
+    case 'golem_test':             return <GolemTestCard clue={clue} />;
+    case 'golem_hint_color':       return <GolemHintColorCard clue={clue} />;
+    case 'golem_hint_size':        return <GolemHintSizeCard clue={clue} />;
     default:                       return <ExpandedBaseClueCard clue={clue} />;
   }
 }

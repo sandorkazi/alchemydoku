@@ -48,6 +48,8 @@ import medium_pp_02 from './medium-pp-02.json';
 import medium_pp_03 from './medium-pp-03.json';
 import hard_pp_01 from './hard-pp-01.json';
 import hard_pp_02 from './hard-pp-02.json';
+import tutorial_two_color_01 from './tutorial-two-color-01.json';
+import tutorial_two_color_02 from './tutorial-two-color-02.json';
 import tutorial_pp_01 from './tutorial-pp-01.json';
 import tutorial_pp_02 from './tutorial-pp-02.json';
 import aspect_set_01 from './aspect-set-01.json';
@@ -56,7 +58,7 @@ import large_comp_01 from './large-comp-01.json';
 import collectionsData from './collections.json';
 import type { Puzzle } from '../../types';
 
-export const ALL_PUZZLES: Puzzle[] = [easy_2000, easy_2001, easy_2002, easy_2003, easy_2004, easy_2005, easy_2006, easy_2007, easy_2008, easy_2009, hard_9000, hard_9001, hard_9002, hard_9003, hard_9004, hard_9005, medium_6000, medium_6001, medium_6002, medium_6003, medium_6004, medium_6005, medium_6006, medium_6007, tutorial_mix_01, tutorial_mix_02, tutorial_mix_03, tutorial_sell_01, tutorial_sell_02, tutorial_debunk_01, tutorial_debunk_02, tutorial_debunk_03, safe_publish_01, safe_publish_02, safe_publish_03, safe_publish_04, expert_1001, expert_1002, expert_1003, expert_1004, expert_1005, expert_1006, expert_1007, expert_1008, medium_pp_01, medium_pp_02, medium_pp_03, hard_pp_01, hard_pp_02, tutorial_pp_01, tutorial_pp_02, aspect_set_01, aspect_set_04, large_comp_01] as unknown as Puzzle[];
+export const ALL_PUZZLES: Puzzle[] = [easy_2000, easy_2001, easy_2002, easy_2003, easy_2004, easy_2005, easy_2006, easy_2007, easy_2008, easy_2009, hard_9000, hard_9001, hard_9002, hard_9003, hard_9004, hard_9005, medium_6000, medium_6001, medium_6002, medium_6003, medium_6004, medium_6005, medium_6006, medium_6007, tutorial_mix_01, tutorial_mix_02, tutorial_mix_03, tutorial_sell_01, tutorial_sell_02, tutorial_debunk_01, tutorial_debunk_02, tutorial_debunk_03, safe_publish_01, safe_publish_02, safe_publish_03, safe_publish_04, expert_1001, expert_1002, expert_1003, expert_1004, expert_1005, expert_1006, expert_1007, expert_1008, medium_pp_01, medium_pp_02, medium_pp_03, hard_pp_01, hard_pp_02, tutorial_two_color_01, tutorial_two_color_02, tutorial_pp_01, tutorial_pp_02, aspect_set_01, aspect_set_04, large_comp_01] as unknown as Puzzle[];
 export const COLLECTIONS = collectionsData as Collection[];
 export const PUZZLE_MAP: Record<string, Puzzle> = Object.fromEntries(ALL_PUZZLES.map(p => [p.id, p]));
 

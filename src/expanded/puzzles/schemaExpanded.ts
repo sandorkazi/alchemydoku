@@ -8,14 +8,19 @@
 import { generateAllWorlds } from '../../logic/worldSet';
 import { computeAnswerFromWorlds as baseComputeAnswer, answersEqual as baseAnswersEqual } from '../../puzzles/schema';
 import { applyAnyClues } from '../logic/worldSetExpanded';
+import {
+  computeGolemGroup, computeGolemAnimatePotion,
+  computeGolemMixPotion, computeGolemPossiblePotions,
+} from '../logic/golem';
 import { isSolar } from '../logic/solarLunar';
 import { WORLD_DATA, SIGN_TABLE, COLOR_INDEX } from '../../logic/worldPack';
 import type { WorldSet, IngredientId, AlchemicalId, Color } from '../../types';
 import type { PuzzleAnswer } from '../../puzzles/schema';
 import type {
   ExpandedPuzzle, AnyQuestion, AnyAnswer, ExpandedAnswer,
-  AspectColorAnswer, SolarLunarAnswer,
+  AspectColorAnswer, SolarLunarAnswer, IngredientSetAnswer,
   EncyclopediaFourthQuestion, EncyclopediaWhichAspectQuestion, SolarLunarQuestion,
+  GolemGroupQuestion, GolemMixPotionQuestion, GolemPossiblePotionsQuestion,
 } from '../types';
 
 // ─── Helpers ──────────────────────────────────────────────────────────────────
@@ -90,14 +95,31 @@ function computeSolarLunar(worlds: WorldSet, q: SolarLunarQuestion): AnyAnswer |
 // ─── Public API ───────────────────────────────────────────────────────────────
 
 export function getExpandedPuzzleWorlds(puzzle: ExpandedPuzzle): WorldSet {
-  return applyAnyClues(generateAllWorlds(), puzzle.clues);
+  return applyAnyClues(generateAllWorlds(), puzzle.clues, { golem: puzzle.golem });
 }
 
-export function computeExpandedAnswer(worlds: WorldSet, question: AnyQuestion): AnyAnswer | null {
+export function computeExpandedAnswer(worlds: WorldSet, question: AnyQuestion, puzzle?: ExpandedPuzzle): AnyAnswer | null {
   switch (question.kind) {
     case 'encyclopedia_fourth':       return computeEncyclopediaFourth(worlds, question);
     case 'encyclopedia_which_aspect': return computeEncyclopediaWhichAspect(worlds, question);
     case 'solar_lunar':               return computeSolarLunar(worlds, question);
+    // Golem questions — require golem params
+    case 'golem_group':
+    case 'golem_animate_potion':
+    case 'golem_mix_potion':
+    case 'golem_possible_potions': {
+      const params = puzzle?.golem;
+      if (!params) return null;
+      if (question.kind === 'golem_group')
+        return computeGolemGroup(worlds, params, question as GolemGroupQuestion) as AnyAnswer | null;
+      if (question.kind === 'golem_animate_potion')
+        return computeGolemAnimatePotion(worlds, params) as AnyAnswer | null;
+      if (question.kind === 'golem_mix_potion')
+        return computeGolemMixPotion(worlds, params, question as GolemMixPotionQuestion) as AnyAnswer | null;
+      if (question.kind === 'golem_possible_potions')
+        return computeGolemPossiblePotions(worlds, params, question as GolemPossiblePotionsQuestion) as AnyAnswer | null;
+      return null;
+    }
     default:
       return baseComputeAnswer(worlds, question) as AnyAnswer | null;
   }
@@ -107,7 +129,7 @@ export function computeAllExpandedAnswers(puzzle: ExpandedPuzzle): AnyAnswer[] |
   const worlds = getExpandedPuzzleWorlds(puzzle);
   const answers: AnyAnswer[] = [];
   for (const q of puzzle.questions) {
-    const a = computeExpandedAnswer(worlds, q);
+    const a = computeExpandedAnswer(worlds, q, puzzle);
     if (a === null) return null;
     answers.push(a);
   }
@@ -121,6 +143,12 @@ export function expandedAnswersEqual(a: AnyAnswer, b: AnyAnswer): boolean {
     }
     if (a.kind === 'solar_lunar_answer' && b.kind === 'solar_lunar_answer') {
       return (a as SolarLunarAnswer).result === (b as SolarLunarAnswer).result;
+    }
+    if (a.kind === 'ingredient_set' && b.kind === 'ingredient_set') {
+      const ia = (a as IngredientSetAnswer).ingredients;
+      const ib = (b as IngredientSetAnswer).ingredients;
+      if (ia.length !== ib.length) return false;
+      return ia.every((v, i) => v === ib[i]);
     }
   }
   return baseAnswersEqual(a as PuzzleAnswer, b as PuzzleAnswer);
@@ -157,6 +185,37 @@ export function expandedQuestionText(
     }
     case 'solar_lunar':
       return `Is ${ingredientName(question.ingredient)} Solar ☀️ or Lunar 🌙?`;
+    case 'golem_group': {
+      const labels: Record<string, string> = {
+        animators: 'animate the golem', chest_only: 'trigger only the chest',
+        ears_only: 'trigger only the ears', non_reactive: 'trigger no reaction',
+        any_reactive: 'trigger any reaction',
+      };
+      return `Which ingredients ${labels[question.group]}?`;
+    }
+    case 'golem_animate_potion':
+      return 'What potion do the two golem animators produce together?';
+    case 'golem_mix_potion': {
+      const t = question.target;
+      const potStr = t.type === 'neutral' ? 'Neutral' : `${t.color}${t.sign === '+' ? '+' : '−'}`;
+      const grpLabel: Record<string, string> = {
+        animators: 'animators', chest_only: 'chest-only reactors',
+        ears_only: 'ears-only reactors', non_reactive: 'non-reactive ingredients',
+        any_reactive: 'any reactive ingredient',
+      };
+      return `Which ingredients can produce ${potStr} with at least one of the ${grpLabel[question.with_group]}?`;
+    }
+    case 'golem_possible_potions': {
+      const grpLabel: Record<string, string> = {
+        animators: 'animators', chest_only: 'chest-only reactors',
+        ears_only: 'ears-only reactors', non_reactive: 'non-reactive ingredients',
+        any_reactive: 'reactive ingredients',
+      };
+      const base = `What potions can the ${grpLabel[question.group]} produce`;
+      return question.partner
+        ? `${base} when mixed with ${ingredientName(question.partner)}?`
+        : `${base} among themselves?`;
+    }
     default: {
       const q = question as { kind: string; ingredient?: number; ingredient1?: number; ingredient2?: number; color?: string; sign?: string };
       if (q.kind === 'mixing-result')    return `What potion from ${ingredientName(q.ingredient1!)} + ${ingredientName(q.ingredient2!)}?`;

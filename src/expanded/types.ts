@@ -5,7 +5,7 @@
  */
 
 import type {
-  IngredientId, Color, Sign,
+  IngredientId, Color, Sign, Size,
   Clue as BaseClue, QuestionTarget as BaseQuestion,
   PotionResult,
 } from '../types';
@@ -97,12 +97,61 @@ export type DebunkMasterClue = {
   successful: boolean;
 };
 
+// ─── Golem types ─────────────────────────────────────────────────────────────
+
+export type GolemParams = {
+  chest: { color: Color; size: Size };
+  ears:  { color: Color; size: Size };
+};
+
+export type GolemReactionGroup =
+  | 'animators'
+  | 'chest_only'
+  | 'ears_only'
+  | 'non_reactive'
+  | 'any_reactive';
+
+/**
+ * Result of testing one ingredient on the golem.
+ * Both flags false = non_reactive; both true = animator.
+ * World filter: uses puzzle-level GolemParams via applyAnyClues context.
+ */
+export type GolemTestClue = {
+  kind: 'golem_test';
+  ingredient: IngredientId;
+  chest_reacted: boolean;
+  ears_reacted: boolean;
+};
+
+/**
+ * Partial golem hint: reveals the COLOR the chest or ears reacts to.
+ * Display only — does not filter world-set.
+ */
+export type GolemHintColorClue = {
+  kind: 'golem_hint_color';
+  part: 'chest' | 'ears';
+  color: Color;
+};
+
+/**
+ * Partial golem hint: reveals the SIZE (Large/Small) the chest or ears reacts to.
+ * Display only — does not filter world-set.
+ */
+export type GolemHintSizeClue = {
+  kind: 'golem_hint_size';
+  part: 'chest' | 'ears';
+  size: Size;
+};
+
 export type ExpandedClue =
   | BookClue
   | EncyclopediaClue
   | EncyclopediaUncertainClue
   | DebunkApprenticeClue
-  | DebunkMasterClue;
+  | DebunkMasterClue
+  | GolemTestClue
+  | GolemHintColorClue
+  | GolemHintSizeClue;
 
 export type AnyClue = BaseClue | ExpandedClue;
 
@@ -137,14 +186,58 @@ export type SolarLunarQuestion = {
   ingredient: IngredientId;
 };
 
+// ─── Golem question types ────────────────────────────────────────────────────
+
+/** Which ingredients are in the given reaction group? Answer: IngredientSetAnswer */
+export type GolemGroupQuestion = {
+  kind: 'golem_group';
+  group: GolemReactionGroup;
+};
+
+/** What potion do the two animating ingredients produce together? Answer: PotionResult */
+export type GolemAnimatePotionQuestion = {
+  kind: 'golem_animate_potion';
+};
+
+/**
+ * Which ingredients can produce [target] when mixed with at least one member of [with_group]?
+ * Answer: IngredientSetAnswer
+ */
+export type GolemMixPotionQuestion = {
+  kind: 'golem_mix_potion';
+  target: PotionResult;
+  with_group: GolemReactionGroup;
+};
+
+/**
+ * What potions are achievable mixing all pairs within [group],
+ * or if partner given: mixing each group member with partner?
+ * Answer: { kind: 'possible-potions'; potions: string[] }
+ */
+export type GolemPossiblePotionsQuestion = {
+  kind: 'golem_possible_potions';
+  group: GolemReactionGroup;
+  partner?: IngredientId;
+};
+
 export type ExpandedQuestion =
   | EncyclopediaFourthQuestion
   | EncyclopediaWhichAspectQuestion
-  | SolarLunarQuestion;
+  | SolarLunarQuestion
+  | GolemGroupQuestion
+  | GolemAnimatePotionQuestion
+  | GolemMixPotionQuestion
+  | GolemPossiblePotionsQuestion;
 
 export type AnyQuestion = BaseQuestion | ExpandedQuestion;
 
 // ─── Expanded answer types ────────────────────────────────────────────────────
+
+/** Sorted set of ingredient IDs — for golem_group, golem_mix_potion answers. */
+export type IngredientSetAnswer = {
+  kind: 'ingredient_set';
+  ingredients: IngredientId[];  // always sorted ascending
+};
 
 /** Which aspect color an article covers (for encyclopedia_which_aspect). */
 export type AspectColorAnswer = {
@@ -158,7 +251,7 @@ export type SolarLunarAnswer = {
   result: SolarLunar;
 };
 
-export type ExpandedAnswer = AspectColorAnswer | SolarLunarAnswer;
+export type ExpandedAnswer = AspectColorAnswer | SolarLunarAnswer | IngredientSetAnswer;
 
 /**
  * Any answer: base PuzzleAnswer or an expanded answer.
@@ -175,4 +268,6 @@ export type ExpandedPuzzle = Omit<Puzzle, 'clues' | 'questions'> & {
   clues: AnyClue[];
   questions: AnyQuestion[];
   mode: 'expanded';
+  /** Hidden golem configuration. Present for all golem puzzles. */
+  golem?: GolemParams;
 };

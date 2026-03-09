@@ -12,6 +12,7 @@ All specs reflect the **current implementation** unless marked `[DEFERRED]` or `
 | `ARCHITECTURE.md`     | File structure, isolation contract, routing model, context API, localStorage layout, build/deploy |
 | `UI_COMPONENTS.md`    | Component catalogue — props, context deps, rendering contract for every component |
 | `EXPANDED.md`         | Expanded rules: Solar/Lunar, encyclopedia articles, book tokens, debunk clue types, expanded question/answer types, grid UI additions |
+| `GOLEM.md`         | Golem Project: reaction groups, test/hint clue types, all golem question types, grid notepad UI, puzzle JSON format |
 | `DIFFICULTY.md`       | Information-theoretic difficulty scoring: clue strength, deduction chain depth, composite formula, collection re-ranking |
 
 ---
