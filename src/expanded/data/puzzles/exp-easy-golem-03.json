@@ -1,0 +1,86 @@
+{
+  "id": "exp-easy-golem-03",
+  "mode": "expanded",
+  "title": "Whispers of the Archive",
+  "description": "The golem has been tested with 2 ingredients. Deduce the reaction pattern and identify the target group.",
+  "difficulty": "easy",
+  "golem": {
+    "chest": {
+      "color": "G",
+      "size": "S"
+    },
+    "ears": {
+      "color": "R",
+      "size": "S"
+    }
+  },
+  "clues": [
+    {
+      "kind": "golem_test",
+      "ingredient": 8,
+      "chest_reacted": true,
+      "ears_reacted": true
+    },
+    {
+      "kind": "golem_test",
+      "ingredient": 2,
+      "chest_reacted": false,
+      "ears_reacted": false
+    },
+    {
+      "kind": "mixing",
+      "ingredient1": 2,
+      "ingredient2": 4,
+      "result": {
+        "color": "G",
+        "sign": "+"
+      }
+    },
+    {
+      "kind": "mixing",
+      "ingredient1": 6,
+      "ingredient2": 7,
+      "result": {
+        "color": "R",
+        "sign": "+"
+      }
+    }
+  ],
+  "questions": [
+    {
+      "kind": "golem_group",
+      "group": "animators"
+    }
+  ],
+  "solution": {
+    "1": 4,
+    "2": 8,
+    "3": 7,
+    "4": 1,
+    "5": 5,
+    "6": 3,
+    "7": 6,
+    "8": 2
+  },
+  "hints": [
+    {
+      "level": 1,
+      "text": "The golem reacts to SIZE on a specific color channel.\nKnown tests:\n  ing8: chest=\u2713 ears=\u2713  \u2192  animators\n  ing2: chest=\u2717 ears=\u2717  \u2192  non_reactive"
+    },
+    {
+      "level": 2,
+      "text": "Chest reacts to G+S. Ears react to R+S. An animator needs BOTH. Cross-reference with untested ingredients."
+    },
+    {
+      "level": 3,
+      "text": "The animators are: ingredients [4, 8]. Alch: ing4\u2192npN, ing8\u2192pnP."
+    }
+  ],
+  "complexity": {
+    "raw": 2.467,
+    "avg_clue_strength": 2.929,
+    "q_sur": 0.5,
+    "m_sur": 0.8,
+    "residual_worlds": 12
+  }
+}

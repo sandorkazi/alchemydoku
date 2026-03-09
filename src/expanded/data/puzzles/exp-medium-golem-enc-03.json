@@ -1,0 +1,68 @@
+{
+  "id": "exp-medium-golem-enc-03",
+  "mode": "expanded",
+  "title": "Reaction Chains",
+  "description": "The golem has been tested with 2 ingredients. Deduce the reaction pattern and identify the target group.",
+  "difficulty": "medium",
+  "golem": {
+    "chest": {
+      "color": "R",
+      "size": "S"
+    },
+    "ears": {
+      "color": "B",
+      "size": "S"
+    }
+  },
+  "clues": [
+    {
+      "kind": "golem_test",
+      "ingredient": 1,
+      "chest_reacted": true,
+      "ears_reacted": true
+    },
+    {
+      "kind": "golem_test",
+      "ingredient": 5,
+      "chest_reacted": true,
+      "ears_reacted": true
+    }
+  ],
+  "questions": [
+    {
+      "kind": "golem_group",
+      "group": "animators"
+    }
+  ],
+  "solution": {
+    "1": 4,
+    "2": 8,
+    "3": 6,
+    "4": 5,
+    "5": 3,
+    "6": 2,
+    "7": 1,
+    "8": 7
+  },
+  "hints": [
+    {
+      "level": 1,
+      "text": "The golem reacts to SIZE on a specific color channel.\nKnown tests:\n  ing1: chest=\u2713 ears=\u2713  \u2192  animators\n  ing5: chest=\u2713 ears=\u2713  \u2192  animators"
+    },
+    {
+      "level": 2,
+      "text": "Chest reacts to R+S. Ears react to B+S. An animator needs BOTH. Cross-reference with untested ingredients."
+    },
+    {
+      "level": 3,
+      "text": "The animators are: ingredients [1, 5]. Alch: ing1\u2192nPp, ing5\u2192pNn."
+    }
+  ],
+  "complexity": {
+    "raw": 3.678,
+    "avg_clue_strength": 2.404,
+    "q_sur": 0.5,
+    "m_sur": 1.8,
+    "residual_worlds": 1440
+  }
+}

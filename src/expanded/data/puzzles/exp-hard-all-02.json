@@ -1,0 +1,110 @@
+{
+  "id": "exp-hard-all-02",
+  "mode": "expanded",
+  "title": "An Unexpected Result",
+  "description": "The golem has been tested with 3 ingredients. Deduce the reaction pattern and identify the target group.",
+  "difficulty": "hard",
+  "golem": {
+    "chest": {
+      "color": "R",
+      "size": "L"
+    },
+    "ears": {
+      "color": "G",
+      "size": "S"
+    }
+  },
+  "clues": [
+    {
+      "kind": "golem_test",
+      "ingredient": 6,
+      "chest_reacted": true,
+      "ears_reacted": true
+    },
+    {
+      "kind": "golem_test",
+      "ingredient": 1,
+      "chest_reacted": true,
+      "ears_reacted": false
+    },
+    {
+      "kind": "encyclopedia",
+      "aspect": "R",
+      "entries": [
+        {
+          "ingredient": 2,
+          "sign": "+"
+        },
+        {
+          "ingredient": 6,
+          "sign": "+"
+        },
+        {
+          "ingredient": 7,
+          "sign": "+"
+        }
+      ]
+    },
+    {
+      "kind": "encyclopedia",
+      "aspect": "G",
+      "entries": [
+        {
+          "ingredient": 2,
+          "sign": "+"
+        },
+        {
+          "ingredient": 3,
+          "sign": "+"
+        },
+        {
+          "ingredient": 5,
+          "sign": "+"
+        }
+      ]
+    },
+    {
+      "kind": "golem_test",
+      "ingredient": 8,
+      "chest_reacted": false,
+      "ears_reacted": true
+    }
+  ],
+  "questions": [
+    {
+      "kind": "golem_group",
+      "group": "animators"
+    }
+  ],
+  "solution": {
+    "1": 7,
+    "2": 8,
+    "3": 1,
+    "4": 5,
+    "5": 4,
+    "6": 6,
+    "7": 3,
+    "8": 2
+  },
+  "hints": [
+    {
+      "level": 1,
+      "text": "The golem reacts to SIZE on a specific color channel.\nKnown tests:\n  ing6: chest=\u2713 ears=\u2713  \u2192  animators\n  ing1: chest=\u2713 ears=\u2717  \u2192  chest_only\n  ing8: chest=\u2717 ears=\u2713  \u2192  ears_only"
+    },
+    {
+      "level": 2,
+      "text": "Chest reacts to R+L. Ears react to G+S. An animator needs BOTH. Cross-reference with untested ingredients."
+    },
+    {
+      "level": 3,
+      "text": "The animators are: ingredients [4, 6]. Alch: ing4\u2192Nnp, ing6\u2192Ppn."
+    }
+  ],
+  "complexity": {
+    "raw": 3.791,
+    "avg_clue_strength": 2.86,
+    "q_sur": 0.5,
+    "m_sur": 2.1,
+    "residual_worlds": 2
+  }
+}
