@@ -6,6 +6,7 @@ import { AlchemicalDisplay } from './AlchemicalDisplay';
 import { AlchemicalImage, IngredientIcon } from './GameSprites';
 import type { AlchemicalId, IngredientId, CellState } from '../types';
 
+// Fixed visual column order by display-ingredient ID (mushroom → fern → toad → bird claw → mandrake → scorpion → raven's feather → flower)
 const BOARD_DISPLAY_ORDER: IngredientId[] = [3, 1, 7, 2, 4, 5, 6, 8];
 const ALCH_IDS: AlchemicalId[] = [1, 2, 3, 4, 5, 6, 7, 8];
 
@@ -210,17 +211,18 @@ export function IngredientGrid({ onRandomize }: { onRandomize?: () => void }) {
     return () => window.removeEventListener('keydown', onKey);
   }, []);
 
-  // Build inverse displayMap: displayId → slotId
+  // Columns are fixed by display-ingredient ID. Build inverse map: displayId → slotId.
   const displayToSlot: Record<number, IngredientId> = {};
   for (let slot = 1; slot <= 8; slot++) {
     const dispId = displayMap[slot] ?? slot;
     displayToSlot[dispId] = slot as IngredientId;
   }
 
-  const colData: Array<{ slotId: IngredientId; tint: string; displayId: number }> =
-    BOARD_DISPLAY_ORDER
-      .map((displayId, i) => ({ slotId: displayToSlot[displayId], tint: TINT_COLORS[i], displayId }))
-      .filter(x => x.slotId != null) as Array<{ slotId: IngredientId; tint: string; displayId: number }>;
+  const colData = BOARD_DISPLAY_ORDER.map((displayId, i) => ({
+    slotId:    displayToSlot[displayId] as IngredientId,
+    tint:      TINT_COLORS[i],
+    displayId,
+  })).filter(x => x.slotId != null);
 
   const noteKey = (ing: IngredientId, alch: AlchemicalId) => `${ing}-${alch}`;
 

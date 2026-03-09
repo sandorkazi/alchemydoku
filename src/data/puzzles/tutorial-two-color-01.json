@@ -1,0 +1,49 @@
+{
+  "id": "tutorial-two-color-01",
+  "title": "Red Matches, Red Wins",
+  "description": "Both ingredients share a Red+ sign. What can you say about the result before you even check sizes?",
+  "difficulty": "tutorial",
+  "clues": [
+    {
+      "kind": "assignment",
+      "ingredient": 1,
+      "alchemical": 2
+    },
+    {
+      "kind": "assignment",
+      "ingredient": 2,
+      "alchemical": 6
+    }
+  ],
+  "questions": [
+    {
+      "kind": "mixing-result",
+      "ingredient1": 1,
+      "ingredient2": 2
+    }
+  ],
+  "solution": {
+    "1": 2,
+    "2": 6,
+    "3": 1,
+    "4": 3,
+    "5": 4,
+    "6": 5,
+    "7": 7,
+    "8": 8
+  },
+  "hints": [
+    {
+      "level": 1,
+      "text": "Two-colour rule first: pnP has R+, Ppn has R+. Red signs match \u2192 the result must be Red or Green. Blue is impossible."
+    },
+    {
+      "level": 2,
+      "text": "Now check whether Red resolves: pnP has R+Small, Ppn has R+Large. Signs match AND sizes differ \u2192 Red resolves directly."
+    },
+    {
+      "level": 3,
+      "text": "The result is R+. Red signs matched and Red sizes differed, so Red was the resolver. The two-colour rule correctly predicted Red or Green \u2014 and Red won."
+    }
+  ]
+}

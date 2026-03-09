@@ -1,0 +1,30 @@
+{
+  "id": "exp-tutorial-book-01",
+  "mode": "expanded",
+  "title": "The Card Reader's Secret",
+  "description": "You've obtained a Book Token — it tells you whether an ingredient's alchemical is Solar or Lunar. Use it alongside aspect clues to identify the alchemical.",
+  "difficulty": "tutorial",
+  "clues": [
+    { "kind": "aspect", "ingredient": 1, "color": "R", "sign": "+" },
+    { "kind": "aspect", "ingredient": 1, "color": "G", "sign": "-" },
+    { "kind": "book", "ingredient": 1, "result": "solar" }
+  ],
+  "questions": [
+    { "kind": "alchemical", "ingredient": 1 }
+  ],
+  "solution": { "1": 3, "2": 2, "3": 1, "4": 4, "5": 5, "6": 6, "7": 7, "8": 8 },
+  "hints": [
+    {
+      "level": 1,
+      "text": "The Book Token tells you ingredient 1 is Solar. Solar alchemicals have 0 or 2 negative aspects. List which alchemicals have R+ and G−."
+    },
+    {
+      "level": 2,
+      "text": "R+ G− is shared by pNn and Ppn. pNn has signs R+G−B−: 2 negatives = Solar. Ppn has R+G+B−: 1 negative = Lunar. The Book Token says Solar, so it must be pNn."
+    },
+    {
+      "level": 3,
+      "text": "The answer is pNn (alchemical 3). It has R+, G−, B− — two negatives, which makes it Solar."
+    }
+  ]
+}

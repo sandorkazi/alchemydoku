@@ -19,7 +19,7 @@ export type PuzzleStep = {
 
 export type TutorialStep = ExplainStep | PuzzleStep;
 
-export type TutorialId = 'mixing' | 'selling';
+export type TutorialId = 'mixing' | 'selling' | 'two-color';
 
 export type TutorialStatus = 'locked' | 'available' | 'complete';
 

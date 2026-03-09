@@ -4,9 +4,12 @@ import { PuzzleSolverPage } from './pages/PuzzleSolverPage';
 import { TutorialPage } from './pages/TutorialPage';
 import { MIXING_TUTORIAL_STEPS } from './data/tutorials/mixing';
 import { SELLING_TUTORIAL_STEPS } from './data/tutorials/selling';
+import { TWO_COLOR_TUTORIAL_STEPS } from './data/tutorials/two-color';
+import { useTutorial } from './contexts/TutorialContext';
 import type { TutorialId } from './contexts/TutorialContext';
 import type { Puzzle } from './types';
 import { clearPuzzleState } from './contexts/SolverContext';
+import { ExpandedHome as ExpandedHomeImpl } from './expanded/ExpandedHome';
 
 type Collection = {
   id: string;
@@ -261,52 +264,15 @@ function PuzzleRow({
 // ─── Tutorial steps registry ──────────────────────────────────────────────────
 
 const TUTORIAL_STEPS = {
-  mixing:  MIXING_TUTORIAL_STEPS,
-  selling: SELLING_TUTORIAL_STEPS,
+  mixing:      MIXING_TUTORIAL_STEPS,
+  selling:     SELLING_TUTORIAL_STEPS,
+  'two-color': TWO_COLOR_TUTORIAL_STEPS,
 };
 
 // ─── Expanded home (under construction) ──────────────────────────────────────
 
 function ExpandedHome({ onModeChange }: { onModeChange: (m: 'base' | 'expanded') => void }) {
-  return (
-    <div className="min-h-screen bg-amber-50 animate-fadein">
-      <div className="max-w-xl mx-auto px-4 py-10 space-y-8">
-
-        {/* Mode switcher */}
-        <ModeSwitcher mode="expanded" onChange={onModeChange} />
-
-        {/* Hero */}
-        <div className="text-center space-y-2">
-          <div className="text-5xl" aria-hidden="true">✨</div>
-          <h1 className="text-3xl font-bold text-gray-900">Expanded Rules</h1>
-          <p className="text-gray-500 text-sm">
-            Advanced alchemists mechanics and new puzzle types.
-          </p>
-        </div>
-
-        {/* Under construction */}
-        <div className="rounded-2xl border-2 border-amber-300 bg-white p-8 text-center space-y-4 shadow-sm">
-          <div className="text-6xl" aria-hidden="true">🚧</div>
-          <div>
-            <h2 className="text-xl font-bold text-amber-800">Under construction</h2>
-            <p className="text-amber-700 text-sm mt-2 max-w-xs mx-auto">
-              The expanded puzzle set is not yet implemented.
-              Check back soon — it will have its own independent progress track.
-            </p>
-          </div>
-          <button
-            onClick={() => onModeChange('base')}
-            className="mt-2 inline-flex items-center gap-2 text-sm font-semibold text-indigo-600
-                       hover:text-indigo-800 transition-colors focus-visible:outline-none
-                       focus-visible:ring-2 focus-visible:ring-indigo-400 rounded"
-          >
-            ← Back to base game
-          </button>
-        </div>
-
-      </div>
-    </div>
-  );
+  return <ExpandedHomeImpl onModeChange={onModeChange} />;
 }
 
 // ─── Base-game App ────────────────────────────────────────────────────────────
@@ -315,8 +281,11 @@ export default function App() {
   const [mode, setMode]                 = useState<'base' | 'expanded'>(loadMode);
   const [view, setView]                 = useState<View>({ kind: 'home' });
   const [completed, setCompleted]       = useState<Set<string>>(() => loadCompleted(loadMode()));
+  const { completedTutorials } = useTutorial();
   const [freePlay, setFreePlay]         = useState<boolean>(() => loadFreePlay(loadMode()));
   const [lastPuzzleId, setLastPuzzleId] = useState<string | null>(() => loadLastPuzzle(loadMode()));
+  /** Incremented on reset to force SolverProvider remount even for same puzzleId */
+  const [resetVersion, setResetVersion] = useState(0);
 
   // When mode switches, reload per-mode state and reset to home
   function handleModeChange(m: 'base' | 'expanded') {
@@ -381,7 +350,7 @@ export default function App() {
     const nextId = getNextPuzzleId(view.puzzleId, view.colId);
     return (
       <PuzzleSolverPage
-        key={view.puzzleId}
+        key={`${view.puzzleId}-${resetVersion}`}
         puzzle={puzzle}
         onBack={() => setView({ kind: 'collection', colId: view.colId })}
         onNext={() => {
@@ -487,10 +456,125 @@ export default function App() {
               col={col}
               completed={col.puzzleIds.filter(id => completed.has(id)).length}
               locked={!isCollectionUnlocked(col)}
-              onOpen={() => setView({ kind: 'collection', colId: col.id })}
+              onOpen={() => {
+                const tutorialMap: Record<string, TutorialId> = {
+                  'tutorial-mixing':   'mixing',
+                  'tutorial-selling':  'selling',
+                  'tutorial-two-color':'two-color',
+                };
+                const tid = tutorialMap[col.id];
+                if (tid) {
+                  setView({ kind: 'tutorial', tutorialId: tid });
+                } else {
+                  setView({ kind: 'collection', colId: col.id });
+                }
+              }}
             />
           ))}
         </section>
+
+        {/* ── Progressive mechanics reference — shown after each collection is completed ── */}
+        {(completedTutorials.has('mixing') ||
+          completed.has('tutorial-mix-01') ||
+          completed.has('tutorial-mix-03')) && (
+          <details className="group border border-gray-200 rounded-xl overflow-hidden animate-fadein">
+            <summary className="flex items-center justify-between px-3 py-2 cursor-pointer
+              text-xs font-semibold text-gray-600 hover:bg-gray-50 select-none list-none">
+              <span>📖 Mixing Rule — Quick Reference</span>
+              <span className="text-gray-400 group-open:rotate-180 transition-transform">▾</span>
+            </summary>
+            <div className="px-3 pb-3 pt-3 border-t border-gray-100 space-y-2">
+              <div className="rounded-lg bg-indigo-50 border border-indigo-200 p-2.5 space-y-1.5">
+                <p className="text-[11px] font-bold text-indigo-800 uppercase tracking-wide">⚗️ The Mixing Rule</p>
+                <p className="text-[11px] text-indigo-700 leading-relaxed">
+                  Compare alchemicals colour by colour (R, G, B):
+                </p>
+                <ul className="text-[11px] text-indigo-700 space-y-1 pl-2">
+                  <li>All signs opposite → <strong>Neutral</strong> (no potion)</li>
+                  <li>Otherwise: find the colour where signs <strong>match</strong> and sizes <strong>differ</strong> → that colour + sign is your potion</li>
+                </ul>
+                <p className="text-[10px] text-indigo-500 italic">There is always exactly one resolver, or all are opposite.</p>
+              </div>
+            </div>
+          </details>
+        )}
+
+        {completedTutorials.has('two-color') && (
+          <details className="group border border-gray-200 rounded-xl overflow-hidden animate-fadein">
+            <summary className="flex items-center justify-between px-3 py-2 cursor-pointer
+              text-xs font-semibold text-gray-600 hover:bg-gray-50 select-none list-none">
+              <span>🎨 Two-Colour Rule — Quick Reference</span>
+              <span className="text-gray-400 group-open:rotate-180 transition-transform">▾</span>
+            </summary>
+            <div className="px-3 pb-3 pt-3 border-t border-gray-100 space-y-2">
+              <div className="rounded-lg bg-amber-50 border border-amber-200 p-2.5 space-y-1.5">
+                <p className="text-[11px] font-bold text-amber-800 uppercase tracking-wide">🎨 Two-Colour Rule</p>
+                <p className="text-[11px] text-amber-700 leading-relaxed">
+                  When two alchemicals share a sign on a colour, only two result colours are possible:
+                </p>
+                <div className="grid grid-cols-3 gap-1 text-center">
+                  <div className="rounded bg-amber-100 px-1 py-1 text-[10px] font-semibold text-red-700">🔴 Red matches<br/><span className="font-normal">→ Red or Green</span></div>
+                  <div className="rounded bg-amber-100 px-1 py-1 text-[10px] font-semibold text-green-700">🟢 Green matches<br/><span className="font-normal">→ Green or Blue</span></div>
+                  <div className="rounded bg-amber-100 px-1 py-1 text-[10px] font-semibold text-blue-700">🔵 Blue matches<br/><span className="font-normal">→ Blue or Red</span></div>
+                </div>
+                <p className="text-[10px] text-amber-600 italic">Works in reverse: a Red potion means Red or Green sign matched.</p>
+              </div>
+              <div className="rounded-lg bg-slate-50 border border-slate-200 p-2.5 space-y-1">
+                <p className="text-[11px] font-bold text-slate-700 uppercase tracking-wide">⚖️ Neutralizing Pairs</p>
+                <p className="text-[11px] text-slate-600 leading-relaxed">
+                  If two ingredients produce <strong>Neutral</strong>, their alchemicals are direct opposites — all three signs differ.
+                  They will always react identically to the golem.
+                </p>
+              </div>
+            </div>
+          </details>
+        )}
+
+        {completedTutorials.has('selling') && (
+          <details className="group border border-gray-200 rounded-xl overflow-hidden animate-fadein">
+            <summary className="flex items-center justify-between px-3 py-2 cursor-pointer
+              text-xs font-semibold text-gray-600 hover:bg-gray-50 select-none list-none">
+              <span>💰 Sell Results — Quick Reference</span>
+              <span className="text-gray-400 group-open:rotate-180 transition-transform">▾</span>
+            </summary>
+            <div className="px-3 pb-3 pt-3 border-t border-gray-100">
+              <div className="rounded-lg bg-green-50 border border-green-200 p-2.5 space-y-1.5">
+                <p className="text-[11px] font-bold text-green-800 uppercase tracking-wide">💰 Sell Outcomes</p>
+                <p className="text-[11px] text-green-700 leading-relaxed">When you sell a potion and claim a colour+sign:</p>
+                <ul className="text-[11px] text-green-700 space-y-1 pl-2">
+                  <li><strong>Total match</strong> — actual result equals claim exactly</li>
+                  <li><strong>Sign OK</strong> — same sign, different colour</li>
+                  <li><strong>Neutral</strong> — actual result is Neutral</li>
+                  <li><strong>Opposite</strong> — actual sign is opposite to claim</li>
+                </ul>
+              </div>
+            </div>
+          </details>
+        )}
+
+        {(completed.has('tutorial-debunk-01') || completed.has('tutorial-debunk-03')) && (
+          <details className="group border border-gray-200 rounded-xl overflow-hidden animate-fadein">
+            <summary className="flex items-center justify-between px-3 py-2 cursor-pointer
+              text-xs font-semibold text-gray-600 hover:bg-gray-50 select-none list-none">
+              <span>🔍 Debunking — Quick Reference</span>
+              <span className="text-gray-400 group-open:rotate-180 transition-transform">▾</span>
+            </summary>
+            <div className="px-3 pb-3 pt-3 border-t border-gray-100 space-y-2">
+              <div className="rounded-lg bg-rose-50 border border-rose-200 p-2.5 space-y-1.5">
+                <p className="text-[11px] font-bold text-rose-800 uppercase tracking-wide">🔍 Apprentice Debunk</p>
+                <p className="text-[11px] text-rose-700 leading-relaxed">
+                  Reveals the <strong>true</strong> aspect sign for one ingredient — always filterable regardless of success or failure.
+                </p>
+              </div>
+              <div className="rounded-lg bg-rose-50 border border-rose-200 p-2.5 space-y-1.5">
+                <p className="text-[11px] font-bold text-rose-800 uppercase tracking-wide">⚗️ Master Debunk</p>
+                <p className="text-[11px] text-rose-700 leading-relaxed">
+                  Shows the <strong>claimed</strong> mix result. Only constrains worlds if the debunk <strong>succeeded</strong> — failure reveals nothing about the true result.
+                </p>
+              </div>
+            </div>
+          </details>
+        )}
 
         <div className="pt-4 border-t space-y-3" aria-live="polite">
 
@@ -533,11 +617,12 @@ export default function App() {
                   clearAllProgress('base');
                   setCompleted(new Set());
                   setLastPuzzleId(null);
+                  setResetVersion(v => v + 1);
                 }}
                 className="text-xs text-gray-400 hover:text-red-500 transition-colors"
-                title="Clear all solved puzzle marks"
+                title="Clear all base game progress and grid marks"
               >
-                ✕ Reset all progress
+                ✕ Reset base game progress
               </button>
             )}
           </div>
