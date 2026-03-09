@@ -1,0 +1,47 @@
+{
+  "id": "debunk-plan-easy-01",
+  "title": "Double Trouble",
+  "description": "Two rivals have published wrong theories. You know the truth about both — clear the board.",
+  "difficulty": "easy",
+  "clues": [
+    { "kind": "aspect", "ingredient": 1, "color": "R", "sign": "-" },
+    { "kind": "aspect", "ingredient": 1, "color": "G", "sign": "+" },
+    { "kind": "aspect", "ingredient": 1, "color": "B", "sign": "-" },
+    { "kind": "aspect", "ingredient": 6, "color": "R", "sign": "+" },
+    { "kind": "aspect", "ingredient": 6, "color": "G", "sign": "+" },
+    { "kind": "aspect", "ingredient": 6, "color": "B", "sign": "-" }
+  ],
+  "publications": [
+    { "ingredient": 1, "claimedAlchemical": 3 },
+    null, null, null, null,
+    { "ingredient": 6, "claimedAlchemical": 4 },
+    null, null
+  ],
+  "questions": [
+    { "kind": "debunk_min_steps" }
+  ],
+  "solution": {
+    "1": 1, "2": 2, "3": 3, "4": 4,
+    "5": 5, "6": 6, "7": 7, "8": 8
+  },
+  "debunk_answers": {
+    "debunk_min_steps": [
+      { "kind": "apprentice", "ingredient": 1, "color": "R" },
+      { "kind": "apprentice", "ingredient": 6, "color": "R" }
+    ]
+  },
+  "hints": [
+    {
+      "level": 1,
+      "text": "Two publications, two targets. Your clues fully establish the true aspects of ingredient 1 and ingredient 6. Each one can be debunked independently with an apprentice reveal — you just need one valid colour per ingredient."
+    },
+    {
+      "level": 2,
+      "text": "Ingredient 1: true npN vs claimed pNn. R and G both disprove (− vs +, and + vs −). Ingredient 6: true Ppn vs claimed nPp. R and B both disprove (+ vs −, and − vs +). Any valid colour for each gives you a 2-step plan."
+    },
+    {
+      "level": 3,
+      "text": "Two-step plan: ① Apprentice on ingredient 1 — reveal R (or G). ② Apprentice on ingredient 6 — reveal R (or B). Steps can be done in either order."
+    }
+  ]
+}

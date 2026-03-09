@@ -52,6 +52,26 @@ function Ing({ slotId }: { slotId: number }) {
   return <span title={name} aria-label={name} className="inline-flex shrink-0"><IngredientIcon index={index} width={ING_W} /></span>;
 }
 
+// ─── Golem part icon ──────────────────────────────────────────────────────────
+
+const GOLEM_ICON_SRC: Record<'chest' | 'ears', string> = {
+  chest: '/alchemydoku/images/golem_chest_icon.png',
+  ears:  '/alchemydoku/images/golem_ears_icon.png',
+};
+
+function GolemPartIcon({ part, size = 20 }: { part: 'chest' | 'ears'; size?: number }) {
+  const label = part === 'chest' ? 'Chest' : 'Ears';
+  return (
+    <img
+      src={GOLEM_ICON_SRC[part]}
+      alt={label}
+      title={label}
+      style={{ width: size, height: size, borderRadius: '50%', display: 'inline-block', flexShrink: 0, verticalAlign: 'middle' }}
+    />
+  );
+}
+
+
 const BADGE_W = 22;
 
 function IngBadge({ slotId, color, sign }: { slotId: number; color: Color; sign: '+' | '-' }) {
@@ -116,8 +136,8 @@ function BookClueCard({ clue }: { clue: BookClue }) {
         <span title={name}><IngredientIcon index={index} width={ING_W} /></span>
         <span className="text-xs font-semibold">is</span>
         <span className={`inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-xs font-bold
-          ${isSolar ? 'bg-orange-100 text-orange-800 border border-orange-300' : 'bg-gray-100 text-gray-500 border border-gray-300'}`}>
-          {isSolar ? '☀️ Solar' : '🌙 Lunar'}
+          ${isSolar ? 'bg-amber-100 text-amber-700 border border-amber-300' : 'bg-blue-100 text-blue-700 border border-blue-300'}`}>
+          {isSolar ? '☀ Solar' : '🌙 Lunar'}
         </span>
       </div>
     </Card>
@@ -246,13 +266,14 @@ function ExpandedBaseClueCard({ clue }: { clue: AnyClue }) {
 // ─── Golem clue cards ────────────────────────────────────────────────────────
 
 function GolemTestCard({ clue }: { clue: GolemTestClue }) {
-  function Badge({ reacted, label }: { reacted: boolean; label: string }) {
+  function Badge({ reacted, part }: { reacted: boolean; part: 'chest' | 'ears' }) {
     return (
       <span className={`inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-xs font-semibold
         ${reacted
           ? 'bg-green-100 text-green-700 border border-green-300'
           : 'bg-gray-100 text-gray-400 border border-gray-200'}`}>
-        {label} {reacted ? '✓' : '✗'}
+        <GolemPartIcon part={part} size={18} />
+        {reacted ? '✓' : '✗'}
       </span>
     );
   }
@@ -261,8 +282,8 @@ function GolemTestCard({ clue }: { clue: GolemTestClue }) {
       <div className="flex items-center gap-2 flex-wrap">
         <Ing slotId={clue.ingredient} />
         <div className="flex gap-1.5">
-          <Badge reacted={clue.chest_reacted} label="☁️ Chest" />
-          <Badge reacted={clue.ears_reacted}  label="👂 Ears"  />
+          <Badge reacted={clue.chest_reacted} part="chest" />
+          <Badge reacted={clue.ears_reacted}  part="ears"  />
         </div>
       </div>
     </Card>
@@ -270,13 +291,12 @@ function GolemTestCard({ clue }: { clue: GolemTestClue }) {
 }
 
 function GolemHintColorCard({ clue }: { clue: GolemHintColorClue }) {
-  const partLabel = clue.part === 'chest' ? '☁️ Chest' : '👂 Ears';
   const colorLabel = { R: 'Red', G: 'Green', B: 'Blue' }[clue.color];
   const colorClass = { R: 'text-red-600', G: 'text-green-600', B: 'text-blue-600' }[clue.color];
   return (
     <Card icon="🔬" label="Golem Research" accent="blue">
       <p className="text-xs">
-        {partLabel} reacts to a{' '}
+        <GolemPartIcon part={clue.part} size={16} />{' '}reacts to a{' '}
         <span className={`font-bold ${colorClass}`}>{colorLabel}</span>{' '}
         aspect.
       </p>
@@ -285,12 +305,11 @@ function GolemHintColorCard({ clue }: { clue: GolemHintColorClue }) {
 }
 
 function GolemHintSizeCard({ clue }: { clue: GolemHintSizeClue }) {
-  const partLabel = clue.part === 'chest' ? '☁️ Chest' : '👂 Ears';
   const sizeLabel = clue.size === 'L' ? 'Large' : 'Small';
   return (
     <Card icon="🔬" label="Golem Research" accent="blue">
       <p className="text-xs">
-        {partLabel} reacts to a <span className="font-bold">{sizeLabel}</span> aspect.
+        <GolemPartIcon part={clue.part} size={16} />{' '}reacts to a <span className="font-bold">{sizeLabel}</span> aspect.
       </p>
     </Card>
   );

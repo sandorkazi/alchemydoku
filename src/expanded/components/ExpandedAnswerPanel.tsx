@@ -165,7 +165,7 @@ function QuestionHeader({ q }: { q: AnyQuestion }) {
     <span className="inline-flex items-center gap-1.5 flex-wrap">
       <span className="text-xs font-semibold text-violet-600">Is</span>
       <Ing slotId={q.ingredient} />
-      <span className="text-xs font-semibold text-violet-600">☀️ Solar or 🌙 Lunar?</span>
+      <span className="text-xs font-semibold"><span className="text-amber-500">☀ Solar</span> or <span className="text-blue-500">🌙 Lunar</span>?</span>
     </span>
   );
 
@@ -188,8 +188,8 @@ function RevealedAnswer({ q, answer }: { q: AnyQuestion; answer: AnyAnswer }) {
       const r = (answer as SolarLunarAnswer).result;
       return (
         <span className={`inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-xs font-bold
-          ${r==='solar'?'bg-orange-100 text-orange-800':'bg-gray-100 text-gray-500'}`}>
-          {r==='solar'?'☀️ Solar':'🌙 Lunar'}
+          ${r==='solar'?'bg-amber-100 text-amber-700':'bg-blue-100 text-blue-700'}`}>
+          {r==='solar'?'☀ Solar':'🌙 Lunar'}
         </span>
       );
     }
@@ -341,9 +341,9 @@ function SolarLunarPicker({ selected, onSelect }: {
       {(['solar','lunar'] as const).map(val => (
         <button key={val} role="radio" aria-checked={selected===val} onClick={() => onSelect(val)}
           className={`flex flex-col items-center gap-1 px-4 py-2 rounded-xl border-2 transition-all
-            ${selected===val?(val==='solar'?'border-orange-500 bg-orange-50':'border-gray-400 bg-gray-100'):'border-transparent bg-gray-100 hover:bg-gray-200'}`}>
+            ${selected===val?(val==='solar'?'border-amber-500 bg-amber-50':'border-blue-500 bg-blue-50'):'border-transparent bg-gray-100 hover:bg-gray-200'}`}>
           <span className="text-2xl">{val==='solar'?'☀️':'🌙'}</span>
-          <span className="text-xs font-semibold capitalize">{val}</span>
+          <span className={`text-xs font-semibold ${val==='solar'?'text-amber-600':'text-blue-600'}`}>{val==='solar'?'Solar':'Lunar'}</span>
         </button>
       ))}
     </div>

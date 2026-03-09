@@ -20,7 +20,17 @@ hosted under `public/`.
 | `CorrectIcon`      | `width`                            | Green checkmark                           |
 | `IncorrectIcon`    | `width`                            | Red X                                     |
 
-Asset URL pattern: `${import.meta.env.BASE_URL}sprites/<name>.svg`
+Asset URL pattern: `${import.meta.env.BASE_URL}sprites/<name>.s
+
+**Golem part icons** — defined inline in `ExpandedClueCard.tsx` (not in `GameSprites.tsx`):
+
+| Component       | Props                                  | Renders                                                         |
+|-----------------|----------------------------------------|-----------------------------------------------------------------|
+| `GolemPartIcon` | `part: 'chest'|'ears', size?: number`  | Circular PNG crop of the golem sprite, rendered as `<img>` with `border-radius: 50%` |
+
+Source PNGs: `public/images/golem_chest_icon.png`, `public/images/golem_ears_icon.png`
+(400×400 px each — largest center-crop circle from the 760×400 originals).
+URL: `/alchemydoku/images/golem_*_icon.png`.vg`
 
 ---
 
@@ -43,9 +53,24 @@ Row headers show alchemical molecule SVGs.
 **Tint colours** (applied as background tint per ingredient column):
 `#6C4FA3, #8DBF3F, #6B5A3A, #D4A437, #3F6FB6, #979c91, #B23A2E, #23293D`
 
+**Tint opacity varies by row** to create visual groupings that match neutral-potion pairs:
+- Rows 1, 2, 5, 6 → opacity `0.13` (lighter)
+- Rows 3, 4, 7, 8 → opacity `0.31` (standard)
+
+**Neutral-pair decorators**: a half-sized (24×24 px) neutral potion image is positioned
+halfway outside the right edge of the grid, rotated 45° CW, at the boundary between each
+neutral-mixing pair (rows 1–2, 3–4, 5–6, 7–8). These are rendered behind the table
+(`z-index: 0` vs table `z-index: 1`).
+
 ### Expanded variant (`ExpandedIngredientGrid`)
-- Rows gain a left border: amber/gold for Solar alchemicals (1,3,5,8), blue for Lunar (2,4,6,7).
-- Column headers gain ☀️/🌙 toggle buttons that update `solarLunarMarks` state.
+- Rows gain a **left border** (4px): amber/gold for Solar alchemicals (1,3,5,7),
+  blue/indigo for Lunar (2,4,6,8). Note: Solar = odd IDs, Lunar = even IDs.
+- Column headers gain **Solar/Lunar pill buttons** (☀️ orange left, 🌙 grey right),
+  one pair per column. Each button independently tracks a `CellState` mark.
+  See `EXPANDED.md §4b` for full behaviour.
+- Cells in Solar rows show the column's solar mark state in the **top-left corner**;
+  cells in Lunar rows show the lunar mark state in the **top-right corner**.
+- Tint opacity banding and neutral-pair decorators are identical to the base variant.
 
 ---
 
@@ -74,6 +99,9 @@ Renders a single clue as a compact card. Each clue kind has a distinct visual tr
 | `encyclopedia_uncertain`   | 📄   | amber    | Same grid + "≥ 3 of 4 correct" note               |
 | `debunk_apprentice`        | 🔍   | rose     | True sign shown + success/hedge status            |
 | `debunk_master`            | ⚗️   | rose     | Claimed result shown + success/rejected status    |
+| `golem_test`               | 🧿   | blue     | Ingredient + Chest `GolemPartIcon` ✓/✗ + Ears `GolemPartIcon` ✓/✗ |
+| `golem_hint_color`         | 🔬   | blue     | `GolemPartIcon` + "reacts to a Red/Green/Blue aspect" |
+| `golem_hint_size`          | 🔬   | blue     | `GolemPartIcon` + "reacts to a Large/Small aspect" |
 
 ---
 

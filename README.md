@@ -97,6 +97,79 @@ npm run build   # outputs to dist/
 
 ---
 
+## Puzzle toolchain
+
+All puzzle generation, validation and difficulty analysis is handled by a single Python script.
+**No external packages required** — pure Python 3.8+ stdlib only.
+
+Run everything from the project root:
+
+### Generate new expanded puzzles
+
+```bash
+# List all available profiles
+python scripts/alchemydoku.py generate --profiles
+
+# Generate 3 easy encyclopedia puzzles
+python scripts/alchemydoku.py generate --profile easy_enc --count 3
+
+# Generate with a fixed seed (reproducible output)
+python scripts/alchemydoku.py generate --profile easy_golem --seed 42
+
+# Verbose output (shows world counts, clue selection, hints)
+python scripts/alchemydoku.py generate --profile medium_golem_sl --count 2 --verbose
+```
+
+Available profiles:
+
+| Profile | Mechanics |
+|---|---|
+| `tutorial_golem` | Golem tutorial |
+| `easy_enc` | Encyclopedia only |
+| `easy_sl` | Solar/Lunar only |
+| `easy_golem` | Golem only |
+| `medium_enc_sl` | Encyclopedia + Solar/Lunar |
+| `medium_golem_enc` | Golem + Encyclopedia |
+| `medium_golem_sl` | Golem + Solar/Lunar |
+| `hard_all` | All three mechanics |
+| `hard_golem_mix` | Golem-heavy mix |
+
+Generated JSON files land in `src/expanded/data/puzzles/` with auto-incremented filenames
+(e.g. `exp-easy-enc-05.json`).
+
+**After generating**, register each new file in `src/expanded/data/puzzlesIndex.ts`:
+
+```ts
+// 1. Add an import at the top
+import expEasyEnc05 from './puzzles/exp-easy-enc-05.json';
+
+// 2. Add it to ALL_EXPANDED_PUZZLES
+export const ALL_EXPANDED_PUZZLES: ExpandedPuzzle[] =
+  [...existing puzzles..., expEasyEnc05] as unknown as ExpandedPuzzle[];
+
+// 3. Optionally add its id to the relevant collection in EXPANDED_COLLECTIONS
+```
+
+### Validate existing expanded puzzles
+
+```bash
+python scripts/alchemydoku.py validate
+```
+
+Reports `ERROR` / `WARNING` per puzzle per clue. Generated puzzles should be clean;
+hand-crafted tutorials may produce expected warnings.
+
+### Analyse base-game difficulty
+
+```bash
+python scripts/alchemydoku.py analyze
+```
+
+Rescores all puzzles in `src/data/puzzles/*.json` and writes `complexity` metadata back
+into each file. Also reports pip distribution versus `collections.json`.
+
+---
+
 ## Internal reference: ingredient sprite order
 
 | ID | Name            | File   |

@@ -37,6 +37,12 @@
       "kind": "golem_hint_color",
       "part": "chest",
       "color": "R"
+    },
+    {
+      "kind": "golem_test",
+      "ingredient": 3,
+      "chest_reacted": true,
+      "ears_reacted": true
     }
   ],
   "questions": [
@@ -58,15 +64,15 @@
   "hints": [
     {
       "level": 1,
-      "text": "The golem reacts to SIZE, not sign. The chest reacts to a specific color+size combination. The research note tells you the chest reacts to Red. Look at which test made the chest react \u2014 that ingredient has a Large Red aspect."
+      "text": "The golem reacts to SIZE, not sign. The chest reacts to a specific color+size combination. The research note tells you the chest reacts to Red.\nKnown tests:\n  \u2014 ingredient 1: chest \u2713 ears \u2713 \u2192 ANIMATOR\n  \u2014 ingredient 2: chest \u2717 ears \u2713 \u2192 ears-only\n  \u2014 ingredient 3: chest \u2713 ears \u2713 \u2192 ANIMATOR\n  \u2014 ingredient 7: chest \u2717 ears \u2717 \u2192 non-reactive"
     },
     {
       "level": 2,
-      "text": "ingredient 1 triggered both chest and ears \u2014 it is an animator. The ears reacted to ingredient 2 but not the chest, and neither reacted to ingredient 7. You need to find the second animator: another ingredient that triggers both reactions."
+      "text": "Two ingredients triggered both reactions (1 and 3) \u2014 those are the animators. The chest reacts to Large Red; the ears react to Small Green. An animator needs both: Large Red AND Small Green aspects."
     },
     {
       "level": 3,
-      "text": "Animators have both Large Red and Small Green aspects. Alchemicals with Large Red are Nnp(5), Ppn(6), NNN(7), PPP(8). Of those, Small Green is only on Nnp(5) and Ppn(6). ingredient 1 maps to Nnp \u2014 ingredient 3 maps to Ppn. The animators are ingredients 1 and 3."
+      "text": "Ingredient 1 maps to Nnp(5): R\u2212L G\u2212S B+S \u2014 has Large Red \u2713, Small Green \u2713. Animator.\nIngredient 3 maps to Ppn(6): R+L G+S B\u2212S \u2014 has Large Red \u2713, Small Green \u2713. Animator.\nThe animators are ingredients 1 and 3."
     }
   ]
 }

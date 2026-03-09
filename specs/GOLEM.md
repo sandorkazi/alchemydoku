@@ -220,8 +220,9 @@ directly below the 8×8 ingredient grid. Only shown when the puzzle has `golem` 
 
 One row per `golem_test` clue:
 ```
-[ingredient icon]  ☁️ Chest [✓/✗]   👂 Ears [✓/✗]
+[ingredient icon]  [chest icon] ✓/✗   [ears icon] ✓/✗
 ```
+Each part label uses `GolemPartIcon` (circular crop PNG) instead of an emoji.
 Green badge = reacted, grey badge = no reaction.
 
 ### Golem Notepad

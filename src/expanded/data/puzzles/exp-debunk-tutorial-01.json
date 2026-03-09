@@ -1,0 +1,70 @@
+{
+  "id": "exp-debunk-tutorial-01",
+  "kind": "debunk",
+  "mode": "expanded",
+  "title": "The Scorpion Scandal",
+  "description": "A colleague has published a Scorpion article and a suspicious book entry. Your experiments prove them wrong — can you debunk both in a single action?",
+  "difficulty": "tutorial",
+  "clues": [
+    { "kind": "aspect", "ingredient": 1, "color": "G", "sign": "+" },
+    { "kind": "aspect", "ingredient": 1, "color": "R", "sign": "-" },
+    { "kind": "aspect", "ingredient": 1, "color": "B", "sign": "-" },
+    { "kind": "aspect", "ingredient": 2, "color": "G", "sign": "-" },
+    { "kind": "aspect", "ingredient": 2, "color": "B", "sign": "+" },
+    { "kind": "aspect", "ingredient": 3, "color": "R", "sign": "+" },
+    { "kind": "aspect", "ingredient": 3, "color": "G", "sign": "-" },
+    { "kind": "aspect", "ingredient": 4, "color": "R", "sign": "-" },
+    { "kind": "aspect", "ingredient": 4, "color": "G", "sign": "+" },
+    { "kind": "aspect", "ingredient": 4, "color": "B", "sign": "+" },
+    { "kind": "aspect", "ingredient": 5, "color": "R", "sign": "-" },
+    { "kind": "aspect", "ingredient": 5, "color": "G", "sign": "-" },
+    { "kind": "aspect", "ingredient": 5, "color": "B", "sign": "+" },
+    { "kind": "aspect", "ingredient": 6, "color": "G", "sign": "+" },
+    { "kind": "aspect", "ingredient": 6, "color": "B", "sign": "-" },
+    { "kind": "aspect", "ingredient": 7, "color": "R", "sign": "-" },
+    { "kind": "aspect", "ingredient": 7, "color": "G", "sign": "-" }
+  ],
+  "publications": [
+    null, null, null, null, null,
+    { "ingredient": 6, "claimedAlchemical": 3 },
+    null, null
+  ],
+  "articles": [
+    {
+      "id": "art-1",
+      "aspect": "G",
+      "entries": [
+        { "ingredient": 1, "sign": "+" },
+        { "ingredient": 2, "sign": "-" },
+        { "ingredient": 4, "sign": "+" },
+        { "ingredient": 6, "sign": "-" }
+      ]
+    }
+  ],
+  "questions": [
+    { "kind": "debunk_min_steps" }
+  ],
+  "solution": {
+    "1": 1, "2": 2, "3": 3, "4": 4,
+    "5": 5, "6": 6, "7": 7, "8": 8
+  },
+  "debunk_answers": {
+    "debunk_min_steps": [
+      { "kind": "apprentice", "ingredient": 6, "color": "G" }
+    ]
+  },
+  "hints": [
+    {
+      "level": 1,
+      "text": "There is one publication and one encyclopedia article to debunk. Look at what the publication claims about Scorpion (ingredient 6) and compare it to your clues."
+    },
+    {
+      "level": 2,
+      "text": "The publication claims Scorpion is pNn (G−). Your clues show Scorpion's true G aspect is +. Revealing G+ on Scorpion contradicts the publication directly.\n\nNow check the encyclopedia article — it also has a G entry for Scorpion, claiming G−. The same reveal (G+ on Scorpion) will contradict that entry too."
+    },
+    {
+      "level": 3,
+      "text": "One apprentice debunk: reveal G+ on Scorpion (ingredient 6).\n— The publication claims Scorpion is pNn, which has G−. True G+ contradicts it → publication removed.\n— Art-1 also claims Scorpion has G−. True G+ contradicts it → article removed.\nBoth targets gone in a single action."
+    }
+  ]
+}

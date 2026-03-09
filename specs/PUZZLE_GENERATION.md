@@ -569,3 +569,77 @@ Mechanic abbreviations in IDs:
    This sidesteps the double-quantifier complexity: group membership is determined
    first, potion enumeration second. If the params are not fully constrained, use
    `golem_group` or `golem_animate_potion` instead.
+---
+
+## 9. CLI Usage (`scripts/alchemydoku.py`)
+
+The toolchain is a single Python 3.8+ script with no external dependencies.
+Run all commands from the project root.
+
+### generate
+
+```bash
+python scripts/alchemydoku.py generate --profile <name> [--count N] [--seed S] [--verbose]
+python scripts/alchemydoku.py generate --profiles   # list all available profiles
+```
+
+| Profile           | Mechanics                          |
+|-------------------|------------------------------------|
+| `tutorial_golem`  | Golem tutorial                     |
+| `easy_enc`        | Encyclopedia only                  |
+| `easy_sl`         | Solar/Lunar only                   |
+| `easy_golem`      | Golem only                         |
+| `medium_enc_sl`   | Encyclopedia + Solar/Lunar         |
+| `medium_golem_enc`| Golem + Encyclopedia               |
+| `medium_golem_sl` | Golem + Solar/Lunar                |
+| `hard_all`        | All three mechanics                |
+| `hard_golem_mix`  | Golem-heavy mix                    |
+
+Output files land in `src/expanded/data/puzzles/` with auto-incremented filenames
+(e.g. `exp-easy-enc-05.json`).
+
+### validate
+
+```bash
+python scripts/alchemydoku.py validate
+```
+
+Validates every `*.json` in `src/expanded/data/puzzles/`. Reports `ERROR` and `WARNING`
+per puzzle. Generated puzzles should be clean; hand-crafted tutorials may produce
+expected warnings.
+
+### analyze
+
+```bash
+python scripts/alchemydoku.py analyze
+```
+
+Rescores all puzzles in `src/data/puzzles/*.json` and writes `complexity` metadata back
+into each file.
+
+---
+
+## 10. Post-Generation: Registering Puzzles
+
+The generator writes JSON files but does **not** update the index. After generating,
+manually edit `src/expanded/data/puzzlesIndex.ts`:
+
+```ts
+// 1. Add an import
+import expEasyEnc05 from './puzzles/exp-easy-enc-05.json';
+
+// 2. Add to ALL_EXPANDED_PUZZLES array
+export const ALL_EXPANDED_PUZZLES: ExpandedPuzzle[] =
+  [ ...existing..., expEasyEnc05 ] as unknown as ExpandedPuzzle[];
+
+// 3. Add the puzzle ID to the relevant collection in EXPANDED_COLLECTIONS
+{
+  id: 'exp-easy',
+  puzzleIds: ['exp-easy-solar-01', 'exp-easy-enc-01', 'exp-easy-enc-05'],
+}
+```
+
+> ⚠️ As of the current codebase, 18 generated puzzle files exist in `src/expanded/data/puzzles/`
+> that are not yet registered (enc-02..07, golem-02..03, sl-02..03, medium-enc-sl-02..03,
+> medium-golem-enc-02..03, medium-golem-sl-02..03, hard-all-02, hard-golem-mix-02).
+> They are valid and passing `validate`, but invisible in-game until added to `puzzlesIndex.ts`.

@@ -5,7 +5,7 @@
  */
 
 import type {
-  IngredientId, Color, Sign, Size,
+  IngredientId, Color, Sign, Size, CellState,
   Clue as BaseClue, QuestionTarget as BaseQuestion,
   PotionResult,
 } from '../types';
@@ -14,7 +14,8 @@ import type { PuzzleAnswer } from '../puzzles/schema';
 // ─── Solar / Lunar ────────────────────────────────────────────────────────────
 
 export type SolarLunar = 'solar' | 'lunar';
-export type SolarLunarMark = 'solar' | 'lunar' | null;
+/** Per-column mark: each polarity tracked independently as a CellState. */
+export type SolarLunarMark = { solar: CellState; lunar: CellState };
 export type SolarLunarMarks = Record<number, SolarLunarMark>;
 
 // ─── Encyclopedia entry ───────────────────────────────────────────────────────

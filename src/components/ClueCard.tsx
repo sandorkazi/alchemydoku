@@ -4,7 +4,7 @@ import { PotionImage, AlchemicalImage, SignedElemImage, IngredientIcon,
 import { ALCHEMICALS } from '../data/alchemicals';
 import { INGREDIENTS } from '../data/ingredients';
 import { useIngredient } from '../contexts/SolverContext';
-import type { Clue, SellResult, DebunkClue, AlchemicalId } from '../types';
+import type { Clue, SellResult, DebunkClue, AlchemicalId, Color, Sign } from '../types';
 
 const ING_W        = 36;  // ingredient icon in clue cards
 const ASPECT_BADGE = 22;  // aspect orb badge — half overlaps top of ingredient
@@ -55,7 +55,70 @@ function IngBadge({
   );
 }
 
-// ─── Card shell ───────────────────────────────────────────────────────────────
+/**
+ * Ingredient icon with TWO aspect badges — their centres sit on the top edge,
+ * left badge offset left-of-centre, right badge offset right-of-centre.
+ * Both orbs are fully visible and slightly overlap.
+ */
+function IngDualBadge({
+  slotId,
+  badge1, badge2,
+  title1, title2,
+}: {
+  slotId: number;
+  badge1: React.ReactNode; badge2: React.ReactNode;
+  title1: string; title2: string;
+}) {
+  const getIngredient = useIngredient();
+  const { displayId, index } = getIngredient(slotId);
+  const name = INGREDIENTS[displayId as 1].name;
+  // ING_W=36, BADGE=22 → left centre at 7, right centre at 29 (22px apart, 4px overlap each side)
+  const leftX  = ING_W / 2 - 11;   // left badge left edge
+  const rightX = ING_W / 2 - 11 + 14; // right badge left edge (14px gap between left edges)
+  return (
+    <div
+      className="relative inline-block"
+      style={{ paddingTop: ASPECT_BADGE / 2, width: ING_W + 14 }}
+      title={`${name}: ${title1}, ${title2}`}
+      aria-label={`${name}: ${title1} and ${title2}`}
+    >
+      <div className="absolute z-10 drop-shadow" style={{ top: 0, left: leftX }}>{badge1}</div>
+      <div className="absolute z-20 drop-shadow" style={{ top: 0, left: rightX }}>{badge2}</div>
+      <div style={{ marginLeft: 7 }}>
+        <IngredientIcon index={index} width={ING_W} />
+      </div>
+    </div>
+  );
+}
+
+/** One card for 2 aspect clues on the same ingredient. */
+export function MultiAspectClueCard({ clues }: { clues: Array<Extract<Clue, { kind: 'aspect' }>> }) {
+  const colorNames: Record<string, string> = { R: 'Red', G: 'Green', B: 'Blue' };
+  const [a, b] = clues;
+  const t = (c: Color, s: Sign) => `${colorNames[c]} ${s === '+' ? 'positive' : 'negative'}`;
+  return (
+    <Card icon="📋" label="Known Components" accent="blue">
+      <IngDualBadge
+        slotId={a.ingredient}
+        badge1={<SignedElemImage color={a.color} sign={a.sign} width={ASPECT_BADGE} />}
+        badge2={<SignedElemImage color={b.color} sign={b.sign} width={ASPECT_BADGE} />}
+        title1={t(a.color, a.sign)}
+        title2={t(b.color, b.sign)}
+      />
+    </Card>
+  );
+}
+
+/** Derive the unique alchemical ID that matches all three given aspect signs. */
+function alchemicalFromSigns(R: Sign, G: Sign, B: Sign): AlchemicalId | null {
+  for (const [id, alch] of Object.entries(ALCHEMICALS) as [string, typeof ALCHEMICALS[1]][]) {
+    if (alch.R.sign === R && alch.G.sign === G && alch.B.sign === B)
+      return Number(id) as AlchemicalId;
+  }
+  return null;
+}
+
+
 
 function Card({
   icon, label, children, accent = 'amber',

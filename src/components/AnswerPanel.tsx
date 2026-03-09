@@ -3,6 +3,7 @@ import { ALCHEMICALS } from '../data/alchemicals';
 import { PotionImage, AlchemicalImage, ElemImage, CorrectIcon, IncorrectIcon, IngredientIcon } from './GameSprites';
 import { useSolver, useIngredient } from '../contexts/SolverContext';
 import { computeAnswers } from '../puzzles/schema';
+import { DebunkAnswerPanel } from './DebunkAnswerPanel';
 import type { PotionResult, AlchemicalId, Color } from '../types';
 import type { PuzzleAnswer } from '../puzzles/schema';
 import type { QuestionTarget } from '../types';
@@ -427,6 +428,21 @@ function QuestionRow({ q, index, total, value, onChange, correctAnswer, showSolu
 // ─── Main panel ───────────────────────────────────────────────────────────────
 
 export function AnswerPanel({ onNext, isTutorial = false }: {
+  onNext?: () => void;
+  isTutorial?: boolean;
+}) {
+  const { state } = useSolver();
+  const isDebunkPuzzle = state.puzzle.questions.some(
+    q => q.kind === 'debunk_min_steps' || q.kind === 'debunk_conflict_only'
+  );
+
+  if (isDebunkPuzzle) {
+    return <DebunkAnswerPanel onNext={onNext} isTutorial={isTutorial} />;
+  }
+  return <StandardAnswerPanel onNext={onNext} isTutorial={isTutorial} />;
+}
+
+function StandardAnswerPanel({ onNext, isTutorial = false }: {
   onNext?: () => void;
   isTutorial?: boolean;
 }) {

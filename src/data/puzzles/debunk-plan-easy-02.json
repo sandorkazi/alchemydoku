@@ -1,0 +1,45 @@
+{
+  "id": "debunk-plan-easy-02",
+  "title": "The Master's Shortcut",
+  "description": "Two wrong publications sit on the board. A master mix can expose one of them — but you still need to find it.",
+  "difficulty": "easy",
+  "clues": [
+    { "kind": "aspect", "ingredient": 1, "color": "R", "sign": "-" },
+    { "kind": "aspect", "ingredient": 1, "color": "G", "sign": "+" },
+    { "kind": "aspect", "ingredient": 1, "color": "B", "sign": "-" },
+    { "kind": "aspect", "ingredient": 4, "color": "B", "sign": "+" }
+  ],
+  "publications": [
+    { "ingredient": 1, "claimedAlchemical": 3 },
+    null, null,
+    { "ingredient": 4, "claimedAlchemical": 7 },
+    null, null, null, null
+  ],
+  "questions": [
+    { "kind": "debunk_min_steps" }
+  ],
+  "solution": {
+    "1": 1, "2": 2, "3": 3, "4": 4,
+    "5": 5, "6": 6, "7": 7, "8": 8
+  },
+  "debunk_answers": {
+    "debunk_min_steps": [
+      { "kind": "master", "ingredient1": 1, "ingredient2": 4 },
+      { "kind": "apprentice", "ingredient": 1, "color": "R" }
+    ]
+  },
+  "hints": [
+    {
+      "level": 1,
+      "text": "You know ingredient 1's full alchemical from the clues. Ingredient 4 is only partially known. A master debunk works when one ingredient's true alchemical is definitively established — because then the audience can calculate exactly what the result should have been under the wrong publication."
+    },
+    {
+      "level": 2,
+      "text": "Ingredient 1 is fully known (npN). Mix ingredients 1 + 4: the true result is neutral. If ingredient 4's publication (claiming NNN) were correct, the expected result would be mix(npN, NNN) = R−. That contradicts neutral — so ingredient 4's publication is exposed. Ingredient 1's publication can then be removed with a simple apprentice reveal."
+    },
+    {
+      "level": 3,
+      "text": "Step 1: Master debunk — mix ingredients 1 + 4. Ingredient 1 is definitively known, so the audience can check ingredient 4's publication: mix(npN, NNN) = R− ≠ neutral → ingredient 4's publication removed. Step 2: Apprentice on ingredient 1 — reveal R (or G) → ingredient 1's publication removed."
+    }
+  ]
+}

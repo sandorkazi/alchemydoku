@@ -1,0 +1,207 @@
+{
+  "id": "exp-debunk-medium-01",
+  "kind": "debunk",
+  "mode": "expanded",
+  "title": "The False Alibi",
+  "description": "Two wrong publications and a suspicious R-aspect article. The naive plan wastes a step — but one well-chosen master mix removes two targets at once and reveals why the article is wrong.",
+  "difficulty": "medium",
+  "clues": [
+    {
+      "kind": "aspect",
+      "ingredient": 1,
+      "color": "G",
+      "sign": "+"
+    },
+    {
+      "kind": "aspect",
+      "ingredient": 1,
+      "color": "R",
+      "sign": "-"
+    },
+    {
+      "kind": "aspect",
+      "ingredient": 1,
+      "color": "B",
+      "sign": "-"
+    },
+    {
+      "kind": "aspect",
+      "ingredient": 2,
+      "color": "G",
+      "sign": "-"
+    },
+    {
+      "kind": "aspect",
+      "ingredient": 2,
+      "color": "B",
+      "sign": "+"
+    },
+    {
+      "kind": "aspect",
+      "ingredient": 3,
+      "color": "R",
+      "sign": "+"
+    },
+    {
+      "kind": "aspect",
+      "ingredient": 3,
+      "color": "G",
+      "sign": "-"
+    },
+    {
+      "kind": "aspect",
+      "ingredient": 4,
+      "color": "R",
+      "sign": "-"
+    },
+    {
+      "kind": "aspect",
+      "ingredient": 4,
+      "color": "G",
+      "sign": "+"
+    },
+    {
+      "kind": "aspect",
+      "ingredient": 4,
+      "color": "B",
+      "sign": "+"
+    },
+    {
+      "kind": "aspect",
+      "ingredient": 5,
+      "color": "R",
+      "sign": "-"
+    },
+    {
+      "kind": "aspect",
+      "ingredient": 5,
+      "color": "G",
+      "sign": "-"
+    },
+    {
+      "kind": "aspect",
+      "ingredient": 5,
+      "color": "B",
+      "sign": "+"
+    },
+    {
+      "kind": "aspect",
+      "ingredient": 6,
+      "color": "G",
+      "sign": "+"
+    },
+    {
+      "kind": "aspect",
+      "ingredient": 6,
+      "color": "B",
+      "sign": "-"
+    },
+    {
+      "kind": "aspect",
+      "ingredient": 7,
+      "color": "R",
+      "sign": "-"
+    },
+    {
+      "kind": "aspect",
+      "ingredient": 7,
+      "color": "G",
+      "sign": "-"
+    }
+  ],
+  "publications": [
+    {
+      "ingredient": 1,
+      "claimedAlchemical": 6
+    },
+    null,
+    {
+      "ingredient": 3,
+      "claimedAlchemical": 5
+    },
+    null,
+    null,
+    null,
+    null,
+    null
+  ],
+  "articles": [
+    {
+      "id": "art-1",
+      "aspect": "R",
+      "entries": [
+        {
+          "ingredient": 2,
+          "sign": "+"
+        },
+        {
+          "ingredient": 5,
+          "sign": "+"
+        },
+        {
+          "ingredient": 6,
+          "sign": "+"
+        },
+        {
+          "ingredient": 8,
+          "sign": "-"
+        }
+      ]
+    }
+  ],
+  "questions": [
+    {
+      "kind": "debunk_min_steps"
+    },
+    {
+      "kind": "debunk_conflict_only",
+      "variant": "master",
+      "fixedIngredient": 1
+    }
+  ],
+  "solution": {
+    "1": 1,
+    "2": 2,
+    "3": 3,
+    "4": 4,
+    "5": 5,
+    "6": 6,
+    "7": 7,
+    "8": 8
+  },
+  "debunk_answers": {
+    "debunk_min_steps": [
+      {
+        "kind": "master",
+        "ingredient1": 1,
+        "ingredient2": 5
+      },
+      {
+        "kind": "apprentice",
+        "ingredient": 3,
+        "color": "R"
+      }
+    ],
+    "debunk_conflict_only": [
+      {
+        "kind": "master",
+        "ingredient1": 1,
+        "ingredient2": 3
+      }
+    ]
+  },
+  "hints": [
+    {
+      "level": 1,
+      "text": "Three targets: Fern's publication (claims Ppn), Mushroom's publication (claims Nnp), and Art-1 (R aspect, partially wrong). The naive plan is three separate apprentice reveals — but the minimum is two steps. Look for a master mix that handles two targets at once."
+    },
+    {
+      "level": 2,
+      "text": "Consider mixing Fern (1) + Mandrake (5). True result: R−.\n\nFern's publication claims Ppn. Predicted mix(Ppn + Nnp) = neutral ≠ R−, so there is a conflict on Fern's publication. Mandrake has no wrong publication, so blame is unambiguous → Fern's publication removed.\n\nBut there is more: the mix result R− also tells you that Fern and Mandrake share R−. Since Fern's true R is − (confirmed by clues), the result confirms Mandrake's R is also −. Art-1 claims Mandrake has R+, which this directly contradicts → Art-1 removed.\n\nTwo targets gone in step 1. Only Mushroom's publication remains."
+    },
+    {
+      "level": 3,
+      "text": "Optimal 2-step plan:\n① Master: mix Fern + Mandrake (1 + 5) → true result R−.\n   • Removes Fern's publication: mix(claimed Ppn + true Nnp) = neutral ≠ R−, conflict is unambiguous (only Fern has a wrong pub in this pair).\n   • Simultaneously: result R− with Fern known as R−S proves Mandrake is R−L. Art-1 claims Mandrake (5) is R+, so the contradiction removes Art-1.\n② Apprentice: reveal R+ on Mushroom (3). Mushroom's true alchemical pNn is R+; the publication claims Nnp which is R−. Contradiction → Mushroom's publication removed.\n\nBonus — Q2 (conflict only, fixed ingredient = Fern):\nMix Fern + Mushroom (1 + 3) → true result B−. Both Fern's publication (claims Ppn) and Mushroom's publication (claims Nnp) are in conflict. Since both are wrong, neither can be unambiguously blamed → neither is removed. Pure conflict only."
+    }
+  ]
+}
