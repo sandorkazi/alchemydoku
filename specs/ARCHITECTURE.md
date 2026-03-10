@@ -34,6 +34,7 @@ alchemydoku/
 │   │   ├── worldPack.ts      ← WORLD_DATA, SIGN_TABLE, SIZE_TABLE, MIX_TABLE, filterWorlds
 │   │   ├── worldSet.ts       ← generateAllWorlds, applyClues, per-clue filters
 │   │   ├── deducer.ts        ← deduceMixingResult, deduceAlchemical, deduceAspect, etc.
+│   │   ├── debunk.ts         ← isDefinitivelyKnown, simulateStep, evaluatePlan, validateMinStepsAnswer, validateConflictOnlyAnswer
 │   │   ├── mixer.ts          ← mix(), mixIngredients(), potionResultsEqual()
 │   │   ├── alchemicals.ts    ← isDirectOpposite(), helper functions
 │   │   ├── sellValidator.ts  ← sell outcome logic
@@ -49,7 +50,8 @@ alchemydoku/
 │   ├── components/           ← base game UI components (all use useSolver())
 │   │   ├── IngredientGrid.tsx
 │   │   ├── ClueCard.tsx / CluePanel.tsx
-│   │   ├── AnswerPanel.tsx
+│   │   ├── AnswerPanel.tsx          ← routing wrapper (StandardAnswerPanel vs DebunkAnswerPanel)
+│   │   ├── DebunkAnswerPanel.tsx    ← debunk-plan question UI
 │   │   ├── HintDrawer.tsx
 │   │   ├── MixSimulator.tsx
 │   │   ├── AlchemicalDisplay.tsx

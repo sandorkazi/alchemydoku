@@ -1,7 +1,7 @@
 {
-  "id": "exp-medium-golem-sl-03",
+  "id": "exp-medium-golem-sl-04",
   "mode": "expanded",
-  "title": "The Last Awakening",
+  "title": "The Stone's Echo",
   "description": "The golem has been tested with 2 ingredients. Identify the animators and determine what potion their mix would produce.",
   "difficulty": "medium",
   "golem": {
@@ -10,20 +10,20 @@
       "size": "L"
     },
     "ears": {
-      "color": "G",
-      "size": "S"
+      "color": "B",
+      "size": "L"
     }
   },
   "clues": [
     {
       "kind": "golem_test",
-      "ingredient": 4,
+      "ingredient": 5,
       "chest_reacted": true,
       "ears_reacted": true
     },
     {
       "kind": "golem_test",
-      "ingredient": 7,
+      "ingredient": 4,
       "chest_reacted": true,
       "ears_reacted": true
     }
@@ -34,34 +34,37 @@
     }
   ],
   "solution": {
-    "1": 8,
+    "1": 5,
     "2": 4,
-    "3": 7,
-    "4": 6,
-    "5": 3,
-    "6": 2,
-    "7": 5,
+    "3": 3,
+    "4": 7,
+    "5": 8,
+    "6": 6,
+    "7": 2,
     "8": 1
   },
   "hints": [
     {
       "level": 1,
-      "text": "The golem reacts to SIZE on a specific color channel.\nKnown tests:\n  ing4: chest=\u2713 ears=\u2713  \u2192  animators\n  ing7: chest=\u2713 ears=\u2713  \u2192  animators"
+      "text": "The golem reacts to SIZE on a specific color channel.\nKnown tests:\n  ing5: chest=\u2713 ears=\u2713  \u2192  animators\n  ing4: chest=\u2713 ears=\u2713  \u2192  animators"
     },
     {
       "level": 2,
-      "text": "Chest reacts to R+L. Ears react to G+S. An animator needs BOTH. Cross-reference with untested ingredients."
+      "text": "Chest reacts to R+L. Ears react to B+L. An animator needs BOTH. Cross-reference with untested ingredients."
     },
     {
       "level": 3,
-      "text": "Animators: ingredients [4, 7] (Ppn, Nnp). Mix: neutral."
+      "text": "Animators: ingredients [4, 5] (NNN, PPP). Mix: neutral."
     }
   ],
   "complexity": {
-    "raw": 3.278,
+    "raw": 2.978,
     "avg_clue_strength": 2.404,
-    "q_sur": 0.8,
-    "m_sur": 1.1,
+    "ambig_penalty": 0.0,
+    "chain_depth": 0,
+    "stuck": false,
+    "requires_complement_set": false,
+    "question_requires_enumeration": false,
     "residual_worlds": 1440
   }
 }

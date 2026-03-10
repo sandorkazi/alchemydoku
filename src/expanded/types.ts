@@ -265,10 +265,23 @@ export type AnyAnswer = PuzzleAnswer | ExpandedAnswer;
 
 import type { Puzzle } from '../types';
 
+/**
+ * A debunkable encyclopedia article (expanded-mode debunk puzzles only).
+ * One article covers one aspect (color). Each entry claims a sign for one ingredient.
+ * The article is removed when ANY entry is directly and unambiguously disproved.
+ */
+export type DebunkArticle = {
+  id: string;
+  aspect: import('../types').Color;
+  entries: { ingredient: import('../types').IngredientId; sign: '+' | '-' }[];
+};
+
 export type ExpandedPuzzle = Omit<Puzzle, 'clues' | 'questions'> & {
   clues: AnyClue[];
   questions: AnyQuestion[];
   mode: 'expanded';
   /** Hidden golem configuration. Present for all golem puzzles. */
   golem?: GolemParams;
+  /** Expanded debunk: encyclopedia articles that can be disproved alongside publications. */
+  articles?: DebunkArticle[];
 };

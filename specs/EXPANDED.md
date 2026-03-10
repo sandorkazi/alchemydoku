@@ -241,7 +241,7 @@ ingredient has the stated sign on that color.
 **Computation:** Check whether every remaining world maps `ingredient` to an alchemical of
 the same Solar/Lunar class.
 
-**Answer UI:** Two buttons: ☀️ Solar (gold) and 🌙 Lunar (blue/silver).
+**Answer UI:** Two buttons: ☀ Solar (`text-orange-400`) and ☽ Lunar (`text-slate-400`).
 
 ---
 
@@ -260,8 +260,8 @@ alternating — must be computed via `isSolar`, not assumed.
 ### 4b. Solar/Lunar column marks
 
 Each ingredient column header gains two small pill-shaped toggle buttons:
-- ☀️ Solar button (always orange) — left
-- 🌙 Lunar button (always grey) — right
+- ☀ Solar button (`text-orange-400`, always orange) — left
+- ☽ Lunar button (`text-slate-400`, always grey) — right
 
 These let the player record their deduction about an ingredient's Solar/Lunar class.
 Solar and Lunar marks are **fully independent** — both can be set simultaneously (e.g.
@@ -273,8 +273,9 @@ Each button cycles through the same four states as a regular cell:
 - **question tool**: toggles unknown ↔ possible
 - **text tool**: behaves like mark tool
 
-When a cell in a Solar row is confirmed, a small ☀️ mark appears in the cell's top-left
-corner reflecting the column's solar mark state. Lunar rows show 🌙 in the top-right.
+When a cell in a Solar row is confirmed, a small ☀ mark (`text-orange-400`) appears in the
+cell's top-left corner reflecting the column's solar mark state. Lunar rows show ☽
+(`text-slate-400`) in the top-right.
 
 **State:** `solarLunarMarks: Record<number, SolarLunarMark>` in `ExpandedSolverState`,
 where `SolarLunarMark = { solar: CellState; lunar: CellState }`.
@@ -352,9 +353,15 @@ Encyclopedia fourth question example:
 ## 7. Implemented Since Initial Design
 
 - **Golem Project mechanics**: fully implemented — see `GOLEM.md`
-- **Debunking puzzle type**: question/answer types fully designed — see `DEBUNK_PUZZLES.md`;
-  three hand-crafted puzzles exist (`exp-debunk-tutorial-01`, `exp-debunk-easy-01`,
-  `exp-debunk-medium-01`); generator not yet implemented
+- **Base-game debunking puzzles**: fully implemented. Four hand-crafted puzzles:
+  - `debunk-plan-tutorial-01` — single apprentice, 1-step min
+  - `debunk-plan-easy-01`, `debunk-plan-easy-02` — easy 1–2 step plans
+  - `debunk-plan-conflict-01` — `debunk_conflict_only` question type
+  Logic lives in `src/logic/debunk.ts`; schema validation in `src/puzzles/schema.ts`;
+  UI in `src/components/DebunkAnswerPanel.tsx`.
+- **Expanded debunking puzzle type**: three hand-crafted puzzles
+  (`exp-debunk-tutorial-01`, `exp-debunk-easy-01`, `exp-debunk-medium-01`);
+  generator not yet implemented.
 
 ## 8. Deferred / Out of Scope
 

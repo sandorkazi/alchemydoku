@@ -114,10 +114,10 @@ function QuestionHeader({ q }: { q: QuestionTarget }) {
 function RevealedAnswer({ q, answer }: { q: QuestionTarget; answer: PuzzleAnswer }) {
 
   if (q.kind === 'mixing-result') {
-    return <PotionImage result={answer as PotionResult} width={36} />;
+    return <PotionImage result={answer as PotionResult} width={40} />;
   }
   if (q.kind === 'alchemical') {
-    return <AlchemicalImage id={answer as AlchemicalId} width={40} />;
+    return <AlchemicalImage id={answer as AlchemicalId} width={44} />;
   }
   if (q.kind === 'aspect') {
     const ds = (answer as { sign: '+' | '-' }).sign;
@@ -141,7 +141,7 @@ function RevealedAnswer({ q, answer }: { q: QuestionTarget; answer: PuzzleAnswer
     );
     return (
       <span className="inline-flex flex-wrap gap-1.5">
-        {pots.map(p => <PotionImage key={potionKey(p)} result={p} width={36} />)}
+        {pots.map(p => <PotionImage key={potionKey(p)} result={p} width={40} />)}
       </span>
     );
   }
@@ -149,7 +149,7 @@ function RevealedAnswer({ q, answer }: { q: QuestionTarget; answer: PuzzleAnswer
     const ids = (answer as { ingredients: number[] }).ingredients;
     return (
       <span className="inline-flex flex-wrap gap-1.5">
-        {ids.map(id => <IngredientIcon key={id} index={id - 1} width={32} />)}
+        {ids.map(id => <IngredientIcon key={id} index={id - 1} width={36} />)}
         {ids.length === 0 && <span className="text-xs text-gray-400 italic">None</span>}
       </span>
     );
@@ -174,7 +174,7 @@ function PotionPicker({ choices, selected, onSelect }: {
               focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-indigo-400
               ${active ? 'border-indigo-500 bg-indigo-50 shadow-md scale-105'
                        : 'border-transparent bg-gray-100 hover:bg-gray-200 hover:border-gray-300'}`}
-          ><PotionImage result={p} width={36} /></button>
+          ><PotionImage result={p} width={40} /></button>
         );
       })}
     </div>
@@ -195,7 +195,7 @@ function AlchemicalPicker({ selected, onSelect }: {
               focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-indigo-400
               ${active ? 'border-indigo-500 bg-indigo-50 shadow-md scale-105'
                        : 'border-transparent bg-gray-100 hover:bg-gray-200 hover:border-gray-300'}`}
-          ><AlchemicalImage id={id} width={46} /></button>
+          ><AlchemicalImage id={id} width={44} /></button>
         );
       })}
     </div>
@@ -263,7 +263,7 @@ function PossiblePotionsPicker({ displayChoices, selected, onToggle }: {
                 ${active ? 'border-indigo-500 bg-indigo-50 shadow-md scale-105'
                          : 'border-transparent bg-gray-100 hover:bg-gray-200 hover:border-gray-300'}`}
             >
-              <PotionImage result={p} width={36} />
+              <PotionImage result={p} width={40} />
               <span className={`text-[9px] font-bold leading-none h-2.5 ${active ? 'text-indigo-600' : 'text-transparent'}`}>✓</span>
             </button>
           );

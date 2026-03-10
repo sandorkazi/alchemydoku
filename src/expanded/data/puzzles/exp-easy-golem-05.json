@@ -1,0 +1,101 @@
+{
+  "id": "exp-easy-golem-05",
+  "mode": "expanded",
+  "title": "The Golem's Gambit",
+  "description": "The golem has been tested with 4 ingredients. Deduce the reaction pattern and identify the target group.",
+  "difficulty": "easy",
+  "golem": {
+    "chest": {
+      "color": "R",
+      "size": "S"
+    },
+    "ears": {
+      "color": "B",
+      "size": "L"
+    }
+  },
+  "clues": [
+    {
+      "kind": "golem_test",
+      "ingredient": 3,
+      "chest_reacted": true,
+      "ears_reacted": true
+    },
+    {
+      "kind": "golem_test",
+      "ingredient": 7,
+      "chest_reacted": false,
+      "ears_reacted": true
+    },
+    {
+      "kind": "mixing",
+      "ingredient1": 3,
+      "ingredient2": 4,
+      "result": {
+        "color": "G",
+        "sign": "+"
+      }
+    },
+    {
+      "kind": "mixing",
+      "ingredient1": 2,
+      "ingredient2": 6,
+      "result": {
+        "color": "G",
+        "sign": "+"
+      }
+    },
+    {
+      "kind": "golem_test",
+      "ingredient": 1,
+      "chest_reacted": true,
+      "ears_reacted": false
+    },
+    {
+      "kind": "golem_test",
+      "ingredient": 5,
+      "chest_reacted": false,
+      "ears_reacted": false
+    }
+  ],
+  "questions": [
+    {
+      "kind": "golem_group",
+      "group": "animators"
+    }
+  ],
+  "solution": {
+    "1": 3,
+    "2": 6,
+    "3": 1,
+    "4": 4,
+    "5": 5,
+    "6": 8,
+    "7": 7,
+    "8": 2
+  },
+  "hints": [
+    {
+      "level": 1,
+      "text": "The golem reacts to SIZE on a specific color channel.\nKnown tests:\n  ing3: chest=\u2713 ears=\u2713  \u2192  animators\n  ing7: chest=\u2717 ears=\u2713  \u2192  ears_only\n  ing1: chest=\u2713 ears=\u2717  \u2192  chest_only\n  ing5: chest=\u2717 ears=\u2717  \u2192  non_reactive"
+    },
+    {
+      "level": 2,
+      "text": "Chest reacts to R+S. Ears react to B+L. An animator needs BOTH. Cross-reference with untested ingredients."
+    },
+    {
+      "level": 3,
+      "text": "The animators are: ingredients [3, 8]. Alch: ing3\u2192npN, ing8\u2192pnP."
+    }
+  ],
+  "complexity": {
+    "raw": 2.772,
+    "avg_clue_strength": 2.217,
+    "ambig_penalty": 0.0,
+    "chain_depth": 0,
+    "stuck": false,
+    "requires_complement_set": false,
+    "question_requires_enumeration": false,
+    "residual_worlds": 4
+  }
+}

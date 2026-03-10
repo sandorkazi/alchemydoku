@@ -1,0 +1,70 @@
+{
+  "id": "exp-medium-golem-sl-06",
+  "mode": "expanded",
+  "title": "The Living Clay",
+  "description": "The golem has been tested with 2 ingredients. Identify the animators and determine what potion their mix would produce.",
+  "difficulty": "medium",
+  "golem": {
+    "chest": {
+      "color": "R",
+      "size": "S"
+    },
+    "ears": {
+      "color": "B",
+      "size": "L"
+    }
+  },
+  "clues": [
+    {
+      "kind": "golem_test",
+      "ingredient": 7,
+      "chest_reacted": true,
+      "ears_reacted": true
+    },
+    {
+      "kind": "golem_test",
+      "ingredient": 8,
+      "chest_reacted": true,
+      "ears_reacted": true
+    }
+  ],
+  "questions": [
+    {
+      "kind": "golem_animate_potion"
+    }
+  ],
+  "solution": {
+    "1": 6,
+    "2": 8,
+    "3": 4,
+    "4": 3,
+    "5": 7,
+    "6": 5,
+    "7": 2,
+    "8": 1
+  },
+  "hints": [
+    {
+      "level": 1,
+      "text": "The golem reacts to SIZE on a specific color channel.\nKnown tests:\n  ing7: chest=\u2713 ears=\u2713  \u2192  animators\n  ing8: chest=\u2713 ears=\u2713  \u2192  animators"
+    },
+    {
+      "level": 2,
+      "text": "Chest reacts to R+S. Ears react to B+L. An animator needs BOTH. Cross-reference with untested ingredients."
+    },
+    {
+      "level": 3,
+      "text": "Animators: ingredients [7, 8] (pnP, npN). Mix: neutral."
+    }
+  ],
+  "complexity": {
+    "raw": 2.978,
+    "avg_clue_strength": 2.404,
+    "ambig_penalty": 0.0,
+    "chain_depth": 0,
+    "stuck": false,
+    "requires_complement_set": false,
+    "question_requires_enumeration": false,
+    "residual_worlds": 1440
+  }
+}

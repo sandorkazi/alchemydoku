@@ -1,7 +1,7 @@
 {
   "id": "tutorial-debunk-03",
   "title": "Proof by Contradiction",
-  "description": "A failed debunk tells you what the mix is NOT. Use that, plus the assignment and mixing clues, to nail down the answer.",
+  "description": "A failed debunk tells you what the mix is NOT. Use that, plus the other clues, to nail down the answer.",
   "difficulty": "tutorial",
   "clues": [
     {
@@ -13,22 +13,20 @@
       "kind": "mixing",
       "ingredient1": 2,
       "ingredient2": 3,
-      "result": {
-        "type": "potion",
-        "color": "B",
-        "sign": "+"
-      }
+      "result": { "type": "potion", "color": "B", "sign": "+" }
+    },
+    {
+      "kind": "aspect",
+      "ingredient": 2,
+      "color": "B",
+      "sign": "+"
     },
     {
       "kind": "debunk",
       "variant": "master",
       "ingredient1": 2,
       "ingredient2": 7,
-      "claimedPotion": {
-        "type": "potion",
-        "color": "G",
-        "sign": "+"
-      },
+      "claimedPotion": { "type": "potion", "color": "G", "sign": "+" },
       "outcome": "failure"
     }
   ],
@@ -45,15 +43,15 @@
   "hints": [
     {
       "level": 1,
-      "text": "The master debunk outcome is 'failure' \u2014 that means the actual mix of those two ingredients is NOT the claimed potion. List what it could still be."
+      "text": "The failed master debunk tells you the true mix of ingredients 2 and 7 is NOT G+. The aspect clue pins ingredient 2's Blue component. Together these narrow down which alchemical ingredient 2 can be."
     },
     {
       "level": 2,
-      "text": "The assignment clue pins one ingredient exactly. The mixing clue pins another pair's result. Together they constrain the world significantly."
+      "text": "Ingredient 2 has B+. The mixing clue says mix(2,3) = B+. Ingredient 4 is alchemical NNN (all Large Negative). The failure clue eliminates any world where mix(ing2, ing7) = G+, which rules out alchemicals where G components match across ingredients 2 and 7."
     },
     {
       "level": 3,
-      "text": "Once worlds are narrowed, check what mix(2+4) must be in every remaining world."
+      "text": "Ingredient 2's B+ and the mix(2,3)=B+ clue significantly constrain ingredient 3. The failure on mix(2,7) eliminates the remaining ambiguity. In all consistent worlds, mix(2,4) = G−."
     }
   ],
   "questions": [
@@ -62,15 +60,5 @@
       "ingredient1": 2,
       "ingredient2": 4
     }
-  ],
-  "complexity": {
-    "score": 1,
-    "raw": 4.663,
-    "avg_clue_strength": 1.905,
-    "chain_depth": 2,
-    "stuck": true,
-    "requires_complement_set": false,
-    "question_requires_enumeration": false,
-    "residual_worlds": 768
-  }
+  ]
 }

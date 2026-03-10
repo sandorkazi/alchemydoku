@@ -1,0 +1,81 @@
+{
+  "id": "exp-easy-sl-04",
+  "mode": "expanded",
+  "title": "The Star Archive",
+  "description": "Use the clues to deduce which alchemical belongs to the target ingredient.",
+  "difficulty": "easy",
+  "clues": [
+    {
+      "kind": "mixing",
+      "ingredient1": 1,
+      "ingredient2": 2,
+      "result": {
+        "color": "R",
+        "sign": "+"
+      }
+    },
+    {
+      "kind": "mixing",
+      "ingredient1": 7,
+      "ingredient2": 8,
+      "result": {
+        "color": "R",
+        "sign": "+"
+      }
+    },
+    {
+      "kind": "book",
+      "ingredient": 5,
+      "result": "lunar"
+    },
+    {
+      "kind": "mixing",
+      "ingredient1": 1,
+      "ingredient2": 3,
+      "result": {
+        "color": "B",
+        "sign": "+"
+      }
+    }
+  ],
+  "questions": [
+    {
+      "kind": "alchemical",
+      "ingredient": 3
+    }
+  ],
+  "solution": {
+    "1": 8,
+    "2": 2,
+    "3": 5,
+    "4": 7,
+    "5": 4,
+    "6": 1,
+    "7": 3,
+    "8": 6
+  },
+  "hints": [
+    {
+      "level": 1,
+      "text": "Identify the alchemical for ingredient 3. Direct clues: ing1+ing3=B+."
+    },
+    {
+      "level": 2,
+      "text": "Eliminated for slot 3: [1, 2, 3, 4, 6, 7, 8]. Remaining: [5]."
+    },
+    {
+      "level": 3,
+      "text": "Ingredient 3 = Nnp (R- G- B+)."
+    }
+  ],
+  "complexity": {
+    "raw": 1.503,
+    "avg_clue_strength": 2.825,
+    "ambig_penalty": 0.0,
+    "chain_depth": 0,
+    "stuck": false,
+    "requires_complement_set": false,
+    "question_requires_enumeration": false,
+    "residual_worlds": 16
+  }
+}

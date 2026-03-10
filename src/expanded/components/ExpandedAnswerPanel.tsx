@@ -18,6 +18,7 @@ import type {
   AnyQuestion, AnyAnswer,
   AspectColorAnswer, SolarLunarAnswer, IngredientSetAnswer,
 } from '../types';
+import { ExpandedDebunkAnswerPanel } from './ExpandedDebunkAnswerPanel';
 
 // ─── Helpers ──────────────────────────────────────────────────────────────────
 
@@ -165,7 +166,7 @@ function QuestionHeader({ q }: { q: AnyQuestion }) {
     <span className="inline-flex items-center gap-1.5 flex-wrap">
       <span className="text-xs font-semibold text-violet-600">Is</span>
       <Ing slotId={q.ingredient} />
-      <span className="text-xs font-semibold"><span className="text-amber-500">☀ Solar</span> or <span className="text-blue-500">🌙 Lunar</span>?</span>
+      <span className="text-xs font-semibold"><span className="text-orange-400">☀ Solar</span> or <span className="text-slate-400">☽ Lunar</span>?</span>
     </span>
   );
 
@@ -188,8 +189,8 @@ function RevealedAnswer({ q, answer }: { q: AnyQuestion; answer: AnyAnswer }) {
       const r = (answer as SolarLunarAnswer).result;
       return (
         <span className={`inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-xs font-bold
-          ${r==='solar'?'bg-amber-100 text-amber-700':'bg-blue-100 text-blue-700'}`}>
-          {r==='solar'?'☀ Solar':'🌙 Lunar'}
+          ${r==='solar'?'bg-amber-100 text-amber-700':'bg-slate-100 text-slate-600'}`}>
+          {r==='solar'?<><span className="text-orange-400">☀</span> Solar</>:<><span className="text-slate-400">☽</span> Lunar</>}
         </span>
       );
     }
@@ -341,9 +342,9 @@ function SolarLunarPicker({ selected, onSelect }: {
       {(['solar','lunar'] as const).map(val => (
         <button key={val} role="radio" aria-checked={selected===val} onClick={() => onSelect(val)}
           className={`flex flex-col items-center gap-1 px-4 py-2 rounded-xl border-2 transition-all
-            ${selected===val?(val==='solar'?'border-amber-500 bg-amber-50':'border-blue-500 bg-blue-50'):'border-transparent bg-gray-100 hover:bg-gray-200'}`}>
-          <span className="text-2xl">{val==='solar'?'☀️':'🌙'}</span>
-          <span className={`text-xs font-semibold ${val==='solar'?'text-amber-600':'text-blue-600'}`}>{val==='solar'?'Solar':'Lunar'}</span>
+            ${selected===val?(val==='solar'?'border-amber-500 bg-amber-50':'border-slate-400 bg-slate-50'):'border-transparent bg-gray-100 hover:bg-gray-200'}`}>
+          <span className={`text-2xl leading-none font-bold ${val==='solar'?'text-orange-400':'text-slate-400'}`}>{val==='solar'?'☀':'☽'}</span>
+          <span className={`text-xs font-semibold ${val==='solar'?'text-amber-600':'text-slate-500'}`}>{val==='solar'?'Solar':'Lunar'}</span>
         </button>
       ))}
     </div>
@@ -519,7 +520,7 @@ function QuestionRow({ q, index, total, value, onChange, correctAnswer, showSolu
 
 // ─── Main panel ───────────────────────────────────────────────────────────────
 
-export function ExpandedAnswerPanel({ onNext, isTutorial = false }: {
+function StandardExpandedAnswerPanel({ onNext, isTutorial = false }: {
   onNext?: () => void;
   isTutorial?: boolean;
 }) {
@@ -586,4 +587,18 @@ export function ExpandedAnswerPanel({ onNext, isTutorial = false }: {
       )}
     </div>
   );
+}
+
+export function ExpandedAnswerPanel({ onNext, isTutorial = false }: {
+  onNext?: () => void;
+  isTutorial?: boolean;
+}) {
+  const { state } = useExpandedSolver();
+  const isDebunkPuzzle = state.puzzle.questions.some(
+    q => q.kind === 'debunk_min_steps' || q.kind === 'debunk_conflict_only'
+  );
+  if (isDebunkPuzzle) {
+    return <ExpandedDebunkAnswerPanel onNext={onNext} isTutorial={isTutorial} />;
+  }
+  return <StandardExpandedAnswerPanel onNext={onNext} isTutorial={isTutorial} />;
 }

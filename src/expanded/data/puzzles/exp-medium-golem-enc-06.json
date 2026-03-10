@@ -1,7 +1,7 @@
 {
-  "id": "exp-medium-golem-enc-03",
+  "id": "exp-medium-golem-enc-06",
   "mode": "expanded",
-  "title": "The Golem's Chain",
+  "title": "The Sentinel's Index",
   "description": "The golem has been tested with 2 ingredients. Deduce the reaction pattern and identify the target group.",
   "difficulty": "medium",
   "golem": {
@@ -11,7 +11,7 @@
     },
     "ears": {
       "color": "B",
-      "size": "S"
+      "size": "L"
     }
   },
   "clues": [
@@ -35,14 +35,14 @@
     }
   ],
   "solution": {
-    "1": 4,
-    "2": 8,
+    "1": 1,
+    "2": 7,
     "3": 6,
-    "4": 5,
-    "5": 3,
-    "6": 2,
-    "7": 1,
-    "8": 7
+    "4": 3,
+    "5": 2,
+    "6": 4,
+    "7": 8,
+    "8": 5
   },
   "hints": [
     {
@@ -51,18 +51,21 @@
     },
     {
       "level": 2,
-      "text": "Chest reacts to R+S. Ears react to B+S. An animator needs BOTH. Cross-reference with untested ingredients."
+      "text": "Chest reacts to R+S. Ears react to B+L. An animator needs BOTH. Cross-reference with untested ingredients."
     },
     {
       "level": 3,
-      "text": "The animators are: ingredients [1, 5]. Alch: ing1\u2192nPp, ing5\u2192pNn."
+      "text": "The animators are: ingredients [1, 5]. Alch: ing1\u2192npN, ing5\u2192pnP."
     }
   ],
   "complexity": {
-    "raw": 3.678,
+    "raw": 2.678,
     "avg_clue_strength": 2.404,
-    "q_sur": 0.5,
-    "m_sur": 1.8,
+    "ambig_penalty": 0.0,
+    "chain_depth": 0,
+    "stuck": false,
+    "requires_complement_set": false,
+    "question_requires_enumeration": false,
     "residual_worlds": 1440
   }
 }

@@ -137,7 +137,7 @@ function BookClueCard({ clue }: { clue: BookClue }) {
         <span className="text-xs font-semibold">is</span>
         <span className={`inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-xs font-bold
           ${isSolar ? 'bg-amber-100 text-amber-700 border border-amber-300' : 'bg-blue-100 text-blue-700 border border-blue-300'}`}>
-          {isSolar ? '☀ Solar' : '🌙 Lunar'}
+          {isSolar ? <><span className="text-orange-400">☀</span> Solar</> : <><span className="text-slate-400">☽</span> Lunar</>}
         </span>
       </div>
     </Card>

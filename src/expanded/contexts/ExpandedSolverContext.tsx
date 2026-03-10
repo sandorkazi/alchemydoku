@@ -19,10 +19,40 @@ import { getEliminatedCells } from '../../logic/deducer';
 import { applyAnyClues } from '../logic/worldSetExpanded';
 import { isSolar } from '../logic/solarLunar';
 import { checkExpandedAnswers, computeAllExpandedAnswers } from '../puzzles/schemaExpanded';
+import { validateExpandedMinStepsAnswer, validateExpandedConflictOnlyAnswer } from '../logic/debunkExpanded';
 import { WORLD_DATA } from '../../logic/worldPack';
-import type { CellState, WorldSet, AlchemicalId } from '../../types';
+import type { CellState, WorldSet, AlchemicalId, IngredientId } from '../../types';
 import type { ExpandedPuzzle, AnyAnswer, SolarLunarMark, SolarLunarMarks, GolemParams } from '../types';
 import type { Color, Size } from '../../types';
+
+// ─── Debunk answer validator ──────────────────────────────────────────────────
+
+function checkExpandedDebunkAnswers(
+  puzzle: ExpandedPuzzle,
+  worlds: WorldSet,
+  playerAnswers: (AnyAnswer | null)[],
+): boolean {
+  const publications = (puzzle.publications ?? []).filter(Boolean) as import('../../types').Publication[];
+  const articles = puzzle.articles ?? [];
+  const solution = puzzle.solution;
+
+  for (let i = 0; i < puzzle.questions.length; i++) {
+    const q = puzzle.questions[i];
+    const a = playerAnswers[i];
+    if (!a || typeof a !== 'object' || !('kind' in a) || (a as {kind:string}).kind !== 'debunk-plan') return false;
+    const steps = (a as { kind: 'debunk-plan'; steps: import('../../types').DebunkStep[] }).steps;
+
+    if (q.kind === 'debunk_min_steps') {
+      const refLen = (puzzle.debunk_answers?.debunk_min_steps ?? []).length;
+      if (!validateExpandedMinStepsAnswer(steps, solution, publications, articles, worlds, refLen)) return false;
+    } else if (q.kind === 'debunk_conflict_only') {
+      const fixedIng = (q as { fixedIngredient?: IngredientId }).fixedIngredient ?? null;
+      if (!fixedIng || steps.length !== 1) return false;
+      if (!validateExpandedConflictOnlyAnswer(steps[0], fixedIng, solution, publications, articles, worlds)) return false;
+    }
+  }
+  return true;
+}
 
 // ─── Display map (identical logic to base) ────────────────────────────────────
 
@@ -240,7 +270,15 @@ function reducer(state: ExpandedSolverState, action: ExpandedAction): ExpandedSo
     }
 
     case 'SUBMIT_ANSWER': {
-      const correct = checkExpandedAnswers(state.puzzle, action.answers);
+      const hasDebunk = state.puzzle.questions.some(
+        q => q.kind === 'debunk_min_steps' || q.kind === 'debunk_conflict_only'
+      );
+      let correct: boolean;
+      if (hasDebunk) {
+        correct = checkExpandedDebunkAnswers(state.puzzle, state.worlds, action.answers);
+      } else {
+        correct = checkExpandedAnswers(state.puzzle, action.answers);
+      }
       if (correct) return { ...state, answers: action.answers, completed: true };
       const wrongAttempts = state.wrongAttempts + 1;
       return {

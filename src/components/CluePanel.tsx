@@ -40,7 +40,7 @@ function InferredAlchemicalCard({ clues }: { clues: AspectClue[] }) {
         </span>
         <span className="text-gray-400 text-xs">→</span>
         {alchId
-          ? <AlchemicalImage id={alchId} width={80} title={ALCHEMICALS[alchId].code} />
+          ? <AlchemicalImage id={alchId} width={44} title={ALCHEMICALS[alchId].code} />
           : <span className="text-xs text-green-600 italic">3 aspects known</span>
         }
       </div>

@@ -206,7 +206,7 @@ function SolarLunarButtons({ slotId, mark, activeTool, onToggle }: {
           border transition-all focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-blue-300
           ${slBtnClass(lunar, 'lunar')}`}
       >
-        <span className="text-gray-300 leading-none" style={lunar !== 'unknown' ? {filter:'brightness(10)'} : {}}>🌙</span>
+        <span className="text-slate-400 leading-none" style={lunar !== 'unknown' ? {filter:'brightness(10)'} : {}}>☽</span>
       </button>
     </div>
   );
@@ -369,7 +369,7 @@ export function ExpandedIngredientGrid({ onRandomize, activeTool, setActiveTool 
           </span>
           <span className="flex items-center gap-1">
             <span className="w-3 h-3 rounded-sm bg-blue-100 border border-blue-400 inline-block" />
-            <span className="text-gray-400 font-semibold">🌙 Lunar</span>
+            <span className="text-slate-400 font-semibold">☽ Lunar</span>
           </span>
         </div>
 

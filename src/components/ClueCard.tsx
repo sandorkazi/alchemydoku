@@ -6,9 +6,9 @@ import { INGREDIENTS } from '../data/ingredients';
 import { useIngredient } from '../contexts/SolverContext';
 import type { Clue, SellResult, DebunkClue, AlchemicalId, Color, Sign } from '../types';
 
-const ING_W        = 36;  // ingredient icon in clue cards
+const ING_W        = 36;  // ingredient icon — matches grid header
 const ASPECT_BADGE = 22;  // aspect orb badge — half overlaps top of ingredient
-const ALCH_W       = 80;  // alchemical molecule in assignment clue — shown beside ingredient
+const ALCH_W       = 44;  // alchemical molecule — matches grid cell watermark
 const POT_W        = 40;  // potion image in clue cards
 
 // ─── Ingredient sub-components ───────────────────────────────────────────────

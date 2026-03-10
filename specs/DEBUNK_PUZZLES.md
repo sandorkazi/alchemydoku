@@ -1,6 +1,7 @@
 # Debunk Puzzles — Design Specification
 
-*Status: DRAFT — data model and rules settled, generator not yet implemented.*
+*Status: Base-game debunk puzzles FULLY IMPLEMENTED. Expanded debunk puzzles: 3 hand-crafted
+puzzles available, generator not yet implemented.*
 
 Debunk puzzles are a distinct puzzle type (alongside `alchemical`, `encyclopedia_fourth`, etc.)
 where the player is given a solved world (via clues) plus a board state of wrong publications
@@ -406,7 +407,41 @@ approach takes one extra step, is ideal for medium/hard difficulty.
 
 ---
 
-## 8. Deferred
+## 8. Implemented Puzzles
+
+### Base game (registered in `src/data/puzzles/collections.json` as `"debunk-planning"`)
+
+| ID                          | Difficulty | Questions                                       |
+|-----------------------------|------------|-------------------------------------------------|
+| `debunk-plan-tutorial-01`   | tutorial   | `debunk_min_steps` (1 step, single apprentice)  |
+| `debunk-plan-easy-01`       | easy       | `debunk_min_steps` (1–2 steps)                  |
+| `debunk-plan-easy-02`       | easy       | `debunk_min_steps` (1–2 steps)                  |
+| `debunk-plan-conflict-01`   | easy       | `debunk_conflict_only`                          |
+
+### Expanded game (registered in `src/expanded/data/puzzlesIndex.ts`)
+
+| ID                        | Difficulty | Notes                            |
+|---------------------------|------------|----------------------------------|
+| `exp-debunk-tutorial-01`  | tutorial   | Introduces master debunk         |
+| `exp-debunk-easy-01`      | easy       | Mixed apprentice + master        |
+| `exp-debunk-medium-01`    | medium     | Ordering matters                 |
+
+---
+
+## 9. Implementation Files
+
+| File                                           | Role                                                    |
+|------------------------------------------------|---------------------------------------------------------|
+| `src/logic/debunk.ts`                          | `isDefinitivelyKnown`, `simulateStep`, `evaluatePlan`, `validateMinStepsAnswer`, `validateConflictOnlyAnswer` |
+| `src/puzzles/schema.ts`                        | Routes debunk question kinds to debunk validators; `checkDebunkAnswers()` |
+| `src/contexts/SolverContext.tsx`               | `SUBMIT_ANSWER` dispatches to `checkDebunkAnswers()` for debunk questions |
+| `src/components/AnswerPanel.tsx`               | Wrapper: routes to `DebunkAnswerPanel` or `StandardAnswerPanel` |
+| `src/components/DebunkAnswerPanel.tsx`         | Full plan-builder UI (PublicationsBoard, StepEditor, etc.) |
+| `src/types.ts`                                 | `DebunkStep`, `Publication`, `debunk_min_steps`, `debunk_conflict_only` types |
+
+---
+
+## 10. Deferred
 
 - **Seals / hedging**: 1-seal, 2-seal publications; apprentice seals (reputation protection);
   own-publication removal strategy. Rich design space, reserved for after initial content.
