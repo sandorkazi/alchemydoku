@@ -1,7 +1,7 @@
 import { createContext, useContext, useReducer, useEffect, useMemo, type ReactNode } from 'react';
 import { generateAllWorlds, applyClues } from '../logic/worldSet';
 import { getEliminatedCells } from '../logic/deducer';
-import { checkAnswers } from '../puzzles/schema';
+import { checkAnswers, checkDebunkAnswers } from '../puzzles/schema';
 import type { Puzzle, CellState, WorldSet } from '../types';
 import type { PuzzleAnswer } from '../puzzles/schema';
 
@@ -156,7 +156,12 @@ function reducer(state: SolverState, action: Action): SolverState {
     }
 
     case 'SUBMIT_ANSWER': {
-      const correct = checkAnswers(state.puzzle, action.answers);
+      const hasDebunk = state.puzzle.questions.some(
+        q => q.kind === 'debunk_min_steps' || q.kind === 'debunk_conflict_only'
+      );
+      const correct = hasDebunk
+        ? checkDebunkAnswers(state.puzzle, state.worlds, action.answers)
+        : checkAnswers(state.puzzle, action.answers);
       if (correct) return { ...state, answers: action.answers, completed: true };
       const wrongAttempts = state.wrongAttempts + 1;
       return {

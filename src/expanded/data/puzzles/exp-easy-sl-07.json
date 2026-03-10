@@ -1,0 +1,81 @@
+{
+  "id": "exp-easy-sl-07",
+  "mode": "expanded",
+  "title": "The Absent Page",
+  "description": "Use the clues to deduce which alchemical belongs to the target ingredient.",
+  "difficulty": "easy",
+  "clues": [
+    {
+      "kind": "mixing",
+      "ingredient1": 1,
+      "ingredient2": 2,
+      "result": {
+        "color": "R",
+        "sign": "+"
+      }
+    },
+    {
+      "kind": "mixing",
+      "ingredient1": 4,
+      "ingredient2": 7,
+      "result": {
+        "color": "R",
+        "sign": "+"
+      }
+    },
+    {
+      "kind": "mixing",
+      "ingredient1": 1,
+      "ingredient2": 3,
+      "result": {
+        "color": "G",
+        "sign": "+"
+      }
+    },
+    {
+      "kind": "book",
+      "ingredient": 3,
+      "result": "lunar"
+    }
+  ],
+  "questions": [
+    {
+      "kind": "alchemical",
+      "ingredient": 1
+    }
+  ],
+  "solution": {
+    "1": 6,
+    "2": 3,
+    "3": 4,
+    "4": 2,
+    "5": 5,
+    "6": 7,
+    "7": 8,
+    "8": 1
+  },
+  "hints": [
+    {
+      "level": 1,
+      "text": "Identify the alchemical for ingredient 1. Direct clues: ing1+ing2=R+, ing1+ing3=G+."
+    },
+    {
+      "level": 2,
+      "text": "Eliminated for slot 1: [1, 2, 3, 4, 5, 7, 8]. Remaining: [6]."
+    },
+    {
+      "level": 3,
+      "text": "Ingredient 1 = Ppn (R+ G+ B-)."
+    }
+  ],
+  "complexity": {
+    "raw": 1.558,
+    "avg_clue_strength": 2.679,
+    "ambig_penalty": 0.0,
+    "chain_depth": 0,
+    "stuck": false,
+    "requires_complement_set": false,
+    "question_requires_enumeration": false,
+    "residual_worlds": 24
+  }
+}

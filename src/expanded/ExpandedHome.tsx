@@ -46,54 +46,94 @@ const DIFF_BADGE: Record<string, string> = {
   hard:     'bg-red-100 text-red-700',
 };
 
-// ─── Collection card ──────────────────────────────────────────────────────────
+// ─── Collection summary card (hub level) ─────────────────────────────────────
 
-function CollectionCard({ collection, completed, onSelectPuzzle }: {
+function CollectionSummaryCard({ collection, completed, onOpen }: {
   collection: ExpandedCollection;
   completed: Set<string>;
-  onSelectPuzzle: (puzzle: ExpandedPuzzle) => void;
+  onOpen: () => void;
 }) {
   const puzzles = collection.puzzleIds.map(id => EXPANDED_PUZZLE_MAP[id]).filter(Boolean);
   const doneCount = puzzles.filter(p => completed.has(p.id)).length;
   const allDone = doneCount === puzzles.length;
 
   return (
-    <div className={`rounded-2xl border-2 bg-white shadow-sm overflow-hidden
-      ${allDone ? 'border-green-300' : 'border-gray-200'}`}>
-
-      {/* Collection header */}
-      <div className={`px-4 py-3 ${allDone ? 'bg-green-50' : 'bg-gray-50'} border-b`}>
+    <button onClick={onOpen}
+      className={`w-full text-left rounded-2xl border-2 bg-white shadow-sm overflow-hidden
+        hover:border-violet-300 hover:shadow-md transition-all
+        ${allDone ? 'border-green-300' : 'border-gray-200'}`}>
+      <div className={`px-4 py-3 ${allDone ? 'bg-green-50' : 'bg-gray-50'}`}>
         <div className="flex items-center justify-between gap-2">
           <h3 className="font-bold text-gray-900 text-sm">{collection.title}</h3>
-          <span className={`text-xs font-semibold tabular-nums ${allDone ? 'text-green-600' : 'text-gray-400'}`}>
-            {doneCount}/{puzzles.length}
-          </span>
+          <div className="flex items-center gap-2 shrink-0">
+            <span className={`text-xs font-semibold tabular-nums ${allDone ? 'text-green-600' : 'text-gray-400'}`}>
+              {doneCount}/{puzzles.length}
+            </span>
+            <span className="text-gray-300 text-xs">›</span>
+          </div>
         </div>
         <p className="text-xs text-gray-500 mt-0.5">{collection.description}</p>
       </div>
+    </button>
+  );
+}
 
-      {/* Puzzle list */}
-      <div className="divide-y divide-gray-100">
-        {puzzles.map(puzzle => {
-          const done = completed.has(puzzle.id);
-          return (
-            <button key={puzzle.id} onClick={() => onSelectPuzzle(puzzle)}
-              className="w-full flex items-center gap-3 px-4 py-3 hover:bg-indigo-50 transition-colors text-left group">
-              <span className={`w-5 h-5 rounded-full flex items-center justify-center text-[10px] font-bold shrink-0
-                ${done ? 'bg-green-500 text-white' : 'bg-gray-200 text-gray-400 group-hover:bg-indigo-200 group-hover:text-indigo-600'}`}>
-                {done ? '✓' : ''}
+// ─── Collection puzzle list (collection level) ───────────────────────────────
+
+function CollectionView({ collection, completed, onSelectPuzzle, onBack }: {
+  collection: ExpandedCollection;
+  completed: Set<string>;
+  onSelectPuzzle: (puzzle: ExpandedPuzzle) => void;
+  onBack: () => void;
+}) {
+  const puzzles = collection.puzzleIds.map(id => EXPANDED_PUZZLE_MAP[id]).filter(Boolean);
+  const doneCount = puzzles.filter(p => completed.has(p.id)).length;
+  const allDone = doneCount === puzzles.length;
+
+  return (
+    <div className="min-h-screen bg-amber-50 animate-fadein">
+      <div className="max-w-xl mx-auto px-4 py-6 space-y-4">
+        {/* Back + header */}
+        <div className="flex items-center gap-3">
+          <button onClick={onBack}
+            className="text-sm text-violet-600 hover:text-violet-800 font-semibold transition-colors">
+            ← Back
+          </button>
+        </div>
+        <div className={`rounded-2xl border-2 bg-white shadow-sm overflow-hidden
+          ${allDone ? 'border-green-300' : 'border-gray-200'}`}>
+          <div className={`px-4 py-3 ${allDone ? 'bg-green-50' : 'bg-gray-50'} border-b`}>
+            <div className="flex items-center justify-between gap-2">
+              <h2 className="font-bold text-gray-900 text-base">{collection.title}</h2>
+              <span className={`text-xs font-semibold tabular-nums ${allDone ? 'text-green-600' : 'text-gray-400'}`}>
+                {doneCount}/{puzzles.length}
               </span>
-              <span className="flex-1 min-w-0">
-                <span className="text-sm font-medium text-gray-900 truncate block">{puzzle.title}</span>
-                <span className="text-xs text-gray-400 truncate block">{puzzle.description}</span>
-              </span>
-              <span className={`text-[10px] font-semibold px-2 py-0.5 rounded-full shrink-0
-                ${DIFF_BADGE[puzzle.difficulty] ?? 'bg-gray-100 text-gray-600'}`}>
-                {puzzle.difficulty}
-              </span>
-            </button>
-          );
-        })}
+            </div>
+            <p className="text-xs text-gray-500 mt-0.5">{collection.description}</p>
+          </div>
+          <div className="divide-y divide-gray-100">
+            {puzzles.map(puzzle => {
+              const done = completed.has(puzzle.id);
+              return (
+                <button key={puzzle.id} onClick={() => onSelectPuzzle(puzzle)}
+                  className="w-full flex items-center gap-3 px-4 py-3 hover:bg-indigo-50 transition-colors text-left group">
+                  <span className={`w-5 h-5 rounded-full flex items-center justify-center text-[10px] font-bold shrink-0
+                    ${done ? 'bg-green-500 text-white' : 'bg-gray-200 text-gray-400 group-hover:bg-indigo-200 group-hover:text-indigo-600'}`}>
+                    {done ? '✓' : ''}
+                  </span>
+                  <span className="flex-1 min-w-0">
+                    <span className="text-sm font-medium text-gray-900 truncate block">{puzzle.title}</span>
+                    <span className="text-xs text-gray-400 truncate block">{puzzle.description}</span>
+                  </span>
+                  <span className={`text-[10px] font-semibold px-2 py-0.5 rounded-full shrink-0
+                    ${DIFF_BADGE[puzzle.difficulty] ?? 'bg-gray-100 text-gray-600'}`}>
+                    {puzzle.difficulty}
+                  </span>
+                </button>
+              );
+            })}
+          </div>
+        </div>
       </div>
     </div>
   );
@@ -104,6 +144,7 @@ function CollectionCard({ collection, completed, onSelectPuzzle }: {
 export function ExpandedHome({ onModeChange }: { onModeChange: (m: 'base' | 'expanded') => void }) {
   const [completed, setCompleted] = useState<Set<string>>(loadCompleted as () => Set<string>);
   const [activePuzzle, setActivePuzzle] = useState<ExpandedPuzzle | null>(null);
+  const [activeCollection, setActiveCollection] = useState<ExpandedCollection | null>(null);
   const [puzzleQueue, setPuzzleQueue] = useState<ExpandedPuzzle[]>([]);
   const [resetVersion, setResetVersion] = useState(0);
 
@@ -140,6 +181,7 @@ export function ExpandedHome({ onModeChange }: { onModeChange: (m: 'base' | 'exp
     } else {
       if (activePuzzle) markCompleted(activePuzzle.id);
       setActivePuzzle(null);
+      // stay on collection view if we came from one
     }
   };
 
@@ -154,6 +196,19 @@ export function ExpandedHome({ onModeChange }: { onModeChange: (m: 'base' | 'exp
         onBack={() => setActivePuzzle(null)}
         onNext={handleNext}
         isTutorial={isTutorial}
+      />
+    );
+  }
+
+  // ── Collection view ────────────────────────────────────────────────────────
+
+  if (activeCollection) {
+    return (
+      <CollectionView
+        collection={activeCollection}
+        completed={completed}
+        onSelectPuzzle={openPuzzle}
+        onBack={() => setActiveCollection(null)}
       />
     );
   }
@@ -195,21 +250,21 @@ export function ExpandedHome({ onModeChange }: { onModeChange: (m: 'base' | 'exp
         {/* Quick legend */}
         <div className="rounded-xl bg-white border border-violet-100 p-4 space-y-2 text-xs text-gray-600">
           <p className="font-semibold text-violet-700 text-sm">New mechanics in this mode:</p>
-          <p>📖 <strong>Book Token</strong> — reveals whether an ingredient's alchemical is Solar (☀️) or Lunar (🌙)</p>
-          <p>☀️🌙 <strong>Solar/Lunar</strong> — alchemicals with 0 or 2 negatives are Solar; 1 or 3 are Lunar</p>
+          <p>📖 <strong>Book Token</strong> — reveals whether an ingredient's alchemical is Solar (☀) or Lunar (☽)</p>
+          <p>☀ ☽ <strong>Solar/Lunar</strong> — alchemicals with 0 or 2 negatives are Solar; 1 or 3 are Lunar</p>
           <p>📜 <strong>Encyclopedia Article</strong> — covers one aspect; lists 4 ingredients each with their own sign on that aspect (any mix of + and −)</p>
           <p>📄 <strong>Uncertain Article</strong> — at least 3 of 4 entries are correct</p>
           <p>🔍 <strong>Debunked Article</strong> — at least 1 entry has been proven wrong (actual sign differs from listed sign)</p>
         </div>
 
         {/* Collections */}
-        <div className="space-y-4">
+        <div className="space-y-3">
           {EXPANDED_COLLECTIONS.map(coll => (
-            <CollectionCard
+            <CollectionSummaryCard
               key={coll.id}
               collection={coll}
               completed={completed}
-              onSelectPuzzle={openPuzzle}
+              onOpen={() => setActiveCollection(coll)}
             />
           ))}
         </div>

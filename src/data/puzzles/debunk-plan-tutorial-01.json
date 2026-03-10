@@ -1,0 +1,41 @@
+{
+  "id": "debunk-plan-tutorial-01",
+  "title": "The First Deception",
+  "description": "A rival has published a theory about ingredient 1 — but you've run the tests and know better. Expose the lie.",
+  "difficulty": "tutorial",
+  "clues": [
+    { "kind": "aspect", "ingredient": 1, "color": "R", "sign": "-" },
+    { "kind": "aspect", "ingredient": 1, "color": "G", "sign": "+" },
+    { "kind": "aspect", "ingredient": 1, "color": "B", "sign": "-" }
+  ],
+  "publications": [
+    { "ingredient": 1, "claimedAlchemical": 3 },
+    null, null, null, null, null, null, null
+  ],
+  "questions": [
+    { "kind": "debunk_min_steps" }
+  ],
+  "solution": {
+    "1": 1, "2": 2, "3": 3, "4": 4,
+    "5": 5, "6": 6, "7": 7, "8": 8
+  },
+  "debunk_answers": {
+    "debunk_min_steps": [
+      { "kind": "apprentice", "ingredient": 1, "color": "R" }
+    ]
+  },
+  "hints": [
+    {
+      "level": 1,
+      "text": "The publication claims ingredient 1 is alchemical pNn. Your clues give you the true aspects of ingredient 1 — compare each aspect against what the publication claims."
+    },
+    {
+      "level": 2,
+      "text": "Alchemical pNn has R+, G−, B−. Your clues show ingredient 1's true aspects are R−, G+, B−. Any colour where the signs differ is a valid apprentice debunk: R (true − vs claimed +) or G (true + vs claimed −)."
+    },
+    {
+      "level": 3,
+      "text": "One apprentice debunk: reveal the R or G aspect of ingredient 1. The true sign contradicts what the publication claims → publication removed. B matches the claim so revealing B would have no effect."
+    }
+  ]
+}

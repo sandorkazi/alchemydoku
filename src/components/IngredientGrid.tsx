@@ -3,7 +3,7 @@ import { INGREDIENTS } from '../data/ingredients';
 import { ALCHEMICALS } from '../data/alchemicals';
 import { useSolver, useIngredient } from '../contexts/SolverContext';
 import { AlchemicalDisplay } from './AlchemicalDisplay';
-import { AlchemicalImage, IngredientIcon } from './GameSprites';
+import { AlchemicalImage, IngredientIcon, PotionImage } from './GameSprites';
 import type { AlchemicalId, IngredientId, CellState } from '../types';
 
 // Fixed visual column order by display-ingredient ID (mushroom → fern → toad → bird claw → mandrake → scorpion → raven's feather → flower)
@@ -43,7 +43,7 @@ const MARKER: Record<CellState, { glyph: string; textShadow: string }> = {
 // ─── Cell ─────────────────────────────────────────────────────────────────────
 
 function Cell({
-  cellState, alchId, tintColor, noteText,
+  cellState, alchId, tintColor, tintOpacity, noteText,
   activeTool, isEditing,
   onMouseDown, onStartEdit,
   ariaLabel,
@@ -51,6 +51,7 @@ function Cell({
   cellState:   CellState;
   alchId:      AlchemicalId;
   tintColor:   string;
+  tintOpacity: number;
   noteText:    string;
   activeTool:  GridTool;
   isEditing:   boolean;
@@ -82,12 +83,12 @@ function Cell({
       {/* vibrant column tint */}
       <span
         className="absolute inset-0 rounded pointer-events-none"
-        style={{ backgroundColor: tintColor, opacity: 0.28 }}
+        style={{ backgroundColor: tintColor, opacity: tintOpacity }}
       />
       {/* alchemical watermark */}
       <span
         className="absolute inset-0 flex items-center justify-center pointer-events-none"
-        style={{ opacity: 0.45 }}
+        style={{ opacity: 0.22 }}
       >
         <AlchemicalImage id={alchId} width={44} />
       </span>
@@ -333,7 +334,7 @@ export function IngredientGrid({ onRandomize }: { onRandomize?: () => void }) {
         {/* Grid — cursor + tool indicator badge */}
         <div
           ref={gridRef}
-          className="overflow-x-auto -mx-1 px-1 pb-1 flex justify-center relative"
+          className="overflow-x-auto -mx-1 pl-1 pr-4 pb-1 flex justify-center relative"
           style={{ cursor: TOOL_CURSOR[activeTool] }}
         >
           {/* Active tool badge — floats top-right of the scroll area */}
@@ -352,7 +353,25 @@ export function IngredientGrid({ onRandomize }: { onRandomize?: () => void }) {
             {activeTool === 'text'     && <><span>abc</span><span>text</span></>}
             <kbd className="ml-0.5 opacity-60 font-mono text-[9px] border border-current/40 rounded px-0.5">Space</kbd>
           </div>
-          <table className="border-collapse text-xs">
+          {/* ── Neutral-pair decorators + table wrapper ──────────────────── */}
+          <div className="relative inline-block">
+            {/* 4 neutral potions at the row-pair boundaries, behind the table */}
+            {([1, 3, 5, 7] as const).map(boundaryRow => (
+              <div
+                key={boundaryRow}
+                className="absolute pointer-events-none"
+                style={{
+                  right: -18,
+                  top: 44 + boundaryRow * 48,
+                  transform: 'translateY(-50%) rotate(45deg)',
+                  width: 24, height: 24,
+                  zIndex: 0, opacity: 0.35,
+                }}
+              >
+                <PotionImage result={{ type: 'neutral' }} width={24} />
+              </div>
+            ))}
+            <table className="border-collapse text-xs" style={{ position: 'relative', zIndex: 1 }}>
             <thead>
               <tr>
                 <th className="pr-2" />
@@ -372,7 +391,7 @@ export function IngredientGrid({ onRandomize }: { onRandomize?: () => void }) {
             </thead>
             <tbody>
               {ALCH_IDS.map(alchId => (
-                <tr key={alchId} className="border-t border-gray-100">
+                <tr key={alchId}>
                   <td className="pr-1 py-0 align-middle">
                     <div className="flex items-center justify-end">
                       <AlchemicalDisplay id={alchId} elemWidth={48} />
@@ -388,6 +407,7 @@ export function IngredientGrid({ onRandomize }: { onRandomize?: () => void }) {
                             cellState={gridState[slotId]?.[alchId] ?? 'unknown'}
                             alchId={alchId}
                             tintColor={tint}
+                            tintOpacity={[1,2,5,6].includes(alchId) ? 0.13 : 0.31}
                             noteText={notes[key] ?? ''}
                             activeTool={activeTool}
                             isEditing={isEditing}
@@ -410,6 +430,7 @@ export function IngredientGrid({ onRandomize }: { onRandomize?: () => void }) {
               ))}
             </tbody>
           </table>
+          </div>{/* /neutral-pair wrapper */}
         </div>
 
         {/* Contextual legend + keyboard hints */}

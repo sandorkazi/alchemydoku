@@ -184,7 +184,7 @@ export function expandedQuestionText(
       return `${entries} form a valid article. Which aspect (color)?`;
     }
     case 'solar_lunar':
-      return `Is ${ingredientName(question.ingredient)} Solar ☀️ or Lunar 🌙?`;
+      return `Is ${ingredientName(question.ingredient)} Solar ☀ or Lunar ☽?`;
     case 'golem_group': {
       const labels: Record<string, string> = {
         animators: 'animate the golem', chest_only: 'trigger only the chest',

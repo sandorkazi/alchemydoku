@@ -9,11 +9,13 @@ All specs reflect the **current implementation** unless marked `[DEFERRED]` or `
 |-----------------------|--------------------------------------------------------------------------|
 | `GAME_MECHANICS.md`   | Alchemical data, mixing rules, sell rules, all base clue types, world representation, question/answer types |
 | `PUZZLE_FORMAT.md`    | Base game puzzle JSON schema, ID conventions, collection structure, validation rules |
-| `ARCHITECTURE.md`     | File structure, isolation contract, routing model, context API, localStorage layout, build/deploy |
+| `ARCHITECTURE.md`     | File structure, isolation contract, routing model, context API, localStorage layout, build/deploy, unit tests |
 | `UI_COMPONENTS.md`    | Component catalogue — props, context deps, rendering contract for every component |
 | `EXPANDED.md`         | Expanded rules: Solar/Lunar, encyclopedia articles, book tokens, debunk clue types, expanded question/answer types, grid UI additions |
 | `GOLEM.md`         | Golem Project: reaction groups, test/hint clue types, all golem question types, grid notepad UI, puzzle JSON format |
 | `DIFFICULTY.md`       | Information-theoretic difficulty scoring: clue strength, deduction chain depth, composite formula, collection re-ranking |
+| `PUZZLE_GENERATION.md`| Puzzle generation: constraint composition, mechanic combinations, extended difficulty scoring, Python generation algorithm, authoring validity checklist, CLI usage, post-generation registration |
+| `DEBUNK_PUZZLES.md`   | Debunk puzzle type: apprentice/master rules, removal vs conflict-only logic, article disproof, question types (min-steps, conflict-only), answer format, solver logic sketch, difficulty guidelines |
 
 ---
 
@@ -29,8 +31,7 @@ All specs reflect the **current implementation** unless marked `[DEFERRED]` or `
 
 ## Deferred / Out of scope
 
-- **Golem Project mechanics** — separate expansion, not yet designed
-- **Debunking questions** — "what mix would debunk this article?" — deferred until Q/A types designed
-- **Double-trouble debunk** — simultaneous two-article disproof — deferred
+- **Debunk puzzle generator** — rules and data model settled in `DEBUNK_PUZZLES.md`; generator not yet added to `scripts/alchemydoku.py`
+- **Double-trouble debunk** — simultaneous two-article/publication disproof in one action — handled by §2c of `DEBUNK_PUZZLES.md`
 - **Uncertain article difficulty scoring** — `analyze_difficulty.py` not updated for 3-of-4 enumeration
-- **Expanded puzzle generation scripts** — manual authoring only for now
+- **Expanded puzzle index registration** — 18 generated puzzles exist but are not yet registered in `puzzlesIndex.ts`

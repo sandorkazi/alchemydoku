@@ -1,0 +1,67 @@
+{
+  "id": "exp-medium-golem-sl-03",
+  "mode": "expanded",
+  "title": "The Last Awakening",
+  "description": "The golem has been tested with 2 ingredients. Identify the animators and determine what potion their mix would produce.",
+  "difficulty": "medium",
+  "golem": {
+    "chest": {
+      "color": "R",
+      "size": "L"
+    },
+    "ears": {
+      "color": "G",
+      "size": "S"
+    }
+  },
+  "clues": [
+    {
+      "kind": "golem_test",
+      "ingredient": 4,
+      "chest_reacted": true,
+      "ears_reacted": true
+    },
+    {
+      "kind": "golem_test",
+      "ingredient": 7,
+      "chest_reacted": true,
+      "ears_reacted": true
+    }
+  ],
+  "questions": [
+    {
+      "kind": "golem_animate_potion"
+    }
+  ],
+  "solution": {
+    "1": 8,
+    "2": 4,
+    "3": 7,
+    "4": 6,
+    "5": 3,
+    "6": 2,
+    "7": 5,
+    "8": 1
+  },
+  "hints": [
+    {
+      "level": 1,
+      "text": "The golem reacts to SIZE on a specific color channel.\nKnown tests:\n  ing4: chest=\u2713 ears=\u2713  \u2192  animators\n  ing7: chest=\u2713 ears=\u2713  \u2192  animators"
+    },
+    {
+      "level": 2,
+      "text": "Chest reacts to R+L. Ears react to G+S. An animator needs BOTH. Cross-reference with untested ingredients."
+    },
+    {
+      "level": 3,
+      "text": "Animators: ingredients [4, 7] (Ppn, Nnp). Mix: neutral."
+    }
+  ],
+  "complexity": {
+    "raw": 3.278,
+    "avg_clue_strength": 2.404,
+    "q_sur": 0.8,
+    "m_sur": 1.1,
+    "residual_worlds": 1440
+  }
+}

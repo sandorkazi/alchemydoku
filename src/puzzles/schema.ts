@@ -1,8 +1,10 @@
 import { generateAllWorlds, applyClues } from '../logic/worldSet';
 import { deduceMixingResult, deduceAlchemical, deduceAspect, deduceUncertainAspect, getPossibleResults } from '../logic/deducer';
 import { COLOR_INDEX, WORLD_DATA, SIGN_TABLE, SIZE_TABLE } from '../logic/worldPack';
+import { validateMinStepsAnswer, validateConflictOnlyAnswer } from '../logic/debunk';
 import type {
   Puzzle, QuestionTarget, PotionResult, AlchemicalId, IngredientId, Sign, Color, WorldSet,
+  DebunkStep, Publication,
 } from '../types';
 
 // ─── Answer type ──────────────────────────────────────────────────────────────
@@ -17,7 +19,9 @@ export type PuzzleAnswer =
   /** Sorted array of ingredient IDs confirmed to have this color+sign */
   | { kind: 'aspect-set'; ingredients: IngredientId[] }
   /** Sorted array of ingredient IDs confirmed to have the Large component for this color */
-  | { kind: 'large-component'; ingredients: IngredientId[] };
+  | { kind: 'large-component'; ingredients: IngredientId[] }
+  /** A debunk plan: ordered sequence of debunking actions */
+  | { kind: 'debunk-plan'; steps: DebunkStep[] };
 
 // ─── Core functions ───────────────────────────────────────────────────────────
 
@@ -88,6 +92,11 @@ export function computeAnswerFromWorlds(
       if (!color) return null;
       return { kind: 'hedge-color', color };
     }
+
+    // Debunk planning questions: answer is validated externally, not computed from worlds
+    case 'debunk_min_steps':
+    case 'debunk_conflict_only':
+      return null;
   }
 }
 
@@ -131,9 +140,48 @@ export function answersEqual(a: PuzzleAnswer, b: PuzzleAnswer): boolean {
   }
   if (typeof a === 'object' && typeof b === 'object' && 'sign' in a && 'sign' in b)
     return (a as {sign:Sign}).sign === (b as {sign:Sign}).sign;
-  if (typeof a === 'object' && typeof b === 'object' && 'kind' in a && 'kind' in b)
-    return (a as {kind:string;color:Color}).color === (b as {kind:string;color:Color}).color;
+  if (typeof a === 'object' && typeof b === 'object' && 'kind' in a && 'kind' in b) {
+    const ka = a as { kind: string; potions?: string[]; color?: Color; steps?: DebunkStep[] };
+    const kb = b as { kind: string; potions?: string[]; color?: Color; steps?: DebunkStep[] };
+    if (ka.kind !== kb.kind) return false;
+    if (ka.kind === 'possible-potions')
+      return JSON.stringify(ka.potions ?? []) === JSON.stringify(kb.potions ?? []);
+    if (ka.kind === 'debunk-plan')
+      return JSON.stringify(ka.steps ?? []) === JSON.stringify(kb.steps ?? []);
+    return ka.color === kb.color;
+  }
   return false;
+}
+
+/**
+ * Check debunk plan answers. Used instead of checkAnswers when the puzzle has debunk questions.
+ * Imports the debunk evaluator lazily to avoid circular deps.
+ */
+export function checkDebunkAnswers(
+  puzzle: Puzzle,
+  worlds: WorldSet,
+  playerAnswers: (PuzzleAnswer | null)[],
+): boolean {
+  const pubs: Publication[] = (puzzle.publications ?? []).filter(Boolean) as Publication[];
+  const sol = puzzle.solution;
+
+  return puzzle.questions.every((q, i) => {
+    const playerAns = playerAnswers[i];
+    if (!playerAns) return false;
+    const plan = (playerAns as { kind: string; steps?: DebunkStep[] });
+    if (plan.kind !== 'debunk-plan' || !plan.steps) return false;
+    const steps = plan.steps;
+
+    if (q.kind === 'debunk_min_steps') {
+      const refLen = (puzzle.debunk_answers?.debunk_min_steps ?? []).length;
+      return validateMinStepsAnswer(steps, sol, pubs, worlds, refLen);
+    }
+    if (q.kind === 'debunk_conflict_only') {
+      if (steps.length !== 1) return false;
+      return validateConflictOnlyAnswer(steps[0], q.fixedIngredient, sol, pubs, worlds);
+    }
+    return false;
+  });
 }
 
 /**
@@ -168,5 +216,9 @@ export function questionText(question: QuestionTarget, ingredientName: (id: numb
       return `Which ingredients have a ${{ R: 'Red', G: 'Green', B: 'Blue' }[question.color]}${question.sign === '+' ? ' positive' : ' negative'} aspect?`;
     case 'large-component':
       return `Which ingredients have a Large ${{ R: 'Red', G: 'Green', B: 'Blue' }[question.color]} component?`;
+    case 'debunk_min_steps':
+      return 'What is the shortest sequence of debunk actions to remove all publications?';
+    case 'debunk_conflict_only':
+      return `Mix ingredient ${ingredientName(question.fixedIngredient)} with something to create a conflict — without removing any publication.`;
   }
 }

@@ -9,11 +9,16 @@ import expTutorialEnc01     from './puzzles/exp-tutorial-enc-01.json';
 import expEasyEnc01         from './puzzles/exp-easy-enc-01.json';
 import expEasySolar01       from './puzzles/exp-easy-solar-01.json';
 import expGolemTutorial01   from './puzzles/exp-golem-tutorial-01.json';
+import expDebunkTutorial01  from './puzzles/exp-debunk-tutorial-01.json';
+import expDebunkEasy01      from './puzzles/exp-debunk-easy-01.json';
+import expDebunkMedium01    from './puzzles/exp-debunk-medium-01.json';
 import type { ExpandedPuzzle } from '../types';
 
 export const ALL_EXPANDED_PUZZLES: ExpandedPuzzle[] =
   [expTutorialBook01, expTutorialEnc01, expEasyEnc01, expEasySolar01,
-   expGolemTutorial01] as unknown as ExpandedPuzzle[];
+   expGolemTutorial01,
+   expDebunkTutorial01, expDebunkEasy01, expDebunkMedium01,
+  ] as unknown as ExpandedPuzzle[];
 
 export const EXPANDED_PUZZLE_MAP: Record<string, ExpandedPuzzle> =
   Object.fromEntries(ALL_EXPANDED_PUZZLES.map(p => [p.id, p]));
@@ -43,5 +48,11 @@ export const EXPANDED_COLLECTIONS: ExpandedCollection[] = [
     title: 'The Golem Project',
     description: 'Test ingredients on the royal golem. Deduce what it reacts to, then identify the two that will bring it to life.',
     puzzleIds: ['exp-golem-tutorial-01'],
+  },
+  {
+    id: 'exp-debunk',
+    title: 'Debunking',
+    description: "Rivals have published false alchemical theories. You know the truth — plan the fewest possible debunk actions to clear the board.",
+    puzzleIds: ['exp-debunk-tutorial-01', 'exp-debunk-easy-01', 'exp-debunk-medium-01'],
   },
 ];

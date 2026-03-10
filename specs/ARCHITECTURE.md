@@ -10,6 +10,11 @@
 ```
 alchemydoku/
 ├── specs/                    ← design specifications (this folder)
+├── tests/
+│   └── logic/                ← unit tests (vitest)
+│       ├── deducer.test.ts   ← deduceMixingResult, deduceAlchemical, getPossibleAlchemicals
+│       ├── mixer.test.ts     ← mix(), potionToString(), isDirectOpposite()
+│       └── worldSet.test.ts  ← generateAllWorlds, filterByClue, applyClues
 ├── scripts/                  ← Python tooling (puzzle generation, analysis)
 ├── public/                   ← static assets (SVG sprites, favicon)
 ├── src/
@@ -29,6 +34,7 @@ alchemydoku/
 │   │   ├── worldPack.ts      ← WORLD_DATA, SIGN_TABLE, SIZE_TABLE, MIX_TABLE, filterWorlds
 │   │   ├── worldSet.ts       ← generateAllWorlds, applyClues, per-clue filters
 │   │   ├── deducer.ts        ← deduceMixingResult, deduceAlchemical, deduceAspect, etc.
+│   │   ├── debunk.ts         ← isDefinitivelyKnown, simulateStep, evaluatePlan, validateMinStepsAnswer, validateConflictOnlyAnswer
 │   │   ├── mixer.ts          ← mix(), mixIngredients(), potionResultsEqual()
 │   │   ├── alchemicals.ts    ← isDirectOpposite(), helper functions
 │   │   ├── sellValidator.ts  ← sell outcome logic
@@ -44,7 +50,8 @@ alchemydoku/
 │   ├── components/           ← base game UI components (all use useSolver())
 │   │   ├── IngredientGrid.tsx
 │   │   ├── ClueCard.tsx / CluePanel.tsx
-│   │   ├── AnswerPanel.tsx
+│   │   ├── AnswerPanel.tsx          ← routing wrapper (StandardAnswerPanel vs DebunkAnswerPanel)
+│   │   ├── DebunkAnswerPanel.tsx    ← debunk-plan question UI
 │   │   ├── HintDrawer.tsx
 │   │   ├── MixSimulator.tsx
 │   │   ├── AlchemicalDisplay.tsx
@@ -160,11 +167,14 @@ State persisted in `localStorage`:
 
 ```ts
 type ExpandedSolverState = base state fields + {
-  solarLunarMarks: Record<number, 'solar' | 'lunar' | null>;
+  solarLunarMarks: Record<number, SolarLunarMark>;
+  // SolarLunarMark = { solar: CellState; lunar: CellState }
+  // Solar and Lunar marks are independent; each tracks its own CellState.
+  // (Earlier versions used 'solar' | 'lunar' | null — replaced to support independent marks.)
 };
 
 additional action:
-  | { type: 'SET_SOLAR_LUNAR_MARK'; slotId: number; mark: 'solar' | 'lunar' | null }
+  | { type: 'SET_SOLAR_LUNAR_MARK'; slotId: number; mark: SolarLunarMark }
 ```
 
 Persisted under `exp-solver-${id}` and `exp-display-map-${id}` to avoid key collisions
@@ -221,3 +231,24 @@ const url = `${import.meta.env.BASE_URL}sprites/ingredients.png`;
 // Wrong (breaks on GitHub Pages)
 const url = `/sprites/ingredients.png`;
 ```
+---
+
+## 9. Tests
+
+Unit tests live in `tests/logic/` and run via **Vitest** (no browser environment needed).
+
+```bash
+npm test          # run once
+npm run test:watch  # watch mode
+```
+
+| File                  | Covers                                                    |
+|-----------------------|-----------------------------------------------------------|
+| `worldSet.test.ts`    | `generateAllWorlds`, `filterByClue` (mixing/aspect/assignment), `applyClues` |
+| `mixer.test.ts`       | `mix()`, `potionToString()`, `isDirectOpposite()`         |
+| `deducer.test.ts`     | `deduceAlchemical`, `deduceMixingResult`, `getPossibleAlchemicals`, `getEliminatedCells` |
+
+Tests import directly from `src/logic/` — no component rendering. They cover the core
+deduction and mixing logic that all puzzle solving depends on. Expanded logic
+(`solarLunar.ts`, `worldSetExpanded.ts`, `golem.ts`) does not currently have dedicated
+tests; correctness is verified via puzzle validation (`scripts/alchemydoku.py validate`).

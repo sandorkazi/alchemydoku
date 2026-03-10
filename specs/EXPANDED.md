@@ -1,8 +1,8 @@
 # Alchemydoku — Expanded Rules: Design Specification
 
-> Status: fully implemented (phase 10d).
-> Golem Project mechanics: explicitly out of scope.
-> Debunking sub-game (question/answer about *how* to debunk): deferred.
+> Status: fully implemented (phase 10d+).
+> Golem Project mechanics: implemented — see GOLEM.md.
+> Debunking puzzle type: designed — see DEBUNK_PUZZLES.md.
 
 ---
 
@@ -241,7 +241,7 @@ ingredient has the stated sign on that color.
 **Computation:** Check whether every remaining world maps `ingredient` to an alchemical of
 the same Solar/Lunar class.
 
-**Answer UI:** Two buttons: ☀️ Solar (gold) and 🌙 Lunar (blue/silver).
+**Answer UI:** Two buttons: ☀ Solar (`text-orange-400`) and ☽ Lunar (`text-slate-400`).
 
 ---
 
@@ -259,18 +259,32 @@ alternating — must be computed via `isSolar`, not assumed.
 
 ### 4b. Solar/Lunar column marks
 
-Each ingredient column header gains two small toggle buttons:
-- ☀️ Solar button (gold when active)
-- 🌙 Lunar button (blue when active)
+Each ingredient column header gains two small pill-shaped toggle buttons:
+- ☀ Solar button (`text-orange-400`, always orange) — left
+- ☽ Lunar button (`text-slate-400`, always grey) — right
 
-These let the player record that they have deduced an ingredient's Solar/Lunar class.
+These let the player record their deduction about an ingredient's Solar/Lunar class.
+Solar and Lunar marks are **fully independent** — both can be set simultaneously (e.g.
+while narrowing candidates).
 
-**State:** `solarLunarMarks: Record<number, 'solar' | 'lunar' | null>` in
-`ExpandedSolverState`. Persisted in the same `exp-solver-${id}` localStorage blob as
-`gridState`.
+Each button cycles through the same four states as a regular cell:
+`unknown → possible → eliminated → confirmed`, and is tool-aware:
+- **mark tool**: cycles unknown → confirmed → eliminated → unknown
+- **question tool**: toggles unknown ↔ possible
+- **text tool**: behaves like mark tool
+
+When a cell in a Solar row is confirmed, a small ☀ mark (`text-orange-400`) appears in the
+cell's top-left corner reflecting the column's solar mark state. Lunar rows show ☽
+(`text-slate-400`) in the top-right.
+
+**State:** `solarLunarMarks: Record<number, SolarLunarMark>` in `ExpandedSolverState`,
+where `SolarLunarMark = { solar: CellState; lunar: CellState }`.
+
+> ⚠️ Earlier versions used `'solar' | 'lunar' | null` — this was replaced by the
+> `{solar, lunar}` pair so both marks can be tracked independently per column.
 
 **Auto-deduction:** When auto-deduction is on, if every remaining world agrees an ingredient
-is Solar (or Lunar), the mark is applied automatically — same pattern as cell auto-deduction.
+is Solar (or Lunar), the corresponding mark is auto-confirmed — same pattern as cell auto-deduction.
 
 ---
 
@@ -336,14 +350,25 @@ Encyclopedia fourth question example:
 
 ---
 
-## 7. Deferred / Out of Scope
+## 7. Implemented Since Initial Design
 
-- **Golem Project mechanics**: separate expansion, not yet designed
-- **Debunking questions**: e.g. "What mix would successfully debunk this article?" —
-  deferred until question/answer types for debunking are designed
+- **Golem Project mechanics**: fully implemented — see `GOLEM.md`
+- **Base-game debunking puzzles**: fully implemented. Four hand-crafted puzzles:
+  - `debunk-plan-tutorial-01` — single apprentice, 1-step min
+  - `debunk-plan-easy-01`, `debunk-plan-easy-02` — easy 1–2 step plans
+  - `debunk-plan-conflict-01` — `debunk_conflict_only` question type
+  Logic lives in `src/logic/debunk.ts`; schema validation in `src/puzzles/schema.ts`;
+  UI in `src/components/DebunkAnswerPanel.tsx`.
+- **Expanded debunking puzzle type**: three hand-crafted puzzles
+  (`exp-debunk-tutorial-01`, `exp-debunk-easy-01`, `exp-debunk-medium-01`);
+  generator not yet implemented.
+
+## 8. Deferred / Out of Scope
+
 - **Two-colour rule explanation**: pedagogical content only, no puzzle mechanic yet
 - **Double-trouble**: simultaneous two-article debunk via a single mix — deferred
-- **Uncertain article difficulty scoring**: `analyze_difficulty.py` not yet updated for
+- **Uncertain article difficulty scoring**: `analyze` subcommand not yet updated for
   3-of-4 enumeration complexity
-- **Puzzle authoring validation**: `encyclopedia_which_aspect` questions should be validated
-  for answer uniqueness within the constrained world-set
+- **Debunk puzzle generator**: BFS-based generator described in `DEBUNK_PUZZLES.md`;
+  not yet added to `scripts/alchemydoku.py`
+- **Seal mechanic / own-publication strategy**: deferred indefinitely

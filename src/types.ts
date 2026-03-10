@@ -128,7 +128,25 @@ export type QuestionTarget =
   /** Which ingredients have this color+sign aspect (deduced, never directly clued)? */
   | { kind: 'aspect-set'; color: Color; sign: Sign }
   /** Which ingredients have the Large component for this color? (size never directly revealed) */
-  | { kind: 'large-component'; color: Color };
+  | { kind: 'large-component'; color: Color }
+  /** Debunk planning: find the shortest sequence of actions that removes all publications */
+  | { kind: 'debunk_min_steps' }
+  /** Debunk planning: perform a master mix that conflicts with fixedIngredient's publication
+   *  without removing it (both publications conflict → neither removed) */
+  | { kind: 'debunk_conflict_only'; fixedIngredient: IngredientId };
+
+// ─── Debunk plan types ────────────────────────────────────────────────────────
+
+/** A single debunking action in a plan */
+export type DebunkStep =
+  | { kind: 'apprentice'; ingredient: IngredientId; color: Color }
+  | { kind: 'master'; ingredient1: IngredientId; ingredient2: IngredientId };
+
+/** A wrong publication on the board: opponent claims ingredient has claimedAlchemical */
+export type Publication = {
+  ingredient: IngredientId;
+  claimedAlchemical: AlchemicalId;
+};
 
 export type Puzzle = {
   id: string;
@@ -144,6 +162,10 @@ export type Puzzle = {
     worldsAfterClues?: number;
     minimumClues?: boolean;
   };
+  /** Present for debunk-plan puzzles: opponent publications to disprove */
+  publications?: (Publication | null)[];
+  /** Pre-computed reference answers for debunk questions (keyed by question kind) */
+  debunk_answers?: Record<string, DebunkStep[]>;
 };
 
 // ─── Solver State ─────────────────────────────────────────────────────────────

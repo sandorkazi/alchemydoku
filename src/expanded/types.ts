@@ -5,7 +5,7 @@
  */
 
 import type {
-  IngredientId, Color, Sign, Size,
+  IngredientId, Color, Sign, Size, CellState,
   Clue as BaseClue, QuestionTarget as BaseQuestion,
   PotionResult,
 } from '../types';
@@ -14,7 +14,8 @@ import type { PuzzleAnswer } from '../puzzles/schema';
 // ─── Solar / Lunar ────────────────────────────────────────────────────────────
 
 export type SolarLunar = 'solar' | 'lunar';
-export type SolarLunarMark = 'solar' | 'lunar' | null;
+/** Per-column mark: each polarity tracked independently as a CellState. */
+export type SolarLunarMark = { solar: CellState; lunar: CellState };
 export type SolarLunarMarks = Record<number, SolarLunarMark>;
 
 // ─── Encyclopedia entry ───────────────────────────────────────────────────────
@@ -264,10 +265,23 @@ export type AnyAnswer = PuzzleAnswer | ExpandedAnswer;
 
 import type { Puzzle } from '../types';
 
+/**
+ * A debunkable encyclopedia article (expanded-mode debunk puzzles only).
+ * One article covers one aspect (color). Each entry claims a sign for one ingredient.
+ * The article is removed when ANY entry is directly and unambiguously disproved.
+ */
+export type DebunkArticle = {
+  id: string;
+  aspect: import('../types').Color;
+  entries: { ingredient: import('../types').IngredientId; sign: '+' | '-' }[];
+};
+
 export type ExpandedPuzzle = Omit<Puzzle, 'clues' | 'questions'> & {
   clues: AnyClue[];
   questions: AnyQuestion[];
   mode: 'expanded';
   /** Hidden golem configuration. Present for all golem puzzles. */
   golem?: GolemParams;
+  /** Expanded debunk: encyclopedia articles that can be disproved alongside publications. */
+  articles?: DebunkArticle[];
 };

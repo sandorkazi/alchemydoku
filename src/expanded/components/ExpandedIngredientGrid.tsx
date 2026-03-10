@@ -3,8 +3,9 @@
  *
  * Ingredient grid for expanded mode. Extends the base grid with:
  *  - Solar/Lunar row border colouring (warm gold = Solar, cool blue = Lunar)
- *  - Per-column ☀️/🌙 deduction buttons below ingredient icons
- *  - Uses useExpandedSolver / useExpandedIngredient instead of base context
+ *  - Per-column ☀/🌙 deduction buttons (single row, tool-aware mark cycling)
+ *  - Corner indicators on cells showing the column's solar/lunar button state
+ *  - Golem panel with unified marker styling
  *
  * The Cell component and marker logic are identical to the base grid.
  */
@@ -13,16 +14,15 @@ import { useState, useRef, useEffect, useCallback } from 'react';
 import { INGREDIENTS } from '../../data/ingredients';
 import { ALCHEMICALS } from '../../data/alchemicals';
 import { useExpandedSolver, useExpandedIngredient } from '../contexts/ExpandedSolverContext';
-import type { GolemNotepad, GolemSlotMark } from '../contexts/ExpandedSolverContext';
-import type { GolemTestClue } from '../types';
+import type { GolemSlotMark } from '../contexts/ExpandedSolverContext';
 import type { Color, Size } from '../../types';
 import { isSolar } from '../logic/solarLunar';
 import { AlchemicalDisplay } from '../../components/AlchemicalDisplay';
-import { AlchemicalImage, IngredientIcon, ElemImage } from '../../components/GameSprites';
+import { AlchemicalImage, IngredientIcon, ElemImage, PotionImage } from '../../components/GameSprites';
 import type { AlchemicalId, IngredientId, CellState } from '../../types';
 import type { SolarLunarMark } from '../types';
 
-// Fixed visual column order by display-ingredient ID (mushroom → fern → toad → bird claw → mandrake → scorpion → raven's feather → flower)
+// Fixed visual column order by display-ingredient ID
 const BOARD_DISPLAY_ORDER: IngredientId[] = [3, 1, 7, 2, 4, 5, 6, 8];
 const ALCH_IDS: AlchemicalId[] = [1, 2, 3, 4, 5, 6, 7, 8];
 
@@ -34,10 +34,15 @@ const TINT_COLORS = [
 export type GridTool = 'mark' | 'question' | 'text';
 const TOOL_CURSOR: Record<GridTool, string> = { mark: 'crosshair', question: 'cell', text: 'text' };
 
+// ─── Shared marker style system ───────────────────────────────────────────────
+// Used by Cell, GolemCell, and SolarLunarButtons corner indicators
+
 function stroke(c: string) {
   return `-2px -2px 0 ${c}, 2px -2px 0 ${c}, -2px 2px 0 ${c}, 2px 2px 0 ${c},`
        + ` 0 -2px 0 ${c}, 0 2px 0 ${c}, -2px 0 0 ${c}, 2px 0 0 ${c}`;
 }
+
+/** Glyph + textShadow for all mark states — identical across every grid. */
 const MARKER: Record<CellState, { glyph: string; textShadow: string }> = {
   unknown:    { glyph: '',  textShadow: '' },
   possible:   { glyph: '?', textShadow: stroke('#6366f1') },
@@ -45,26 +50,41 @@ const MARKER: Record<CellState, { glyph: string; textShadow: string }> = {
   confirmed:  { glyph: '✔', textShadow: stroke('#22c55e') },
 };
 
+/** Background + border colours for marked states in golem cells. */
+const GOLEM_CELL_STATE: Record<CellState, { bg: string; border: string }> = {
+  unknown:    { bg: 'white',   border: '#e5e7eb' },
+  possible:   { bg: '#eef2ff', border: '#a5b4fc' },
+  eliminated: { bg: '#fef2f2', border: '#fca5a5' },
+  confirmed:  { bg: '#f0fdf4', border: '#4ade80' },
+};
+
 // ─── Solar/Lunar row styling ──────────────────────────────────────────────────
 
+// border-l doubled in thickness compared to previous version
 function rowBorderStyle(alchId: AlchemicalId): string {
   return isSolar(alchId)
-    ? 'border-l-2 border-l-orange-400'  // Solar: orange
-    : 'border-l-2 border-l-gray-300';   // Lunar: light grey
+    ? 'border-l-4 border-l-amber-400'
+    : 'border-l-4 border-l-blue-400';
 }
 
 // ─── Cell (pure — no context dependency) ─────────────────────────────────────
 
 function Cell({
-  cellState, alchId, tintColor, noteText,
+  cellState, alchId, tintColor, tintOpacity, noteText,
   activeTool, isEditing,
   onMouseDown, ariaLabel, isSolarRow,
+  slotSolarMark, slotLunarMark,
 }: {
-  cellState: CellState; alchId: AlchemicalId; tintColor: string; noteText: string;
+  cellState: CellState; alchId: AlchemicalId; tintColor: string; tintOpacity: number; noteText: string;
   activeTool: GridTool; isEditing: boolean;
   onMouseDown: (e: React.MouseEvent) => void; ariaLabel?: string; isSolarRow: boolean;
+  slotSolarMark: CellState; slotLunarMark: CellState;
 }) {
   const { glyph, textShadow } = MARKER[cellState];
+  // Corner indicator: top-left for solar rows, top-right for lunar rows
+  const cornerMark = isSolarRow ? slotSolarMark : slotLunarMark;
+  const { glyph: cornerGlyph, textShadow: cornerShadow } = MARKER[cornerMark];
+
   return (
     <button
       onMouseDown={onMouseDown}
@@ -72,17 +92,26 @@ function Cell({
       className={`relative w-12 h-12 rounded flex items-center justify-center border transition-all
         focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-indigo-400
         ${isEditing ? 'border-indigo-400 ring-2 ring-indigo-300' : 'border-gray-200 hover:border-gray-400'}
-        ${isSolarRow ? 'bg-orange-50/40' : 'bg-gray-50/60'}
+        ${isSolarRow ? 'bg-amber-50/50' : 'bg-blue-50/40'}
       `}
       aria-label={ariaLabel ?? cellState}
       title={ariaLabel ?? cellState}
     >
       <span className="absolute inset-0 rounded pointer-events-none"
-        style={{ backgroundColor: tintColor, opacity: 0.28 }} />
+        style={{ backgroundColor: tintColor, opacity: tintOpacity }} />
       <span className="absolute inset-0 flex items-center justify-center pointer-events-none"
-        style={{ opacity: 0.45 }}>
+        style={{ opacity: 0.22 }}>
         <AlchemicalImage id={alchId} width={44} />
       </span>
+      {/* Corner solar/lunar indicator */}
+      {cornerGlyph && (
+        <span
+          className={`absolute z-20 text-[9px] font-black leading-none select-none pointer-events-none
+            ${isSolarRow ? 'top-0.5 left-0.5' : 'top-0.5 right-0.5'}`}
+          style={{ color: 'white', textShadow: cornerShadow }}
+        >{cornerGlyph}</span>
+      )}
+      {/* Main cell glyph */}
       {glyph && !noteText && (
         <span className="relative z-10 text-xl font-black leading-none select-none"
           style={{ color: 'white', textShadow }}>{glyph}</span>
@@ -114,42 +143,71 @@ function CellTextEditor({ value, onChange, onDone }: {
   );
 }
 
-// ─── Solar/Lunar column button ────────────────────────────────────────────────
+// ─── Solar/Lunar column buttons ───────────────────────────────────────────────
+//
+// Layout: single row, ☀ left / 🌙 right, each ~22 px wide.
+// Tool behaviour:
+//   mark tool    → cycles unknown → confirmed → eliminated → unknown
+//   question tool → toggles unknown ↔ possible
+//   text tool    → treated as mark tool (no text editing on these buttons)
+//
+// Icon colours: ☀ always orange-400, 🌙 always gray-300
 
-function SolarLunarButtons({ slotId, mark, onToggle }: {
+function nextSlMark(cur: CellState, tool: 'mark' | 'question'): CellState {
+  if (tool === 'question') return cur === 'possible' ? 'unknown' : 'possible';
+  if (cur === 'unknown')   return 'confirmed';
+  if (cur === 'confirmed') return 'eliminated';
+  return 'unknown';
+}
+
+function slBtnClass(state: CellState, polarity: 'solar' | 'lunar'): string {
+  if (state === 'confirmed')
+    return polarity === 'solar'
+      ? 'bg-amber-400 border-amber-500'
+      : 'bg-blue-400  border-blue-500';
+  if (state === 'eliminated') return 'bg-red-200   border-red-400';
+  if (state === 'possible')   return 'bg-indigo-100 border-indigo-300';
+  // unknown
+  return polarity === 'solar'
+    ? 'bg-amber-50  border-amber-200 hover:bg-amber-100'
+    : 'bg-gray-50   border-gray-200  hover:bg-gray-100';
+}
+
+function SolarLunarButtons({ slotId, mark, activeTool, onToggle }: {
   slotId: number;
-  mark: SolarLunarMark;
+  mark: SolarLunarMark | null;
+  activeTool: GridTool;
   onToggle: (slot: number, next: SolarLunarMark) => void;
 }) {
-  const nextMark = (current: SolarLunarMark, pressed: 'solar' | 'lunar'): SolarLunarMark =>
-    current === pressed ? null : pressed;
+  const solar: CellState = mark?.solar ?? 'unknown';
+  const lunar: CellState = mark?.lunar ?? 'unknown';
+  // text tool behaves as mark for these buttons
+  const tool: 'mark' | 'question' = activeTool === 'question' ? 'question' : 'mark';
 
   return (
-    <div className="flex flex-col gap-0.5 items-center mt-0.5">
-      {/* Solar button */}
+    <div className="flex gap-0.5 justify-center mt-0.5 w-full">
+      {/* Solar — left, orange icon */}
       <button
-        title="Mark as Solar (☀️)"
-        aria-pressed={mark === 'solar'}
-        onClick={() => onToggle(slotId, nextMark(mark, 'solar'))}
-        className={`w-8 h-4 rounded text-[9px] font-bold flex items-center justify-center
-          border transition-all focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-orange-400
-          ${mark === 'solar'
-            ? 'bg-orange-500 border-orange-600 text-white'
-            : 'bg-orange-50 border-orange-200 text-orange-600 hover:bg-orange-100'
-          }`}
-      >☀️</button>
-      {/* Lunar button */}
+        title={`Solar: ${solar} (click to cycle)`}
+        aria-pressed={solar !== 'unknown'}
+        onClick={() => onToggle(slotId, { solar: nextSlMark(solar, tool), lunar })}
+        className={`w-[22px] h-[15px] rounded text-[10px] flex items-center justify-center
+          border transition-all focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-amber-400
+          ${slBtnClass(solar, 'solar')}`}
+      >
+        <span className="text-orange-400 leading-none" style={solar !== 'unknown' ? {filter:'brightness(10)'} : {}}>☀</span>
+      </button>
+      {/* Lunar — right, gray icon */}
       <button
-        title="Mark as Lunar (🌙)"
-        aria-pressed={mark === 'lunar'}
-        onClick={() => onToggle(slotId, nextMark(mark, 'lunar'))}
-        className={`w-8 h-4 rounded text-[9px] font-bold flex items-center justify-center
-          border transition-all focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-gray-400
-          ${mark === 'lunar'
-            ? 'bg-gray-400 border-gray-500 text-white'
-            : 'bg-gray-100 border-gray-300 text-gray-500 hover:bg-gray-200'
-          }`}
-      >🌙</button>
+        title={`Lunar: ${lunar} (click to cycle)`}
+        aria-pressed={lunar !== 'unknown'}
+        onClick={() => onToggle(slotId, { solar, lunar: nextSlMark(lunar, tool) })}
+        className={`w-[22px] h-[15px] rounded text-[10px] flex items-center justify-center
+          border transition-all focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-blue-300
+          ${slBtnClass(lunar, 'lunar')}`}
+      >
+        <span className="text-slate-400 leading-none" style={lunar !== 'unknown' ? {filter:'brightness(10)'} : {}}>☽</span>
+      </button>
     </div>
   );
 }
@@ -305,11 +363,17 @@ export function ExpandedIngredientGrid({ onRandomize, activeTool, setActiveTool 
 
         {/* Solar/Lunar legend */}
         <div className="flex items-center gap-3 text-[10px] text-gray-500">
-          <span className="flex items-center gap-1"><span className="w-3 h-3 rounded-sm bg-amber-200 border border-amber-300 inline-block" />Solar row</span>
-          <span className="flex items-center gap-1"><span className="w-3 h-3 rounded-sm bg-blue-100 border border-blue-300 inline-block" />Lunar row</span>
+          <span className="flex items-center gap-1">
+            <span className="w-3 h-3 rounded-sm bg-amber-100 border border-amber-400 inline-block" />
+            <span className="text-orange-400 font-semibold">☀ Solar</span>
+          </span>
+          <span className="flex items-center gap-1">
+            <span className="w-3 h-3 rounded-sm bg-blue-100 border border-blue-400 inline-block" />
+            <span className="text-slate-400 font-semibold">☽ Lunar</span>
+          </span>
         </div>
 
-        <div ref={gridRef} className="overflow-x-auto -mx-1 px-1 pb-1 flex justify-center relative"
+        <div ref={gridRef} className="overflow-x-auto -mx-1 pl-1 pr-4 pb-1 flex justify-center relative"
           style={{ cursor: TOOL_CURSOR[activeTool] }}>
 
           {/* Active tool badge */}
@@ -325,24 +389,43 @@ export function ExpandedIngredientGrid({ onRandomize, activeTool, setActiveTool 
             <kbd className="ml-0.5 opacity-60 font-mono text-[9px] border border-current/40 rounded px-0.5">Space</kbd>
           </div>
 
-          <table className="border-collapse text-xs">
+          {/* ── Neutral-pair decorators + table wrapper ──────────────────── */}
+          <div className="relative inline-block">
+            {/* 4 neutral potions at the row-pair boundaries, behind the table */}
+            {([1, 3, 5, 7] as const).map(boundaryRow => (
+              <div
+                key={boundaryRow}
+                className="absolute pointer-events-none"
+                style={{
+                  right: -18,
+                  top: 61 + boundaryRow * 48,
+                  transform: 'translateY(-50%) rotate(45deg)',
+                  width: 24, height: 24,
+                  zIndex: 0, opacity: 0.35,
+                }}
+              >
+                <PotionImage result={{ type: 'neutral' }} width={24} />
+              </div>
+            ))}
+            <table className="border-collapse text-xs" style={{ position: 'relative', zIndex: 1 }}>
             <thead>
               <tr>
                 <th className="pr-2" />
                 {colData.map(({ slotId, tint, displayId }) => {
                   const { index } = getIngredient(slotId);
                   const name = INGREDIENTS[displayId as 1]?.name ?? '';
-                  const mark = solarLunarMarks[slotId] ?? null;
+                  const slotMark = solarLunarMarks[slotId] ?? null;
                   return (
                     <th key={slotId} className="px-0.5 pb-0.5 text-center align-bottom">
                       <div className="mx-auto mb-0.5 rounded-full h-1" style={{ backgroundColor: tint, width: 20 }} />
                       <span title={name} aria-label={name}>
                         <IngredientIcon index={index} width={36} />
                       </span>
-                      {/* Solar/Lunar column buttons */}
+                      {/* Solar/Lunar column buttons — single row */}
                       <SolarLunarButtons
                         slotId={slotId}
-                        mark={mark}
+                        mark={slotMark}
+                        activeTool={activeTool}
                         onToggle={handleSolarLunarToggle}
                       />
                     </th>
@@ -354,7 +437,7 @@ export function ExpandedIngredientGrid({ onRandomize, activeTool, setActiveTool 
               {ALCH_IDS.map(alchId => {
                 const solar = isSolar(alchId);
                 return (
-                  <tr key={alchId} className={`border-t border-gray-100 ${rowBorderStyle(alchId)}`}>
+                  <tr key={alchId} className={rowBorderStyle(alchId)}>
                     <td className="pr-1 py-0 align-middle">
                       <div className="flex items-center justify-end">
                         <AlchemicalDisplay id={alchId} elemWidth={48} />
@@ -363,6 +446,9 @@ export function ExpandedIngredientGrid({ onRandomize, activeTool, setActiveTool 
                     {colData.map(({ slotId, tint }) => {
                       const key = noteKey(slotId, alchId);
                       const isEditing = editingCell?.ing === slotId && editingCell?.alch === alchId;
+                      const slotMark = solarLunarMarks[slotId] ?? null;
+                      const slotSolarMark: CellState = slotMark?.solar ?? 'unknown';
+                      const slotLunarMark: CellState = slotMark?.lunar ?? 'unknown';
                       return (
                         <td key={slotId} className="px-0.5 py-0 text-center align-middle">
                           <div className="relative">
@@ -370,10 +456,13 @@ export function ExpandedIngredientGrid({ onRandomize, activeTool, setActiveTool 
                               cellState={gridState[slotId]?.[alchId] ?? 'unknown'}
                               alchId={alchId}
                               tintColor={tint}
+                              tintOpacity={[1,2,5,6].includes(alchId) ? 0.13 : 0.31}
                               noteText={notes[key] ?? ''}
                               activeTool={activeTool}
                               isEditing={isEditing}
                               isSolarRow={solar}
+                              slotSolarMark={slotSolarMark}
+                              slotLunarMark={slotLunarMark}
                               onMouseDown={e => handleCellMouseDown(e, slotId, alchId)}
                               ariaLabel={`${INGREDIENTS[getIngredient(slotId).displayId as 1]?.name ?? slotId} / ${ALCHEMICALS[alchId].code} (${solar ? 'Solar' : 'Lunar'}): ${gridState[slotId]?.[alchId] ?? 'unknown'}`}
                             />
@@ -393,6 +482,7 @@ export function ExpandedIngredientGrid({ onRandomize, activeTool, setActiveTool 
               })}
             </tbody>
           </table>
+          </div>{/* /neutral-pair wrapper */}
         </div>
 
         <p className="text-[10px] text-gray-400">
@@ -416,41 +506,6 @@ const ALCH_COLS: { color: Color; size: Size }[] = [
 
 const GOLEM_EARS_IMG  = '/alchemydoku/images/golem_ears.png';
 const GOLEM_CHEST_IMG = '/alchemydoku/images/golem_chest.png';
-
-function cycleSlotMark(m: GolemSlotMark): GolemSlotMark {
-  if (m === null)      return 'reacts';
-  if (m === 'reacts')  return 'no-react';
-  return null;
-}
-
-function ReactionCell({
-  mark, isClue, onClick,
-}: { mark: GolemSlotMark; isClue?: boolean; onClick?: () => void }) {
-  const base = 'w-12 h-9 flex items-center justify-center border rounded text-sm font-bold transition-all select-none';
-  if (isClue && mark === 'reacts')
-    return <div className={`${base} bg-green-200 border-green-400 text-green-700 cursor-default`}>✓</div>;
-  if (isClue && mark === 'no-react')
-    return <div className={`${base} bg-red-100 border-red-300 text-red-500 cursor-default`}>✗</div>;
-  if (mark === 'reacts')
-    return <button className={`${base} bg-green-100 border-green-400 text-green-700 hover:bg-green-200`} onClick={onClick}>✓</button>;
-  if (mark === 'no-react')
-    return <button className={`${base} bg-red-50 border-red-300 text-red-500 hover:bg-red-100`} onClick={onClick}>✗</button>;
-  return <button className={`${base} bg-white border-gray-200 text-gray-200 hover:border-gray-400`} onClick={onClick}>·</button>;
-}
-
-function AlchPropertyCell({ active, onClick }: { active: boolean; onClick: () => void }) {
-  return (
-    <button
-      onClick={onClick}
-      className={`w-10 h-9 flex items-center justify-center border rounded transition-all
-        ${active
-          ? 'bg-indigo-100 border-indigo-500 shadow-sm scale-105'
-          : 'bg-white border-gray-200 hover:border-gray-400'}`}
-    >
-      {active && <span className="text-indigo-600 font-bold text-sm">✓</span>}
-    </button>
-  );
-}
 
 export function GolemPanel({ activeTool }: { activeTool: GridTool }) {
   const { state, dispatch } = useExpandedSolver();
@@ -480,7 +535,7 @@ export function GolemPanel({ activeTool }: { activeTool: GridTool }) {
     };
   });
 
-  // Image is 760×400 → AR = 400/760 ≈ 0.526. Explicit height avoids any distortion.
+  // Image is 760×400 → AR = 400/760 ≈ 0.526. Explicit height avoids distortion.
   const CELL_W = 48;
   const ROW_H  = Math.round(CELL_W * 400 / 760); // ≈ 25 px
   const HDR_W  = CELL_W;
@@ -501,30 +556,31 @@ export function GolemPanel({ activeTool }: { activeTool: GridTool }) {
     );
   }
 
-  function GolemCell({ mark, isClue, img, noteKey, orbColor, orbSize, tint, onMark }: {
+  /**
+   * GolemCell — unified marker styling matching the ingredient grid.
+   *
+   * isBottomGrid:
+   *   true  → golem image is rendered grayscale at lower opacity, BEHIND the
+   *            mark-state colour overlay (so colour always shows through).
+   *   false → normal coloured image on top of white bg (top grid behaviour).
+   */
+  function GolemCell({ mark, isClue, img, noteKey, orbColor, orbSize, tint, isBottomGrid, onMark }: {
     mark: GolemSlotMark; isClue?: boolean; img: string; noteKey: string;
-    orbColor?: Color; orbSize?: number; tint?: string; onMark: () => void;
+    orbColor?: Color; orbSize?: number; tint?: string; isBottomGrid?: boolean; onMark: () => void;
   }) {
     const [editing, setEditing] = useState(false);
     const note = notes[noteKey] ?? '';
-    const bgColor =
-      mark === 'reacts'   ? '#dcfce7' :
-      mark === 'no-react' ? '#fef2f2' :
-      mark === 'possible' ? '#fef9c3' : 'white';
-    const borderColor =
-      isClue && mark === 'reacts'   ? '#4ade80' :
-      isClue && mark === 'no-react' ? '#fca5a5' :
-      mark === 'reacts'   ? '#4ade80' :
-      mark === 'no-react' ? '#fca5a5' :
-      mark === 'possible' ? '#fde047' : '#e5e7eb';
-    const symbol =
-      mark === 'reacts'   ? '✓' :
-      mark === 'no-react' ? '✗' :
-      mark === 'possible' ? '?' : '';
-    const symColor =
-      mark === 'reacts'   ? '#16a34a' :
-      mark === 'no-react' ? '#dc2626' :
-      mark === 'possible' ? '#ca8a04' : '#d1d5db';
+
+    // Map GolemSlotMark → CellState for the unified MARKER system
+    const cellState: CellState =
+      mark === 'reacts'   ? 'confirmed'  :
+      mark === 'no-react' ? 'eliminated' :
+      mark === 'possible' ? 'possible'   : 'unknown';
+
+    const { glyph, textShadow }    = MARKER[cellState];
+    const { bg, border }           = GOLEM_CELL_STATE[cellState];
+    const borderWidth = isClue && mark !== null ? '2px' : '1px';
+
     return (
       <button
         onClick={() => { if (activeTool === 'text') { setEditing(true); return; } onMark(); }}
@@ -532,20 +588,43 @@ export function GolemPanel({ activeTool }: { activeTool: GridTool }) {
           position: 'relative', width: CELL_W, height: ROW_H, flexShrink: 0,
           display: 'flex', alignItems: 'center', justifyContent: 'center',
           borderRadius: 4, overflow: 'hidden',
-          border: `1px solid ${borderColor}`, background: bgColor,
-          cursor: 'pointer', transition: 'all 0.12s', fontWeight: 700, fontSize: 14,
+          border: `${borderWidth} solid ${border}`,
+          background: 'white',    // always white — colour comes from overlay
+          cursor: 'pointer', transition: 'all 0.12s',
         }}
       >
+        {/* Golem silhouette:
+            - Bottom grid: grayscale, behind the colour overlay
+            - Top grid: coloured, normal contrast */}
         <img src={img} alt="" style={{
           position: 'absolute', inset: 0, width: '100%', height: '100%',
-          objectFit: 'cover', opacity: 0.10, pointerEvents: 'none',
+          objectFit: 'cover',
+          opacity: isBottomGrid ? 0.20 : 0.30,
+          filter: isBottomGrid ? 'grayscale(1)' : 'none',
+          pointerEvents: 'none',
         }} />
-        {tint && <span style={{ position: 'absolute', inset: 0, borderRadius: 4, backgroundColor: tint, opacity: 0.28, pointerEvents: 'none' }} />}
+
+        {/* Mark-state colour overlay — sits ABOVE the bg image so colour is always visible */}
+        {cellState !== 'unknown' && (
+          <span style={{
+            position: 'absolute', inset: 0, borderRadius: 3,
+            backgroundColor: bg, opacity: 0.70,
+            pointerEvents: 'none',
+          }} />
+        )}
+
+        {/* Column tint overlay (top grid only — ingredient identity) */}
+        {tint && !isBottomGrid && (
+          <span style={{ position: 'absolute', inset: 0, borderRadius: 4, backgroundColor: tint, opacity: 0.28, pointerEvents: 'none' }} />
+        )}
+
+        {/* Alch-property orb (bottom grid only) */}
         {orbColor != null && orbSize != null && (
-          <span style={{ position: 'absolute', opacity: 0.20, pointerEvents: 'none' }}>
+          <span style={{ position: 'absolute', opacity: 0.22, pointerEvents: 'none' }}>
             <ElemImage color={orbColor} size="L" width={orbSize} />
           </span>
         )}
+
         {editing ? (
           <input
             autoFocus
@@ -554,16 +633,18 @@ export function GolemPanel({ activeTool }: { activeTool: GridTool }) {
             onBlur={e => { dispatch({ type: 'SET_NOTE', key: noteKey, value: e.target.value }); setEditing(false); }}
             onKeyDown={e => { if (e.key === 'Enter' || e.key === 'Escape') (e.target as HTMLInputElement).blur(); }}
             onClick={e => e.stopPropagation()}
-            style={{
-              position: 'absolute', inset: 0, width: '100%', height: '100%',
-              background: 'rgba(255,255,240,0.95)', border: 'none', outline: 'none',
-              textAlign: 'center', fontSize: 10, fontWeight: 600, zIndex: 10,
-            }}
+            className="absolute inset-0 z-20 w-full h-full text-center text-[11px] font-bold bg-white/90 border-2 border-indigo-400 rounded outline-none"
           />
         ) : note ? (
-          <span style={{ position: 'absolute', bottom: 1, right: 2, fontSize: 8, color: '#6366f1', fontWeight: 700, lineHeight: 1, pointerEvents: 'none' }}>{note}</span>
+          <span className="absolute bottom-0.5 right-0.5 text-[8px] font-bold text-indigo-500 leading-none pointer-events-none"
+            style={{ textShadow: stroke('white') }}>{note}</span>
         ) : null}
-        {!editing && <span style={{ color: symColor, position: 'relative' }}>{symbol}</span>}
+
+        {/* Marker glyph — same white-with-stroke style as ingredient grid */}
+        {!editing && glyph && (
+          <span className="relative z-10 text-xl font-black leading-none select-none"
+            style={{ color: 'white', textShadow }}>{glyph}</span>
+        )}
       </button>
     );
   }
@@ -571,7 +652,7 @@ export function GolemPanel({ activeTool }: { activeTool: GridTool }) {
   function cycleIngMark(cur: GolemSlotMark): GolemSlotMark {
     if (activeTool === 'mark')     return cur === null ? 'reacts' : cur === 'reacts' ? 'no-react' : null;
     if (activeTool === 'question') return cur === 'possible' ? null : 'possible';
-    return cur;
+    return cur;  // text tool — no cycling on golem marks
   }
 
   return (
@@ -602,6 +683,7 @@ export function GolemPanel({ activeTool }: { activeTool: GridTool }) {
                     img={img}
                     noteKey={`g1-${slotId}-${part}`}
                     tint={tint}
+                    isBottomGrid={false}
                     onMark={() => dispatch({
                       type: 'SET_GOLEM_INGREDIENT_MARK',
                       slot: slotId, part,
@@ -634,6 +716,7 @@ export function GolemPanel({ activeTool }: { activeTool: GridTool }) {
                   noteKey={`g2-${part}-${colKey}`}
                   orbColor={col.color}
                   orbSize={orbSize}
+                  isBottomGrid={true}
                   onMark={() => {
                     if (activeTool === 'question') {
                       dispatch({ type: 'SET_NOTE', key: `g2-${part}-${colKey}`, value: qMark ? '' : '?' });
@@ -651,5 +734,3 @@ export function GolemPanel({ activeTool }: { activeTool: GridTool }) {
     </div>
   );
 }
-
-
