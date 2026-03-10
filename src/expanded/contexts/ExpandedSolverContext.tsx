@@ -21,9 +21,12 @@ import { isSolar } from '../logic/solarLunar';
 import { checkExpandedAnswers, computeAllExpandedAnswers } from '../puzzles/schemaExpanded';
 import { validateExpandedMinStepsAnswer, validateExpandedConflictOnlyAnswer } from '../logic/debunkExpanded';
 import { WORLD_DATA } from '../../logic/worldPack';
+import { makeDisplayMap, loadDisplayMap, saveDisplayMap, emptyGrid, mergeIntoUnifiedStore } from '../../utils/solverStorage';
 import type { CellState, WorldSet, AlchemicalId, IngredientId } from '../../types';
 import type { ExpandedPuzzle, AnyAnswer, SolarLunarMark, SolarLunarMarks, GolemParams } from '../types';
 import type { Color, Size } from '../../types';
+
+export type { DisplayMap, GridState } from '../../utils/solverStorage';
 
 // ─── Debunk answer validator ──────────────────────────────────────────────────
 
@@ -56,47 +59,10 @@ function checkExpandedDebunkAnswers(
 
 // ─── Display map (identical logic to base) ────────────────────────────────────
 
-export type DisplayMap = Record<number, number>;
-
-function randomShuffle(arr: number[]): number[] {
-  const a = [...arr];
-  for (let i = a.length - 1; i > 0; i--) {
-    const j = Math.floor(Math.random() * (i + 1));
-    [a[i], a[j]] = [a[j], a[i]];
-  }
-  return a;
-}
-
-function makeDisplayMap(): DisplayMap {
-  const shuffled = randomShuffle([1, 2, 3, 4, 5, 6, 7, 8]);
-  const map: DisplayMap = {};
-  for (let i = 0; i < 8; i++) map[i + 1] = shuffled[i];
-  return map;
-}
-
-function loadDisplayMap(puzzleId: string): DisplayMap | null {
-  try {
-    const raw = localStorage.getItem(`exp-display-map-${puzzleId}`);
-    return raw ? JSON.parse(raw) : null;
-  } catch { return null; }
-}
-
-function saveDisplayMap(puzzleId: string, map: DisplayMap) {
-  try { localStorage.setItem(`exp-display-map-${puzzleId}`, JSON.stringify(map)); } catch { /**/ }
-}
-
 // ─── Grid + solar/lunar state ─────────────────────────────────────────────────
 
-type GridState = Record<number, Record<number, CellState>>;
-
-function emptyGrid(): GridState {
-  const g: GridState = {};
-  for (let i = 1; i <= 8; i++) {
-    g[i] = {};
-    for (let a = 1; a <= 8; a++) g[i][a] = 'unknown';
-  }
-  return g;
-}
+type GridState = import('../../utils/solverStorage').GridState;
+type DisplayMap = import('../../utils/solverStorage').DisplayMap;
 
 function emptySolarLunarMarks(): SolarLunarMarks {
   const m: SolarLunarMarks = {};
@@ -126,6 +92,22 @@ function emptyGolemNotepad(): GolemNotepad { return { chest: null, ears: null, i
 
 function loadSolverState(puzzleId: string): SavedState | null {
   try {
+    // 1. Try new unified key
+    const unified = localStorage.getItem('alch-save-expanded');
+    if (unified) {
+      const file = JSON.parse(unified);
+      const entry = file?.puzzles?.[puzzleId];
+      if (entry?.gridState) {
+        return {
+          gridState:       entry.gridState      as GridState,
+          notes:           (entry.notes ?? {})  as Record<string, string>,
+          hintLevel:       typeof entry.hintLevel === 'number' ? entry.hintLevel : 0,
+          solarLunarMarks: (entry.solarLunarMarks ?? emptySolarLunarMarks()) as SolarLunarMarks,
+          golemNotepad:    (entry.golemNotepad    ?? emptyGolemNotepad())    as GolemNotepad,
+        };
+      }
+    }
+    // 2. Fall back to legacy per-puzzle key
     const raw = localStorage.getItem(`exp-solver-${puzzleId}`);
     if (!raw) return null;
     const p = JSON.parse(raw);
@@ -173,7 +155,8 @@ export type ExpandedAction =
   | { type: 'SET_NOTE';            key: string; value: string }
   | { type: 'SET_SOLAR_LUNAR_MARK'; slot: number; mark: SolarLunarMark }
   | { type: 'SET_GOLEM_NOTEPAD'; part: 'chest' | 'ears'; value: { color: Color; size: Size } | null }
-  | { type: 'SET_GOLEM_INGREDIENT_MARK'; slot: number; part: 'chest' | 'ears'; mark: GolemSlotMark };
+  | { type: 'SET_GOLEM_INGREDIENT_MARK'; slot: number; part: 'chest' | 'ears'; mark: GolemSlotMark }
+  | { type: 'LOAD_PROGRESS'; gridState: GridState; notes: Record<string,string>; hintLevel: number; wrongAttempts: number; answers: (AnyAnswer | null)[]; solarLunarMarks: SolarLunarMarks; golemNotepad: GolemNotepad };
 
 // ─── Auto-deduction ───────────────────────────────────────────────────────────
 
@@ -301,7 +284,7 @@ function reducer(state: ExpandedSolverState, action: ExpandedAction): ExpandedSo
 
     case 'RESET': {
       const newMap = makeDisplayMap();
-      saveDisplayMap(state.puzzle.id, newMap);
+      saveDisplayMap(`exp-display-map-${state.puzzle.id}`, newMap);
       return applyAutoDeduction({
         ...state,
         displayMap:      newMap,
@@ -319,7 +302,7 @@ function reducer(state: ExpandedSolverState, action: ExpandedAction): ExpandedSo
 
     case 'RESHUFFLE': {
       const newMap = makeDisplayMap();
-      saveDisplayMap(state.puzzle.id, newMap);
+      saveDisplayMap(`exp-display-map-${state.puzzle.id}`, newMap);
       return { ...state, displayMap: newMap };
     }
 
@@ -365,6 +348,35 @@ function reducer(state: ExpandedSolverState, action: ExpandedAction): ExpandedSo
       };
     }
 
+    case 'LOAD_PROGRESS': {
+      const loaded = applyAutoDeduction({
+        ...state,
+        gridState: action.gridState,
+        notes: action.notes,
+        hintLevel: action.hintLevel,
+        wrongAttempts: action.wrongAttempts,
+        answers: action.answers,
+        solarLunarMarks: action.solarLunarMarks,
+        golemNotepad: action.golemNotepad,
+        completed: false,
+        showSolution: false,
+      });
+      try {
+        localStorage.setItem(`exp-solver-${state.puzzle.id}`, JSON.stringify(action.gridState));
+        mergeIntoUnifiedStore('alch-save-expanded', state.puzzle.id, {
+          savedAt: new Date().toISOString(),
+          gridState: action.gridState,
+          notes: action.notes,
+          hintLevel: action.hintLevel,
+          wrongAttempts: action.wrongAttempts,
+          answers: action.answers,
+          solarLunarMarks: action.solarLunarMarks,
+          golemNotepad: action.golemNotepad,
+        });
+      } catch { /* ignore */ }
+      return loaded;
+    }
+
     default:
       return state;
   }
@@ -379,10 +391,10 @@ export function ExpandedSolverProvider({ puzzle, children }: { puzzle: ExpandedP
   const worlds = useMemo(() => applyAnyClues(generateAllWorlds(), puzzle.clues), [puzzle]);
 
   const displayMap = useMemo(() => {
-    const saved = loadDisplayMap(puzzle.id);
+    const saved = loadDisplayMap(`exp-display-map-${puzzle.id}`);
     if (saved) return saved;
     const fresh = makeDisplayMap();
-    saveDisplayMap(puzzle.id, fresh);
+    saveDisplayMap(`exp-display-map-${puzzle.id}`, fresh);
     return fresh;
   }, [puzzle.id]);
 
@@ -410,15 +422,23 @@ export function ExpandedSolverProvider({ puzzle, children }: { puzzle: ExpandedP
   useEffect(() => {
     try {
       if (!state.completed) {
-        localStorage.setItem(`exp-solver-${puzzle.id}`, JSON.stringify({
+        const progress = {
+          savedAt:         new Date().toISOString(),
           gridState:       state.gridState,
           notes:           state.notes,
           hintLevel:       state.hintLevel,
+          wrongAttempts:   state.wrongAttempts,
+          answers:         state.answers,
           solarLunarMarks: state.solarLunarMarks,
-        }));
+          golemNotepad:    state.golemNotepad,
+        };
+        // Legacy per-puzzle key (backwards compat)
+        localStorage.setItem(`exp-solver-${puzzle.id}`, JSON.stringify(progress));
+        // Unified key
+        mergeIntoUnifiedStore('alch-save-expanded', puzzle.id, progress);
       }
     } catch { /**/ }
-  }, [state.gridState, state.notes, state.hintLevel, state.solarLunarMarks, state.completed, puzzle.id]);
+  }, [state.gridState, state.notes, state.hintLevel, state.wrongAttempts, state.answers, state.solarLunarMarks, state.golemNotepad, state.completed, puzzle.id]);
 
   return (
     <ExpandedSolverContext.Provider value={{ state, dispatch }}>

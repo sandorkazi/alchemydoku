@@ -11,6 +11,7 @@
 import { useState } from 'react';
 import { ALCHEMICALS } from '../../data/alchemicals';
 import { PotionImage, AlchemicalImage, ElemImage, CorrectIcon, IncorrectIcon, IngredientIcon, SignedElemImage } from '../../components/GameSprites';
+import { PotionPicker, AlchemicalPicker, LOGICAL_POTIONS, potionKey } from '../../components/AnswerPickers';
 import { useExpandedSolver, useExpandedIngredient, computeAllExpandedAnswers } from '../contexts/ExpandedSolverContext';
 import { INGREDIENTS } from '../../data/ingredients';
 import type { PotionResult, AlchemicalId, Color, IngredientId } from '../../types';
@@ -21,14 +22,6 @@ import type {
 import { ExpandedDebunkAnswerPanel } from './ExpandedDebunkAnswerPanel';
 
 // ─── Helpers ──────────────────────────────────────────────────────────────────
-
-const LOGICAL_POTIONS: PotionResult[] = [
-  { type:'potion',color:'R',sign:'+' }, { type:'potion',color:'R',sign:'-' },
-  { type:'potion',color:'G',sign:'+' }, { type:'potion',color:'G',sign:'-' },
-  { type:'potion',color:'B',sign:'+' }, { type:'potion',color:'B',sign:'-' },
-  { type:'neutral' },
-];
-const potionKey = (p: PotionResult) => p.type === 'neutral' ? 'neutral' : `${p.color}${p.sign}`;
 
 function Ing({ slotId, size = 28 }: { slotId: number; size?: number }) {
   const getIngredient = useExpandedIngredient();
@@ -225,36 +218,7 @@ function RevealedAnswer({ q, answer }: { q: AnyQuestion; answer: AnyAnswer }) {
 
 // ─── Pickers ──────────────────────────────────────────────────────────────────
 
-function PotionPicker({ selected, onSelect }: { selected: PotionResult | null; onSelect: (p: PotionResult) => void }) {
-  return (
-    <div className="flex flex-wrap gap-1.5" role="radiogroup">
-      {LOGICAL_POTIONS.map(p => {
-        const key = potionKey(p); const active = selected ? potionKey(selected) === key : false;
-        return (
-          <button key={key} role="radio" aria-checked={active} aria-label={key} onClick={() => onSelect(p)}
-            className={`flex items-center justify-center p-1.5 rounded-xl border-2 transition-all
-              ${active?'border-indigo-500 bg-indigo-50 shadow-md scale-105':'border-transparent bg-gray-100 hover:bg-gray-200'}`}>
-            <PotionImage result={p} width={36} />
-          </button>
-        );
-      })}
-    </div>
-  );
-}
 
-function AlchemicalPicker({ selected, onSelect }: { selected: AlchemicalId | null; onSelect: (id: AlchemicalId) => void }) {
-  return (
-    <div className="flex flex-wrap gap-1.5" role="radiogroup">
-      {([1,2,3,4,5,6,7,8] as AlchemicalId[]).map(id => (
-        <button key={id} role="radio" aria-checked={selected===id} aria-label={ALCHEMICALS[id].code} onClick={() => onSelect(id)}
-          className={`flex items-center justify-center p-1.5 rounded-xl border-2 transition-all
-            ${selected===id?'border-indigo-500 bg-indigo-50 shadow-md scale-105':'border-transparent bg-gray-100 hover:bg-gray-200'}`}>
-          <AlchemicalImage id={id} width={46} />
-        </button>
-      ))}
-    </div>
-  );
-}
 
 function IngredientSetPicker({ selected, onToggle }: { selected: Set<number>; onToggle: (id: number) => void }) {
   return (

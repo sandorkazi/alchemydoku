@@ -36,4 +36,9 @@
   .press-sm:active {
     transform: scale(0.97);
   }
+
+  @keyframes alch-spin {
+    from { transform: rotate(0deg); }
+    to   { transform: rotate(360deg); }
+  }
 }

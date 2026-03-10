@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { ALL_PUZZLES, COLLECTIONS, PUZZLE_MAP } from './data/puzzles/index';
 import { PuzzleSolverPage } from './pages/PuzzleSolverPage';
 import { TutorialPage } from './pages/TutorialPage';
@@ -10,6 +10,8 @@ import type { TutorialId } from './contexts/TutorialContext';
 import type { Puzzle } from './types';
 import { clearPuzzleState } from './contexts/SolverContext';
 import { ExpandedHome as ExpandedHomeImpl } from './expanded/ExpandedHome';
+import { DriveProvider, useDrive } from './contexts/DriveContext';
+import { DriveSync } from './components/DriveSync';
 
 type Collection = {
   id: string;
@@ -277,7 +279,7 @@ function ExpandedHome({ onModeChange }: { onModeChange: (m: 'base' | 'expanded')
 
 // ─── Base-game App ────────────────────────────────────────────────────────────
 
-export default function App() {
+function AppInner() {
   const [mode, setMode]                 = useState<'base' | 'expanded'>(loadMode);
   const [view, setView]                 = useState<View>({ kind: 'home' });
   const [completed, setCompleted]       = useState<Set<string>>(() => loadCompleted(loadMode()));
@@ -286,6 +288,17 @@ export default function App() {
   const [lastPuzzleId, setLastPuzzleId] = useState<string | null>(() => loadLastPuzzle(loadMode()));
   /** Incremented on reset to force SolverProvider remount even for same puzzleId */
   const [resetVersion, setResetVersion] = useState(0);
+
+  const { onPuzzleComplete } = useDrive();
+
+  // Re-read completed set when Drive sync merges cloud data
+  useEffect(() => {
+    function handleCloudSync() {
+      setCompleted(loadCompleted('base'));
+    }
+    window.addEventListener('alch-cloud-sync', handleCloudSync);
+    return () => window.removeEventListener('alch-cloud-sync', handleCloudSync);
+  }, []);
 
   // When mode switches, reload per-mode state and reset to home
   function handleModeChange(m: 'base' | 'expanded') {
@@ -316,6 +329,7 @@ export default function App() {
     next.add(puzzleId);
     setCompleted(next);
     saveCompleted('base', next);
+    onPuzzleComplete(); // sync to Drive if signed in
   }
 
   function openPuzzle(puzzleId: string, colId: string) {
@@ -418,8 +432,11 @@ export default function App() {
     <div className="min-h-screen bg-gray-50 animate-fadein">
       <div className="max-w-xl mx-auto px-4 py-10 space-y-8">
 
-        {/* Mode switcher — very top */}
-        <ModeSwitcher mode="base" onChange={handleModeChange} />
+        {/* Mode switcher + cloud save — very top */}
+        <div className="flex items-center justify-between gap-2">
+          <ModeSwitcher mode="base" onChange={handleModeChange} />
+          <DriveSync />
+        </div>
 
         {/* Hero */}
         <div className="text-center space-y-2">
@@ -631,5 +648,15 @@ export default function App() {
 
       </div>
     </div>
+  );
+}
+
+// ─── Root export wrapped in DriveProvider ────────────────────────────────────
+
+export default function App() {
+  return (
+    <DriveProvider>
+      <AppInner />
+    </DriveProvider>
   );
 }

@@ -2,54 +2,34 @@ import { createContext, useContext, useReducer, useEffect, useMemo, type ReactNo
 import { generateAllWorlds, applyClues } from '../logic/worldSet';
 import { getEliminatedCells } from '../logic/deducer';
 import { checkAnswers, checkDebunkAnswers } from '../puzzles/schema';
+import { makeDisplayMap, loadDisplayMap, saveDisplayMap, emptyGrid, mergeIntoUnifiedStore } from '../utils/solverStorage';
 import type { Puzzle, CellState, WorldSet } from '../types';
 import type { PuzzleAnswer } from '../puzzles/schema';
 
-// ─── Display map ──────────────────────────────────────────────────────────────
+export type { DisplayMap, GridState } from '../utils/solverStorage';
 
-/**
- * Maps ingredient slot IDs (1-8) → display ingredient IDs (1-8).
- * Randomly shuffled once per puzzle session so the same puzzle can be
- * played with different ingredient visuals every time you start fresh.
- *
- * Slot IDs are what the logic engine sees (clues, question, world-set).
- * Display IDs control which name + sprite the player actually sees.
- */
-export type DisplayMap = Record<number, number>;
+// ─── Local type alias ─────────────────────────────────────────────────────────
 
-function randomShuffle(arr: number[]): number[] {
-  const a = [...arr];
-  for (let i = a.length - 1; i > 0; i--) {
-    const j = Math.floor(Math.random() * (i + 1));
-    [a[i], a[j]] = [a[j], a[i]];
-  }
-  return a;
-}
-
-function makeDisplayMap(): DisplayMap {
-  const shuffled = randomShuffle([1, 2, 3, 4, 5, 6, 7, 8]);
-  const map: DisplayMap = {};
-  for (let i = 0; i < 8; i++) map[i + 1] = shuffled[i];
-  return map;
-}
-
-function loadDisplayMap(puzzleId: string): DisplayMap | null {
-  try {
-    const raw = localStorage.getItem(`display-map-${puzzleId}`);
-    return raw ? JSON.parse(raw) : null;
-  } catch { return null; }
-}
-
-function saveDisplayMap(puzzleId: string, map: DisplayMap) {
-  try { localStorage.setItem(`display-map-${puzzleId}`, JSON.stringify(map)); } catch { /* ignore */ }
-}
+type GridState = import('../utils/solverStorage').GridState;
 
 // ─── State ────────────────────────────────────────────────────────────────────
 
-type GridState = Record<number, Record<number, CellState>>;
-
 function loadSolverState(puzzleId: string): { gridState: GridState; notes: Record<string,string>; hintLevel: number } | null {
   try {
+    // 1. Try new unified key (written by save-file load + auto-save)
+    const unified = localStorage.getItem('alch-save-base');
+    if (unified) {
+      const file = JSON.parse(unified);
+      const entry = file?.puzzles?.[puzzleId];
+      if (entry?.gridState) {
+        return {
+          gridState: entry.gridState as GridState,
+          notes:     (entry.notes ?? {}) as Record<string,string>,
+          hintLevel: typeof entry.hintLevel === 'number' ? entry.hintLevel : 0,
+        };
+      }
+    }
+    // 2. Fall back to legacy per-puzzle key
     const raw = localStorage.getItem(`solver-${puzzleId}`);
     if (!raw) return null;
     const parsed = JSON.parse(raw);
@@ -60,15 +40,6 @@ function loadSolverState(puzzleId: string): { gridState: GridState; notes: Recor
       hintLevel:  typeof parsed.hintLevel === 'number' ? parsed.hintLevel : 0,
     };
   } catch { return null; }
-}
-
-function emptyGrid(): GridState {
-  const g: GridState = {};
-  for (let i = 1; i <= 8; i++) {
-    g[i] = {};
-    for (let a = 1; a <= 8; a++) g[i][a] = 'unknown';
-  }
-  return g;
 }
 
 export type SolverState = {
@@ -101,7 +72,8 @@ export type Action =
   | { type: 'RESET' }
   | { type: 'RESHUFFLE' }
   | { type: 'CLEAR_GRID' }
-  | { type: 'SET_NOTE'; key: string; value: string };
+  | { type: 'SET_NOTE'; key: string; value: string }
+  | { type: 'LOAD_PROGRESS'; gridState: GridState; notes: Record<string,string>; hintLevel: number; wrongAttempts: number; answers: (PuzzleAnswer | null)[] };
 
 // ─── Reducer ──────────────────────────────────────────────────────────────────
 
@@ -184,7 +156,7 @@ function reducer(state: SolverState, action: Action): SolverState {
 
     case 'RESET': {
       const newMap = makeDisplayMap();
-      saveDisplayMap(state.puzzle.id, newMap);
+      saveDisplayMap(`display-map-${state.puzzle.id}`, newMap);
       return applyAutoDeduction({
         ...state,
         displayMap: newMap,
@@ -209,8 +181,34 @@ function reducer(state: SolverState, action: Action): SolverState {
     case 'RESHUFFLE': {
       // Re-randomise ingredient visuals without clearing logic progress
       const newMap = makeDisplayMap();
-      saveDisplayMap(state.puzzle.id, newMap);
+      saveDisplayMap(`display-map-${state.puzzle.id}`, newMap);
       return { ...state, displayMap: newMap };
+    }
+
+    case 'LOAD_PROGRESS': {
+      const loaded = applyAutoDeduction({
+        ...state,
+        gridState: action.gridState,
+        notes: action.notes,
+        hintLevel: action.hintLevel,
+        wrongAttempts: action.wrongAttempts,
+        answers: action.answers,
+        completed: false,
+        showSolution: false,
+      });
+      // Persist to localStorage too
+      try {
+        localStorage.setItem(`solver-${state.puzzle.id}`, JSON.stringify(action.gridState));
+        mergeIntoUnifiedStore('alch-save-base', state.puzzle.id, {
+          savedAt: new Date().toISOString(),
+          gridState: action.gridState,
+          notes: action.notes,
+          hintLevel: action.hintLevel,
+          wrongAttempts: action.wrongAttempts,
+          answers: action.answers,
+        });
+      } catch { /* ignore */ }
+      return loaded;
     }
 
     default:
@@ -231,10 +229,10 @@ export function SolverProvider({ puzzle, children }: { puzzle: Puzzle; children:
   const worlds = useMemo(() => applyClues(generateAllWorlds(), puzzle.clues), [puzzle]);
 
   const displayMap = useMemo(() => {
-    const saved = loadDisplayMap(puzzle.id);
+    const saved = loadDisplayMap(`display-map-${puzzle.id}`);
     if (saved) return saved;
     const fresh = makeDisplayMap();
-    saveDisplayMap(puzzle.id, fresh);
+    saveDisplayMap(`display-map-${puzzle.id}`, fresh);
     return fresh;
   }, [puzzle.id]);
 
@@ -259,14 +257,21 @@ export function SolverProvider({ puzzle, children }: { puzzle: Puzzle; children:
   useEffect(() => {
     try {
       if (!state.completed) {
-        localStorage.setItem(`solver-${puzzle.id}`, JSON.stringify({
-          gridState:  state.gridState,
-          notes:      state.notes,
-          hintLevel:  state.hintLevel,
-        }));
+        const progress = {
+          savedAt:      new Date().toISOString(),
+          gridState:    state.gridState,
+          notes:        state.notes,
+          hintLevel:    state.hintLevel,
+          wrongAttempts: state.wrongAttempts,
+          answers:      state.answers,
+        };
+        // Legacy per-puzzle key (backwards compat)
+        localStorage.setItem(`solver-${puzzle.id}`, JSON.stringify(progress));
+        // Unified key
+        mergeIntoUnifiedStore('alch-save-base', puzzle.id, progress);
       }
     } catch { /* ignore */ }
-  }, [state.gridState, state.notes, state.completed, state.hintLevel, puzzle.id]);
+  }, [state.gridState, state.notes, state.completed, state.hintLevel, state.wrongAttempts, state.answers, puzzle.id]);
 
   return (
     <SolverContext.Provider value={{ state, dispatch }}>
