@@ -16,7 +16,7 @@ import type { PuzzleAnswer } from '../puzzles/schema';
 export type SolarLunar = 'solar' | 'lunar';
 /** Per-column mark: each polarity tracked independently as a CellState. */
 export type SolarLunarMark = { solar: CellState; lunar: CellState };
-export type SolarLunarMarks = Record<number, SolarLunarMark>;
+export type SolarLunarMarks = Record<number, SolarLunarMark | null>;
 
 // ─── Encyclopedia entry ───────────────────────────────────────────────────────
 

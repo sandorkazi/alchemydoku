@@ -25,9 +25,9 @@ export function IngredientIcon({ index, width = 80 }: { index: IngredientIndex; 
 
 // ─── Potion ───────────────────────────────────────────────────────────────────
 
-export function PotionImage({ result, width = 60 }: { result: PotionResult; width?: number }) {
+export function PotionImage({ result, width = 60, title }: { result: PotionResult; width?: number; title?: string }) {
   const key = result.type === 'neutral' ? 'neutral' : `${result.color}${result.sign}` as keyof typeof POTION_SPRITES;
-  return <AtlasSprite sprite={POTION_SPRITES[key]} width={width} title={key} />;
+  return <AtlasSprite sprite={POTION_SPRITES[key]} width={width} title={title ?? key} />;
 }
 
 /** Icon representing one of the 4 sell outcomes */
@@ -87,8 +87,8 @@ export function SignImage({ color, sign, width = 28 }: { color: Color; sign: Sig
 
 // ─── Alchemical identity ──────────────────────────────────────────────────────
 
-export function AlchemicalImage({ id, width = 40 }: { id: AlchemicalId; width?: number }) {
-  return <AtlasSprite sprite={ALCHEMICAL_SPRITES[id as keyof typeof ALCHEMICAL_SPRITES]} width={width} />;
+export function AlchemicalImage({ id, width = 40, title }: { id: AlchemicalId; width?: number; title?: string }) {
+  return <AtlasSprite sprite={ALCHEMICAL_SPRITES[id as keyof typeof ALCHEMICAL_SPRITES]} width={width} title={title} />;
 }
 
 // ─── UI icons ─────────────────────────────────────────────────────────────────

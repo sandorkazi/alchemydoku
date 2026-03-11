@@ -127,7 +127,7 @@ function SolverInner({ onBack, onNext, isTutorial = false }: {
       hintLevel: state.hintLevel,
       wrongAttempts: state.wrongAttempts,
       answers: state.answers,
-      solarLunarMarks: state.solarLunarMarks as Record<number, string | null>,
+      solarLunarMarks: state.solarLunarMarks,
       golemNotepad: state.golemNotepad,
     }, 'expanded');
   }

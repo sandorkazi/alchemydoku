@@ -23,7 +23,7 @@ import { validateExpandedMinStepsAnswer, validateExpandedConflictOnlyAnswer } fr
 import { WORLD_DATA } from '../../logic/worldPack';
 import { makeDisplayMap, loadDisplayMap, saveDisplayMap, emptyGrid, mergeIntoUnifiedStore } from '../../utils/solverStorage';
 import type { CellState, WorldSet, AlchemicalId, IngredientId } from '../../types';
-import type { ExpandedPuzzle, AnyAnswer, SolarLunarMark, SolarLunarMarks, GolemParams } from '../types';
+import type { ExpandedPuzzle, AnyAnswer, SolarLunarMark, SolarLunarMarks } from '../types';
 import type { Color, Size } from '../../types';
 
 export type { DisplayMap, GridState } from '../../utils/solverStorage';
@@ -171,7 +171,11 @@ function computeSolarLunarAutoMarks(worlds: WorldSet): SolarLunarMarks {
         allSame = false; break;
       }
     }
-    marks[s + 1] = allSame ? (firstSolar ? 'solar' : 'lunar') : null;
+    marks[s + 1] = allSame
+      ? (firstSolar
+        ? { solar: 'confirmed', lunar: 'eliminated' }
+        : { solar: 'eliminated', lunar: 'confirmed' })
+      : null;
   }
   return marks;
 }
@@ -213,11 +217,11 @@ function applyAutoDeduction(state: ExpandedSolverState): ExpandedSolverState {
     const newIngMarks = { ...newNotepad.ingredientMarks };
     for (const clue of state.puzzle.clues) {
       if (clue.kind !== 'golem_test') continue;
-      const s = (clue as import('../puzzles/schemaExpanded').GolemTestClue).ingredient;
+      const s = (clue as import('../types').GolemTestClue).ingredient;
       const prev = newIngMarks[s] ?? { chest: null, ears: null };
       newIngMarks[s] = {
-        chest: prev.chest ?? ((clue as import('../puzzles/schemaExpanded').GolemTestClue).chest_reacted ? 'reacts' : 'no-react'),
-        ears:  prev.ears  ?? ((clue as import('../puzzles/schemaExpanded').GolemTestClue).ears_reacted  ? 'reacts' : 'no-react'),
+        chest: prev.chest ?? ((clue as import('../types').GolemTestClue).chest_reacted ? 'reacts' : 'no-react'),
+        ears:  prev.ears  ?? ((clue as import('../types').GolemTestClue).ears_reacted  ? 'reacts' : 'no-react'),
       };
     }
     newNotepad = { ...newNotepad, ingredientMarks: newIngMarks };

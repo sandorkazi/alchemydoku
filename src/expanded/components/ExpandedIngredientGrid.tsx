@@ -71,12 +71,12 @@ function rowBorderStyle(alchId: AlchemicalId): string {
 
 function Cell({
   cellState, alchId, tintColor, tintOpacity, noteText,
-  activeTool, isEditing,
+  isEditing,
   onMouseDown, ariaLabel, isSolarRow,
   slotSolarMark, slotLunarMark,
 }: {
   cellState: CellState; alchId: AlchemicalId; tintColor: string; tintOpacity: number; noteText: string;
-  activeTool: GridTool; isEditing: boolean;
+  isEditing: boolean;
   onMouseDown: (e: React.MouseEvent) => void; ariaLabel?: string; isSolarRow: boolean;
   slotSolarMark: CellState; slotLunarMark: CellState;
 }) {
@@ -256,12 +256,12 @@ export function ExpandedIngredientGrid({ onRandomize, activeTool, setActiveTool 
     const onKey = (e: KeyboardEvent) => {
       if (e.key === ' ' && !editingCell) {
         e.preventDefault();
-        setActiveTool(t => TOOLS[(TOOLS.indexOf(t) + 1) % TOOLS.length]);
+        setActiveTool(TOOLS[(TOOLS.indexOf(activeTool) + 1) % TOOLS.length]);
       }
     };
     window.addEventListener('keydown', onKey);
     return () => window.removeEventListener('keydown', onKey);
-  }, [editingCell]);
+  }, [editingCell, activeTool, setActiveTool]);
 
   const noteKey = (ing: number, alch: number) => `${ing}-${alch}`;
 
@@ -458,7 +458,6 @@ export function ExpandedIngredientGrid({ onRandomize, activeTool, setActiveTool 
                               tintColor={tint}
                               tintOpacity={[1,2,5,6].includes(alchId) ? 0.13 : 0.31}
                               noteText={notes[key] ?? ''}
-                              activeTool={activeTool}
                               isEditing={isEditing}
                               isSolarRow={solar}
                               slotSolarMark={slotSolarMark}

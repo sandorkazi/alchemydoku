@@ -6,7 +6,7 @@
  */
 
 import {
-  WORLD_DATA, FULL_INDICES, SIGN_TABLE, SIZE_TABLE, MIX_TABLE,
+  WORLD_DATA, FULL_INDICES, SIGN_TABLE, MIX_TABLE,
   COLOR_INDEX, encodePotionResult, filterWorlds,
 } from './worldPack';
 import type {

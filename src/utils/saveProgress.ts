@@ -30,7 +30,7 @@ export type PuzzleProgress = {
 };
 
 export type ExpandedPuzzleProgress = PuzzleProgress & {
-  solarLunarMarks: Record<number, string | null>;
+  solarLunarMarks: Record<number, { solar: string; lunar: string } | null>;
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   golemNotepad: any;
 };

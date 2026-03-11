@@ -7,7 +7,6 @@ import {
   getPossibleResults,
   getEliminatedCells,
 } from '../../src/logic/deducer';
-import type { Clue } from '../../src/types';
 
 beforeEach(() => clearWorldCache());
 

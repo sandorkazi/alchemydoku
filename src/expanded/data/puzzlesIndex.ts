@@ -105,6 +105,7 @@ export type ExpandedCollection = {
   id: string;
   title: string;
   description: string;
+  difficulty: 'tutorial' | 'easy' | 'medium' | 'hard';
   puzzleIds: string[];
   unlockedAfter?: string;
 };
@@ -114,12 +115,14 @@ export const EXPANDED_COLLECTIONS: ExpandedCollection[] = [
     id: 'exp-tutorials',
     title: 'New Mechanics',
     description: 'Learn the Book Token and Royal Encyclopedia — the two new tools of the expanded rules.',
+    difficulty: 'tutorial',
     puzzleIds: ['exp-tutorial-book-01', 'exp-tutorial-enc-01'],
   },
   {
     id: 'exp-easy-enc',
     title: 'First Articles',
     description: 'Apply encyclopedia entries to narrow down alchemical identities. Short, focused deductions.',
+    difficulty: 'easy',
     puzzleIds: [
       'exp-easy-enc-01', 'exp-easy-enc-02', 'exp-easy-enc-03', 'exp-easy-enc-04', 'exp-easy-enc-05',
       'exp-easy-enc-06', 'exp-easy-enc-07', 'exp-easy-enc-08', 'exp-easy-enc-09', 'exp-easy-enc-10',
@@ -130,6 +133,7 @@ export const EXPANDED_COLLECTIONS: ExpandedCollection[] = [
     id: 'exp-easy-sl',
     title: 'Solar & Lunar Readings',
     description: 'Use the Book Token to classify ingredients as Solar or Lunar, then deduce from there.',
+    difficulty: 'easy',
     puzzleIds: [
       'exp-easy-solar-01', 'exp-easy-sl-02', 'exp-easy-sl-03',
       'exp-easy-sl-04', 'exp-easy-sl-05', 'exp-easy-sl-06', 'exp-easy-sl-07',
@@ -140,6 +144,7 @@ export const EXPANDED_COLLECTIONS: ExpandedCollection[] = [
     id: 'exp-golem',
     title: 'The Golem Project',
     description: 'Test ingredients on the royal golem. Deduce what it reacts to, then find the pair that will bring it to life.',
+    difficulty: 'easy',
     puzzleIds: [
       'exp-golem-tutorial-01',
       'exp-easy-golem-02', 'exp-easy-golem-03', 'exp-easy-golem-04',
@@ -151,6 +156,7 @@ export const EXPANDED_COLLECTIONS: ExpandedCollection[] = [
     id: 'exp-medium-enc-sl',
     title: "The Scholar's Compendium",
     description: 'Encyclopedia and Solar/Lunar clues interlock — neither alone is enough.',
+    difficulty: 'medium',
     puzzleIds: [
       'exp-medium-enc-sl-02', 'exp-medium-enc-sl-03', 'exp-medium-enc-sl-04',
       'exp-medium-enc-sl-05', 'exp-medium-enc-sl-06',
@@ -161,6 +167,7 @@ export const EXPANDED_COLLECTIONS: ExpandedCollection[] = [
     id: 'exp-medium-golem-enc',
     title: 'Golem & Encyclopedia',
     description: 'Golem reactions and published articles constrain each other. Cross-reference to find the animators.',
+    difficulty: 'medium',
     puzzleIds: [
       'exp-medium-golem-enc-02', 'exp-medium-golem-enc-03', 'exp-medium-golem-enc-04',
       'exp-medium-golem-enc-05', 'exp-medium-golem-enc-06',
@@ -171,6 +178,7 @@ export const EXPANDED_COLLECTIONS: ExpandedCollection[] = [
     id: 'exp-medium-golem-sl',
     title: 'Golem & Field Tests',
     description: 'Combine golem reactions with mixing results to deduce the animate potion.',
+    difficulty: 'medium',
     puzzleIds: [
       'exp-medium-golem-sl-02', 'exp-medium-golem-sl-03', 'exp-medium-golem-sl-04',
       'exp-medium-golem-sl-05', 'exp-medium-golem-sl-06',
@@ -181,6 +189,7 @@ export const EXPANDED_COLLECTIONS: ExpandedCollection[] = [
     id: 'exp-hard-all',
     title: 'The Hard Cases',
     description: 'All expanded mechanics in play — golem tests, encyclopedia entries, Solar/Lunar. No single clue type is sufficient.',
+    difficulty: 'hard',
     puzzleIds: [
       'exp-hard-all-02', 'exp-hard-all-03', 'exp-hard-all-04',
       'exp-hard-all-05', 'exp-hard-all-06',
@@ -191,6 +200,7 @@ export const EXPANDED_COLLECTIONS: ExpandedCollection[] = [
     id: 'exp-hard-golem-mix',
     title: 'Animating the Golem',
     description: 'You must deduce not just the reaction pattern but the exact potion needed — using only golem tests and mixing results.',
+    difficulty: 'hard',
     puzzleIds: [
       'exp-hard-golem-mix-02', 'exp-hard-golem-mix-03', 'exp-hard-golem-mix-04',
       'exp-hard-golem-mix-05', 'exp-hard-golem-mix-06',
@@ -201,6 +211,7 @@ export const EXPANDED_COLLECTIONS: ExpandedCollection[] = [
     id: 'exp-hard-among',
     title: 'Whispers & Reactions',
     description: 'You overheard partial results — reactions from unnamed ingredients, sell outcomes without knowing whose potion it was. Piece it together.',
+    difficulty: 'hard',
     puzzleIds: ['exp-hard-among-golem-01', 'exp-hard-among-golem-02'],
     unlockedAfter: 'exp-hard-all',
   },
@@ -208,6 +219,7 @@ export const EXPANDED_COLLECTIONS: ExpandedCollection[] = [
     id: 'exp-debunk',
     title: 'Debunking',
     description: "Rivals have published false alchemical theories. You know the truth — plan the fewest possible debunk actions to clear the board.",
+    difficulty: 'medium',
     puzzleIds: ['exp-debunk-tutorial-01', 'exp-debunk-easy-01', 'exp-debunk-medium-01'],
     unlockedAfter: 'exp-tutorials',
   },

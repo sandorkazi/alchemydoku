@@ -9,11 +9,9 @@
  */
 
 import { useState } from 'react';
-import { ALCHEMICALS } from '../../data/alchemicals';
 import { PotionImage, AlchemicalImage, ElemImage, CorrectIcon, IncorrectIcon, IngredientIcon, SignedElemImage } from '../../components/GameSprites';
 import { PotionPicker, AlchemicalPicker, LOGICAL_POTIONS, potionKey } from '../../components/AnswerPickers';
 import { useExpandedSolver, useExpandedIngredient, computeAllExpandedAnswers } from '../contexts/ExpandedSolverContext';
-import { INGREDIENTS } from '../../data/ingredients';
 import type { PotionResult, AlchemicalId, Color, IngredientId } from '../../types';
 import type {
   AnyQuestion, AnyAnswer,
@@ -29,15 +27,9 @@ function Ing({ slotId, size = 28 }: { slotId: number; size?: number }) {
   return <span className="inline-flex shrink-0"><IngredientIcon index={index} width={size} /></span>;
 }
 
-function ingName(slotId: number, getIngredient: ReturnType<typeof useExpandedIngredient>): string {
-  const { displayId } = getIngredient(slotId);
-  return INGREDIENTS[displayId as 1]?.name ?? `#${slotId}`;
-}
-
 // ─── Question header ──────────────────────────────────────────────────────────
 
 function QuestionHeader({ q }: { q: AnyQuestion }) {
-  const getIngredient = useExpandedIngredient();
   const colorLabel = (c: Color) => ({ R:'Red', G:'Green', B:'Blue' }[c]);
 
   // Base types
@@ -168,8 +160,7 @@ function QuestionHeader({ q }: { q: AnyQuestion }) {
 
 // ─── Revealed answer ──────────────────────────────────────────────────────────
 
-function RevealedAnswer({ q, answer }: { q: AnyQuestion; answer: AnyAnswer }) {
-  const getIngredient = useExpandedIngredient();
+function RevealedAnswer({ answer }: { q: AnyQuestion; answer: AnyAnswer }) {
 
   if (typeof answer === 'object' && answer !== null && 'kind' in answer) {
     const a = answer as { kind: string };

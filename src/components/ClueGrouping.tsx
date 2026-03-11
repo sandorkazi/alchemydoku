@@ -24,7 +24,7 @@ export type ClueGroup<C extends GroupableClue = GroupableClue> =
   | { type: 'multi'; clues: AspectClue[] }
   | { type: 'full';  clues: AspectClue[] };
 
-export type GetIngredient = (slotId: number) => { displayId: number; index: number };
+export type GetIngredient = (slotId: number) => { displayId: number; index: 0 | 1 | 2 | 3 | 4 | 5 | 6 | 7 };
 
 // ─── Grouping ─────────────────────────────────────────────────────────────────
 

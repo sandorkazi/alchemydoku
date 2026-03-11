@@ -165,6 +165,7 @@
   {
     "id": "debunk-planning",
     "title": "Debunk Planning",
+    "difficulty": "easy",
     "description": "Opponents have published false theories. Plan the shortest sequence of apprentice and master debunks to expose them all.",
     "puzzleIds": [
       "debunk-plan-tutorial-01",

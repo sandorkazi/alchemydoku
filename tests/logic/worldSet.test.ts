@@ -1,5 +1,6 @@
 import { describe, it, expect, beforeEach } from 'vitest';
 import { generateAllWorlds, clearWorldCache, applyClues, filterByClue } from '../../src/logic/worldSet';
+import { WORLD_DATA } from '../../src/logic/worldPack';
 import type { Clue } from '../../src/types';
 
 beforeEach(() => clearWorldCache());
@@ -13,7 +14,7 @@ describe('generateAllWorlds', () => {
   it('every world is a valid bijection', () => {
     const worlds = generateAllWorlds();
     for (const world of worlds.slice(0, 100)) { // spot-check first 100
-      const values = Object.values(world);
+      const values = Array.from({ length: 8 }, (_, i) => WORLD_DATA[world * 8 + i]);
       const unique = new Set(values);
       expect(unique.size).toBe(8);
       expect(values.length).toBe(8);
@@ -50,7 +51,7 @@ describe('filterByClue — mixing', () => {
       result: { type: 'potion', color: 'G', sign: '+' },
     };
     const filtered = filterByClue(worlds, clue);
-    for (const world of filtered) {
+    for (const _world of filtered) {
       // In all remaining worlds, the assignment pair must produce G+
       // We can't import mix() here without a circular dep, so just check count is reasonable
       expect(filtered.length).toBeGreaterThan(0);
@@ -87,7 +88,7 @@ describe('filterByClue — assignment', () => {
     // Exactly 7! = 5040 worlds should remain (ingredient 1 fixed, rest permuted)
     expect(filtered.length).toBe(5040);
     for (const world of filtered) {
-      expect(world[1]).toBe(3);
+      expect(WORLD_DATA[world * 8 + 0] + 1).toBe(3);
     }
   });
 });
@@ -121,7 +122,7 @@ describe('applyClues', () => {
     ];
     const filtered = applyClues(worlds, clues);
     expect(filtered.length).toBe(1);
-    expect(filtered[0][1]).toBe(1);
-    expect(filtered[0][8]).toBe(8);
+    expect(WORLD_DATA[filtered[0] * 8 + 0] + 1).toBe(1);
+    expect(WORLD_DATA[filtered[0] * 8 + 7] + 1).toBe(8);
   });
 });

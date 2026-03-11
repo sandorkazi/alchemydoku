@@ -139,15 +139,6 @@ export function StarBurst({ notes, firstSlot, lastSlot }: StarBurstProps) {
 
   return (
     <>
-      {/* Inject keyframe once */}
-      <style>{`
-        @keyframes alch-star-fly {
-          0%   { opacity: 0;   transform: translate(0, 0) scale(0.2) rotate(0deg); }
-          15%  { opacity: 1; }
-          80%  { opacity: 0.9; transform: translate(var(--dx), var(--dy)) scale(1) rotate(360deg); }
-          100% { opacity: 0;   transform: translate(calc(var(--dx) * 1.15), calc(var(--dy) * 1.15)) scale(0.4) rotate(420deg); }
-        }
-      `}</style>
       {bursts.map(b => (
         <BurstLayer
           key={b.id}

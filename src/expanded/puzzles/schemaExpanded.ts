@@ -17,7 +17,7 @@ import { WORLD_DATA, SIGN_TABLE, COLOR_INDEX } from '../../logic/worldPack';
 import type { WorldSet, IngredientId, AlchemicalId, Color } from '../../types';
 import type { PuzzleAnswer } from '../../puzzles/schema';
 import type {
-  ExpandedPuzzle, AnyQuestion, AnyAnswer, ExpandedAnswer,
+  ExpandedPuzzle, AnyQuestion, AnyAnswer,
   AspectColorAnswer, SolarLunarAnswer, IngredientSetAnswer,
   EncyclopediaFourthQuestion, EncyclopediaWhichAspectQuestion, SolarLunarQuestion,
   GolemGroupQuestion, GolemMixPotionQuestion, GolemPossiblePotionsQuestion,
