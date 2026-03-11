@@ -4,7 +4,7 @@ import { PotionImage, AlchemicalImage, SignedElemImage, IngredientIcon,
 import { ALCHEMICALS } from '../data/alchemicals';
 import { INGREDIENTS } from '../data/ingredients';
 import { useIngredient } from '../contexts/SolverContext';
-import type { Clue, SellResult, DebunkClue, AlchemicalId, Color, Sign } from '../types';
+import type { Clue, SellResult, DebunkClue, AlchemicalId, Color, Sign, MixingAmongClue, SellAmongClue, SellResultAmongClue } from '../types';
 
 const ING_W        = 36;  // ingredient icon — matches grid header
 const ASPECT_BADGE = 22;  // aspect orb badge — half overlaps top of ingredient
@@ -293,6 +293,82 @@ function DebunkClueCard({ clue }: { clue: DebunkClue }) {
   );
 }
 
+
+// ─── MixingAmong clue card ────────────────────────────────────────────────────
+
+function MixingAmongClueCard({ clue }: { clue: MixingAmongClue }) {
+  const getIngredient = useIngredient();
+  const count = clue.ingredients.length;
+  return (
+    <Card icon="👀" label="Observed Mix" accent="blue">
+      <div className="flex items-center gap-1.5 flex-wrap">
+        <span className="text-[10px] text-gray-500 shrink-0">
+          {count === 2 ? 'These 2' : `2 of these ${count}`} mixed
+        </span>
+        <PotionImage result={clue.result} width={POT_W} />
+      </div>
+      <div className="flex flex-wrap gap-1 mt-1">
+        {clue.ingredients.map(id => {
+          const { index } = getIngredient(id);
+          return <IngredientIcon key={id} index={index} width={ING_W} />;
+        })}
+      </div>
+    </Card>
+  );
+}
+
+// ─── SellAmong clue card ──────────────────────────────────────────────────────
+
+function SellAmongClueCard({ clue }: { clue: SellAmongClue }) {
+  const getIngredient = useIngredient();
+  const count = clue.ingredients.length;
+  const verb = clue.result === 'sold' ? 'sold' : 'rejected';
+  return (
+    <Card icon="🪙" label="Observed Sale" accent="amber">
+      <div className="flex items-center gap-1.5 flex-wrap">
+        <span className="text-[10px] text-gray-500 shrink-0">
+          {clue.count} of {count === 2 ? 'these 2' : `these ${count}`} {verb}
+        </span>
+        <SignedElemImage color={clue.potion.color} sign={clue.potion.sign} width={22} />
+      </div>
+      <div className="flex flex-wrap gap-1 mt-1">
+        {clue.ingredients.map(id => {
+          const { index } = getIngredient(id);
+          return <IngredientIcon key={id} index={index} width={ING_W} />;
+        })}
+      </div>
+    </Card>
+  );
+}
+
+// ─── SellResultAmong clue card ─────────────────────────────────────────────────
+
+function SellResultAmongClueCard({ clue }: { clue: SellResultAmongClue }) {
+  const getIngredient = useIngredient();
+  const count = clue.ingredients.length;
+  const ambigLabel = count === 2 ? 'One of these 2 pairs' : `A pair from these ${count}`;
+  return (
+    <Card icon={<SellIcon width={18} />} label="Ambiguous Sale" accent="purple">
+      <div className="flex items-center gap-1.5 flex-wrap">
+        <span className="text-[10px] text-gray-500 shrink-0">{ambigLabel} sold</span>
+        <SignedElemImage color={clue.claimedPotion.color} sign={clue.claimedPotion.sign} width={22} />
+        <span className="text-[10px] text-gray-500 shrink-0">→</span>
+        <SellResultIcon result={clue.sellResult} width={26} />
+        <span className="text-[10px] font-semibold text-gray-700 shrink-0">
+          {SELL_RESULT_LABEL[clue.sellResult]}
+        </span>
+      </div>
+      <p className="text-[9px] text-gray-400 mt-0.5">{SELL_RESULT_DESC[clue.sellResult]}</p>
+      <div className="flex flex-wrap gap-1 mt-1">
+        {clue.ingredients.map(id => {
+          const { index } = getIngredient(id);
+          return <IngredientIcon key={id} index={index} width={ING_W} />;
+        })}
+      </div>
+    </Card>
+  );
+}
+
 // ─── Main export ──────────────────────────────────────────────────────────────
 
 export function ClueCard({ clue }: { clue: Clue }) {
@@ -301,6 +377,8 @@ export function ClueCard({ clue }: { clue: Clue }) {
     case 'aspect':     return <AspectClueCard     clue={clue} />;
     case 'assignment': return <AssignmentClueCard clue={clue} />;
     case 'sell':       return <SellClueCard       clue={clue} />;
-    case 'debunk':     return <DebunkClueCard      clue={clue} />;
+    case 'debunk':        return <DebunkClueCard       clue={clue} />;
+    case 'mixing_among':  return <MixingAmongClueCard  clue={clue} />;
+    case 'sell_result_among':  return <SellResultAmongClueCard clue={clue} />;
   }
 }

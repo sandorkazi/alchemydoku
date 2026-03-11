@@ -113,7 +113,49 @@ export type MasterDebunkClue = {
 
 export type DebunkClue = ApprenticeDebunkClue | MasterDebunkClue;
 
-export type Clue = MixingClue | AspectClue | FullAssignmentClue | SellClue | DebunkClue;
+/**
+ * "Among" clue: at least one pair from the listed 2-4 ingredients mixed this result.
+ * You witnessed the outcome across the table but not which specific pair was involved.
+ */
+export type MixingAmongClue = {
+  kind: 'mixing_among';
+  ingredients: [IngredientId, IngredientId, ...IngredientId[]]; // 2-4
+  result: PotionResult;
+};
+
+/**
+ * "Among" clue: exactly `count` of the listed 2-4 ingredients sold for this potion.
+ * A sold result means the ingredient has that color+sign aspect; rejected means it does not.
+ * Typical puzzle usage: count=2, result='sold'.
+ */
+export type SellAmongClue = {
+  kind: 'sell_among';
+  ingredients: [IngredientId, IngredientId, ...IngredientId[]]; // 2-4
+  potion: { color: Color; sign: Sign };
+  result: 'sold' | 'rejected';
+  count: number;
+};
+
+/**
+ * Ambiguous sell-attempt clue: some pair from these 3–5 ingredients was mixed,
+ * claimed as `claimedPotion`, and the market's verdict was `sellResult`.
+ * You saw the outcome but not which specific pair was used.
+ *
+ * Filter: keep worlds where ∃ at least one pair (i,j) whose mix produces the
+ * sell result against claimedPotion.
+ *
+ * The most informative variants are `sign_ok` (only the sign matched — wrong
+ * colour) and `opposite` (same colour but sign was flipped).
+ */
+export type SellResultAmongClue = {
+  kind: 'sell_result_among';
+  ingredients: [IngredientId, IngredientId, ...IngredientId[]]; // 2–5
+  claimedPotion: { color: Color; sign: Sign };
+  sellResult: SellResult;
+};
+
+export type Clue = MixingClue | AspectClue | FullAssignmentClue | SellClue | DebunkClue
+                | MixingAmongClue | SellAmongClue | SellResultAmongClue;
 
 // ─── Puzzle ───────────────────────────────────────────────────────────────────
 

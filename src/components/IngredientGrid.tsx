@@ -4,6 +4,7 @@ import { ALCHEMICALS } from '../data/alchemicals';
 import { useSolver, useIngredient } from '../contexts/SolverContext';
 import { AlchemicalDisplay } from './AlchemicalDisplay';
 import { AlchemicalImage, IngredientIcon, PotionImage } from './GameSprites';
+import { StarBurst } from './StarBurst';
 import type { AlchemicalId, IngredientId, CellState } from '../types';
 
 // Fixed visual column order by display-ingredient ID (mushroom → fern → toad → bird claw → mandrake → scorpion → raven's feather → flower)
@@ -430,6 +431,11 @@ export function IngredientGrid({ onRandomize }: { onRandomize?: () => void }) {
               ))}
             </tbody>
           </table>
+          <StarBurst
+            notes={notes}
+            firstSlot={colData[0]?.slotId}
+            lastSlot={colData[colData.length - 1]?.slotId}
+          />
           </div>{/* /neutral-pair wrapper */}
         </div>
 

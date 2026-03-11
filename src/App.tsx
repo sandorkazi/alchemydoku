@@ -441,9 +441,9 @@ function AppInner() {
         {/* Hero */}
         <div className="text-center space-y-2">
           <div className="text-5xl" aria-hidden="true">⚗️</div>
-          <h1 className="text-3xl font-bold text-gray-900">Alchemists Trainer</h1>
+          <h1 className="text-3xl font-bold text-gray-900">Alchemy Sudoku Training</h1>
           <p className="text-gray-500 text-sm">
-            Learn the deduction logic of Alchemists through interactive puzzles.
+            Train your deduction skills with interactive alchemy puzzles.
           </p>
         </div>
 

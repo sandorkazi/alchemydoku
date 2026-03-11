@@ -144,6 +144,19 @@ export type GolemHintSizeClue = {
   size: Size;
 };
 
+/**
+ * "Among" clue: exactly `count` of the listed 2-4 ingredients trigger the given
+ * golem reaction. You observed the test but not which ingredient caused it.
+ * Typical puzzle usage: count=1, reaction='animators'.
+ * Requires puzzle-level GolemParams to filter (like GolemTestClue).
+ */
+export type GolemReactionAmongClue = {
+  kind: 'golem_reaction_among';
+  ingredients: [IngredientId, IngredientId, ...IngredientId[]]; // 2-4
+  reaction: GolemReactionGroup;
+  count: number;
+};
+
 export type ExpandedClue =
   | BookClue
   | EncyclopediaClue
@@ -152,7 +165,8 @@ export type ExpandedClue =
   | DebunkMasterClue
   | GolemTestClue
   | GolemHintColorClue
-  | GolemHintSizeClue;
+  | GolemHintSizeClue
+  | GolemReactionAmongClue;
 
 export type AnyClue = BaseClue | ExpandedClue;
 

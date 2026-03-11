@@ -11,6 +11,7 @@ import {
 } from './worldPack';
 import type {
   WorldSet, Clue, MixingClue, AspectClue, FullAssignmentClue, SellClue, DebunkClue,
+  MixingAmongClue, SellAmongClue, SellResultAmongClue,
 } from '../types';
 
 // ─── World generation ─────────────────────────────────────────────────────────
@@ -103,14 +104,81 @@ export function filterByDebunk(worlds: WorldSet, clue: DebunkClue): WorldSet {
   }
 }
 
+
+export function filterByMixingAmong(worlds: WorldSet, clue: MixingAmongClue): WorldSet {
+  const slots   = clue.ingredients.map(id => id - 1);
+  const expected = encodePotionResult(clue.result);
+  return filterWorlds(worlds, w => {
+    for (let a = 0; a < slots.length; a++)
+      for (let b = a + 1; b < slots.length; b++)
+        if (MIX_TABLE[WORLD_DATA[w * 8 + slots[a]] * 8 + WORLD_DATA[w * 8 + slots[b]]] === expected)
+          return true;
+    return false;
+  });
+}
+
+export function filterBySellAmong(worlds: WorldSet, clue: SellAmongClue): WorldSet {
+  const slots    = clue.ingredients.map(id => id - 1);
+  const ci       = COLOR_INDEX[clue.potion.color];
+  const wantSign = clue.result === 'sold'
+    ? (clue.potion.sign === '+' ? 1 : 0)
+    : (clue.potion.sign === '+' ? 0 : 1);
+  return filterWorlds(worlds, w => {
+    let matches = 0;
+    for (const s of slots)
+      if (SIGN_TABLE[WORLD_DATA[w * 8 + s] * 3 + ci] === wantSign) matches++;
+    return matches === clue.count;
+  });
+}
+
+export function filterBySellResultAmong(worlds: WorldSet, clue: SellResultAmongClue): WorldSet {
+  const slots       = clue.ingredients.map(id => id - 1);
+  const ci          = COLOR_INDEX[clue.claimedPotion.color];
+  const claimedSign = clue.claimedPotion.sign === '+' ? 1 : 0;
+  const claimedCode = ci * 2 + (claimedSign === 1 ? 1 : 2);
+
+  return filterWorlds(worlds, w => {
+    for (let a = 0; a < slots.length; a++) {
+      for (let b = a + 1; b < slots.length; b++) {
+        const actual = MIX_TABLE[WORLD_DATA[w * 8 + slots[a]] * 8 + WORLD_DATA[w * 8 + slots[b]]];
+        let match = false;
+        switch (clue.sellResult) {
+          case 'total_match': match = actual === claimedCode; break;
+          case 'neutral':     match = actual === 0; break;
+          case 'sign_ok': {
+            if (actual !== 0 && actual !== claimedCode) {
+              const actualSign  = actual % 2 === 1 ? 1 : 0;
+              const actualColor = (actual - 1) >> 1;
+              match = actualSign === claimedSign && actualColor !== ci;
+            }
+            break;
+          }
+          case 'opposite': {
+            if (actual !== 0) {
+              const actualSign = actual % 2 === 1 ? 1 : 0;
+              match = actualSign !== claimedSign;
+            }
+            break;
+          }
+        }
+        if (match) return true;
+      }
+    }
+    return false;
+  });
+}
+
 /** Apply a single clue. */
 export function filterByClue(worlds: WorldSet, clue: Clue): WorldSet {
   switch (clue.kind) {
-    case 'mixing':     return filterByMixing(worlds, clue);
-    case 'aspect':     return filterByAspect(worlds, clue);
-    case 'assignment': return filterByAssignment(worlds, clue);
-    case 'sell':       return filterBySell(worlds, clue);
-    case 'debunk':     return filterByDebunk(worlds, clue);
+    case 'mixing':             return filterByMixing(worlds, clue);
+    case 'mixing_among':       return filterByMixingAmong(worlds, clue as MixingAmongClue);
+    case 'sell_among':         return filterBySellAmong(worlds, clue as SellAmongClue);
+    case 'sell_result_among':  return filterBySellResultAmong(worlds, clue as SellResultAmongClue);
+    case 'aspect':             return filterByAspect(worlds, clue);
+    case 'assignment':         return filterByAssignment(worlds, clue);
+    case 'sell':               return filterBySell(worlds, clue);
+    case 'debunk':             return filterByDebunk(worlds, clue);
   }
 }
 
