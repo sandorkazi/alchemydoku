@@ -167,6 +167,21 @@ export function validateMinStepsAnswer(
 }
 
 /**
+ * Validate an apprentice-only plan.
+ * Same as validateMinStepsAnswer but additionally rejects any master steps.
+ */
+export function validateApprenticePlanAnswer(
+  steps: DebunkStep[],
+  solution: Assignment,
+  publications: Publication[],
+  worlds: WorldSet,
+  refLen: number,
+): boolean {
+  if (steps.some(s => s.kind === 'master')) return false;
+  return validateMinStepsAnswer(steps, solution, publications, worlds, refLen);
+}
+
+/**
  * Validate a conflict-only answer.
  * Valid when the single step:
  * 1. Is a master debunk.

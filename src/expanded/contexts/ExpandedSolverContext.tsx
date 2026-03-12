@@ -19,7 +19,7 @@ import { getEliminatedCells } from '../../logic/deducer';
 import { applyAnyClues } from '../logic/worldSetExpanded';
 import { isSolar } from '../logic/solarLunar';
 import { checkExpandedAnswers, computeAllExpandedAnswers } from '../puzzles/schemaExpanded';
-import { validateExpandedMinStepsAnswer, validateExpandedConflictOnlyAnswer } from '../logic/debunkExpanded';
+import { validateExpandedMinStepsAnswer, validateExpandedApprenticePlanAnswer, validateExpandedConflictOnlyAnswer } from '../logic/debunkExpanded';
 import { WORLD_DATA } from '../../logic/worldPack';
 import { makeDisplayMap, loadDisplayMap, saveDisplayMap, emptyGrid, mergeIntoUnifiedStore } from '../../utils/solverStorage';
 import type { CellState, WorldSet, AlchemicalId, IngredientId } from '../../types';
@@ -48,6 +48,9 @@ function checkExpandedDebunkAnswers(
     if (q.kind === 'debunk_min_steps') {
       const refLen = (puzzle.debunk_answers?.debunk_min_steps ?? []).length;
       if (!validateExpandedMinStepsAnswer(steps, solution, publications, articles, worlds, refLen)) return false;
+    } else if (q.kind === 'debunk_apprentice_plan') {
+      const refLen = (puzzle.debunk_answers?.debunk_apprentice_plan ?? []).length;
+      if (!validateExpandedApprenticePlanAnswer(steps, solution, publications, articles, worlds, refLen)) return false;
     } else if (q.kind === 'debunk_conflict_only') {
       const fixedIng = (q as { fixedIngredient?: IngredientId }).fixedIngredient ?? null;
       if (!fixedIng || steps.length !== 1) return false;
@@ -258,7 +261,7 @@ function reducer(state: ExpandedSolverState, action: ExpandedAction): ExpandedSo
 
     case 'SUBMIT_ANSWER': {
       const hasDebunk = state.puzzle.questions.some(
-        q => q.kind === 'debunk_min_steps' || q.kind === 'debunk_conflict_only'
+        q => q.kind === 'debunk_min_steps' || q.kind === 'debunk_apprentice_plan' || q.kind === 'debunk_conflict_only'
       );
       let correct: boolean;
       if (hasDebunk) {

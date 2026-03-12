@@ -18,14 +18,14 @@
     null, null
   ],
   "questions": [
-    { "kind": "debunk_min_steps" }
+    { "kind": "debunk_apprentice_plan" }
   ],
   "solution": {
     "1": 1, "2": 2, "3": 3, "4": 4,
     "5": 5, "6": 6, "7": 7, "8": 8
   },
   "debunk_answers": {
-    "debunk_min_steps": [
+    "debunk_apprentice_plan": [
       { "kind": "apprentice", "ingredient": 1, "color": "R" },
       { "kind": "apprentice", "ingredient": 6, "color": "R" }
     ]

@@ -1,7 +1,7 @@
 import { generateAllWorlds, applyClues } from '../logic/worldSet';
 import { deduceMixingResult, deduceAlchemical, deduceAspect, deduceUncertainAspect, getPossibleResults, deduceNeutralPartner, getIngredientPotionProfile, getGroupPossiblePotions, getMostInformativeMix, getGuaranteedNonProducers } from '../logic/deducer';
 import { COLOR_INDEX, WORLD_DATA, SIGN_TABLE, SIZE_TABLE } from '../logic/worldPack';
-import { validateMinStepsAnswer, validateConflictOnlyAnswer } from '../logic/debunk';
+import { validateMinStepsAnswer, validateApprenticePlanAnswer, validateConflictOnlyAnswer } from '../logic/debunk';
 import type {
   Puzzle, QuestionTarget, PotionResult, AlchemicalId, IngredientId, Sign, Color, WorldSet,
   DebunkStep, Publication,
@@ -101,6 +101,7 @@ export function computeAnswerFromWorlds(
 
     // Debunk planning questions: answer is validated externally, not computed from worlds
     case 'debunk_min_steps':
+    case 'debunk_apprentice_plan':
     case 'debunk_conflict_only':
       return null;
 
@@ -208,6 +209,10 @@ export function checkDebunkAnswers(
       const refLen = (puzzle.debunk_answers?.debunk_min_steps ?? []).length;
       return validateMinStepsAnswer(steps, sol, pubs, worlds, refLen);
     }
+    if (q.kind === 'debunk_apprentice_plan') {
+      const refLen = (puzzle.debunk_answers?.debunk_apprentice_plan ?? []).length;
+      return validateApprenticePlanAnswer(steps, sol, pubs, worlds, refLen);
+    }
     if (q.kind === 'debunk_conflict_only') {
       if (steps.length !== 1) return false;
       return validateConflictOnlyAnswer(steps[0], q.fixedIngredient, sol, pubs, worlds);
@@ -250,6 +255,8 @@ export function questionText(question: QuestionTarget, ingredientName: (id: numb
       return `Which ingredients have a Large ${{ R: 'Red', G: 'Green', B: 'Blue' }[question.color]} component?`;
     case 'debunk_min_steps':
       return 'What is the shortest sequence of debunk actions to remove all publications?';
+    case 'debunk_apprentice_plan':
+      return 'What is the shortest apprentice-only debunk sequence to remove all publications?';
     case 'debunk_conflict_only':
       return `Mix ingredient ${ingredientName(question.fixedIngredient)} with something to create a conflict — without removing any publication.`;
     case 'neutral-partner':

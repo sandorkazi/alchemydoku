@@ -2,12 +2,15 @@
  * Google Drive integration for Alchemy Sudoku Training save sync.
  *
  * Uses GIS (Google Identity Services) implicit token flow — no backend needed.
- * Saves to drive.appDataFolder so the file is invisible to the user in Drive UI.
+ * Default: saves to drive.appDataFolder (invisible to user in Drive UI).
+ * Optional: saves to My Drive/AlchemySudoku/ (visible, manageable by user).
  *
  * Setup: set VITE_GOOGLE_CLIENT_ID in your .env (see README for Google Cloud steps).
  */
 
 // ─── Types ───────────────────────────────────────────────────────────────────
+
+export type DriveMode = 'hidden' | 'visible';
 
 export interface SaveData {
   version: 1;
@@ -67,18 +70,22 @@ const DRIVE_UPLOAD_URL = 'https://www.googleapis.com/upload/drive/v3/files';
 const USERINFO_URL     = 'https://www.googleapis.com/oauth2/v3/userinfo';
 const SCOPES = [
   'https://www.googleapis.com/auth/drive.appdata',
+  'https://www.googleapis.com/auth/drive.file',   // needed for visible folder
   'https://www.googleapis.com/auth/userinfo.profile',
   'https://www.googleapis.com/auth/userinfo.email',
 ].join(' ');
-const SAVE_FILE_NAME = 'alchemy-sudoku-save.json';
+const SAVE_FILE_NAME        = 'alchemy-sudoku-save.json';
+const VISIBLE_FOLDER_NAME   = 'AlchemySudoku';
+const DRIVE_MIME_FOLDER     = 'application/vnd.google-apps.folder';
 
 // ─── Internal state ──────────────────────────────────────────────────────────
 
-let tokenClient: TokenClient | null = null;
-let accessToken: string | null = null;
-let tokenExpiresAt: number = 0;
-let pendingResolve: ((t: string) => void) | null = null;
-let pendingReject:  ((e: Error)   => void) | null = null;
+let tokenClient:      TokenClient | null = null;
+let accessToken:      string | null = null;
+let tokenExpiresAt:   number = 0;
+let pendingResolve:   ((t: string) => void) | null = null;
+let pendingReject:    ((e: Error)   => void) | null = null;
+let visibleFolderId:  string | null = null;
 
 // ─── Script loading ───────────────────────────────────────────────────────────
 
@@ -150,8 +157,9 @@ export function signOut(): void {
   if (accessToken) {
     window.google?.accounts.oauth2.revoke(accessToken, () => {});
   }
-  accessToken    = null;
-  tokenExpiresAt = 0;
+  accessToken      = null;
+  tokenExpiresAt   = 0;
+  visibleFolderId  = null;
 }
 
 export function isSignedIn(): boolean {
@@ -172,13 +180,51 @@ export async function fetchUserInfo(): Promise<DriveUser> {
 
 // ─── Drive helpers ────────────────────────────────────────────────────────────
 
-async function findSaveFileId(): Promise<string | null> {
+async function getOrCreateVisibleFolder(): Promise<string> {
+  if (visibleFolderId) return visibleFolderId;
   const token = await getToken();
-  const url = `${DRIVE_FILES_URL}?spaces=appDataFolder&q=name='${SAVE_FILE_NAME}'&fields=files(id,modifiedTime)&pageSize=1`;
-  const res = await fetch(url, { headers: { Authorization: `Bearer ${token}` } });
-  if (!res.ok) throw new Error(`Drive list ${res.status}`);
-  const data = await res.json() as { files: { id: string; modifiedTime: string }[] };
-  return data.files?.[0]?.id ?? null;
+
+  // Search for existing folder in Drive root
+  const q = encodeURIComponent(`name='${VISIBLE_FOLDER_NAME}' and mimeType='${DRIVE_MIME_FOLDER}' and 'root' in parents and trashed=false`);
+  const listUrl = `${DRIVE_FILES_URL}?spaces=drive&q=${q}&fields=files(id)&pageSize=1`;
+  const listRes = await fetch(listUrl, { headers: { Authorization: `Bearer ${token}` } });
+  if (!listRes.ok) throw new Error(`Drive folder list ${listRes.status}`);
+  const listData = await listRes.json() as { files: { id: string }[] };
+
+  if (listData.files?.[0]?.id) {
+    visibleFolderId = listData.files[0].id;
+    return visibleFolderId;
+  }
+
+  // Create folder
+  const createRes = await fetch(DRIVE_FILES_URL, {
+    method: 'POST',
+    headers: { Authorization: `Bearer ${token}`, 'Content-Type': 'application/json' },
+    body: JSON.stringify({ name: VISIBLE_FOLDER_NAME, mimeType: DRIVE_MIME_FOLDER }),
+  });
+  if (!createRes.ok) throw new Error(`Drive folder create ${createRes.status}`);
+  const created = await createRes.json() as { id: string };
+  visibleFolderId = created.id;
+  return visibleFolderId;
+}
+
+async function findSaveFileId(mode: DriveMode = 'hidden'): Promise<string | null> {
+  const token = await getToken();
+  if (mode === 'hidden') {
+    const url = `${DRIVE_FILES_URL}?spaces=appDataFolder&q=name='${SAVE_FILE_NAME}'&fields=files(id,modifiedTime)&pageSize=1`;
+    const res = await fetch(url, { headers: { Authorization: `Bearer ${token}` } });
+    if (!res.ok) throw new Error(`Drive list ${res.status}`);
+    const data = await res.json() as { files: { id: string; modifiedTime: string }[] };
+    return data.files?.[0]?.id ?? null;
+  } else {
+    const folderId = await getOrCreateVisibleFolder();
+    const q = encodeURIComponent(`name='${SAVE_FILE_NAME}' and '${folderId}' in parents and trashed=false`);
+    const url = `${DRIVE_FILES_URL}?spaces=drive&q=${q}&fields=files(id,modifiedTime)&pageSize=1`;
+    const res = await fetch(url, { headers: { Authorization: `Bearer ${token}` } });
+    if (!res.ok) throw new Error(`Drive list ${res.status}`);
+    const data = await res.json() as { files: { id: string; modifiedTime: string }[] };
+    return data.files?.[0]?.id ?? null;
+  }
 }
 
 async function downloadFile(fileId: string): Promise<SaveData> {
@@ -190,11 +236,11 @@ async function downloadFile(fileId: string): Promise<SaveData> {
   return await res.json() as SaveData;
 }
 
-async function uploadFile(fileId: string | null, data: SaveData): Promise<string> {
+async function uploadFile(fileId: string | null, data: SaveData, parentId: string = 'appDataFolder'): Promise<string> {
   const token = await getToken();
   const metadata = fileId
     ? {}
-    : { name: SAVE_FILE_NAME, parents: ['appDataFolder'] };
+    : { name: SAVE_FILE_NAME, parents: [parentId] };
 
   const form = new FormData();
   form.append('metadata', new Blob([JSON.stringify(metadata)], { type: 'application/json' }));
@@ -215,19 +261,72 @@ async function uploadFile(fileId: string | null, data: SaveData): Promise<string
   return result.id;
 }
 
+async function deleteFile(fileId: string): Promise<void> {
+  const token = await getToken();
+  const res = await fetch(`${DRIVE_FILES_URL}/${fileId}`, {
+    method: 'DELETE',
+    headers: { Authorization: `Bearer ${token}` },
+  });
+  // 404 means already gone — not an error
+  if (!res.ok && res.status !== 404) throw new Error(`Drive delete ${res.status}`);
+}
+
+function mergeSaveData(a: SaveData, b: SaveData): SaveData {
+  return {
+    version: 1,
+    savedAt: new Date().toISOString(),
+    base: {
+      completed:  Array.from(new Set([...a.base.completed, ...b.base.completed])),
+      lastPuzzle: a.base.lastPuzzle ?? b.base.lastPuzzle,
+      freePlay:   a.base.freePlay || b.base.freePlay,
+    },
+    expanded: {
+      completed:  Array.from(new Set([...a.expanded.completed, ...b.expanded.completed])),
+      lastPuzzle: a.expanded.lastPuzzle ?? b.expanded.lastPuzzle,
+      freePlay:   a.expanded.freePlay || b.expanded.freePlay,
+    },
+  };
+}
+
 // ─── Public API ───────────────────────────────────────────────────────────────
 
 /** Load save from Drive. Returns null if no save file exists yet. */
-export async function loadFromDrive(): Promise<SaveData | null> {
-  const fileId = await findSaveFileId();
+export async function loadFromDrive(mode: DriveMode = 'hidden'): Promise<SaveData | null> {
+  const fileId = await findSaveFileId(mode);
   if (!fileId) return null;
   return downloadFile(fileId);
 }
 
 /** Upload save to Drive (create or overwrite). Returns the file ID. */
-export async function saveToDrive(data: SaveData): Promise<string> {
-  const fileId = await findSaveFileId();
-  return uploadFile(fileId, data);
+export async function saveToDrive(data: SaveData, mode: DriveMode = 'hidden'): Promise<string> {
+  const fileId = await findSaveFileId(mode);
+  const parentId = mode === 'visible' ? await getOrCreateVisibleFolder() : 'appDataFolder';
+  return uploadFile(fileId, data, parentId);
+}
+
+/**
+ * Migrate save data between storage locations.
+ * Reads both locations, merges, writes to new location, deletes from old.
+ */
+export async function migrateStorage(fromMode: DriveMode, toMode: DriveMode): Promise<void> {
+  if (fromMode === toMode) return;
+
+  const [fromSave, toSave] = await Promise.all([
+    loadFromDrive(fromMode).catch(() => null),
+    loadFromDrive(toMode).catch(() => null),
+  ]);
+
+  const merged = fromSave && toSave
+    ? mergeSaveData(fromSave, toSave)
+    : (fromSave ?? toSave ?? snapshotLocal());
+
+  await saveToDrive(merged, toMode);
+
+  // Delete old file — non-fatal
+  try {
+    const oldId = await findSaveFileId(fromMode);
+    if (oldId) await deleteFile(oldId);
+  } catch { /* ignore */ }
 }
 
 // ─── LocalStorage snapshot helpers ────────────────────────────────────────────
