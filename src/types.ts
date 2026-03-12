@@ -173,6 +173,8 @@ export type QuestionTarget =
   | { kind: 'large-component'; color: Color }
   /** Debunk planning: find the shortest sequence of actions that removes all publications */
   | { kind: 'debunk_min_steps' }
+  /** Debunk planning: apprentice-only plan — no master steps allowed */
+  | { kind: 'debunk_apprentice_plan' }
   /** Debunk planning: perform a master mix that conflicts with fixedIngredient's publication
    *  without removing it (both publications conflict → neither removed) */
   | { kind: 'debunk_conflict_only'; fixedIngredient: IngredientId }

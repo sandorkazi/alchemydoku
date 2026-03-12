@@ -118,7 +118,7 @@ function isComplete(s: DraftStep): s is DebunkStep {
 }
 
 function StepEditor({
-  index, draft, outcome, onUpdate, onRemove, isConflictOnly,
+  index, draft, outcome, onUpdate, onRemove, isConflictOnly, isApprenticeOnly,
 }: {
   index: number;
   draft: DraftStep;
@@ -126,6 +126,7 @@ function StepEditor({
   onUpdate: (d: DraftStep) => void;
   onRemove: () => void;
   isConflictOnly: boolean;
+  isApprenticeOnly?: boolean;
 }) {
   const totalRemoved = (outcome?.removedPubs.length ?? 0) + (outcome?.removedArts.length ?? 0);
 
@@ -158,7 +159,7 @@ function StepEditor({
       <div className="flex items-center justify-between">
         <span className="text-xs font-bold text-gray-500">Step {index + 1}</span>
         <div className="flex items-center gap-2">
-          {!isConflictOnly && (
+          {!isConflictOnly && !isApprenticeOnly && (
             <div className="flex rounded overflow-hidden border border-gray-200 text-xs">
               {(['apprentice', 'master'] as const).map(k => (
                 <button
@@ -182,6 +183,9 @@ function StepEditor({
           )}
           {isConflictOnly && (
             <span className="text-[10px] uppercase tracking-widest text-indigo-400 font-bold">Master only</span>
+          )}
+          {isApprenticeOnly && (
+            <span className="text-[10px] uppercase tracking-widest text-indigo-400 font-bold">Apprentice only</span>
           )}
           <button
             onClick={onRemove}
@@ -341,16 +345,18 @@ function ArticlesBoard({
 type QuestionPlan = {
   drafts: DraftStep[];
   isConflictOnly: boolean;
+  isApprenticeOnly: boolean;
   fixedIngredient: IngredientId | null;
 };
 
 function makeInitialPlan(q: { kind: string; fixedIngredient?: IngredientId }): QuestionPlan {
   const isConflictOnly = q.kind === 'debunk_conflict_only';
+  const isApprenticeOnly = q.kind === 'debunk_apprentice_plan';
   const fixedIngredient = isConflictOnly ? (q.fixedIngredient ?? null) : null;
   const initialDraft: DraftStep = isConflictOnly
     ? { kind: 'master', ingredient1: fixedIngredient, ingredient2: null }
     : { kind: 'apprentice', ingredient: null, color: null };
-  return { drafts: [initialDraft], isConflictOnly, fixedIngredient };
+  return { drafts: [initialDraft], isConflictOnly, isApprenticeOnly, fixedIngredient };
 }
 
 export function ExpandedDebunkAnswerPanel({ onNext, isTutorial = false }: {
@@ -363,7 +369,7 @@ export function ExpandedDebunkAnswerPanel({ onNext, isTutorial = false }: {
   const publications: Publication[] = (puzzle.publications ?? []).filter(Boolean) as Publication[];
   const articles: DebunkArticle[] = puzzle.articles ?? [];
   const debunkQuestions = puzzle.questions.filter(
-    q => q.kind === 'debunk_min_steps' || q.kind === 'debunk_conflict_only'
+    q => q.kind === 'debunk_min_steps' || q.kind === 'debunk_apprentice_plan' || q.kind === 'debunk_conflict_only'
   ) as Array<{ kind: string; fixedIngredient?: IngredientId }>;
 
   const [plans, setPlans] = useState<QuestionPlan[]>(
@@ -417,7 +423,9 @@ export function ExpandedDebunkAnswerPanel({ onNext, isTutorial = false }: {
         const completedSteps = plan.drafts.filter(isComplete) as DebunkStep[];
         const refAnswer = plan.isConflictOnly
           ? puzzle.debunk_answers?.debunk_conflict_only
-          : puzzle.debunk_answers?.debunk_min_steps;
+          : plan.isApprenticeOnly
+            ? puzzle.debunk_answers?.debunk_apprentice_plan
+            : puzzle.debunk_answers?.debunk_min_steps;
         const refLen = refAnswer?.length ?? 1;
 
         const allCoveredForQ = sim.remainingPubs.length === 0 && sim.remainingArts.length === 0;
@@ -458,6 +466,7 @@ export function ExpandedDebunkAnswerPanel({ onNext, isTutorial = false }: {
                   }}
                   onRemove={() => updatePlan(qi, plan.drafts.filter((_, j) => j !== i))}
                   isConflictOnly={plan.isConflictOnly}
+                  isApprenticeOnly={plan.isApprenticeOnly}
                 />
               );
             })}
@@ -493,7 +502,9 @@ export function ExpandedDebunkAnswerPanel({ onNext, isTutorial = false }: {
             const plan = plans[qi];
             const refAnswer = plan.isConflictOnly
               ? puzzle.debunk_answers?.debunk_conflict_only
-              : puzzle.debunk_answers?.debunk_min_steps;
+              : plan.isApprenticeOnly
+                ? puzzle.debunk_answers?.debunk_apprentice_plan
+                : puzzle.debunk_answers?.debunk_min_steps;
             const solutionSteps = refAnswer ?? [];
             return (
               <div key={qi}>

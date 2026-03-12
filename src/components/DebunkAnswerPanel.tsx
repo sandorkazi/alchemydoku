@@ -121,7 +121,7 @@ function isComplete(s: DraftStep): s is DebunkStep {
 }
 
 function StepEditor({
-  index, draft, outcome, onUpdate, onRemove, isConflictOnly,
+  index, draft, outcome, onUpdate, onRemove, isConflictOnly, isApprenticeOnly,
 }: {
   index: number;
   draft: DraftStep;
@@ -129,6 +129,7 @@ function StepEditor({
   onUpdate: (d: DraftStep) => void;
   onRemove: () => void;
   isConflictOnly: boolean;
+  isApprenticeOnly?: boolean;
 }) {
   const getIngredient = useIngredient();
   void getIngredient;
@@ -159,8 +160,8 @@ function StepEditor({
       <div className="flex items-center justify-between">
         <span className="text-xs font-bold text-gray-500">Step {index + 1}</span>
         <div className="flex items-center gap-2">
-          {/* Switch type — locked for conflict_only (must be master) */}
-          {!isConflictOnly && (
+          {/* Switch type — locked for conflict_only (must be master) or apprentice_plan (must be apprentice) */}
+          {!isConflictOnly && !isApprenticeOnly && (
             <div className="flex rounded overflow-hidden border border-gray-200 text-xs">
               {(['apprentice', 'master'] as const).map(k => (
                 <button
@@ -184,6 +185,9 @@ function StepEditor({
           )}
           {isConflictOnly && (
             <span className="text-[10px] uppercase tracking-widest text-indigo-400 font-bold">Master only</span>
+          )}
+          {isApprenticeOnly && (
+            <span className="text-[10px] uppercase tracking-widest text-indigo-400 font-bold">Apprentice only</span>
           )}
           <button
             onClick={onRemove}
@@ -302,6 +306,7 @@ export function DebunkAnswerPanel({ onNext, isTutorial = false }: {
   const publications: Publication[] = (puzzle.publications ?? []).filter(Boolean) as Publication[];
 
   const isConflictOnly = puzzle.questions.some(q => q.kind === 'debunk_conflict_only');
+  const isApprenticeOnly = puzzle.questions.some(q => q.kind === 'debunk_apprentice_plan');
   const fixedIngredient = puzzle.questions.find(q => q.kind === 'debunk_conflict_only')
     ? (puzzle.questions.find(q => q.kind === 'debunk_conflict_only') as { fixedIngredient?: IngredientId }).fixedIngredient ?? null
     : null;
@@ -323,7 +328,9 @@ export function DebunkAnswerPanel({ onNext, isTutorial = false }: {
   const allStepsComplete = drafts.length > 0 && drafts.every(isComplete);
   const refAnswer = isConflictOnly
     ? puzzle.debunk_answers?.debunk_conflict_only
-    : puzzle.debunk_answers?.debunk_min_steps;
+    : isApprenticeOnly
+      ? puzzle.debunk_answers?.debunk_apprentice_plan
+      : puzzle.debunk_answers?.debunk_min_steps;
   const refLen = refAnswer?.length ?? 1;
 
   function addStep() {
@@ -381,6 +388,7 @@ export function DebunkAnswerPanel({ onNext, isTutorial = false }: {
               onUpdate={d => updateStep(i, d)}
               onRemove={() => removeStep(i)}
               isConflictOnly={isConflictOnly && i === 0}
+              isApprenticeOnly={isApprenticeOnly}
             />
           ))}
 

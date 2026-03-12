@@ -109,16 +109,25 @@
     "unlockedAfter": "medium-mixing"
   },
   {
-    "id": "debunking-basics",
-    "title": "Debunking",
-    "description": "Learn how debunking results \u2014 success and failure \u2014 constrain the possible alchemicals.",
+    "id": "tutorial-debunking-apprentice",
+    "title": "Apprentice Debunking",
+    "description": "Learn how apprentice debunking reveals true aspect signs \u2014 whether the debunk succeeded or failed.",
     "difficulty": "tutorial",
     "puzzleIds": [
       "tutorial-debunk-01",
-      "tutorial-debunk-02",
-      "tutorial-debunk-03"
+      "tutorial-debunk-02"
     ],
     "unlockedAfter": "tutorial-mixing"
+  },
+  {
+    "id": "tutorial-debunking-master",
+    "title": "Master Debunking",
+    "description": "Learn how a witnessed mix constrains alchemicals \u2014 and what failure means.",
+    "difficulty": "tutorial",
+    "puzzleIds": [
+      "tutorial-debunk-03"
+    ],
+    "unlockedAfter": "tutorial-debunking-apprentice"
   },
   {
     "id": "safe-publish",
@@ -163,16 +172,26 @@
     "unlockedAfter": "medium-mixing"
   },
   {
-    "id": "debunk-planning",
-    "title": "Debunk Planning",
+    "id": "debunk-apprentice-planning",
+    "title": "Apprentice Debunk Planning",
+    "description": "Plan the shortest sequence of apprentice debunks to expose all false publications.",
     "difficulty": "easy",
-    "description": "Opponents have published false theories. Plan the shortest sequence of apprentice and master debunks to expose them all.",
     "puzzleIds": [
       "debunk-plan-tutorial-01",
-      "debunk-plan-easy-01",
+      "debunk-plan-easy-01"
+    ],
+    "unlockedAfter": "tutorial-debunking-apprentice"
+  },
+  {
+    "id": "debunk-master-planning",
+    "title": "Advanced Debunk Planning",
+    "description": "Plans requiring master debunks \u2014 including the subtle conflict-only challenge.",
+    "difficulty": "medium",
+    "puzzleIds": [
       "debunk-plan-easy-02",
       "debunk-plan-conflict-01"
-    ]
+    ],
+    "unlockedAfter": "tutorial-debunking-master"
   },
   {
     "id": "among-witnesses",

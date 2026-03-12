@@ -197,6 +197,18 @@ export function validateExpandedMinStepsAnswer(
   return activePubs.size === 0 && activeArts.size === 0;
 }
 
+export function validateExpandedApprenticePlanAnswer(
+  steps: DebunkStep[],
+  solution: Assignment,
+  publications: Publication[],
+  articles: DebunkArticle[],
+  worlds: WorldSet,
+  refLen: number,
+): boolean {
+  if (steps.some(s => s.kind === 'master')) return false;
+  return validateExpandedMinStepsAnswer(steps, solution, publications, articles, worlds, refLen);
+}
+
 export function validateExpandedConflictOnlyAnswer(
   step: DebunkStep,
   fixedIngredient: IngredientId,

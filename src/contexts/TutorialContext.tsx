@@ -19,7 +19,7 @@ export type PuzzleStep = {
 
 export type TutorialStep = ExplainStep | PuzzleStep;
 
-export type TutorialId = 'mixing' | 'selling' | 'two-color';
+export type TutorialId = 'mixing' | 'selling' | 'two-color' | 'debunk-apprentice' | 'debunk-master';
 
 export type TutorialStatus = 'locked' | 'available' | 'complete';
 
@@ -64,6 +64,8 @@ export function TutorialProvider({ children }: { children: ReactNode }) {
     if (completedTutorials.has(id)) return 'complete';
     // selling unlocks after mixing is complete
     if (id === 'selling' && !completedTutorials.has('mixing')) return 'locked';
+    // debunk-master unlocks after debunk-apprentice is complete
+    if (id === 'debunk-master' && !completedTutorials.has('debunk-apprentice')) return 'locked';
     return 'available';
   }, [completedTutorials]);
 
