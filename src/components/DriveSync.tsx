@@ -54,6 +54,42 @@ function LastSyncedLabel({ date }: { date: Date }) {
   return <span>{h}:{m}</span>;
 }
 
+/** Storage mode toggle row shown inside the signed-in dropdown */
+function StorageModeRow({
+  driveMode,
+  isMigrating,
+  onToggle,
+}: {
+  driveMode: 'hidden' | 'visible';
+  isMigrating: boolean;
+  onToggle: () => void;
+}) {
+  const label = driveMode === 'hidden' ? 'Private (app-only folder)' : 'My Drive / AlchemySudoku';
+  const btnLabel = isMigrating ? 'Moving…' : driveMode === 'hidden' ? 'Make visible' : 'Make private';
+  return (
+    <div className="px-4 py-2.5 border-b border-gray-100">
+      <div className="flex items-center justify-between">
+        <div>
+          <p className="text-xs text-gray-500 font-medium">Storage location</p>
+          <p className="text-xs text-gray-400">{label}</p>
+        </div>
+        <button
+          onClick={onToggle}
+          disabled={isMigrating}
+          className="text-xs text-amber-600 hover:text-amber-800 font-medium disabled:opacity-40 whitespace-nowrap ml-2"
+        >
+          {btnLabel}
+        </button>
+      </div>
+      {driveMode === 'visible' && (
+        <p className="text-xs text-gray-400 mt-1 leading-relaxed">
+          File visible in your Google Drive under <strong>My Drive › AlchemySudoku</strong>.
+        </p>
+      )}
+    </div>
+  );
+}
+
 // ─── Main component ───────────────────────────────────────────────────────────
 
 /**
@@ -63,7 +99,7 @@ function LastSyncedLabel({ date }: { date: Date }) {
  * Signed in: shows avatar + sync status + dropdown with sync/sign-out.
  */
 export function DriveSync() {
-  const { authStatus, syncStatus, user, lastSynced, errorMsg, signIn, signOut, syncNow } = useDrive();
+  const { authStatus, syncStatus, user, lastSynced, errorMsg, driveMode, isMigrating, signIn, signOut, syncNow, setDriveMode } = useDrive();
   const [open, setOpen] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
 
@@ -157,6 +193,13 @@ export function DriveSync() {
             </button>
           </div>
 
+          {/* Storage mode row */}
+          <StorageModeRow
+            driveMode={driveMode}
+            isMigrating={isMigrating}
+            onToggle={() => setDriveMode(driveMode === 'hidden' ? 'visible' : 'hidden')}
+          />
+
           {/* Error message if any */}
           {errorMsg && (
             <div className="px-4 py-2 text-xs text-red-500 border-b border-gray-100 bg-red-50">
@@ -167,7 +210,9 @@ export function DriveSync() {
           {/* Info note */}
           <div className="px-4 py-2.5 border-b border-gray-100">
             <p className="text-xs text-gray-400 leading-relaxed">
-              Progress saves to a private file in your Google Drive — only this app can see it.
+              {driveMode === 'hidden'
+                ? 'Progress saves to a private file in your Google Drive — only this app can see it.'
+                : 'Progress saves to My Drive / AlchemySudoku — visible and manageable in Google Drive.'}
             </p>
           </div>
 
