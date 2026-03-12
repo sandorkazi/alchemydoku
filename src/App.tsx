@@ -353,6 +353,7 @@ function AppInner() {
         steps={TUTORIAL_STEPS[view.tutorialId]}
         onBack={() => setView({ kind: 'home' })}
         onDone={() => setView({ kind: 'home' })}
+        onPuzzleDone={markDone}
       />
     );
   }

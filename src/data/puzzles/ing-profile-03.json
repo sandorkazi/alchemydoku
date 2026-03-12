@@ -1,0 +1,84 @@
+{
+  "id": "ing-profile-03",
+  "title": "The Third Ingredient",
+  "description": "Determine all potions that the target ingredient can certainly produce when mixed with at least one partner.",
+  "difficulty": "medium",
+  "clues": [
+    {
+      "kind": "mixing",
+      "ingredient1": 1,
+      "ingredient2": 2,
+      "result": {
+        "color": "G",
+        "sign": "-"
+      }
+    },
+    {
+      "kind": "mixing",
+      "ingredient1": 3,
+      "ingredient2": 8,
+      "result": {
+        "color": "G",
+        "sign": "-"
+      }
+    },
+    {
+      "kind": "mixing",
+      "ingredient1": 1,
+      "ingredient2": 7,
+      "result": {
+        "color": "B",
+        "sign": "-"
+      }
+    },
+    {
+      "kind": "mixing",
+      "ingredient1": 3,
+      "ingredient2": 5,
+      "result": {
+        "color": "B",
+        "sign": "+"
+      }
+    }
+  ],
+  "questions": [
+    {
+      "kind": "ingredient-potion-profile",
+      "ingredient": 4
+    }
+  ],
+  "solution": {
+    "1": 7,
+    "2": 5,
+    "3": 2,
+    "4": 8,
+    "5": 4,
+    "6": 1,
+    "7": 6,
+    "8": 3
+  },
+  "hints": [
+    {
+      "level": 1,
+      "text": "Find all potions that ingredient 4 can certainly produce with at least one partner. A potion is 'certain' when the mix result is the same in every remaining possible world."
+    },
+    {
+      "level": 2,
+      "text": "Check each of ingredient 4's 7 possible partners. Certain results so far: ing6\u2192G+."
+    },
+    {
+      "level": 3,
+      "text": "Ingredient 4 = PPP. Certain potions: ['G+']."
+    }
+  ],
+  "complexity": {
+    "raw": 2.919,
+    "avg_clue_strength": 3.075,
+    "ambig_penalty": 0.0,
+    "chain_depth": 0,
+    "stuck": false,
+    "requires_complement_set": false,
+    "question_requires_enumeration": true,
+    "residual_worlds": 8
+  }
+}

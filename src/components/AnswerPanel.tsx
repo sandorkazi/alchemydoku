@@ -8,6 +8,34 @@ import type { PotionResult, AlchemicalId, Color, IngredientId } from '../types';
 import type { PuzzleAnswer } from '../puzzles/schema';
 import type { QuestionTarget } from '../types';
 
+// ─── Ingredient single-select picker ─────────────────────────────────────────
+
+function IngredientSinglePicker({ selected, onSelect, excludeId }: {
+  selected: IngredientId | null;
+  onSelect: (id: IngredientId) => void;
+  excludeId?: IngredientId;
+}) {
+  return (
+    <div className="flex flex-wrap gap-1.5" role="radiogroup">
+      {([1,2,3,4,5,6,7,8] as IngredientId[]).map(slotId => {
+        if (slotId === excludeId) return null;
+        const active = selected === slotId;
+        return (
+          <button key={slotId} role="radio" aria-checked={active} onClick={() => onSelect(slotId)}
+            className={`flex flex-col items-center gap-0.5 px-2 pt-1.5 pb-1 rounded-xl border-2 transition-all
+              press-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-indigo-400
+              ${active ? 'border-indigo-500 bg-indigo-50 shadow-md scale-105'
+                       : 'border-transparent bg-gray-100 hover:bg-gray-200 hover:border-gray-300'}`}
+          >
+            <Ing slotId={slotId} size={36} />
+            <span className={`text-[9px] font-bold leading-none h-2.5 ${active ? 'text-indigo-600' : 'text-transparent'}`}>✓</span>
+          </button>
+        );
+      })}
+    </div>
+  );
+}
+
 
 // ─── Ingredient icon (slot-aware) ─────────────────────────────────────────────
 
@@ -95,6 +123,51 @@ function QuestionHeader({ q }: { q: QuestionTarget }) {
     </span>
   );
 
+  if (q.kind === 'neutral-partner') return (
+    <span className="inline-flex items-center gap-1.5 flex-wrap">
+      <Ing slotId={q.ingredient} />
+      <span className="text-indigo-300 mx-0.5">→</span>
+      <span className="text-xs font-semibold text-indigo-500">direct opposite (neutral mix)?</span>
+    </span>
+  );
+
+  if (q.kind === 'ingredient-potion-profile') return (
+    <span className="inline-flex items-center gap-1.5 flex-wrap">
+      <Ing slotId={q.ingredient} />
+      <span className="text-indigo-300 mx-0.5">→</span>
+      <span className="text-xs font-semibold text-indigo-500">all certainly producible potions?</span>
+    </span>
+  );
+
+  if (q.kind === 'group-possible-potions') return (
+    <span className="inline-flex items-center gap-1.5 flex-wrap">
+      {q.ingredients.map((id, i) => (
+        <span key={id} className="inline-flex items-center gap-1">
+          {i > 0 && <span className="text-indigo-400 font-bold text-base">+</span>}
+          <Ing slotId={id} />
+        </span>
+      ))}
+      <span className="text-indigo-300 mx-0.5">→</span>
+      <span className="text-xs font-semibold text-indigo-500">achievable potions?</span>
+    </span>
+  );
+
+  if (q.kind === 'most-informative-mix') return (
+    <span className="inline-flex items-center gap-1.5 flex-wrap">
+      <span className="text-xs font-semibold text-indigo-500">best partner to mix with</span>
+      <Ing slotId={q.ingredient} />
+      <span className="text-indigo-400">?</span>
+    </span>
+  );
+
+  if (q.kind === 'guaranteed-non-producer') return (
+    <span className="inline-flex items-center gap-1.5 flex-wrap">
+      <span className="text-xs font-semibold text-indigo-500">which ingredients can never produce</span>
+      <PotionImage result={q.potion} width={32} />
+      <span className="text-indigo-400">?</span>
+    </span>
+  );
+
   return null;
 }
 
@@ -134,12 +207,26 @@ function RevealedAnswer({ q, answer }: { q: QuestionTarget; answer: PuzzleAnswer
       </span>
     );
   }
-  if (q.kind === 'aspect-set' || q.kind === 'large-component') {
+  if (typeof answer === 'object' && answer !== null && 'ingredients' in answer) {
     const ids = (answer as { ingredients: number[] }).ingredients;
     return (
       <span className="inline-flex flex-wrap gap-1.5">
         {ids.map(id => <IngredientIcon key={id} index={(id - 1) as 0|1|2|3|4|5|6|7} width={36} />)}
         {ids.length === 0 && <span className="text-xs text-gray-400 italic">None</span>}
+      </span>
+    );
+  }
+  if (q.kind === 'neutral-partner' || q.kind === 'most-informative-mix') {
+    return <Ing slotId={answer as number} size={36} />;
+  }
+  if (q.kind === 'ingredient-potion-profile' || q.kind === 'group-possible-potions') {
+    const pots = (answer as { potions: string[] }).potions.map(k =>
+      k === 'neutral' ? { type:'neutral' } as PotionResult
+      : { type:'potion', color: k[0] as Color, sign: k[1] as '+' | '-' } as PotionResult
+    );
+    return (
+      <span className="inline-flex flex-wrap gap-1.5">
+        {pots.map(p => <PotionImage key={potionKey(p)} result={p} width={40} />)}
       </span>
     );
   }
@@ -287,18 +374,55 @@ function QuestionRow({ q, index, total, value, onChange, correctAnswer, showSolu
             );
           })()}
 
-          {(q.kind === 'aspect-set' || q.kind === 'large-component') && (() => {
+          {(q.kind === 'aspect-set' || q.kind === 'large-component' || q.kind === 'guaranteed-non-producer') && (() => {
             const currentIds = new Set<number>(
               (value as { ingredients?: number[] } | null)?.ingredients ?? []
             );
+            const answerKind = q.kind === 'guaranteed-non-producer' ? 'non-producer-set' as const
+              : q.kind as 'aspect-set' | 'large-component';
             const toggleIng = (slotId: number) => {
               const next = new Set(currentIds);
               if (next.has(slotId)) next.delete(slotId); else next.add(slotId);
               const sorted = [...next].sort((a,b) => a-b);
-              onChange(sorted.length === 0 ? null : { kind: q.kind as 'aspect-set' | 'large-component', ingredients: sorted as IngredientId[] });
+              onChange(sorted.length === 0 ? null : { kind: answerKind, ingredients: sorted as IngredientId[] });
             };
             return <IngredientSetPicker selected={currentIds} onToggle={toggleIng} />;
           })()}
+
+          {(q.kind === 'neutral-partner' || q.kind === 'most-informative-mix') && (
+            <IngredientSinglePicker
+              selected={value as IngredientId | null}
+              onSelect={id => onChange(id)}
+              excludeId={q.ingredient}
+            />
+          )}
+
+          {(q.kind === 'ingredient-potion-profile' || q.kind === 'group-possible-potions') && (() => {
+            const currentLogical = new Set<string>(
+              (value as { potions?: string[] } | null)?.potions ?? []
+            );
+            const togglePotion = (displayKey: string) => {
+              const dp = displayPotions.find(p => potionKey(p) === displayKey);
+              if (!dp) return;
+              const lk = potionKey(dp);
+              const next = new Set(currentLogical);
+              if (next.has(lk)) next.delete(lk); else next.add(lk);
+              onChange(next.size === 0 ? null : { kind: 'possible-potions' as const, potions: [...next].sort() });
+            };
+            const displaySelected = new Set<string>();
+            for (const lk of currentLogical) {
+              const lp = LOGICAL_POTIONS.find(p => potionKey(p) === lk);
+              if (lp) displaySelected.add(potionKey(lp));
+            }
+            return (
+              <PossiblePotionsPicker
+                displayChoices={displayPotions}
+                selected={displaySelected}
+                onToggle={togglePotion}
+              />
+            );
+          })()}
+
         </>
       )}
     </div>

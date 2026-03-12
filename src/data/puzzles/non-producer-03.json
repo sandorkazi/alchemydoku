@@ -1,0 +1,79 @@
+{
+  "id": "non-producer-03",
+  "title": "Second Opinion",
+  "description": "Find all ingredients that can never produce the target potion with any partner in any remaining world.",
+  "difficulty": "medium",
+  "clues": [
+    {
+      "kind": "mixing",
+      "ingredient1": 1,
+      "ingredient2": 5,
+      "result": {
+        "color": "B",
+        "sign": "-"
+      }
+    },
+    {
+      "kind": "mixing",
+      "ingredient1": 4,
+      "ingredient2": 6,
+      "result": {
+        "color": "B",
+        "sign": "+"
+      }
+    },
+    {
+      "kind": "mixing",
+      "ingredient1": 2,
+      "ingredient2": 8,
+      "result": {
+        "color": "R",
+        "sign": "+"
+      }
+    }
+  ],
+  "questions": [
+    {
+      "kind": "guaranteed-non-producer",
+      "potion": {
+        "type": "potion",
+        "color": "R",
+        "sign": "+"
+      }
+    }
+  ],
+  "solution": {
+    "1": 3,
+    "2": 2,
+    "3": 4,
+    "4": 8,
+    "5": 1,
+    "6": 5,
+    "7": 7,
+    "8": 6
+  },
+  "hints": [
+    {
+      "level": 1,
+      "text": "Find all ingredients that can never produce R+ with any partner in any remaining world. An ingredient is a non-producer if no world/partner combination yields R+."
+    },
+    {
+      "level": 2,
+      "text": "Check each ingredient: does any remaining world have this ingredient produce R+ with some partner? Non-producers found: [3, 7]."
+    },
+    {
+      "level": 3,
+      "text": "Guaranteed non-producers of R+: [3, 7]."
+    }
+  ],
+  "complexity": {
+    "raw": 2.725,
+    "avg_clue_strength": 2.766,
+    "ambig_penalty": 0.0,
+    "chain_depth": 0,
+    "stuck": false,
+    "requires_complement_set": false,
+    "question_requires_enumeration": true,
+    "residual_worlds": 128
+  }
+}

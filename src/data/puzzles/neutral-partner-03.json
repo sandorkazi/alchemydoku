@@ -1,0 +1,92 @@
+{
+  "id": "neutral-partner-03",
+  "title": "Second Opinion",
+  "description": "Use the clues to identify the one ingredient that always mixes to neutral with the target ingredient.",
+  "difficulty": "medium",
+  "clues": [
+    {
+      "kind": "mixing",
+      "ingredient1": 6,
+      "ingredient2": 7,
+      "result": {
+        "color": "R",
+        "sign": "-"
+      }
+    },
+    {
+      "kind": "mixing",
+      "ingredient1": 1,
+      "ingredient2": 3,
+      "result": {
+        "color": "G",
+        "sign": "+"
+      }
+    },
+    {
+      "kind": "mixing",
+      "ingredient1": 2,
+      "ingredient2": 4,
+      "result": {
+        "type": "neutral"
+      }
+    },
+    {
+      "kind": "mixing",
+      "ingredient1": 1,
+      "ingredient2": 8,
+      "result": {
+        "color": "B",
+        "sign": "-"
+      }
+    },
+    {
+      "kind": "mixing",
+      "ingredient1": 1,
+      "ingredient2": 6,
+      "result": {
+        "color": "R",
+        "sign": "-"
+      }
+    }
+  ],
+  "questions": [
+    {
+      "kind": "neutral-partner",
+      "ingredient": 7
+    }
+  ],
+  "solution": {
+    "1": 1,
+    "2": 5,
+    "3": 8,
+    "4": 6,
+    "5": 2,
+    "6": 7,
+    "7": 4,
+    "8": 3
+  },
+  "hints": [
+    {
+      "level": 1,
+      "text": "Find the ingredient whose alchemical is the direct opposite of ingredient 7. Two alchemicals are direct opposites when their mix is always neutral \u2014 all three colour aspects have opposite signs."
+    },
+    {
+      "level": 2,
+      "text": "Ingredient 7 has alchemical properties: R- G+ B+. Its direct opposite has all signs flipped. Check which remaining possible alchemicals always mix to neutral with it."
+    },
+    {
+      "level": 3,
+      "text": "Ingredient 7 = nPp. Its direct opposite is ingredient 8 = pNn."
+    }
+  ],
+  "complexity": {
+    "raw": 1.691,
+    "avg_clue_strength": 2.86,
+    "ambig_penalty": 0.0,
+    "chain_depth": 0,
+    "stuck": false,
+    "requires_complement_set": false,
+    "question_requires_enumeration": false,
+    "residual_worlds": 2
+  }
+}

@@ -242,6 +242,21 @@ def apply_all(worlds: frozenset, clues: list, golem: Optional[dict] = None) -> f
 # QUESTION ANSWERING  (base + expanded question kinds)
 # ══════════════════════════════════════════════════════════════════════════════
 
+def _entropy_table(worlds, si_0based: int) -> list:
+    """Return [(entropy, s2_1based, dist_str), ...] sorted by entropy descending."""
+    n = len(worlds)
+    result = []
+    for s2 in range(8):
+        if s2 == si_0based:
+            continue
+        counts = Counter(MIX_TABLE[w[si_0based]][w[s2]] for w in worlds)
+        entropy = -sum((c / n) * math.log2(c / n) for c in counts.values() if c > 0)
+        dist = ', '.join(f"{fmt_r(r)}:{c}" for r, c in sorted(counts.items(), key=str))
+        result.append((entropy, s2 + 1, dist))
+    result.sort(reverse=True)
+    return result
+
+
 def answer(worlds: frozenset, q: dict, golem: Optional[dict] = None):
     """Return unique answer or None if not determined."""
     k = q['kind']
@@ -347,6 +362,59 @@ def answer(worlds: frozenset, q: dict, golem: Optional[dict] = None):
     if k in ('debunk_min_steps', 'debunk_conflict_only'):
         return 'not_validated'
 
+    if k == 'neutral-partner':
+        si = q['ingredient'] - 1
+        candidates = []
+        for s2 in range(8):
+            if s2 == si:
+                continue
+            if all(MIX_TABLE[w[si]][w[s2]] == 'neutral' for w in worlds):
+                candidates.append(s2 + 1)
+        return candidates[0] if len(candidates) == 1 else None
+
+    if k == 'ingredient-potion-profile':
+        si = q['ingredient'] - 1
+        certain_potions = set()
+        for s2 in range(8):
+            if s2 == si:
+                continue
+            results = {MIX_TABLE[w[si]][w[s2]] for w in worlds}
+            if len(results) == 1:
+                certain_potions.add(results.pop())
+        return sorted(fmt_r(p) for p in certain_potions) if certain_potions else None
+
+    if k == 'group-possible-potions':
+        slots = [i - 1 for i in q['ingredients']]
+        certain_potions = set()
+        for a, b in itertools.combinations(slots, 2):
+            results = {MIX_TABLE[w[a]][w[b]] for w in worlds}
+            if len(results) == 1:
+                certain_potions.add(results.pop())
+        return sorted(fmt_r(p) for p in certain_potions) if certain_potions else None
+
+    if k == 'most-informative-mix':
+        si = q['ingredient'] - 1
+        entropies = _entropy_table(worlds, si)
+        if not entropies:
+            return None
+        # Require a unique best partner (no ties)
+        if len(entropies) > 1 and abs(entropies[1][0] - entropies[0][0]) < 1e-9:
+            return None
+        return entropies[0][1]  # already 1-based
+
+    if k == 'guaranteed-non-producer':
+        target_r = d2r(q['potion'])
+        non_producers = []
+        for si in range(8):
+            can_produce = any(
+                MIX_TABLE[w[si]][w[sj]] == target_r
+                for w in worlds for sj in range(8) if sj != si
+            )
+            if not can_produce:
+                non_producers.append(si + 1)
+        # Require at least one non-producer for a non-trivial puzzle
+        return sorted(non_producers) if non_producers else None
+
     return None
 
 def all_answered(worlds: frozenset, questions: list, golem: Optional[dict] = None) -> bool:
@@ -369,6 +437,9 @@ Q_SURCHARGE = {
     'encyclopedia_fourth': 0.3, 'encyclopedia_which_aspect': 0.5,
     'golem_group': 0.5, 'golem_animate_potion': 0.8,
     'golem_mix_potion': 1.0, 'golem_possible_potions': 1.2,
+    'neutral-partner': 0.5, 'ingredient-potion-profile': 0.8,
+    'group-possible-potions': 0.8, 'most-informative-mix': 0.6,
+    'guaranteed-non-producer': 0.5,
 }
 
 
@@ -471,7 +542,8 @@ def compute_difficulty(puzzle: dict) -> dict:
     if has_sl:                m_sur += 0.3
 
     enum = any(q['kind'] in {'possible-potions', 'aspect-set', 'large-component',
-                              'golem_possible_potions'} for q in questions)
+                              'golem_possible_potions', 'ingredient-potion-profile',
+                              'group-possible-potions', 'guaranteed-non-producer'} for q in questions)
 
     raw = (
         (1.0 / (avg_strength + 0.5)) * 4.0
@@ -604,15 +676,21 @@ class Profile:
     question_params: dict = field(default_factory=dict)
 
 PROFILES = {
-    'tutorial_golem':    Profile('exp-tutorial-golem',    ['base', 'golem'],                      'golem_group',          'tutorial', 6,  True,  {'group': 'animators'}),
-    'easy_enc':          Profile('exp-easy-enc',          ['base', 'encyclopedia'],               'encyclopedia_fourth',  'easy',     10, False),
-    'easy_sl':           Profile('exp-easy-sl',           ['base', 'solar_lunar'],                'alchemical',           'easy',     7,  False),
-    'easy_golem':        Profile('exp-easy-golem',        ['base', 'golem'],                      'golem_group',          'easy',     8,  True,  {'group': 'animators'}),
-    'medium_enc_sl':     Profile('exp-medium-enc-sl',     ['base', 'encyclopedia', 'solar_lunar'], 'encyclopedia_fourth', 'medium',   12, False),
-    'medium_golem_enc':  Profile('exp-medium-golem-enc',  ['base', 'encyclopedia', 'golem'],       'golem_group',         'medium',   12, True,  {'group': 'animators'}),
-    'medium_golem_sl':   Profile('exp-medium-golem-sl',   ['base', 'golem', 'solar_lunar'],        'golem_animate_potion','medium',   10, True),
-    'hard_all':          Profile('exp-hard-all',          ['base', 'encyclopedia', 'golem', 'solar_lunar'], 'golem_group', 'hard',  15, True,  {'group': 'animators'}),
-    'hard_golem_mix':    Profile('exp-hard-golem-mix',    ['base', 'golem'],                       'golem_animate_potion','hard',    10, True),
+    'tutorial_golem':    Profile('exp-tutorial-golem',    ['base', 'golem'],                      'golem_group',             'tutorial', 6,  True,  {'group': 'animators'}),
+    'easy_enc':          Profile('exp-easy-enc',          ['base', 'encyclopedia'],               'encyclopedia_fourth',      'easy',     10, False),
+    'easy_sl':           Profile('exp-easy-sl',           ['base', 'solar_lunar'],                'alchemical',               'easy',     7,  False),
+    'easy_golem':        Profile('exp-easy-golem',        ['base', 'golem'],                      'golem_group',              'easy',     8,  True,  {'group': 'animators'}),
+    'medium_enc_sl':     Profile('exp-medium-enc-sl',     ['base', 'encyclopedia', 'solar_lunar'], 'encyclopedia_fourth',     'medium',   12, False),
+    'medium_golem_enc':  Profile('exp-medium-golem-enc',  ['base', 'encyclopedia', 'golem'],       'golem_group',             'medium',   12, True,  {'group': 'animators'}),
+    'medium_golem_sl':   Profile('exp-medium-golem-sl',   ['base', 'golem', 'solar_lunar'],        'golem_animate_potion',    'medium',   10, True),
+    'hard_all':          Profile('exp-hard-all',          ['base', 'encyclopedia', 'golem', 'solar_lunar'], 'golem_group',   'hard',     15, True,  {'group': 'animators'}),
+    'hard_golem_mix':    Profile('exp-hard-golem-mix',    ['base', 'golem'],                       'golem_animate_potion',    'hard',     10, True),
+    # Base-game new question profiles
+    'q_neutral_partner': Profile('neutral-partner',       ['base'],                               'neutral-partner',          'medium',   8,  False),
+    'q_ing_profile':     Profile('ing-profile',           ['base'],                               'ingredient-potion-profile','medium',   8,  False),
+    'q_group_potions':   Profile('group-potions',         ['base'],                               'group-possible-potions',   'medium',   8,  False),
+    'q_best_mix':        Profile('best-mix',              ['base'],                               'most-informative-mix',     'medium',   8,  False),
+    'q_non_producer':    Profile('non-producer',          ['base'],                               'guaranteed-non-producer',  'medium',   8,  False),
 }
 
 # ── Clue pool ─────────────────────────────────────────────────────────────────
@@ -700,6 +778,33 @@ def build_question_anchor(profile: Profile, sol: dict, golem: Optional[dict],
 
     if k == 'golem_animate_potion':
         return {'kind': 'golem_animate_potion'}, None, set()
+
+    if k == 'neutral-partner':
+        return {'kind': 'neutral-partner', 'ingredient': rng.choice(SLOTS)}, None, set()
+
+    if k == 'ingredient-potion-profile':
+        return {'kind': 'ingredient-potion-profile', 'ingredient': rng.choice(SLOTS)}, None, set()
+
+    if k == 'group-possible-potions':
+        size = rng.choice([2, 3])
+        ingredients = sorted(rng.sample(SLOTS, size))
+        return {'kind': 'group-possible-potions', 'ingredients': ingredients}, None, set()
+
+    if k == 'most-informative-mix':
+        return {'kind': 'most-informative-mix', 'ingredient': rng.choice(SLOTS)}, None, set()
+
+    if k == 'guaranteed-non-producer':
+        # Pick a random target potion from the 7 possible mix results
+        potions = [
+            {'type': 'neutral'},
+            {'type': 'potion', 'color': 'R', 'sign': '+'},
+            {'type': 'potion', 'color': 'R', 'sign': '-'},
+            {'type': 'potion', 'color': 'G', 'sign': '+'},
+            {'type': 'potion', 'color': 'G', 'sign': '-'},
+            {'type': 'potion', 'color': 'B', 'sign': '+'},
+            {'type': 'potion', 'color': 'B', 'sign': '-'},
+        ]
+        return {'kind': 'guaranteed-non-producer', 'potion': rng.choice(potions)}, None, set()
 
     return None, None, set()
 
@@ -947,6 +1052,100 @@ def gen_hints(raw: dict) -> list:
             f"Ingredient {slot} = {ALCH_CODES[alch]}, which is {result.upper()}."
         })
 
+    elif k == 'neutral-partner':
+        slot = q['ingredient']
+        alch = sol[slot]
+        # find the actual neutral partner
+        partner_slot = next(s for s in SLOTS if s != slot and MIX_TABLE[sol[s]][alch] == 'neutral')
+        partner_alch = sol[partner_slot]
+        hints.append({'level': 1, 'text': (
+            f"Find the ingredient whose alchemical is the direct opposite of ingredient {slot}. "
+            f"Two alchemicals are direct opposites when their mix is always neutral — "
+            f"all three colour aspects have opposite signs."
+        )})
+        hints.append({'level': 2, 'text': (
+            f"Ingredient {slot} has alchemical properties: "
+            f"R{sgn_str(ALCH_DATA[alch]['R'][0])} G{sgn_str(ALCH_DATA[alch]['G'][0])} B{sgn_str(ALCH_DATA[alch]['B'][0])}. "
+            f"Its direct opposite has all signs flipped. "
+            f"Check which remaining possible alchemicals always mix to neutral with it."
+        )})
+        hints.append({'level': 3, 'text': (
+            f"Ingredient {slot} = {ALCH_CODES[alch]}. "
+            f"Its direct opposite is ingredient {partner_slot} = {ALCH_CODES[partner_alch]}."
+        )})
+
+    elif k == 'ingredient-potion-profile':
+        slot = q['ingredient']
+        alch = sol[slot]
+        profile = []
+        for s2 in SLOTS:
+            if s2 == slot:
+                continue
+            results = {MIX_TABLE[w[slot - 1]][w[s2 - 1]] for w in worlds}
+            if len(results) == 1:
+                profile.append(f"ing{s2}→{fmt_r(results.pop())}")
+        hints.append({'level': 1, 'text': (
+            f"Find all potions that ingredient {slot} can certainly produce with at least one partner. "
+            f"A potion is 'certain' when the mix result is the same in every remaining possible world."
+        )})
+        hints.append({'level': 2, 'text': (
+            f"Check each of ingredient {slot}'s 7 possible partners. "
+            f"Certain results so far: {', '.join(profile) or 'none yet — keep reducing worlds'}."
+        )})
+        ans = answer(worlds, q, golem)
+        hints.append({'level': 3, 'text':
+            f"Ingredient {slot} = {ALCH_CODES[alch]}. Certain potions: {ans}."
+        })
+
+    elif k == 'group-possible-potions':
+        ingredients = q['ingredients']
+        certain = []
+        for a, b in itertools.combinations(ingredients, 2):
+            results = {MIX_TABLE[w[a - 1]][w[b - 1]] for w in worlds}
+            if len(results) == 1:
+                certain.append(f"ing{a}+ing{b}→{fmt_r(results.pop())}")
+        hints.append({'level': 1, 'text': (
+            f"Find all potions certainly achievable by some pair within ingredients {ingredients}. "
+            f"Check all {len(list(itertools.combinations(ingredients, 2)))} pair combinations."
+        )})
+        hints.append({'level': 2, 'text': (
+            f"Certain pairs so far: {', '.join(certain) or 'keep reducing worlds'}."
+        )})
+        ans = answer(worlds, q, golem)
+        hints.append({'level': 3, 'text': f"Certain potions for group {ingredients}: {ans}."})
+
+    elif k == 'most-informative-mix':
+        slot = q['ingredient']
+        alch = sol[slot]
+        n = len(worlds)
+        partner_entropies = _entropy_table(worlds, slot - 1)
+        best = partner_entropies[0]
+        hints.append({'level': 1, 'text': (
+            f"Find the partner that gives the most information when mixed with ingredient {slot}. "
+            f"Information = Shannon entropy of the mix result distribution across all {n} remaining worlds."
+        )})
+        hints.append({'level': 2, 'text': (
+            f"Top partners by entropy: "
+            + ', '.join(f"ing{s2}(H={e:.2f}, dist=[{d}])" for e, s2, d in partner_entropies[:3])
+        )})
+        hints.append({'level': 3, 'text': (
+            f"Most informative mix for ingredient {slot} ({ALCH_CODES[alch]}): "
+            f"ingredient {best[1]} with entropy {best[0]:.3f}."
+        )})
+
+    elif k == 'guaranteed-non-producer':
+        target_str = fmt_r(d2r(q['potion']))
+        non_producers = answer(worlds, q, golem) or []
+        hints.append({'level': 1, 'text': (
+            f"Find all ingredients that can never produce {target_str} with any partner in any remaining world. "
+            f"An ingredient is a non-producer if no world/partner combination yields {target_str}."
+        )})
+        hints.append({'level': 2, 'text': (
+            f"Check each ingredient: does any remaining world have this ingredient produce {target_str} "
+            f"with some partner? Non-producers found: {non_producers or 'keep checking'}."
+        )})
+        hints.append({'level': 3, 'text': f"Guaranteed non-producers of {target_str}: {non_producers}."})
+
     else:
         ans = answer(worlds, q, golem)
         hints.append({'level': 1, 'text': 'Use all clues to eliminate impossible worlds.'})
@@ -970,11 +1169,16 @@ TITLES = [
 ]
 
 DESCS = {
-    'encyclopedia_fourth':  "A partial encyclopedia article lists three ingredients on the same aspect. Use the supporting clues to identify the fourth.",
-    'golem_group':          "The golem has been tested with several ingredients. Deduce the reaction pattern and identify the target group.",
-    'golem_animate_potion': "The golem stirred during testing. Identify the animators and determine what potion their mix would produce.",
-    'alchemical':           "Use the clues to deduce which alchemical belongs to the target ingredient.",
-    'solar_lunar':          "Use the clues to determine whether the target ingredient is Solar or Lunar.",
+    'encyclopedia_fourth':      "A partial encyclopedia article lists three ingredients on the same aspect. Use the supporting clues to identify the fourth.",
+    'golem_group':              "The golem has been tested with several ingredients. Deduce the reaction pattern and identify the target group.",
+    'golem_animate_potion':     "The golem stirred during testing. Identify the animators and determine what potion their mix would produce.",
+    'alchemical':               "Use the clues to deduce which alchemical belongs to the target ingredient.",
+    'solar_lunar':              "Use the clues to determine whether the target ingredient is Solar or Lunar.",
+    'neutral-partner':          "Use the clues to identify the one ingredient that always mixes to neutral with the target ingredient.",
+    'ingredient-potion-profile':"Determine all potions that the target ingredient can certainly produce when mixed with at least one partner.",
+    'group-possible-potions':   "Identify all potions that can be certainly produced by some pair within the listed ingredient group.",
+    'most-informative-mix':     "Decide which partner provides the most information (maximum entropy) when mixed with the target ingredient.",
+    'guaranteed-non-producer':  "Find all ingredients that can never produce the target potion with any partner in any remaining world.",
 }
 
 EXP_PUZZLE_DIR = Path(__file__).parent.parent / 'src' / 'expanded' / 'data' / 'puzzles'
@@ -987,6 +1191,14 @@ def _next_num(prefix: str, out_dir: Path) -> int:
     return max(nums, default=1) + 1
 
 
+BASE_QUESTION_PROFILES = {
+    'neutral-partner', 'ingredient-potion-profile', 'group-possible-potions',
+    'most-informative-mix', 'guaranteed-non-producer',
+}
+
+def is_base_profile(profile: Profile) -> bool:
+    return profile.mechanics == ['base'] and profile.question_kind in BASE_QUESTION_PROFILES
+
 def assemble(raw: dict, profile: Profile, num: int, rng: random.Random) -> dict:
     hints = gen_hints(raw)
     sc    = compute_difficulty({
@@ -998,9 +1210,8 @@ def assemble(raw: dict, profile: Profile, num: int, rng: random.Random) -> dict:
         nt   = sum(1 for c in raw['clues'] if c['kind'] == 'golem_test')
         desc = (f"The golem has been tested with {nt} ingredient{'s' if nt != 1 else ''}. "
                 + desc.split('. ', 1)[1])
-    return {
+    puz = {
         'id':          f"{profile.id_prefix}-{num:02d}",
-        'mode':        'expanded',
         'title':       rng.choice(TITLES),
         'description': desc,
         'difficulty':  profile.difficulty,
@@ -1011,6 +1222,11 @@ def assemble(raw: dict, profile: Profile, num: int, rng: random.Random) -> dict:
         'hints':     hints,
         'complexity': sc,
     }
+    if not is_base_profile(profile):
+        puz['mode'] = 'expanded'
+        # Insert mode after id
+        puz = {'id': puz.pop('id'), 'mode': puz.pop('mode'), **puz}
+    return puz
 
 # ══════════════════════════════════════════════════════════════════════════════
 # SUBCOMMAND: generate
@@ -1059,10 +1275,11 @@ def cmd_generate(args):
                 print(f"  → rejected: {[e for e in errs if e.startswith('ERROR')]}")
             continue
 
-        num = _next_num(profile.id_prefix, EXP_PUZZLE_DIR)
+        out_dir = BASE_PUZZLE_DIR if is_base_profile(profile) else EXP_PUZZLE_DIR
+        num = _next_num(profile.id_prefix, out_dir)
         puz = assemble(raw, profile, num, rng)
         puz['id'] = f"{profile.id_prefix}-{num:02d}"
-        (EXP_PUZZLE_DIR / f"{puz['id']}.json").write_text(json.dumps(puz, indent=2))
+        (out_dir / f"{puz['id']}.json").write_text(json.dumps(puz, indent=2))
 
         warns = [e for e in errs if e.startswith('WARNING')]
         print(f"  ✓  {puz['id']}  clues={len(raw['clues'])}  "

@@ -105,11 +105,13 @@ export function TutorialPage({
   steps,
   onBack,
   onDone,
+  onPuzzleDone,
 }: {
   tutorialId: TutorialId;
   steps: TutorialStep[];
   onBack: () => void;
   onDone: () => void;
+  onPuzzleDone?: (puzzleId: string) => void;
 }) {
   const { markTutorialDone } = useTutorial();
   // Step index is local state — context only tracks completion, not current step
@@ -118,6 +120,7 @@ export function TutorialPage({
   const step = steps[stepIndex];
 
   function handleNext() {
+    if (step?.kind === 'puzzle') onPuzzleDone?.(step.puzzleId);
     const next = stepIndex + 1;
     if (next >= steps.length) {
       markTutorialDone(tutorialId);

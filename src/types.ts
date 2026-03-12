@@ -175,7 +175,17 @@ export type QuestionTarget =
   | { kind: 'debunk_min_steps' }
   /** Debunk planning: perform a master mix that conflicts with fixedIngredient's publication
    *  without removing it (both publications conflict → neither removed) */
-  | { kind: 'debunk_conflict_only'; fixedIngredient: IngredientId };
+  | { kind: 'debunk_conflict_only'; fixedIngredient: IngredientId }
+  /** Which ingredient is the direct opposite of this ingredient in every remaining world? */
+  | { kind: 'neutral-partner'; ingredient: IngredientId }
+  /** All potions certainly producible by this ingredient with at least one partner */
+  | { kind: 'ingredient-potion-profile'; ingredient: IngredientId }
+  /** All potions certainly producible by at least one pair from this group */
+  | { kind: 'group-possible-potions'; ingredients: [IngredientId, IngredientId, ...IngredientId[]] }
+  /** Which partner maximises information (entropy) when mixed with this ingredient? */
+  | { kind: 'most-informative-mix'; ingredient: IngredientId }
+  /** Which ingredients can never produce this potion with any partner in any world? */
+  | { kind: 'guaranteed-non-producer'; potion: PotionResult };
 
 // ─── Debunk plan types ────────────────────────────────────────────────────────
 
