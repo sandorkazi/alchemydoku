@@ -130,6 +130,11 @@ export function StarBurst({ notes, firstSlot, lastSlot }: StarBurstProps) {
 
     if (newBursts.length > 0) {
       setBursts(b => [...b, ...newBursts]);
+      for (const { corner } of newBursts) {
+        (window as unknown as { gtag?: (...args: unknown[]) => void }).gtag?.(
+          'event', 'easter_egg_triggered', { corner }
+        );
+      }
     }
 
     prevNotes.current = { ...notes };
