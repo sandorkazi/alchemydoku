@@ -8,6 +8,7 @@
 
 import { useState, useEffect } from 'react';
 import { ExpandedRulesQuickReference } from './components/ExpandedRulesQuickReference';
+import { ExpandedInterfaceQuickReference } from './components/ExpandedInterfaceQuickReference';
 import { ALL_EXPANDED_PUZZLES, EXPANDED_COLLECTIONS, EXPANDED_PUZZLE_MAP } from './data/puzzlesIndex';
 import { ExpandedPuzzleSolverPage } from './pages/ExpandedPuzzleSolverPage';
 import { clearExpandedPuzzleState } from './contexts/ExpandedSolverContext';
@@ -271,6 +272,7 @@ export function ExpandedHome({ onModeChange }: { onModeChange: (m: 'base' | 'exp
 
         {/* Rules quick reference — top, closed by default */}
         <ExpandedRulesQuickReference />
+        <ExpandedInterfaceQuickReference />
 
         {/* Collections */}
         <div className="space-y-3">

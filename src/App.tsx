@@ -9,6 +9,7 @@ import { DEBUNK_APPRENTICE_TUTORIAL_STEPS } from './data/tutorials/debunk-appren
 import { DEBUNK_MASTER_TUTORIAL_STEPS } from './data/tutorials/debunk-master';
 import type { TutorialId } from './contexts/TutorialContext';
 import { RulesQuickReference } from './components/RulesQuickReference';
+import { InterfaceQuickReference } from './components/InterfaceQuickReference';
 import type { Puzzle } from './types';
 import { clearPuzzleState } from './contexts/SolverContext';
 import { ExpandedHome as ExpandedHomeImpl } from './expanded/ExpandedHome';
@@ -437,6 +438,7 @@ function AppInner() {
 
         {/* Rules quick reference — top, closed by default */}
         <RulesQuickReference />
+        <InterfaceQuickReference />
 
         {/* Continue banner */}
         {lastPuzzle && lastCol && !completed.has(lastPuzzle.id) && (
