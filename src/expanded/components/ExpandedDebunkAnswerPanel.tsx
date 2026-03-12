@@ -8,7 +8,7 @@
 
 import { useState } from 'react';
 import { useExpandedSolver, useExpandedIngredient } from '../contexts/ExpandedSolverContext';
-import { IngredientIcon, AlchemicalImage, ElemImage, CorrectIcon, IncorrectIcon } from '../../components/GameSprites';
+import { IngredientIcon, AlchemicalImage, ElemImage, SignedElemImage, CorrectIcon, IncorrectIcon } from '../../components/GameSprites';
 import { simulateExpandedPlan } from '../logic/debunkExpanded';
 import type { DebunkStep, IngredientId, Color, Publication } from '../../types';
 import type { DebunkArticle } from '../types';
@@ -314,7 +314,7 @@ const ASPECT_COLOR_CLS: Record<string, string> = {
   G: 'bg-green-50 border-green-200 text-green-700',
   B: 'bg-blue-50 border-blue-200 text-blue-700',
 };
-const ASPECT_LABEL: Record<string, string> = { R: 'Red', G: 'Green', B: 'Blue' };
+
 
 function ArticlesBoard({
   articles, removedArtSet,
@@ -343,18 +343,17 @@ function ArticlesBoard({
               }`}
             >
               <div className={`flex items-center gap-1 mb-1 ${removed ? 'line-through text-green-400' : ''}`}>
-                <span className="font-bold text-[10px] uppercase tracking-widest">
-                  {ASPECT_LABEL[art.aspect]} article
-                </span>
+                <ElemImage color={art.aspect as 'R'|'G'|'B'} size="S" width={12} />
+                <span className="font-bold text-[10px] uppercase tracking-widest">article</span>
                 {removed && <span className="text-green-500 ml-0.5">✓</span>}
               </div>
               <div className={`flex flex-wrap gap-1 ${removed ? 'opacity-60' : ''}`}>
                 {art.entries.map((entry, ei) => {
                   const { index } = getIngredient(entry.ingredient);
                   return (
-                    <span key={ei} className="flex items-center gap-0.5 text-[10px] font-semibold">
+                    <span key={ei} className="flex items-center gap-0.5">
                       <IngredientIcon index={index} width={16} />
-                      <span>{entry.sign === '+' ? '+' : '−'}</span>
+                      <SignedElemImage color={art.aspect as 'R'|'G'|'B'} sign={entry.sign} width={14} />
                     </span>
                   );
                 })}

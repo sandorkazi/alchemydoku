@@ -180,14 +180,7 @@ function RevealedAnswer({ q, answer }: { q: QuestionTarget; answer: PuzzleAnswer
   }
   if (q.kind === 'safe-publish') {
     const dc = (answer as { kind: string; color: Color }).color;
-    return (
-      <span className="inline-flex items-center gap-1.5">
-        <ElemImage color={dc} size="L" width={36} />
-        <span className="text-xs font-semibold text-amber-700">
-          {{ R:'Red', G:'Green', B:'Blue' }[dc]} aspect
-        </span>
-      </span>
-    );
+    return <ElemImage color={dc} size="L" width={36} />;
   }
   if (q.kind === 'possible-potions') {
     const pots = (answer as { potions: string[] }).potions.map(k =>

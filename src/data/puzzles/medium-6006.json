@@ -58,6 +58,20 @@
       "ingredient2": 5
     }
   ],
+  "hints": [
+    {
+      "level": 1,
+      "text": "Two of the five clues give a Neutral result. A neutral mix means the two ingredients are direct opposites — every aspect sign is flipped. Use those two neutral clues to work out the R- sign of ing4 and ing1 relative to the ingredients you already know something about."
+    },
+    {
+      "level": 2,
+      "text": "Chain R- through every clue: ing3+ing6 gives R-, so both carry R-. ing3+ing4 is Neutral, so ing4 is the opposite of ing3 and carries R+. ing4+ing8 gives R+, so ing8 also carries R+. ing1+ing6 is Neutral, so ing1 is the opposite of ing6 and carries R+. ing1+ing7 gives R+, so ing7 also carries R+. That accounts for all four R+ alchemicals spread across ing1, ing4, ing7, ing8."
+    },
+    {
+      "level": 3,
+      "text": "Because ing1, ing4, ing7, ing8 claim all four R+ alchemicals, ing2, ing3, ing5, ing6 must share all four R- alchemicals. The first clue already pairs ing3 with ing6 as one R- small and one R- large. That leaves ing2 and ing5 as the other R- small/large pair. A mix where both signs are R- but one is large and the other is small always resolves to R-."
+    }
+  ],
   "solution": {
     "1": 8,
     "2": 5,

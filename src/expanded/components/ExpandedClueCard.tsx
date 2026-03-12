@@ -18,13 +18,12 @@ import type {
 import type { Color } from '../../types';
 
 const ING_W = 28;
-const COLOR_LABEL: Record<Color, string> = { R: 'Red', G: 'Green', B: 'Blue' };
 
 // ─── Shared primitives ────────────────────────────────────────────────────────
 
 function Card({ icon, label, accent = 'amber', children }: {
   icon: string;
-  label: string;
+  label: React.ReactNode;
   accent?: 'amber' | 'blue' | 'green' | 'purple' | 'rose';
   children: React.ReactNode;
 }) {
@@ -95,18 +94,6 @@ function IngBadge({ slotId, color, sign }: { slotId: number; color: Color; sign:
   );
 }
 
-function SignBadge({ sign }: { sign: '+' | '-' }) {
-  return (
-    <span className={`inline-flex items-center justify-center w-5 h-5 rounded font-black text-sm leading-none
-      ${sign === '+' ? 'bg-green-100 text-green-700 border border-green-300' : 'bg-red-100 text-red-700 border border-red-300'}`}>
-      {sign === '+' ? '＋' : '－'}
-    </span>
-  );
-}
-
-function AspectIcon({ color }: { color: Color }) {
-  return <ElemImage color={color} size="S" width={16} />;
-}
 
 // ─── Encyclopedia entry grid ──────────────────────────────────────────────────
 
@@ -146,7 +133,7 @@ function BookClueCard({ clue }: { clue: BookClue }) {
 
 function EncyclopediaClueCard({ clue }: { clue: EncyclopediaClue }) {
   return (
-    <Card icon="📜" label={`Verified Publication — ${COLOR_LABEL[clue.aspect]}`} accent="green">
+    <Card icon="📜" label={<><ElemImage color={clue.aspect} size="S" width={12} /> Verified Publication</>} accent="green">
       <p className="text-[10px] opacity-60 mb-0.5">All entries guaranteed correct</p>
       <EntryGrid aspect={clue.aspect} entries={[...clue.entries]} />
     </Card>
@@ -155,7 +142,7 @@ function EncyclopediaClueCard({ clue }: { clue: EncyclopediaClue }) {
 
 function EncyclopediaUncertainClueCard({ clue }: { clue: EncyclopediaUncertainClue }) {
   return (
-    <Card icon="📄" label={`Uncertain Article — ${COLOR_LABEL[clue.aspect]}`} accent="amber">
+    <Card icon="📄" label={<><ElemImage color={clue.aspect} size="S" width={12} /> Uncertain Article</>} accent="amber">
       <p className="text-[10px] opacity-70 mb-0.5">≥ 3 of 4 entries are correct</p>
       <EntryGrid aspect={clue.aspect} entries={[...clue.entries]} />
     </Card>
@@ -177,10 +164,8 @@ function DebunkApprenticeCard({ clue }: { clue: DebunkApprenticeClue }) {
       </div>
       <div className="flex items-center gap-1.5">
         <Ing slotId={clue.ingredient} />
-        <span className="text-xs opacity-70">true</span>
-        <AspectIcon color={clue.aspect} />
-        <span className="text-xs opacity-70">sign:</span>
-        <SignBadge sign={clue.sign} />
+        <span className="text-xs opacity-70">true sign:</span>
+        <SignedElemImage color={clue.aspect} sign={clue.sign} width={22} />
       </div>
     </Card>
   );

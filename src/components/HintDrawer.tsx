@@ -60,11 +60,12 @@ function renderHint(text: string, displayMap: DisplayMap): React.ReactNode {
           return (
             <span
               key={i}
-              className="inline-flex items-center align-middle mx-0.5
-                         bg-amber-50 border border-amber-200 rounded px-1 py-0.5 leading-none"
-              title={name}
+              className="inline-flex items-center gap-1 align-middle mx-0.5
+                         bg-amber-50 border border-amber-200 rounded px-1.5 py-0.5
+                         text-[11px] font-semibold text-amber-800 leading-none"
             >
-              <IngredientIcon index={iconIdx} width={20} />
+              <IngredientIcon index={iconIdx} width={16} />
+              <span>{name}</span>
             </span>
           );
         }

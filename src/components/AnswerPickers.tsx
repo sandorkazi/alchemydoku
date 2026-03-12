@@ -102,12 +102,11 @@ export function HedgeColorPicker({ displayColors, selected, onSelect }: {
       {displayColors.map(({ color, label }) => (
         <button key={color} role="radio" aria-checked={selected === color} aria-label={label}
           onClick={() => onSelect(color)}
-          className={`flex flex-col items-center gap-1 p-2 rounded-xl border-2 transition-all press-sm
+          className={`flex items-center justify-center p-2 rounded-xl border-2 transition-all press-sm
             focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-indigo-400
             ${selected === color ? activeCls : idleCls}`}
         >
           <ElemImage color={color} size="L" width={36} />
-          <span className="text-[10px] font-semibold text-gray-500">{label}</span>
         </button>
       ))}
     </div>

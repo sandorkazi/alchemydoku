@@ -10,7 +10,7 @@
 
 import { useState } from 'react';
 import { PotionImage, AlchemicalImage, ElemImage, CorrectIcon, IncorrectIcon, IngredientIcon, SignedElemImage } from '../../components/GameSprites';
-import { PotionPicker, AlchemicalPicker, PossiblePotionsPicker, LOGICAL_POTIONS, potionKey } from '../../components/AnswerPickers';
+import { PotionPicker, AlchemicalPicker, AspectPicker, PossiblePotionsPicker, LOGICAL_POTIONS, potionKey } from '../../components/AnswerPickers';
 import { useExpandedSolver, useExpandedIngredient, computeAllExpandedAnswers } from '../contexts/ExpandedSolverContext';
 import type { PotionResult, AlchemicalId, Color, IngredientId } from '../../types';
 import type {
@@ -381,16 +381,11 @@ function QuestionRow({ q, index, total, value, onChange, correctAnswer, showSolu
           {q.kind==='mixing-result' && <PotionPicker selected={value as PotionResult|null} onSelect={p => onChange(p)} />}
           {q.kind==='alchemical' && <AlchemicalPicker selected={value as AlchemicalId|null} onSelect={id => onChange(id)} />}
           {q.kind==='aspect' && (
-            <div className="flex gap-3">
-              {(['+','-'] as const).map(s => (
-                <button key={s} role="radio" aria-checked={(value as {sign?:string}|null)?.sign===s}
-                  onClick={() => onChange({ sign: s })}
-                  className={`flex items-center justify-center w-20 h-16 rounded-xl border-2 text-3xl font-bold transition-all
-                    ${(value as {sign?:string}|null)?.sign===s?'border-indigo-500 bg-indigo-50 shadow-md scale-105':'border-transparent bg-gray-100 hover:bg-gray-200'}`}>
-                  {s==='+'?'＋':'－'}
-                </button>
-              ))}
-            </div>
+            <AspectPicker
+              color={q.color}
+              selected={(value as {sign?:string}|null)?.sign as '+'|'-'|null ?? null}
+              onSelect={s => onChange({ sign: s })}
+            />
           )}
           {q.kind==='safe-publish' && (
             <div className="flex gap-2" role="radiogroup">
@@ -398,10 +393,9 @@ function QuestionRow({ q, index, total, value, onChange, correctAnswer, showSolu
                 const active = (value as {color?:Color}|null)?.color===c;
                 return (
                   <button key={c} role="radio" aria-checked={active} onClick={() => onChange({ kind:'hedge-color' as const, color:c })}
-                    className={`flex flex-col items-center gap-1 p-2 rounded-xl border-2 transition-all
+                    className={`flex items-center justify-center p-2 rounded-xl border-2 transition-all
                       ${active?'border-indigo-500 bg-indigo-50 shadow-md scale-105':'border-transparent bg-gray-100 hover:bg-gray-200'}`}>
                     <ElemImage color={c} size="L" width={36} />
-                    <span className="text-[10px] font-semibold text-gray-500">{{ R:'Red',G:'Green',B:'Blue' }[c]}</span>
                   </button>
                 );
               })}
