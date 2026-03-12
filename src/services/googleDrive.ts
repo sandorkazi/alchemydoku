@@ -1,5 +1,5 @@
 /**
- * Google Drive integration for Alchemydoku save sync.
+ * Google Drive integration for Alchemy Sudoku Training save sync.
  *
  * Uses GIS (Google Identity Services) implicit token flow — no backend needed.
  * Saves to drive.appDataFolder so the file is invisible to the user in Drive UI.
@@ -70,7 +70,7 @@ const SCOPES = [
   'https://www.googleapis.com/auth/userinfo.profile',
   'https://www.googleapis.com/auth/userinfo.email',
 ].join(' ');
-const SAVE_FILE_NAME = 'alchemydoku-save.json';
+const SAVE_FILE_NAME = 'alchemy-sudoku-save.json';
 
 // ─── Internal state ──────────────────────────────────────────────────────────
 

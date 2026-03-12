@@ -1,14 +1,14 @@
 /**
  * Save / load all puzzle progress as JSON files on the user's own drive.
  * Two files total:
- *   alchemydoku-save.json          — base-game progress (all puzzles)
- *   alchemydoku-expanded-save.json — expanded-mode progress (all puzzles)
+ *   alchemy-sudoku-save.json          — base-game progress (all puzzles)
+ *   alchemy-sudoku-expanded-save.json — expanded-mode progress (all puzzles)
  *
  * Each file is { version, exportedAt, puzzles: { [puzzleId]: PuzzleProgress } }.
  *
  * localStorage mirrors (auto-written on every state change):
- *   alch-save-base     — same shape as alchemydoku-save.json
- *   alch-save-expanded — same shape as alchemydoku-expanded-save.json
+ *   alch-save-base     — same shape as alchemy-sudoku-save.json
+ *   alch-save-expanded — same shape as alchemy-sudoku-expanded-save.json
  *
  * On page open, contexts read from these unified keys (falling back to old
  * per-puzzle keys for backwards compatibility).
@@ -30,7 +30,7 @@ export type PuzzleProgress = {
 };
 
 export type ExpandedPuzzleProgress = PuzzleProgress & {
-  solarLunarMarks: Record<number, string | null>;
+  solarLunarMarks: Record<number, { solar: string; lunar: string } | null>;
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   golemNotepad: any;
 };
@@ -113,8 +113,8 @@ export function downloadBothFiles(
   baseFile.exportedAt = now;
   expFile.exportedAt  = now;
 
-  triggerDownload('alchemydoku-save.json',          baseFile);
-  triggerDownload('alchemydoku-expanded-save.json', expFile);
+  triggerDownload('alchemy-sudoku-save.json',          baseFile);
+  triggerDownload('alchemy-sudoku-expanded-save.json', expFile);
 }
 
 // ─── Upload ───────────────────────────────────────────────────────────────────
@@ -146,7 +146,7 @@ export async function uploadBaseProgress(puzzleId: string): Promise<PuzzleProgre
   try {
     const file = JSON.parse(text) as SaveFile<PuzzleProgress>;
     if (typeof file.version !== 'number' || !file.puzzles) {
-      alert('This file does not look like an Alchemydoku save.');
+      alert('This file does not look like an Alchemy Sudoku Training save.');
       return null;
     }
     try { localStorage.setItem(BASE_KEY, JSON.stringify(file)); } catch { /* ignore */ }
@@ -168,7 +168,7 @@ export async function uploadExpandedProgress(puzzleId: string): Promise<Expanded
   try {
     const file = JSON.parse(text) as SaveFile<ExpandedPuzzleProgress>;
     if (typeof file.version !== 'number' || !file.puzzles) {
-      alert('This file does not look like an Alchemydoku Expanded save.');
+      alert('This file does not look like an Alchemy Sudoku Training Expanded save.');
       return null;
     }
     try { localStorage.setItem(EXPANDED_KEY, JSON.stringify(file)); } catch { /* ignore */ }

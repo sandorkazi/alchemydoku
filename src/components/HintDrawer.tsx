@@ -24,7 +24,7 @@ const COLOR_NAME: Record<Color, string> = { R: 'Red', G: 'Green', B: 'Blue' };
 
 function renderHint(text: string, displayMap: DisplayMap): React.ReactNode {
   // Order matters: longer / more specific patterns first
-  const TOKEN = /(ingredient\s+[1-8]|NNN|PPP|npN|pnP|pNn|nPp|Nnp|Ppn|[RGB][+\-\u2212])/gi;
+  const TOKEN = /(ingredient\s+[1-8]|ing[1-8]|NNN|PPP|npN|pnP|pNn|nPp|Nnp|Ppn|[RGB][+\-\u2212])/gi;
   const parts = text.split(TOKEN);
 
   return (
@@ -52,8 +52,8 @@ function renderHint(text: string, displayMap: DisplayMap): React.ReactNode {
           );
         }
 
-        // ── ingredient N ─────────────────────────────────────────────────────
-        const ingMatch = part.match(/^ingredient\s+([1-8])$/i);
+        // ── ingredient N / ingN ───────────────────────────────────────────────
+        const ingMatch = part.match(/^(?:ingredient\s+|ing)([1-8])$/i);
         if (ingMatch) {
           const slotId    = parseInt(ingMatch[1], 10);
           const displayId = displayMap[slotId] ?? slotId;

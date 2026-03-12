@@ -4,6 +4,7 @@ import { ALCHEMICALS } from '../data/alchemicals';
 import { useSolver, useIngredient } from '../contexts/SolverContext';
 import { AlchemicalDisplay } from './AlchemicalDisplay';
 import { AlchemicalImage, IngredientIcon, PotionImage } from './GameSprites';
+import { StarBurst } from './StarBurst';
 import type { AlchemicalId, IngredientId, CellState } from '../types';
 
 // Fixed visual column order by display-ingredient ID (mushroom → fern → toad → bird claw → mandrake → scorpion → raven's feather → flower)
@@ -44,8 +45,8 @@ const MARKER: Record<CellState, { glyph: string; textShadow: string }> = {
 
 function Cell({
   cellState, alchId, tintColor, tintOpacity, noteText,
-  activeTool, isEditing,
-  onMouseDown, onStartEdit,
+  isEditing,
+  onMouseDown,
   ariaLabel,
 }: {
   cellState:   CellState;
@@ -53,10 +54,8 @@ function Cell({
   tintColor:   string;
   tintOpacity: number;
   noteText:    string;
-  activeTool:  GridTool;
   isEditing:   boolean;
   onMouseDown: (e: React.MouseEvent) => void;
-  onStartEdit: () => void;
   ariaLabel?:  string;
 }) {
   const { glyph, textShadow } = MARKER[cellState];
@@ -409,10 +408,8 @@ export function IngredientGrid({ onRandomize }: { onRandomize?: () => void }) {
                             tintColor={tint}
                             tintOpacity={[1,2,5,6].includes(alchId) ? 0.13 : 0.31}
                             noteText={notes[key] ?? ''}
-                            activeTool={activeTool}
                             isEditing={isEditing}
                             onMouseDown={e => handleCellMouseDown(e, slotId, alchId)}
-                            onStartEdit={() => setEditingCell({ ing: slotId, alch: alchId })}
                             ariaLabel={`${INGREDIENTS[getIngredient(slotId).displayId as 1].name} / ${ALCHEMICALS[alchId].code}: ${gridState[slotId]?.[alchId] ?? 'unknown'}`}
                           />
                           {isEditing && (
@@ -430,6 +427,11 @@ export function IngredientGrid({ onRandomize }: { onRandomize?: () => void }) {
               ))}
             </tbody>
           </table>
+          <StarBurst
+            notes={notes}
+            firstSlot={colData[0]?.slotId}
+            lastSlot={colData[colData.length - 1]?.slotId}
+          />
           </div>{/* /neutral-pair wrapper */}
         </div>
 

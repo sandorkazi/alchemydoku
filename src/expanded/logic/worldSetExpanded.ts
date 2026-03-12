@@ -9,13 +9,13 @@ import { filterByClue, applyClues } from '../../logic/worldSet';
 import { WORLD_DATA, SIGN_TABLE, COLOR_INDEX, filterWorlds } from '../../logic/worldPack';
 import { deduceMixingResult } from '../../logic/deducer';
 import { isSolar } from './solarLunar';
-import { filterByGolemTest } from './golem';
+import { filterByGolemTest, getReactionGroup0 } from './golem';
 import type { WorldSet } from '../../types';
 import type {
   AnyClue, ExpandedClue,
   BookClue, EncyclopediaClue, EncyclopediaUncertainClue,
   DebunkApprenticeClue, DebunkMasterClue,
-  GolemTestClue, GolemParams,
+  GolemTestClue, GolemParams, GolemReactionAmongClue,
 } from '../types';
 
 // ─── Individual expanded filters ─────────────────────────────────────────────
@@ -85,6 +85,28 @@ function filterByDebunkMaster(worlds: WorldSet, clue: DebunkMasterClue): WorldSe
 
 // ─── Dispatch ─────────────────────────────────────────────────────────────────
 
+
+function groupMatches(reaction: import('../types').GolemReactionGroup, g: import('../types').GolemReactionGroup): boolean {
+  if (reaction === 'any_reactive') return g !== 'non_reactive';
+  return g === reaction;
+}
+
+export function filterByGolemReactionAmong(
+  worlds: WorldSet,
+  clue: GolemReactionAmongClue,
+  params: GolemParams,
+): WorldSet {
+  const slots = clue.ingredients.map(id => id - 1);
+  return filterWorlds(worlds, w => {
+    let matches = 0;
+    for (const s of slots) {
+      const g = getReactionGroup0(WORLD_DATA[w * 8 + s], params);
+      if (groupMatches(clue.reaction, g)) matches++;
+    }
+    return matches === clue.count;
+  });
+}
+
 function isExpandedClue(clue: AnyClue): clue is ExpandedClue {
   return clue.kind === 'book'
     || clue.kind === 'encyclopedia'
@@ -93,7 +115,8 @@ function isExpandedClue(clue: AnyClue): clue is ExpandedClue {
     || clue.kind === 'debunk_master'
     || clue.kind === 'golem_test'
     || clue.kind === 'golem_hint_color'
-    || clue.kind === 'golem_hint_size';
+    || clue.kind === 'golem_hint_size'
+    || clue.kind === 'golem_reaction_among';
 }
 
 export type ClueContext = { golem?: GolemParams };
@@ -110,6 +133,10 @@ export function filterByAnyClue(worlds: WorldSet, clue: AnyClue, ctx: ClueContex
     case 'debunk_master':          return filterByDebunkMaster(worlds, clue);
     case 'golem_hint_color':       return worlds; // display only
     case 'golem_hint_size':        return worlds; // display only
+    case 'golem_reaction_among': {
+      if (!ctx.golem) return worlds;
+      return filterByGolemReactionAmong(worlds, clue as GolemReactionAmongClue, ctx.golem);
+    }
     case 'golem_test': {
       if (!ctx.golem) return worlds; // no params = can't filter
       const t = clue as GolemTestClue;

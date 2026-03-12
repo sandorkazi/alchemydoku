@@ -1,0 +1,84 @@
+{
+  "id": "hard-among-02",
+  "title": "Market Day Rumours",
+  "description": "Vendors at the market gossiped freely — you know how many from each group reacted to each potion, but never who. The truth is hidden in the counting.",
+  "difficulty": "hard",
+  "clues": [
+    {
+      "kind": "sell_among",
+      "ingredients": [1, 3, 4, 5, 6],
+      "potion": { "color": "R", "sign": "+" },
+      "result": "rejected",
+      "count": 3
+    },
+    {
+      "kind": "mixing_among",
+      "ingredients": [2, 3, 6, 7],
+      "result": { "type": "potion", "color": "R", "sign": "+" }
+    },
+    {
+      "kind": "sell_among",
+      "ingredients": [1, 4, 5, 8],
+      "potion": { "color": "G", "sign": "+" },
+      "result": "sold",
+      "count": 2
+    },
+    {
+      "kind": "mixing_among",
+      "ingredients": [1, 4, 5],
+      "result": { "type": "potion", "color": "G", "sign": "-" }
+    },
+    {
+      "kind": "sell_among",
+      "ingredients": [1, 2, 5, 7, 8],
+      "potion": { "color": "B", "sign": "+" },
+      "result": "sold",
+      "count": 3
+    },
+    {
+      "kind": "mixing_among",
+      "ingredients": [4, 6, 8],
+      "result": { "type": "potion", "color": "B", "sign": "-" }
+    },
+    {
+      "kind": "sell_among",
+      "ingredients": [2, 4, 6, 7],
+      "potion": { "color": "G", "sign": "-" },
+      "result": "sold",
+      "count": 2
+    },
+    {
+      "kind": "mixing_among",
+      "ingredients": [3, 7, 8],
+      "result": { "type": "potion", "color": "B", "sign": "-" }
+    },
+    {
+      "kind": "mixing_among",
+      "ingredients": [3, 5, 7],
+      "result": { "type": "potion", "color": "G", "sign": "+" }
+    },
+    {
+      "kind": "mixing_among",
+      "ingredients": [3, 4, 5],
+      "result": { "type": "potion", "color": "B", "sign": "+" }
+    }
+  ],
+  "questions": [
+    { "kind": "mixing-result", "ingredient1": 2, "ingredient2": 6 },
+    { "kind": "mixing-result", "ingredient1": 3, "ingredient2": 7 },
+    { "kind": "mixing-result", "ingredient1": 4, "ingredient2": 7 }
+  ],
+  "solution": {
+    "1": 5, "2": 8, "3": 2, "4": 7, "5": 4, "6": 3, "7": 6, "8": 1
+  },
+  "complexity": {
+    "score": 5,
+    "raw": 6.0,
+    "avg_clue_strength": 0.8,
+    "chain_depth": 3,
+    "stuck": false,
+    "requires_complement_set": true,
+    "question_requires_enumeration": true,
+    "residual_worlds": 4
+  }
+}

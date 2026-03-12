@@ -196,6 +196,40 @@ def filter_clue(worlds: frozenset, clue: dict, golem: Optional[dict] = None) -> 
                          if greacts(w[si], golem, 'chest') == clue['chest_reacted']
                          and greacts(w[si], golem, 'ears') == clue['ears_reacted'])
 
+    if k == 'mixing_among':
+        slots = [i - 1 for i in clue['ingredients']]
+        exp = d2r(clue['result'])
+        return frozenset(w for w in worlds
+                         if any(MIX_TABLE[w[a]][w[b]] == exp
+                                for a, b in itertools.combinations(slots, 2)))
+
+    if k == 'sell_result_among':
+        slots = [i - 1 for i in clue['ingredients']]
+        cp = clue['claimedPotion']
+        col, sgn = cp['color'], sgn_int(cp['sign'])
+        sr = clue['sellResult']
+        def sell_matches_among(actual, _col=col, _sgn=sgn, _sr=sr):
+            if _sr == 'total_match': return actual == (_col, _sgn)
+            if _sr == 'neutral':     return actual == 'neutral'
+            if _sr == 'sign_ok':     return actual != 'neutral' and actual != (_col, _sgn) and actual[1] == _sgn
+            if _sr == 'opposite':    return actual != 'neutral' and actual[1] != _sgn
+            return False
+        return frozenset(w for w in worlds
+                         if any(sell_matches_among(MIX_TABLE[w[a]][w[b]])
+                                for a, b in itertools.combinations(slots, 2)))
+
+    if k == 'golem_reaction_among':
+        if golem is None:
+            return worlds
+        slots = [i - 1 for i in clue['ingredients']]
+        reaction = clue['reaction']
+        count = clue['count']
+        def matches_reaction(alch, _reaction=reaction, _golem=golem):
+            g = rgroup(alch, _golem)
+            return g != 'non_reactive' if _reaction == 'any_reactive' else g == _reaction
+        return frozenset(w for w in worlds
+                         if sum(matches_reaction(w[s]) for s in slots) == count)
+
     # Display-only: golem_hint_color, golem_hint_size — no world filtering
     return worlds
 
@@ -280,15 +314,16 @@ def answer(worlds: frozenset, q: dict, golem: Optional[dict] = None):
     if k == 'golem_animate_potion':
         if golem is None:
             return None
-        anim_sets = [frozenset(s for s in SLOTS if rgroup(w[s - 1], golem) == 'animators')
-                     for w in worlds]
-        if len(set(anim_sets)) != 1:
-            return None
-        anims = sorted(anim_sets[0])
-        if len(anims) != 2:
-            return None
-        results = {MIX_TABLE[w[anims[0] - 1]][w[anims[1] - 1]] for w in worlds}
-        return results.pop() if len(results) == 1 else None
+        # The question only asks what potion the animators produce — not which
+        # ingredients they are.  Require every world to have exactly 2 animators
+        # and all those pairs to produce the same potion.
+        potions = set()
+        for w in worlds:
+            anims = sorted(s for s in SLOTS if rgroup(w[s - 1], golem) == 'animators')
+            if len(anims) != 2:
+                return None
+            potions.add(MIX_TABLE[w[anims[0] - 1]][w[anims[1] - 1]])
+        return potions.pop() if len(potions) == 1 else None
 
     if k == 'golem_possible_potions':
         if golem is None:
@@ -307,6 +342,10 @@ def answer(worlds: frozenset, q: dict, golem: Optional[dict] = None):
                 for gi, gj in itertools.combinations(gslots, 2):
                     potions.add(MIX_TABLE[w[gi]][w[gj]])
         return sorted(fmt_r(p) for p in potions) if len(potions) < 7 else None
+
+    # Debunk plan questions require plan-search validation — not auto-checkable here
+    if k in ('debunk_min_steps', 'debunk_conflict_only'):
+        return 'not_validated'
 
     return None
 

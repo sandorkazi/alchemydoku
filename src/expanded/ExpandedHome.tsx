@@ -46,6 +46,20 @@ const DIFF_BADGE: Record<string, string> = {
   hard:     'bg-red-100 text-red-700',
 };
 
+// ─── Complexity pips (expanded) ───────────────────────────────────────────────
+
+function ComplexityPips({ raw }: { raw: number }) {
+  const filled = raw < 1.7 ? 1 : raw < 2.1 ? 2 : raw < 2.8 ? 3 : raw < 3.5 ? 4 : 5;
+  return (
+    <span className="inline-flex items-center gap-0.5" title={`Complexity: ${raw.toFixed(2)}`}>
+      {[1, 2, 3, 4, 5].map(i => (
+        <span key={i} className={`inline-block w-1.5 h-1.5 rounded-full transition-colors
+          ${i <= filled ? 'bg-indigo-400' : 'bg-gray-200'}`} />
+      ))}
+    </span>
+  );
+}
+
 // ─── Collection summary card (hub level) ─────────────────────────────────────
 
 function CollectionSummaryCard({ collection, completed, onOpen }: {
@@ -64,7 +78,13 @@ function CollectionSummaryCard({ collection, completed, onOpen }: {
         ${allDone ? 'border-green-300' : 'border-gray-200'}`}>
       <div className={`px-4 py-3 ${allDone ? 'bg-green-50' : 'bg-gray-50'}`}>
         <div className="flex items-center justify-between gap-2">
-          <h3 className="font-bold text-gray-900 text-sm">{collection.title}</h3>
+          <div className="flex items-center gap-2 min-w-0">
+            <h3 className="font-bold text-gray-900 text-sm">{collection.title}</h3>
+            <span className={`text-[10px] font-semibold px-1.5 py-0.5 rounded-full shrink-0
+              ${DIFF_BADGE[collection.difficulty] ?? 'bg-gray-100 text-gray-600'}`}>
+              {collection.difficulty}
+            </span>
+          </div>
           <div className="flex items-center gap-2 shrink-0">
             <span className={`text-xs font-semibold tabular-nums ${allDone ? 'text-green-600' : 'text-gray-400'}`}>
               {doneCount}/{puzzles.length}
@@ -122,12 +142,13 @@ function CollectionView({ collection, completed, onSelectPuzzle, onBack }: {
                     {done ? '✓' : ''}
                   </span>
                   <span className="flex-1 min-w-0">
-                    <span className="text-sm font-medium text-gray-900 truncate block">{puzzle.title}</span>
+                    <span className="flex items-center gap-2">
+                      <span className="text-sm font-medium text-gray-900 truncate">{puzzle.title}</span>
+                      {(puzzle as any).complexity?.raw != null && (
+                        <ComplexityPips raw={(puzzle as any).complexity.raw} />
+                      )}
+                    </span>
                     <span className="text-xs text-gray-400 truncate block">{puzzle.description}</span>
-                  </span>
-                  <span className={`text-[10px] font-semibold px-2 py-0.5 rounded-full shrink-0
-                    ${DIFF_BADGE[puzzle.difficulty] ?? 'bg-gray-100 text-gray-600'}`}>
-                    {puzzle.difficulty}
                   </span>
                 </button>
               );

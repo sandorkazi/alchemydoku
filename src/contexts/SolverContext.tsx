@@ -8,9 +8,10 @@ import type { PuzzleAnswer } from '../puzzles/schema';
 
 export type { DisplayMap, GridState } from '../utils/solverStorage';
 
-// ─── Local type alias ─────────────────────────────────────────────────────────
+// ─── Local type aliases ───────────────────────────────────────────────────────
 
-type GridState = import('../utils/solverStorage').GridState;
+type GridState  = import('../utils/solverStorage').GridState;
+type DisplayMap = import('../utils/solverStorage').DisplayMap;
 
 // ─── State ────────────────────────────────────────────────────────────────────
 

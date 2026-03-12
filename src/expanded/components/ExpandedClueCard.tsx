@@ -13,7 +13,7 @@ import type {
   AnyClue, EncyclopediaClue, EncyclopediaUncertainClue,
   DebunkApprenticeClue, DebunkMasterClue,
   BookClue, EncyclopediaEntry,
-  GolemTestClue, GolemHintColorClue, GolemHintSizeClue,
+  GolemTestClue, GolemHintColorClue, GolemHintSizeClue, GolemReactionAmongClue, GolemReactionGroup,
 } from '../types';
 import type { Color } from '../../types';
 
@@ -315,6 +315,35 @@ function GolemHintSizeCard({ clue }: { clue: GolemHintSizeClue }) {
   );
 }
 
+
+const REACTION_LABEL: Record<GolemReactionGroup, string> = {
+  animators:    'animator',
+  chest_only:   'chest-only',
+  ears_only:    'ears-only',
+  non_reactive: 'non-reactive',
+  any_reactive: 'reactive',
+};
+
+function GolemReactionAmongCard({ clue }: { clue: GolemReactionAmongClue }) {
+  const getIngredient = useExpandedIngredient();
+  const n = clue.ingredients.length;
+  const label = REACTION_LABEL[clue.reaction];
+  return (
+    <Card icon="🤖" label="Observed Golem Test" accent="purple">
+      <div className="text-xs text-gray-600 mb-1">
+        {clue.count} of {n === 2 ? 'these 2' : `these ${n}`}{' '}
+        triggered a <span className="font-semibold">{label}</span> reaction.
+      </div>
+      <div className="flex flex-wrap gap-1">
+        {clue.ingredients.map(id => {
+          const { index } = getIngredient(id);
+          return <IngredientIcon key={id} index={index} width={ING_W} />;
+        })}
+      </div>
+    </Card>
+  );
+}
+
 // ─── Dispatcher ───────────────────────────────────────────────────────────────
 
 export function ExpandedClueCard({ clue }: { clue: AnyClue }) {
@@ -326,7 +355,8 @@ export function ExpandedClueCard({ clue }: { clue: AnyClue }) {
     case 'debunk_master':          return <DebunkMasterCard clue={clue} />;
     case 'golem_test':             return <GolemTestCard clue={clue} />;
     case 'golem_hint_color':       return <GolemHintColorCard clue={clue} />;
-    case 'golem_hint_size':        return <GolemHintSizeCard clue={clue} />;
+    case 'golem_hint_size':           return <GolemHintSizeCard          clue={clue} />;
+    case 'golem_reaction_among':      return <GolemReactionAmongCard       clue={clue} />;
     default:                       return <ExpandedBaseClueCard clue={clue} />;
   }
 }

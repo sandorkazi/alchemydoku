@@ -413,7 +413,6 @@ export function ExpandedDebunkAnswerPanel({ onNext, isTutorial = false }: {
 
       {/* One plan section per debunk question */}
       {!completed && !showSolution && plans.map((plan, qi) => {
-        const q = debunkQuestions[qi];
         const sim = simulations[qi];
         const completedSteps = plan.drafts.filter(isComplete) as DebunkStep[];
         const refAnswer = plan.isConflictOnly
@@ -490,7 +489,7 @@ export function ExpandedDebunkAnswerPanel({ onNext, isTutorial = false }: {
       {/* Solution reveal */}
       {showSolution && (
         <div className="bg-indigo-50 border border-indigo-200 rounded-xl px-4 py-3 space-y-3">
-          {debunkQuestions.map((q, qi) => {
+          {debunkQuestions.map((_q, qi) => {
             const plan = plans[qi];
             const refAnswer = plan.isConflictOnly
               ? puzzle.debunk_answers?.debunk_conflict_only

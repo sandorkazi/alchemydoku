@@ -11,7 +11,7 @@ export const MIXING_TUTORIAL_STEPS: TutorialStep[] = [
   {
     kind: 'explain',
     id: 'mix-welcome',
-    title: 'Welcome to Alchemists',
+    title: 'Welcome to Alchemy Sudoku Training',
     emoji: '⚗️',
     body: `You are a trainee alchemist. Eight ingredients are laid out on your workbench — mushroom, fern, mandrake root, and others.
 

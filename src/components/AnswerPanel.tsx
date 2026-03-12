@@ -1,11 +1,10 @@
 import { useState } from 'react';
-import { ALCHEMICALS } from '../data/alchemicals';
 import { PotionImage, AlchemicalImage, ElemImage, CorrectIcon, IncorrectIcon, IngredientIcon } from './GameSprites';
 import { PotionPicker, AlchemicalPicker, AspectPicker, HedgeColorPicker, PossiblePotionsPicker, LOGICAL_POTIONS, potionKey } from './AnswerPickers';
 import { useSolver, useIngredient } from '../contexts/SolverContext';
 import { computeAnswers } from '../puzzles/schema';
 import { DebunkAnswerPanel } from './DebunkAnswerPanel';
-import type { PotionResult, AlchemicalId, Color } from '../types';
+import type { PotionResult, AlchemicalId, Color, IngredientId } from '../types';
 import type { PuzzleAnswer } from '../puzzles/schema';
 import type { QuestionTarget } from '../types';
 
@@ -139,7 +138,7 @@ function RevealedAnswer({ q, answer }: { q: QuestionTarget; answer: PuzzleAnswer
     const ids = (answer as { ingredients: number[] }).ingredients;
     return (
       <span className="inline-flex flex-wrap gap-1.5">
-        {ids.map(id => <IngredientIcon key={id} index={id - 1} width={36} />)}
+        {ids.map(id => <IngredientIcon key={id} index={(id - 1) as 0|1|2|3|4|5|6|7} width={36} />)}
         {ids.length === 0 && <span className="text-xs text-gray-400 italic">None</span>}
       </span>
     );
@@ -296,7 +295,7 @@ function QuestionRow({ q, index, total, value, onChange, correctAnswer, showSolu
               const next = new Set(currentIds);
               if (next.has(slotId)) next.delete(slotId); else next.add(slotId);
               const sorted = [...next].sort((a,b) => a-b);
-              onChange(sorted.length === 0 ? null : { kind: q.kind as 'aspect-set' | 'large-component', ingredients: sorted });
+              onChange(sorted.length === 0 ? null : { kind: q.kind as 'aspect-set' | 'large-component', ingredients: sorted as IngredientId[] });
             };
             return <IngredientSetPicker selected={currentIds} onToggle={toggleIng} />;
           })()}

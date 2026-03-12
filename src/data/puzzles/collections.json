@@ -165,6 +165,7 @@
   {
     "id": "debunk-planning",
     "title": "Debunk Planning",
+    "difficulty": "easy",
     "description": "Opponents have published false theories. Plan the shortest sequence of apprentice and master debunks to expose them all.",
     "puzzleIds": [
       "debunk-plan-tutorial-01",
@@ -172,5 +173,16 @@
       "debunk-plan-easy-02",
       "debunk-plan-conflict-01"
     ]
+  },
+  {
+    "id": "among-witnesses",
+    "title": "Among Witnesses",
+    "description": "You never saw whose ingredients were involved \u2014 only overheard the outcomes. Deduce the full picture from fragmentary crowd knowledge.",
+    "difficulty": "hard",
+    "puzzleIds": [
+      "hard-among-01",
+      "hard-among-02"
+    ],
+    "unlockedAfter": "hard-deduction"
   }
 ]
