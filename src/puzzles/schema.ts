@@ -1,11 +1,16 @@
 import { generateAllWorlds, applyClues } from '../logic/worldSet';
-import { deduceMixingResult, deduceAlchemical, deduceAspect, deduceUncertainAspect, getPossibleResults } from '../logic/deducer';
+import { deduceMixingResult, deduceAlchemical, deduceAspect, deduceUncertainAspect, getPossibleResults, deduceNeutralPartner, getIngredientPotionProfile, getGroupPossiblePotions, getMostInformativeMix, getGuaranteedNonProducers } from '../logic/deducer';
 import { COLOR_INDEX, WORLD_DATA, SIGN_TABLE, SIZE_TABLE } from '../logic/worldPack';
 import { validateMinStepsAnswer, validateConflictOnlyAnswer } from '../logic/debunk';
 import type {
   Puzzle, QuestionTarget, PotionResult, AlchemicalId, IngredientId, Sign, Color, WorldSet,
   DebunkStep, Publication,
 } from '../types';
+
+// ─── Shared helpers ───────────────────────────────────────────────────────────
+
+const potionKey = (r: PotionResult): string =>
+  r.type === 'neutral' ? 'neutral' : `${(r as Extract<PotionResult,{type:'potion'}>).color}${(r as Extract<PotionResult,{type:'potion'}>).sign}`;
 
 // ─── Answer type ──────────────────────────────────────────────────────────────
 
@@ -21,7 +26,9 @@ export type PuzzleAnswer =
   /** Sorted array of ingredient IDs confirmed to have the Large component for this color */
   | { kind: 'large-component'; ingredients: IngredientId[] }
   /** A debunk plan: ordered sequence of debunking actions */
-  | { kind: 'debunk-plan'; steps: DebunkStep[] };
+  | { kind: 'debunk-plan'; steps: DebunkStep[] }
+  /** Sorted array of ingredient IDs that can never produce the target potion */
+  | { kind: 'non-producer-set'; ingredients: IngredientId[] };
 
 // ─── Core functions ───────────────────────────────────────────────────────────
 
@@ -46,7 +53,6 @@ export function computeAnswerFromWorlds(
     case 'possible-potions': {
       if (worlds.length === 0) return null;
       const results = getPossibleResults(worlds, question.ingredient1, question.ingredient2);
-      const potionKey = (r: PotionResult) => r.type === 'neutral' ? 'neutral' : `${(r as Extract<PotionResult,{type:'potion'}>).color}${(r as Extract<PotionResult,{type:'potion'}>).sign}`;
       return { kind: 'possible-potions', potions: results.map(potionKey).sort() };
     }
 
@@ -97,6 +103,30 @@ export function computeAnswerFromWorlds(
     case 'debunk_min_steps':
     case 'debunk_conflict_only':
       return null;
+
+    case 'neutral-partner':
+      return deduceNeutralPartner(worlds, question.ingredient);
+
+    case 'ingredient-potion-profile': {
+      const r = getIngredientPotionProfile(worlds, question.ingredient);
+      if (r.length === 0) return null;
+      return { kind: 'possible-potions', potions: r.map(potionKey).sort() };
+    }
+
+    case 'group-possible-potions': {
+      const r = getGroupPossiblePotions(worlds, [...question.ingredients]);
+      if (r.length === 0) return null;
+      return { kind: 'possible-potions', potions: r.map(potionKey).sort() };
+    }
+
+    case 'most-informative-mix':
+      return getMostInformativeMix(worlds, question.ingredient);
+
+    case 'guaranteed-non-producer': {
+      const r = getGuaranteedNonProducers(worlds, question.potion);
+      if (r.length === 0) return null;
+      return { kind: 'non-producer-set', ingredients: r };
+    }
   }
 }
 
@@ -141,13 +171,15 @@ export function answersEqual(a: PuzzleAnswer, b: PuzzleAnswer): boolean {
   if (typeof a === 'object' && typeof b === 'object' && 'sign' in a && 'sign' in b)
     return (a as {sign:Sign}).sign === (b as {sign:Sign}).sign;
   if (typeof a === 'object' && typeof b === 'object' && 'kind' in a && 'kind' in b) {
-    const ka = a as { kind: string; potions?: string[]; color?: Color; steps?: DebunkStep[] };
-    const kb = b as { kind: string; potions?: string[]; color?: Color; steps?: DebunkStep[] };
+    const ka = a as { kind: string; potions?: string[]; color?: Color; steps?: DebunkStep[]; ingredients?: number[] };
+    const kb = b as { kind: string; potions?: string[]; color?: Color; steps?: DebunkStep[]; ingredients?: number[] };
     if (ka.kind !== kb.kind) return false;
     if (ka.kind === 'possible-potions')
       return JSON.stringify(ka.potions ?? []) === JSON.stringify(kb.potions ?? []);
     if (ka.kind === 'debunk-plan')
       return JSON.stringify(ka.steps ?? []) === JSON.stringify(kb.steps ?? []);
+    if ('ingredients' in ka && 'ingredients' in kb)
+      return JSON.stringify(ka.ingredients ?? []) === JSON.stringify(kb.ingredients ?? []);
     return ka.color === kb.color;
   }
   return false;
@@ -220,5 +252,15 @@ export function questionText(question: QuestionTarget, ingredientName: (id: numb
       return 'What is the shortest sequence of debunk actions to remove all publications?';
     case 'debunk_conflict_only':
       return `Mix ingredient ${ingredientName(question.fixedIngredient)} with something to create a conflict — without removing any publication.`;
+    case 'neutral-partner':
+      return `Which ingredient is always the direct opposite (neutral mix) of ${ingredientName(question.ingredient)}?`;
+    case 'ingredient-potion-profile':
+      return `Which potions can ${ingredientName(question.ingredient)} certainly produce with some partner?`;
+    case 'group-possible-potions':
+      return `Which potions can certainly be produced by some pair among ingredients ${question.ingredients.map(ingredientName).join(', ')}?`;
+    case 'most-informative-mix':
+      return `Which ingredient gives the most information when mixed with ${ingredientName(question.ingredient)}?`;
+    case 'guaranteed-non-producer':
+      return `Which ingredients can never produce ${potionKey(question.potion)} with any partner?`;
   }
 }

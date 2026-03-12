@@ -1,0 +1,86 @@
+{
+  "id": "group-potions-03",
+  "title": "The Final Entry",
+  "description": "Identify all potions that can be certainly produced by some pair within the listed ingredient group.",
+  "difficulty": "medium",
+  "clues": [
+    {
+      "kind": "mixing",
+      "ingredient1": 1,
+      "ingredient2": 2,
+      "result": {
+        "color": "R",
+        "sign": "-"
+      }
+    },
+    {
+      "kind": "mixing",
+      "ingredient1": 4,
+      "ingredient2": 7,
+      "result": {
+        "color": "R",
+        "sign": "-"
+      }
+    },
+    {
+      "kind": "mixing",
+      "ingredient1": 1,
+      "ingredient2": 6,
+      "result": {
+        "color": "G",
+        "sign": "-"
+      }
+    },
+    {
+      "kind": "mixing",
+      "ingredient1": 2,
+      "ingredient2": 3,
+      "result": {
+        "type": "neutral"
+      }
+    }
+  ],
+  "questions": [
+    {
+      "kind": "group-possible-potions",
+      "ingredients": [
+        3,
+        5
+      ]
+    }
+  ],
+  "solution": {
+    "1": 7,
+    "2": 4,
+    "3": 3,
+    "4": 1,
+    "5": 8,
+    "6": 2,
+    "7": 5,
+    "8": 6
+  },
+  "hints": [
+    {
+      "level": 1,
+      "text": "Find all potions certainly achievable by some pair within ingredients [3, 5]. Check all 1 pair combinations."
+    },
+    {
+      "level": 2,
+      "text": "Certain pairs so far: ing3+ing5\u2192R+."
+    },
+    {
+      "level": 3,
+      "text": "Certain potions for group [3, 5]: ['R+']."
+    }
+  ],
+  "complexity": {
+    "raw": 2.919,
+    "avg_clue_strength": 3.075,
+    "ambig_penalty": 0.0,
+    "chain_depth": 0,
+    "stuck": false,
+    "requires_complement_set": false,
+    "question_requires_enumeration": true,
+    "residual_worlds": 8
+  }
+}

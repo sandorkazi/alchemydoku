@@ -1,6 +1,6 @@
 import {
   WORLD_DATA, SIGN_TABLE, SIZE_TABLE, MIX_TABLE,
-  COLOR_INDEX, INDEX_COLOR, MIX_RESULTS,
+  COLOR_INDEX, INDEX_COLOR, MIX_RESULTS, encodePotionResult,
 } from './worldPack';
 import type { AlchemicalId, IngredientId, WorldSet, PotionResult, Color, Sign } from '../types';
 
@@ -123,6 +123,139 @@ export function getEliminatedCells(worlds: WorldSet): Set<string> {
     }
   }
   return eliminated;
+}
+
+// ─── Neutral-partner deduction ────────────────────────────────────────────────
+
+/**
+ * Returns the unique ingredient whose alchemical is the direct opposite of
+ * `ingredient`'s in every remaining world (i.e. they always mix to neutral).
+ * Returns null if no single ingredient is always the neutral partner.
+ */
+export function deduceNeutralPartner(worlds: WorldSet, ingredient: IngredientId): IngredientId | null {
+  if (worlds.length === 0) return null;
+  const si = ingredient - 1;
+  for (let s2 = 0; s2 < 8; s2++) {
+    if (s2 === si) continue;
+    let allNeutral = true;
+    for (let i = 0; i < worlds.length; i++) {
+      const w = worlds[i];
+      if (MIX_TABLE[WORLD_DATA[w * 8 + si] * 8 + WORLD_DATA[w * 8 + s2]] !== 0) {
+        allNeutral = false;
+        break;
+      }
+    }
+    if (allNeutral) return (s2 + 1) as IngredientId;
+  }
+  return null;
+}
+
+// ─── Ingredient potion profile ────────────────────────────────────────────────
+
+/**
+ * Returns all potions P where there is some partner Y such that
+ * mixing ingredient with Y is certainly P (= deduceMixingResult returns P).
+ */
+export function getIngredientPotionProfile(worlds: WorldSet, ingredient: IngredientId): PotionResult[] {
+  const si = ingredient - 1;
+  const seen = new Set<number>();
+  for (let s2 = 0; s2 < 8; s2++) {
+    if (s2 === si) continue;
+    const result = deduceMixingResult(worlds, ingredient, (s2 + 1) as IngredientId);
+    if (result !== null) seen.add(encodePotionResult(result));
+  }
+  const results: PotionResult[] = [];
+  if (seen.has(0)) results.push(MIX_RESULTS[0]);
+  for (let c = 1; c <= 6; c++) {
+    if (seen.has(c)) results.push(MIX_RESULTS[c]);
+  }
+  return results;
+}
+
+// ─── Group possible potions ───────────────────────────────────────────────────
+
+/**
+ * Returns all potions P where there is some pair (i, j) in the group such that
+ * mixing i with j is certainly P.
+ */
+export function getGroupPossiblePotions(worlds: WorldSet, ingredients: IngredientId[]): PotionResult[] {
+  const seen = new Set<number>();
+  for (let a = 0; a < ingredients.length; a++) {
+    for (let b = a + 1; b < ingredients.length; b++) {
+      const result = deduceMixingResult(worlds, ingredients[a], ingredients[b]);
+      if (result !== null) seen.add(encodePotionResult(result));
+    }
+  }
+  const results: PotionResult[] = [];
+  if (seen.has(0)) results.push(MIX_RESULTS[0]);
+  for (let c = 1; c <= 6; c++) {
+    if (seen.has(c)) results.push(MIX_RESULTS[c]);
+  }
+  return results;
+}
+
+// ─── Most informative mix ─────────────────────────────────────────────────────
+
+/**
+ * Returns the partner ingredient (≠ ingredient) that maximises the Shannon
+ * entropy of the mix-result distribution across all remaining worlds.
+ * Ties are broken by lower slot index.
+ * Returns null if worlds is empty.
+ */
+export function getMostInformativeMix(worlds: WorldSet, ingredient: IngredientId): IngredientId | null {
+  if (worlds.length === 0) return null;
+  const si = ingredient - 1;
+  const entropies: { entropy: number; s2: number }[] = [];
+
+  for (let s2 = 0; s2 < 8; s2++) {
+    if (s2 === si) continue;
+    const counts = new Float64Array(7);
+    for (let i = 0; i < worlds.length; i++) {
+      const w = worlds[i];
+      counts[MIX_TABLE[WORLD_DATA[w * 8 + si] * 8 + WORLD_DATA[w * 8 + s2]]]++;
+    }
+    let entropy = 0;
+    const n = worlds.length;
+    for (let code = 0; code <= 6; code++) {
+      if (counts[code] > 0) {
+        const p = counts[code] / n;
+        entropy -= p * Math.log2(p);
+      }
+    }
+    entropies.push({ entropy, s2 });
+  }
+  entropies.sort((a, b) => b.entropy - a.entropy);
+  if (entropies.length === 0) return null;
+  // Require unique best partner (no ties within epsilon)
+  if (entropies.length > 1 && Math.abs(entropies[1].entropy - entropies[0].entropy) < 1e-9) return null;
+  return (entropies[0].s2 + 1) as IngredientId;
+}
+
+// ─── Guaranteed non-producers ─────────────────────────────────────────────────
+
+/**
+ * Returns ingredients that produce `potion` in NO world with ANY partner.
+ */
+export function getGuaranteedNonProducers(worlds: WorldSet, potion: PotionResult): IngredientId[] {
+  if (worlds.length === 0) return [];
+  const targetCode = encodePotionResult(potion);
+
+  const nonProducers: IngredientId[] = [];
+  for (let si = 0; si < 8; si++) {
+    let canProduce = false;
+    outer: for (let sj = 0; sj < 8; sj++) {
+      if (sj === si) continue;
+      for (let i = 0; i < worlds.length; i++) {
+        const w = worlds[i];
+        if (MIX_TABLE[WORLD_DATA[w * 8 + si] * 8 + WORLD_DATA[w * 8 + sj]] === targetCode) {
+          canProduce = true;
+          break outer;
+        }
+      }
+    }
+    if (!canProduce) nonProducers.push((si + 1) as IngredientId);
+  }
+  return nonProducers;
 }
 
 // ─── Safe-publish deduction ───────────────────────────────────────────────────

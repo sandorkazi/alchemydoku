@@ -1,0 +1,74 @@
+{
+  "id": "best-mix-02",
+  "title": "Echoes of the Laboratory",
+  "description": "Decide which partner provides the most information (maximum entropy) when mixed with the target ingredient.",
+  "difficulty": "medium",
+  "clues": [
+    {
+      "kind": "mixing",
+      "ingredient1": 1,
+      "ingredient2": 2,
+      "result": {
+        "type": "neutral"
+      }
+    },
+    {
+      "kind": "mixing",
+      "ingredient1": 3,
+      "ingredient2": 4,
+      "result": {
+        "color": "G",
+        "sign": "+"
+      }
+    },
+    {
+      "kind": "mixing",
+      "ingredient1": 1,
+      "ingredient2": 8,
+      "result": {
+        "color": "G",
+        "sign": "+"
+      }
+    }
+  ],
+  "questions": [
+    {
+      "kind": "most-informative-mix",
+      "ingredient": 2
+    }
+  ],
+  "solution": {
+    "1": 6,
+    "2": 5,
+    "3": 8,
+    "4": 1,
+    "5": 7,
+    "6": 2,
+    "7": 3,
+    "8": 4
+  },
+  "hints": [
+    {
+      "level": 1,
+      "text": "Find the partner that gives the most information when mixed with ingredient 2. Information = Shannon entropy of the mix result distribution across all 96 remaining worlds."
+    },
+    {
+      "level": 2,
+      "text": "Top partners by entropy: ing8(H=2.00, dist=[B-:24, B+:24, R-:24, R+:24]), ing4(H=1.81, dist=[B-:12, B+:12, R-:36, R+:36]), ing3(H=1.81, dist=[B-:12, B+:12, R-:36, R+:36])"
+    },
+    {
+      "level": 3,
+      "text": "Most informative mix for ingredient 2 (Nnp): ingredient 8 with entropy 2.000."
+    }
+  ],
+  "complexity": {
+    "raw": 1.775,
+    "avg_clue_strength": 2.905,
+    "ambig_penalty": 0.0,
+    "chain_depth": 0,
+    "stuck": false,
+    "requires_complement_set": false,
+    "question_requires_enumeration": false,
+    "residual_worlds": 96
+  }
+}

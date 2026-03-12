@@ -61,10 +61,20 @@ import debunk_plan_tutorial_01 from './debunk-plan-tutorial-01.json';
 import debunk_plan_easy_01 from './debunk-plan-easy-01.json';
 import debunk_plan_easy_02 from './debunk-plan-easy-02.json';
 import debunk_plan_conflict_01 from './debunk-plan-conflict-01.json';
+import neutral_partner_02 from './neutral-partner-02.json';
+import neutral_partner_03 from './neutral-partner-03.json';
+import ing_profile_03 from './ing-profile-03.json';
+import ing_profile_04 from './ing-profile-04.json';
+import group_potions_02 from './group-potions-02.json';
+import group_potions_03 from './group-potions-03.json';
+import best_mix_02 from './best-mix-02.json';
+import best_mix_03 from './best-mix-03.json';
+import non_producer_02 from './non-producer-02.json';
+import non_producer_03 from './non-producer-03.json';
 import collectionsData from './collections.json';
 import type { Puzzle } from '../../types';
 
-export const ALL_PUZZLES: Puzzle[] = [easy_2000, easy_2001, easy_2002, easy_2003, easy_2004, easy_2005, easy_2006, easy_2007, easy_2008, easy_2009, hard_9000, hard_9001, hard_9002, hard_9003, hard_9004, hard_9005, medium_6000, medium_6001, medium_6002, medium_6003, medium_6004, medium_6005, medium_6006, medium_6007, tutorial_mix_01, tutorial_mix_02, tutorial_mix_03, tutorial_sell_01, tutorial_sell_02, tutorial_debunk_01, tutorial_debunk_02, tutorial_debunk_03, safe_publish_01, safe_publish_02, safe_publish_03, safe_publish_04, expert_1001, expert_1002, expert_1003, expert_1004, expert_1005, expert_1006, expert_1007, expert_1008, hard_among_01, hard_among_02, medium_pp_01, medium_pp_02, medium_pp_03, hard_pp_01, hard_pp_02, tutorial_two_color_01, tutorial_two_color_02, tutorial_pp_01, tutorial_pp_02, aspect_set_01, aspect_set_04, large_comp_01, debunk_plan_tutorial_01, debunk_plan_easy_01, debunk_plan_easy_02, debunk_plan_conflict_01] as unknown as Puzzle[];
+export const ALL_PUZZLES: Puzzle[] = [easy_2000, easy_2001, easy_2002, easy_2003, easy_2004, easy_2005, easy_2006, easy_2007, easy_2008, easy_2009, hard_9000, hard_9001, hard_9002, hard_9003, hard_9004, hard_9005, medium_6000, medium_6001, medium_6002, medium_6003, medium_6004, medium_6005, medium_6006, medium_6007, tutorial_mix_01, tutorial_mix_02, tutorial_mix_03, tutorial_sell_01, tutorial_sell_02, tutorial_debunk_01, tutorial_debunk_02, tutorial_debunk_03, safe_publish_01, safe_publish_02, safe_publish_03, safe_publish_04, expert_1001, expert_1002, expert_1003, expert_1004, expert_1005, expert_1006, expert_1007, expert_1008, hard_among_01, hard_among_02, medium_pp_01, medium_pp_02, medium_pp_03, hard_pp_01, hard_pp_02, tutorial_two_color_01, tutorial_two_color_02, tutorial_pp_01, tutorial_pp_02, aspect_set_01, aspect_set_04, large_comp_01, debunk_plan_tutorial_01, debunk_plan_easy_01, debunk_plan_easy_02, debunk_plan_conflict_01, neutral_partner_02, neutral_partner_03, ing_profile_03, ing_profile_04, group_potions_02, group_potions_03, best_mix_02, best_mix_03, non_producer_02, non_producer_03] as unknown as Puzzle[];
 export const COLLECTIONS = collectionsData as Collection[];
 export const PUZZLE_MAP: Record<string, Puzzle> = Object.fromEntries(ALL_PUZZLES.map(p => [p.id, p]));
 
