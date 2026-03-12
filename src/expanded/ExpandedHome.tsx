@@ -7,6 +7,8 @@
  */
 
 import { useState, useEffect } from 'react';
+import { ExpandedRulesQuickReference } from './components/ExpandedRulesQuickReference';
+import { ExpandedInterfaceQuickReference } from './components/ExpandedInterfaceQuickReference';
 import { ALL_EXPANDED_PUZZLES, EXPANDED_COLLECTIONS, EXPANDED_PUZZLE_MAP } from './data/puzzlesIndex';
 import { ExpandedPuzzleSolverPage } from './pages/ExpandedPuzzleSolverPage';
 import { clearExpandedPuzzleState } from './contexts/ExpandedSolverContext';
@@ -268,15 +270,9 @@ export function ExpandedHome({ onModeChange }: { onModeChange: (m: 'base' | 'exp
           </p>
         </div>
 
-        {/* Quick legend */}
-        <div className="rounded-xl bg-white border border-violet-100 p-4 space-y-2 text-xs text-gray-600">
-          <p className="font-semibold text-violet-700 text-sm">New mechanics in this mode:</p>
-          <p>📖 <strong>Book Token</strong> — reveals whether an ingredient's alchemical is Solar (☀) or Lunar (☽)</p>
-          <p>☀ ☽ <strong>Solar/Lunar</strong> — alchemicals with 0 or 2 negatives are Solar; 1 or 3 are Lunar</p>
-          <p>📜 <strong>Encyclopedia Article</strong> — covers one aspect; lists 4 ingredients each with their own sign on that aspect (any mix of + and −)</p>
-          <p>📄 <strong>Uncertain Article</strong> — at least 3 of 4 entries are correct</p>
-          <p>🔍 <strong>Debunked Article</strong> — at least 1 entry has been proven wrong (actual sign differs from listed sign)</p>
-        </div>
+        {/* Rules quick reference — top, closed by default */}
+        <ExpandedRulesQuickReference />
+        <ExpandedInterfaceQuickReference />
 
         {/* Collections */}
         <div className="space-y-3">

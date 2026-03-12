@@ -10,7 +10,7 @@
 
 import { useState } from 'react';
 import { PotionImage, AlchemicalImage, ElemImage, CorrectIcon, IncorrectIcon, IngredientIcon, SignedElemImage } from '../../components/GameSprites';
-import { PotionPicker, AlchemicalPicker, PossiblePotionsPicker, LOGICAL_POTIONS, potionKey } from '../../components/AnswerPickers';
+import { PotionPicker, AlchemicalPicker, AspectPicker, PossiblePotionsPicker, LOGICAL_POTIONS, potionKey } from '../../components/AnswerPickers';
 import { useExpandedSolver, useExpandedIngredient, computeAllExpandedAnswers } from '../contexts/ExpandedSolverContext';
 import type { PotionResult, AlchemicalId, Color, IngredientId } from '../../types';
 import type {
@@ -30,8 +30,6 @@ function Ing({ slotId, size = 28 }: { slotId: number; size?: number }) {
 // ─── Question header ──────────────────────────────────────────────────────────
 
 function QuestionHeader({ q }: { q: AnyQuestion }) {
-  const colorLabel = (c: Color) => ({ R:'Red', G:'Green', B:'Blue' }[c]);
-
   // Base types
   if (q.kind === 'mixing-result') return (
     <span className="inline-flex items-center gap-1.5 flex-wrap">
@@ -46,7 +44,8 @@ function QuestionHeader({ q }: { q: AnyQuestion }) {
   );
   if (q.kind === 'aspect') return (
     <span className="inline-flex items-center gap-1.5 flex-wrap">
-      <span className="text-xs font-semibold text-indigo-500">{colorLabel(q.color)} aspect of</span><Ing slotId={q.ingredient} /><span className="text-indigo-400">?</span>
+      <ElemImage color={q.color} size="S" width={18} />
+      <span className="text-xs font-semibold text-indigo-500">aspect of</span><Ing slotId={q.ingredient} /><span className="text-indigo-400">?</span>
     </span>
   );
   if (q.kind === 'safe-publish') return (
@@ -64,14 +63,14 @@ function QuestionHeader({ q }: { q: AnyQuestion }) {
   if (q.kind === 'aspect-set') return (
     <span className="inline-flex items-center gap-1.5 flex-wrap">
       <span className="text-xs font-semibold text-indigo-500">which ingredients have</span>
-      <span className={`font-bold text-xs px-1.5 py-0.5 rounded ${q.color==='R'?'bg-red-100 text-red-700':q.color==='G'?'bg-green-100 text-green-700':'bg-blue-100 text-blue-700'}`}>{q.color}{q.sign}</span>
+      <SignedElemImage color={q.color} sign={q.sign} width={24} />
       <span className="text-indigo-400">?</span>
     </span>
   );
   if (q.kind === 'large-component') return (
     <span className="inline-flex items-center gap-1.5 flex-wrap">
       <span className="text-xs font-semibold text-indigo-500">which have Large</span>
-      <span className={`font-bold text-xs px-1.5 py-0.5 rounded ${q.color==='R'?'bg-red-100 text-red-700':q.color==='G'?'bg-green-100 text-green-700':'bg-blue-100 text-blue-700'}`}>{colorLabel(q.color)}</span>
+      <ElemImage color={q.color} size="L" width={24} />
       <span className="text-indigo-500 text-xs font-semibold">component?</span>
     </span>
   );
@@ -134,7 +133,10 @@ function QuestionHeader({ q }: { q: AnyQuestion }) {
         {q.entries.map((e, i) => (
           <span key={i} className="inline-flex items-center gap-0.5">
             <Ing slotId={e.ingredient} />
-            <span className={`text-[10px] font-bold ${e.sign==='+'?'text-green-600':'text-red-500'}`}>{e.sign}</span>
+            <span className={`inline-flex items-center justify-center w-4 h-4 rounded font-black text-xs leading-none
+              ${e.sign==='+'?'bg-green-100 text-green-700 border border-green-300':'bg-red-100 text-red-700 border border-red-300'}`}>
+              {e.sign === '+' ? '＋' : '－'}
+            </span>
           </span>
         ))}
       </span>
@@ -158,16 +160,14 @@ function QuestionHeader({ q }: { q: AnyQuestion }) {
     </span>
   );
   if (q.kind === 'golem_mix_potion') {
-    const t = q.target;
-    const potStr = t.type === 'neutral' ? 'Neutral' : `${t.color}${t.sign === '+' ? '+' : '−'}`;
     const grpLabel: Record<string, string> = {
       animators: 'animators', chest_only: 'chest-only reactors',
       ears_only: 'ears-only reactors', non_reactive: 'non-reactive',
       any_reactive: 'reactive ingredients',
     };
     return (
-      <span className="text-xs font-semibold text-violet-600">
-        🧿 Which ingredients can produce {potStr} with the {grpLabel[q.with_group]}?
+      <span className="inline-flex items-center gap-1.5 flex-wrap text-xs font-semibold text-violet-600">
+        🧿 Which ingredients can produce <PotionImage result={q.target} width={24} /> with the {grpLabel[q.with_group]}?
       </span>
     );
   }
@@ -251,6 +251,7 @@ function RevealedAnswer({ q, answer }: { q: AnyQuestion; answer: AnyAnswer }) {
   if (typeof answer === 'object' && 'type' in (answer as object)) return <PotionImage result={answer as PotionResult} width={36} />;
   if (typeof answer === 'object' && 'sign' in (answer as object)) {
     const s = (answer as { sign: '+' | '-' }).sign;
+    if (q.kind === 'aspect') return <SignedElemImage color={q.color} sign={s} width={40} />;
     return <span className="font-bold text-2xl text-amber-700">{s==='+'?'＋':'－'}</span>;
   }
   return null;
@@ -380,16 +381,11 @@ function QuestionRow({ q, index, total, value, onChange, correctAnswer, showSolu
           {q.kind==='mixing-result' && <PotionPicker selected={value as PotionResult|null} onSelect={p => onChange(p)} />}
           {q.kind==='alchemical' && <AlchemicalPicker selected={value as AlchemicalId|null} onSelect={id => onChange(id)} />}
           {q.kind==='aspect' && (
-            <div className="flex gap-3">
-              {(['+','-'] as const).map(s => (
-                <button key={s} role="radio" aria-checked={(value as {sign?:string}|null)?.sign===s}
-                  onClick={() => onChange({ sign: s })}
-                  className={`flex items-center justify-center w-20 h-16 rounded-xl border-2 text-3xl font-bold transition-all
-                    ${(value as {sign?:string}|null)?.sign===s?'border-indigo-500 bg-indigo-50 shadow-md scale-105':'border-transparent bg-gray-100 hover:bg-gray-200'}`}>
-                  {s==='+'?'＋':'－'}
-                </button>
-              ))}
-            </div>
+            <AspectPicker
+              color={q.color}
+              selected={(value as {sign?:string}|null)?.sign as '+'|'-'|null ?? null}
+              onSelect={s => onChange({ sign: s })}
+            />
           )}
           {q.kind==='safe-publish' && (
             <div className="flex gap-2" role="radiogroup">
@@ -397,10 +393,9 @@ function QuestionRow({ q, index, total, value, onChange, correctAnswer, showSolu
                 const active = (value as {color?:Color}|null)?.color===c;
                 return (
                   <button key={c} role="radio" aria-checked={active} onClick={() => onChange({ kind:'hedge-color' as const, color:c })}
-                    className={`flex flex-col items-center gap-1 p-2 rounded-xl border-2 transition-all
+                    className={`flex items-center justify-center p-2 rounded-xl border-2 transition-all
                       ${active?'border-indigo-500 bg-indigo-50 shadow-md scale-105':'border-transparent bg-gray-100 hover:bg-gray-200'}`}>
                     <ElemImage color={c} size="L" width={36} />
-                    <span className="text-[10px] font-semibold text-gray-500">{{ R:'Red',G:'Green',B:'Blue' }[c]}</span>
                   </button>
                 );
               })}

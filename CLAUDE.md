@@ -93,3 +93,23 @@ npx vitest run tests/logic/mixer.test.ts
 ```
 
 TypeScript is strict (`strict`, `noUnusedLocals`, `noUnusedParameters`). Path alias `@/*` maps to `src/*`.
+
+## Hint text conventions
+
+**Always use visual tokens in hint text — never plain slot references or abbreviations.**
+
+`HintDrawer.tsx` converts the following tokens to inline visual chips automatically:
+
+| Token | Renders as |
+|---|---|
+| `ing1` … `ing8` | Ingredient icon + ingredient name (reshuffle-safe via `displayMap`) |
+| `ingredient 1` … `ingredient 8` | Same as above |
+| `R+` `R-` `G+` `G-` `B+` `B-` | Colored aspect orb (SignedElemImage) |
+| `npN` `pnP` `pNn` `nPp` `Nnp` `Ppn` `NNN` `PPP` | Alchemical symbol image |
+
+**Rules for puzzle authors:**
+- Reference ingredients as `ing1`–`ing8` (not "ingredient 3", not "Fern", not slot numbers as plain text)
+- Reference aspects as `R+`, `R-`, `G+`, `G-`, `B+`, `B-` (not "Red plus", not "red positive")
+- Reference alchemicals by code (`npN`, `PPP`, etc.) — never as "alchemical 5" or plain text
+- Potions and mixing results should be described using aspect tokens, not text strings like "G-"
+- The renderer maps slot IDs through `displayMap` so chips stay correct after puzzle reshuffles

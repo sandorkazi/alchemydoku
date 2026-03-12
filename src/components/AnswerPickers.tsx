@@ -4,7 +4,7 @@
  */
 
 import { ALCHEMICALS } from '../data/alchemicals';
-import { PotionImage, AlchemicalImage, ElemImage } from './GameSprites';
+import { PotionImage, AlchemicalImage, ElemImage, SignedElemImage } from './GameSprites';
 import type { PotionResult, AlchemicalId, Color } from '../types';
 
 // ─── Shared helpers ───────────────────────────────────────────────────────────
@@ -68,7 +68,8 @@ export function AlchemicalPicker({ selected, onSelect, alchWidth = 44 }: {
   );
 }
 
-export function AspectPicker({ selected, onSelect }: {
+export function AspectPicker({ color, selected, onSelect }: {
+  color?: Color;
   selected: '+' | '-' | null;
   onSelect: (s: '+' | '-') => void;
 }) {
@@ -77,10 +78,15 @@ export function AspectPicker({ selected, onSelect }: {
       {(['+', '-'] as const).map(s => (
         <button key={s} role="radio" aria-checked={selected === s}
           aria-label={s === '+' ? 'Positive' : 'Negative'} onClick={() => onSelect(s)}
-          className={`flex items-center justify-center w-20 h-16 rounded-xl border-2 text-3xl font-bold
-            transition-all press-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-indigo-400
+          className={`flex items-center justify-center w-20 h-16 rounded-xl border-2 transition-all
+            press-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-indigo-400
             ${selected === s ? activeCls : idleCls}`}
-        >{s === '+' ? '＋' : '－'}</button>
+        >
+          {color
+            ? <SignedElemImage color={color} sign={s} width={48} />
+            : <span className="text-3xl font-bold">{s === '+' ? '＋' : '－'}</span>
+          }
+        </button>
       ))}
     </div>
   );
@@ -96,12 +102,11 @@ export function HedgeColorPicker({ displayColors, selected, onSelect }: {
       {displayColors.map(({ color, label }) => (
         <button key={color} role="radio" aria-checked={selected === color} aria-label={label}
           onClick={() => onSelect(color)}
-          className={`flex flex-col items-center gap-1 p-2 rounded-xl border-2 transition-all press-sm
+          className={`flex items-center justify-center p-2 rounded-xl border-2 transition-all press-sm
             focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-indigo-400
             ${selected === color ? activeCls : idleCls}`}
         >
           <ElemImage color={color} size="L" width={36} />
-          <span className="text-[10px] font-semibold text-gray-500">{label}</span>
         </button>
       ))}
     </div>

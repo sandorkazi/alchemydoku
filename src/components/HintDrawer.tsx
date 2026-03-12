@@ -41,13 +41,11 @@ function renderHint(text: string, displayMap: DisplayMap): React.ReactNode {
           return (
             <span
               key={i}
-              className="inline-flex items-center gap-0.5 align-middle mx-0.5
-                         bg-slate-100 border border-slate-200 rounded px-1 py-0.5
-                         text-[11px] font-mono text-slate-700 leading-none"
+              className="inline-flex items-center align-middle mx-0.5
+                         bg-slate-100 border border-slate-200 rounded px-1 py-0.5 leading-none"
               title={ALCH_LABEL[alchId]}
             >
-              <AlchemicalImage id={alchId} width={16} />
-              <span>{ALCH_LABEL[alchId]}</span>
+              <AlchemicalImage id={alchId} width={20} />
             </span>
           );
         }
@@ -62,10 +60,9 @@ function renderHint(text: string, displayMap: DisplayMap): React.ReactNode {
           return (
             <span
               key={i}
-              className="inline-flex items-center gap-0.5 align-middle mx-0.5
-                         bg-amber-50 border border-amber-200 rounded px-1 py-0.5
+              className="inline-flex items-center gap-1 align-middle mx-0.5
+                         bg-amber-50 border border-amber-200 rounded px-1.5 py-0.5
                          text-[11px] font-semibold text-amber-800 leading-none"
-              title={name}
             >
               <IngredientIcon index={iconIdx} width={16} />
               <span>{name}</span>
@@ -81,13 +78,11 @@ function renderHint(text: string, displayMap: DisplayMap): React.ReactNode {
           return (
             <span
               key={i}
-              className="inline-flex items-center gap-0.5 align-middle mx-0.5
-                         bg-white border border-gray-200 rounded px-1 py-0.5
-                         text-[11px] font-semibold text-gray-700 leading-none"
+              className="inline-flex items-center align-middle mx-0.5
+                         bg-white border border-gray-200 rounded px-1 py-0.5 leading-none"
               title={label}
             >
-              <SignedElemImage color={color} sign={sign} width={16} />
-              <span>{color}{sign === '-' ? '−' : '+'}</span>
+              <SignedElemImage color={color} sign={sign} width={20} />
             </span>
           );
         }

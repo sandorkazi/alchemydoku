@@ -60,7 +60,7 @@ function MixSimulatorSection() {
                    focus-visible:outline-none"
         aria-expanded={open}
       >
-        <span>Mix Simulator</span>
+        <span>Potion Mixing Hints</span>
         <span className={`transition-transform duration-200 ${open ? 'rotate-180' : ''}`}>▾</span>
       </button>
       {open && (

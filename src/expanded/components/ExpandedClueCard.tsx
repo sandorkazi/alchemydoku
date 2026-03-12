@@ -8,7 +8,7 @@
 
 import { useExpandedIngredient } from '../contexts/ExpandedSolverContext';
 import { INGREDIENTS } from '../../data/ingredients';
-import { IngredientIcon, ElemImage, SignedElemImage } from '../../components/GameSprites';
+import { IngredientIcon, ElemImage, SignedElemImage, PotionImage, SellResultIcon, AlchemicalImage } from '../../components/GameSprites';
 import type {
   AnyClue, EncyclopediaClue, EncyclopediaUncertainClue,
   DebunkApprenticeClue, DebunkMasterClue,
@@ -18,13 +18,12 @@ import type {
 import type { Color } from '../../types';
 
 const ING_W = 28;
-const COLOR_LABEL: Record<Color, string> = { R: 'Red', G: 'Green', B: 'Blue' };
 
 // ─── Shared primitives ────────────────────────────────────────────────────────
 
 function Card({ icon, label, accent = 'amber', children }: {
   icon: string;
-  label: string;
+  label: React.ReactNode;
   accent?: 'amber' | 'blue' | 'green' | 'purple' | 'rose';
   children: React.ReactNode;
 }) {
@@ -95,18 +94,6 @@ function IngBadge({ slotId, color, sign }: { slotId: number; color: Color; sign:
   );
 }
 
-function SignBadge({ sign }: { sign: '+' | '-' }) {
-  return (
-    <span className={`inline-flex items-center justify-center w-5 h-5 rounded font-black text-sm leading-none
-      ${sign === '+' ? 'bg-green-100 text-green-700 border border-green-300' : 'bg-red-100 text-red-700 border border-red-300'}`}>
-      {sign === '+' ? '＋' : '－'}
-    </span>
-  );
-}
-
-function AspectIcon({ color }: { color: Color }) {
-  return <ElemImage color={color} size="S" width={16} />;
-}
 
 // ─── Encyclopedia entry grid ──────────────────────────────────────────────────
 
@@ -146,7 +133,7 @@ function BookClueCard({ clue }: { clue: BookClue }) {
 
 function EncyclopediaClueCard({ clue }: { clue: EncyclopediaClue }) {
   return (
-    <Card icon="📜" label={`Verified Publication — ${COLOR_LABEL[clue.aspect]}`} accent="green">
+    <Card icon="📜" label={<><ElemImage color={clue.aspect} size="S" width={12} /> Verified Publication</>} accent="green">
       <p className="text-[10px] opacity-60 mb-0.5">All entries guaranteed correct</p>
       <EntryGrid aspect={clue.aspect} entries={[...clue.entries]} />
     </Card>
@@ -155,7 +142,7 @@ function EncyclopediaClueCard({ clue }: { clue: EncyclopediaClue }) {
 
 function EncyclopediaUncertainClueCard({ clue }: { clue: EncyclopediaUncertainClue }) {
   return (
-    <Card icon="📄" label={`Uncertain Article — ${COLOR_LABEL[clue.aspect]}`} accent="amber">
+    <Card icon="📄" label={<><ElemImage color={clue.aspect} size="S" width={12} /> Uncertain Article</>} accent="amber">
       <p className="text-[10px] opacity-70 mb-0.5">≥ 3 of 4 entries are correct</p>
       <EntryGrid aspect={clue.aspect} entries={[...clue.entries]} />
     </Card>
@@ -177,10 +164,8 @@ function DebunkApprenticeCard({ clue }: { clue: DebunkApprenticeClue }) {
       </div>
       <div className="flex items-center gap-1.5">
         <Ing slotId={clue.ingredient} />
-        <span className="text-xs opacity-70">true</span>
-        <AspectIcon color={clue.aspect} />
-        <span className="text-xs opacity-70">sign:</span>
-        <SignBadge sign={clue.sign} />
+        <span className="text-xs opacity-70">true sign:</span>
+        <SignedElemImage color={clue.aspect} sign={clue.sign} width={22} />
       </div>
     </Card>
   );
@@ -191,8 +176,6 @@ function DebunkApprenticeCard({ clue }: { clue: DebunkApprenticeClue }) {
  * True result is not revealed (especially when unsuccessful).
  */
 function DebunkMasterCard({ clue }: { clue: DebunkMasterClue }) {
-  const cr = clue.claimed_result;
-  const resultLabel = cr.type === 'neutral' ? 'Neutral' : `${cr.color}${cr.sign === '+' ? '+' : '−'}`;
   const status = clue.successful
     ? <span className="text-green-700 font-semibold">✓ Debunk succeeded</span>
     : <span className="text-rose-600 font-semibold">✗ Claim rejected</span>;
@@ -206,7 +189,7 @@ function DebunkMasterCard({ clue }: { clue: DebunkMasterClue }) {
         <span className="text-gray-400">+</span>
         <Ing slotId={clue.ingredient2} />
         <span className="text-gray-400">→ claimed:</span>
-        <span className="font-bold">{resultLabel}</span>
+        <PotionImage result={clue.claimed_result} width={24} />
       </div>
     </Card>
   );
@@ -222,13 +205,11 @@ function ExpandedBaseClueCard({ clue }: { clue: AnyClue }) {
   };
 
   if (clue.kind === 'mixing') {
-    const r = clue.result;
-    const label = r.type === 'neutral' ? 'Neutral' : `${r.color}${r.sign}`;
     return (
       <Card icon="🧪" label="Mixing Result" accent="amber">
         <div className="flex items-center gap-1 flex-wrap text-xs">
           {ingIcon(clue.ingredient1)}<span className="text-gray-400">+</span>{ingIcon(clue.ingredient2)}
-          <span className="text-gray-400">→</span><span className="font-bold">{label}</span>
+          <span className="text-gray-400">→</span><PotionImage result={clue.result} width={24} />
         </div>
       </Card>
     );
@@ -241,22 +222,24 @@ function ExpandedBaseClueCard({ clue }: { clue: AnyClue }) {
     );
   }
   if (clue.kind === 'sell') {
-    const SELL: Record<string, string> = { total_match: 'Total match', sign_ok: 'Sign matches', neutral: 'Neutral', opposite: 'Opposite' };
     return (
       <Card icon="💰" label="Sell Result" accent="amber">
         <div className="flex items-center gap-1 text-xs">
           {ingIcon(clue.ingredient1)}<span className="text-gray-400">+</span>{ingIcon(clue.ingredient2)}
-          <span className="text-gray-400">→</span><span className="font-semibold">{SELL[clue.sellResult]}</span>
+          <span className="text-gray-400">→</span>
+          <SellResultIcon result={clue.sellResult as 'total_match' | 'sign_ok' | 'neutral' | 'opposite'} width={24} />
         </div>
       </Card>
     );
   }
   if (clue.kind === 'assignment') {
-    const { displayId } = getIngredient(clue.ingredient);
-    const name = INGREDIENTS[displayId as 1]?.name ?? `#${clue.ingredient}`;
     return (
       <Card icon="📌" label="Assignment" accent="purple">
-        <div className="text-xs">{name} = alch {clue.alchemical}</div>
+        <div className="flex items-center gap-1 text-xs">
+          {ingIcon(clue.ingredient)}
+          <span className="text-gray-400">=</span>
+          <AlchemicalImage id={clue.alchemical} width={32} />
+        </div>
       </Card>
     );
   }
@@ -291,14 +274,11 @@ function GolemTestCard({ clue }: { clue: GolemTestClue }) {
 }
 
 function GolemHintColorCard({ clue }: { clue: GolemHintColorClue }) {
-  const colorLabel = { R: 'Red', G: 'Green', B: 'Blue' }[clue.color];
-  const colorClass = { R: 'text-red-600', G: 'text-green-600', B: 'text-blue-600' }[clue.color];
   return (
     <Card icon="🔬" label="Golem Research" accent="blue">
-      <p className="text-xs">
+      <p className="text-xs flex items-center gap-1 flex-wrap">
         <GolemPartIcon part={clue.part} size={16} />{' '}reacts to a{' '}
-        <span className={`font-bold ${colorClass}`}>{colorLabel}</span>{' '}
-        aspect.
+        <ElemImage color={clue.color} size="L" width={20} />{' '}aspect.
       </p>
     </Card>
   );
@@ -308,8 +288,13 @@ function GolemHintSizeCard({ clue }: { clue: GolemHintSizeClue }) {
   const sizeLabel = clue.size === 'L' ? 'Large' : 'Small';
   return (
     <Card icon="🔬" label="Golem Research" accent="blue">
-      <p className="text-xs">
-        <GolemPartIcon part={clue.part} size={16} />{' '}reacts to a <span className="font-bold">{sizeLabel}</span> aspect.
+      <p className="text-xs flex items-center gap-1 flex-wrap">
+        <GolemPartIcon part={clue.part} size={16} />{' '}reacts to a{' '}
+        <span className="inline-flex items-center gap-0.5">
+          <span style={{ opacity: clue.size === 'L' ? 1 : 0.3 }}><ElemImage color="R" size="L" width={18} /></span>
+          <span style={{ opacity: clue.size === 'S' ? 1 : 0.3 }}><ElemImage color="R" size="S" width={12} /></span>
+        </span>
+        <span className="font-bold">{sizeLabel}</span> aspect.
       </p>
     </Card>
   );

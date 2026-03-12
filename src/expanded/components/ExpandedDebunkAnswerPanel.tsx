@@ -8,7 +8,7 @@
 
 import { useState } from 'react';
 import { useExpandedSolver, useExpandedIngredient } from '../contexts/ExpandedSolverContext';
-import { IngredientIcon, AlchemicalImage, CorrectIcon, IncorrectIcon } from '../../components/GameSprites';
+import { IngredientIcon, AlchemicalImage, ElemImage, SignedElemImage, CorrectIcon, IncorrectIcon } from '../../components/GameSprites';
 import { simulateExpandedPlan } from '../logic/debunkExpanded';
 import type { DebunkStep, IngredientId, Color, Publication } from '../../types';
 import type { DebunkArticle } from '../types';
@@ -75,17 +75,6 @@ function LockedIngDisplay({ slotId }: { slotId: IngredientId | null }) {
 
 function ColorPicker({ value, onChange }: { value: Color | null; onChange: (c: Color) => void }) {
   const colors: Color[] = ['R', 'G', 'B'];
-  const labels: Record<Color, string> = { R: 'Red', G: 'Green', B: 'Blue' };
-  const activeCls: Record<Color, string> = {
-    R: 'bg-red-500 text-white border-red-600',
-    G: 'bg-green-600 text-white border-green-700',
-    B: 'bg-blue-500 text-white border-blue-600',
-  };
-  const idleCls: Record<Color, string> = {
-    R: 'bg-red-50 text-red-700 border-red-200 hover:bg-red-100',
-    G: 'bg-green-50 text-green-700 border-green-200 hover:bg-green-100',
-    B: 'bg-blue-50 text-blue-700 border-blue-200 hover:bg-blue-100',
-  };
   return (
     <div className="flex flex-col gap-1">
       <span className="text-[10px] uppercase tracking-widest text-gray-400 font-bold">Aspect</span>
@@ -94,11 +83,14 @@ function ColorPicker({ value, onChange }: { value: Color | null; onChange: (c: C
           <button
             key={c}
             onClick={() => onChange(c)}
-            className={`px-2 py-1 rounded border text-xs font-bold transition-all ${
-              value === c ? activeCls[c] : idleCls[c]
+            title={{ R: 'Red', G: 'Green', B: 'Blue' }[c]}
+            className={`p-1.5 rounded-lg border-2 transition-all ${
+              value === c
+                ? 'border-indigo-500 bg-indigo-50'
+                : 'border-gray-200 hover:border-gray-400'
             }`}
           >
-            {labels[c]}
+            <ElemImage color={c} size="L" width={28} />
           </button>
         ))}
       </div>
@@ -116,6 +108,41 @@ function isComplete(s: DraftStep): s is DebunkStep {
   if (s.kind === 'apprentice') return s.ingredient !== null && s.color !== null;
   return s.ingredient1 !== null && s.ingredient2 !== null;
 }
+
+// ─── Visual solution step ─────────────────────────────────────────────────────
+
+function SolutionStep({ step, index }: { step: DebunkStep; index: number }) {
+  const getIngredient = useExpandedIngredient();
+  if (step.kind === 'apprentice') {
+    const { index: ingIndex } = getIngredient(step.ingredient);
+    return (
+      <div className="text-xs text-indigo-700 flex items-center gap-1.5 flex-wrap">
+        <span className="font-bold shrink-0">{index + 1}.</span>
+        <span className="font-semibold text-indigo-400">Apprentice</span>
+        <span className="text-indigo-300">—</span>
+        <span>reveal</span>
+        <ElemImage color={step.color} size="L" width={20} />
+        <span>aspect of</span>
+        <IngredientIcon index={ingIndex} width={20} />
+      </div>
+    );
+  }
+  const { index: idx1 } = getIngredient(step.ingredient1);
+  const { index: idx2 } = getIngredient(step.ingredient2);
+  return (
+    <div className="text-xs text-indigo-700 flex items-center gap-1.5 flex-wrap">
+      <span className="font-bold shrink-0">{index + 1}.</span>
+      <span className="font-semibold text-indigo-400">Master</span>
+      <span className="text-indigo-300">—</span>
+      <span>mix</span>
+      <IngredientIcon index={idx1} width={20} />
+      <span className="text-indigo-400">+</span>
+      <IngredientIcon index={idx2} width={20} />
+    </div>
+  );
+}
+
+// ─── Step editor ──────────────────────────────────────────────────────────────
 
 function StepEditor({
   index, draft, outcome, onUpdate, onRemove, isConflictOnly, isApprenticeOnly,
@@ -287,7 +314,7 @@ const ASPECT_COLOR_CLS: Record<string, string> = {
   G: 'bg-green-50 border-green-200 text-green-700',
   B: 'bg-blue-50 border-blue-200 text-blue-700',
 };
-const ASPECT_LABEL: Record<string, string> = { R: 'Red', G: 'Green', B: 'Blue' };
+
 
 function ArticlesBoard({
   articles, removedArtSet,
@@ -316,18 +343,17 @@ function ArticlesBoard({
               }`}
             >
               <div className={`flex items-center gap-1 mb-1 ${removed ? 'line-through text-green-400' : ''}`}>
-                <span className="font-bold text-[10px] uppercase tracking-widest">
-                  {ASPECT_LABEL[art.aspect]} article
-                </span>
+                <ElemImage color={art.aspect as 'R'|'G'|'B'} size="S" width={12} />
+                <span className="font-bold text-[10px] uppercase tracking-widest">article</span>
                 {removed && <span className="text-green-500 ml-0.5">✓</span>}
               </div>
               <div className={`flex flex-wrap gap-1 ${removed ? 'opacity-60' : ''}`}>
                 {art.entries.map((entry, ei) => {
                   const { index } = getIngredient(entry.ingredient);
                   return (
-                    <span key={ei} className="flex items-center gap-0.5 text-[10px] font-semibold">
+                    <span key={ei} className="flex items-center gap-0.5">
                       <IngredientIcon index={index} width={16} />
-                      <span>{entry.sign === '+' ? '+' : '−'}</span>
+                      <SignedElemImage color={art.aspect as 'R'|'G'|'B'} sign={entry.sign} width={14} />
                     </span>
                   );
                 })}
@@ -515,13 +541,7 @@ export function ExpandedDebunkAnswerPanel({ onNext, isTutorial = false }: {
                 )}
                 <div className="space-y-1 mt-1">
                   {solutionSteps.map((step, i) => (
-                    <div key={i} className="text-xs text-indigo-700 flex items-start gap-2">
-                      <span className="font-bold shrink-0">{i + 1}.</span>
-                      {step.kind === 'apprentice'
-                        ? <span>Apprentice — reveal <strong>{step.color}</strong> on ingredient {step.ingredient}</span>
-                        : <span>Master — mix ingredients {step.ingredient1} + {step.ingredient2}</span>
-                      }
-                    </div>
+                    <SolutionStep key={i} step={step} index={i} />
                   ))}
                 </div>
               </div>

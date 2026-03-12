@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { PotionImage, AlchemicalImage, ElemImage, CorrectIcon, IncorrectIcon, IngredientIcon } from './GameSprites';
+import { PotionImage, AlchemicalImage, ElemImage, SignedElemImage, CorrectIcon, IncorrectIcon, IngredientIcon } from './GameSprites';
 import { PotionPicker, AlchemicalPicker, AspectPicker, HedgeColorPicker, PossiblePotionsPicker, LOGICAL_POTIONS, potionKey } from './AnswerPickers';
 import { useSolver, useIngredient } from '../contexts/SolverContext';
 import { computeAnswers } from '../puzzles/schema';
@@ -53,8 +53,6 @@ function Ing({ slotId, size = 28 }: { slotId: number; size?: number }) {
 // ─── Question header (icons only) ─────────────────────────────────────────────
 
 function QuestionHeader({ q }: { q: QuestionTarget }) {
-  const colorLabel = (c: Color) => ({ R:'Red', G:'Green', B:'Blue' }[c]);
-
   if (q.kind === 'mixing-result') return (
     <span className="inline-flex items-center gap-1.5 flex-wrap">
       <Ing slotId={q.ingredient1} />
@@ -95,10 +93,7 @@ function QuestionHeader({ q }: { q: QuestionTarget }) {
   if (q.kind === 'aspect-set') return (
     <span className="inline-flex items-center gap-1.5 flex-wrap">
       <span className="text-xs font-semibold text-indigo-500">which ingredients have</span>
-      <span className={`font-bold text-xs px-1.5 py-0.5 rounded ${
-        q.color === 'R' ? 'bg-red-100 text-red-700' :
-        q.color === 'G' ? 'bg-green-100 text-green-700' : 'bg-blue-100 text-blue-700'
-      }`}>{q.color}{q.sign}</span>
+      <SignedElemImage color={q.color} sign={q.sign} width={24} />
       <span className="text-indigo-400">?</span>
     </span>
   );
@@ -106,10 +101,7 @@ function QuestionHeader({ q }: { q: QuestionTarget }) {
   if (q.kind === 'large-component') return (
     <span className="inline-flex items-center gap-1.5 flex-wrap">
       <span className="text-xs font-semibold text-indigo-500">which have Large</span>
-      <span className={`font-bold text-xs px-1.5 py-0.5 rounded ${
-        q.color === 'R' ? 'bg-red-100 text-red-700' :
-        q.color === 'G' ? 'bg-green-100 text-green-700' : 'bg-blue-100 text-blue-700'
-      }`}>{colorLabel(q.color)}</span>
+      <ElemImage color={q.color} size="L" width={24} />
       <span className="text-indigo-500 text-xs font-semibold">component?</span>
     </span>
   );
@@ -117,7 +109,8 @@ function QuestionHeader({ q }: { q: QuestionTarget }) {
   // aspect (legacy tutorials only)
   if (q.kind === 'aspect') return (
     <span className="inline-flex items-center gap-1.5 flex-wrap">
-      <span className="text-xs font-semibold text-indigo-500">{colorLabel(q.color)} aspect of</span>
+      <ElemImage color={q.color} size="S" width={18} />
+      <span className="text-xs font-semibold text-indigo-500">aspect of</span>
       <Ing slotId={q.ingredient} />
       <span className="text-indigo-400">?</span>
     </span>
@@ -183,18 +176,11 @@ function RevealedAnswer({ q, answer }: { q: QuestionTarget; answer: PuzzleAnswer
   }
   if (q.kind === 'aspect') {
     const ds = (answer as { sign: '+' | '-' }).sign;
-    return <span className="font-bold text-2xl text-amber-700">{ds === '+' ? '＋' : '－'}</span>;
+    return <SignedElemImage color={q.color} sign={ds} width={40} />;
   }
   if (q.kind === 'safe-publish') {
     const dc = (answer as { kind: string; color: Color }).color;
-    return (
-      <span className="inline-flex items-center gap-1.5">
-        <ElemImage color={dc} size="L" width={36} />
-        <span className="text-xs font-semibold text-amber-700">
-          {{ R:'Red', G:'Green', B:'Blue' }[dc]} aspect
-        </span>
-      </span>
-    );
+    return <ElemImage color={dc} size="L" width={36} />;
   }
   if (q.kind === 'possible-potions') {
     const pots = (answer as { potions: string[] }).potions.map(k =>
@@ -331,6 +317,7 @@ function QuestionRow({ q, index, total, value, onChange, correctAnswer, showSolu
             const cur = (value as { sign: '+' | '-' } | null)?.sign ?? null;
             return (
               <AspectPicker
+                color={q.color}
                 selected={cur !== null ? cur : null}
                 onSelect={ds => onChange({ sign: ds })}
               />
