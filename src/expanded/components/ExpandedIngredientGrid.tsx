@@ -462,7 +462,7 @@ export function ExpandedIngredientGrid({ onRandomize, activeTool, setActiveTool 
                            hover:border-indigo-300 rounded-lg px-2.5 py-1 transition-colors">🔀</button>
             )}
             <label className="flex items-center gap-1.5 text-xs cursor-pointer select-none">
-              <span className={autoDeduction ? 'text-indigo-600 font-semibold' : 'text-gray-500'}>Hints</span>
+              <span className={autoDeduction ? 'text-indigo-600 font-semibold' : 'text-gray-500'}>Grid Hints</span>
               <button role="switch" aria-checked={autoDeduction}
                 onClick={() => { if (!autoDeduction) setShowConfirm(true); else dispatch({ type: 'TOGGLE_AUTO_DEDUCTION' }); }}
                 className={`relative inline-flex h-5 w-9 items-center rounded-full transition-colors
@@ -569,7 +569,7 @@ export function ExpandedIngredientGrid({ onRandomize, activeTool, setActiveTool 
                       const slotHintMark = slHintMarks[slotId] ?? null;
                       const hintValCorner = slotHintMark ? (solar ? slotHintMark.solar : slotHintMark.lunar) : null;
                       const cornerHint: 'confirmed' | 'eliminated' | undefined =
-                        (userCornerMark === 'unknown' && (hintValCorner === 'confirmed' || hintValCorner === 'eliminated'))
+                        (userCornerMark === 'unknown' && !hintCells.has(key) && (hintValCorner === 'confirmed' || hintValCorner === 'eliminated'))
                           ? hintValCorner : undefined;
                       return (
                         <td key={slotId} className="px-0.5 py-0 text-center align-middle">

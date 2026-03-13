@@ -244,7 +244,7 @@ function RevealedAnswer({ q, answer }: { q: AnyQuestion; answer: AnyAnswer }) {
     }
   }
   if (typeof answer === 'object' && answer !== null && 'kind' in answer && (answer as {kind:string}).kind === 'ingredient_set') {
-    const ids = (answer as IngredientSetAnswer).ingredients;
+    const ids = (answer as unknown as IngredientSetAnswer).ingredients;
     return <span className="inline-flex flex-wrap gap-1.5">{ids.map(id => <IngredientIcon key={id} index={(id-1) as 0|1|2|3|4|5|6|7} width={32} />)}{ids.length===0&&<span className="text-xs text-gray-400 italic">None</span>}</span>;
   }
   if (typeof answer === 'number') return <AlchemicalImage id={answer as AlchemicalId} width={40} />;

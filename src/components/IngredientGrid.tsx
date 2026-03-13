@@ -408,7 +408,7 @@ export function IngredientGrid({ onRandomize }: { onRandomize?: () => void }) {
             )}
 
             <label className="flex items-center gap-1.5 text-xs cursor-pointer select-none">
-              <span className={autoDeduction ? 'text-indigo-600 font-semibold' : 'text-gray-500'}>Hints</span>
+              <span className={autoDeduction ? 'text-indigo-600 font-semibold' : 'text-gray-500'}>Grid Hints</span>
               <button
                 role="switch"
                 aria-checked={autoDeduction}
