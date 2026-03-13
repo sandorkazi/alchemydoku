@@ -15,7 +15,6 @@ import {
   createContext, useContext, useReducer, useEffect, useMemo, type ReactNode,
 } from 'react';
 import { generateAllWorlds } from '../../logic/worldSet';
-import { getEliminatedCells } from '../../logic/deducer';
 import { applyAnyClues } from '../logic/worldSetExpanded';
 import { isSolar } from '../logic/solarLunar';
 import { checkExpandedAnswers, computeAllExpandedAnswers } from '../puzzles/schemaExpanded';
@@ -81,6 +80,7 @@ type SavedState = {
   hintLevel: number;
   solarLunarMarks: SolarLunarMarks;
   golemNotepad: GolemNotepad;
+  drawStrokes: string[];
 };
 
 export type GolemSlotMark = 'reacts' | 'no-react' | 'possible' | null;
@@ -107,6 +107,7 @@ function loadSolverState(puzzleId: string): SavedState | null {
           hintLevel:       typeof entry.hintLevel === 'number' ? entry.hintLevel : 0,
           solarLunarMarks: (entry.solarLunarMarks ?? emptySolarLunarMarks()) as SolarLunarMarks,
           golemNotepad:    (entry.golemNotepad    ?? emptyGolemNotepad())    as GolemNotepad,
+          drawStrokes:     (entry.drawStrokes ?? []) as string[],
         };
       }
     }
@@ -120,7 +121,8 @@ function loadSolverState(puzzleId: string): SavedState | null {
       notes:           (p.notes ?? {})  as Record<string, string>,
       hintLevel:       typeof p.hintLevel === 'number' ? p.hintLevel : 0,
       solarLunarMarks: (p.solarLunarMarks ?? emptySolarLunarMarks()) as SolarLunarMarks,
-      golemNotepad: (p.golemNotepad ?? emptyGolemNotepad()) as GolemNotepad,
+      golemNotepad:    (p.golemNotepad ?? emptyGolemNotepad()) as GolemNotepad,
+      drawStrokes:     (p.drawStrokes ?? []) as string[],
     };
   } catch { return null; }
 }
@@ -139,6 +141,7 @@ export type ExpandedSolverState = {
   answers:         (AnyAnswer | null)[];
   solarLunarMarks: SolarLunarMarks;
   golemNotepad:    GolemNotepad;
+  drawStrokes:     string[];
   completed:       boolean;
   showSolution:    boolean;
 };
@@ -159,11 +162,13 @@ export type ExpandedAction =
   | { type: 'SET_SOLAR_LUNAR_MARK'; slot: number; mark: SolarLunarMark }
   | { type: 'SET_GOLEM_NOTEPAD'; part: 'chest' | 'ears'; value: { color: Color; size: Size } | null }
   | { type: 'SET_GOLEM_INGREDIENT_MARK'; slot: number; part: 'chest' | 'ears'; mark: GolemSlotMark }
-  | { type: 'LOAD_PROGRESS'; gridState: GridState; notes: Record<string,string>; hintLevel: number; wrongAttempts: number; answers: (AnyAnswer | null)[]; solarLunarMarks: SolarLunarMarks; golemNotepad: GolemNotepad };
+  | { type: 'LOAD_PROGRESS'; gridState: GridState; notes: Record<string,string>; hintLevel: number; wrongAttempts: number; answers: (AnyAnswer | null)[]; solarLunarMarks: SolarLunarMarks; golemNotepad: GolemNotepad }
+  | { type: 'ADD_DRAW_STROKE'; d: string }
+  | { type: 'CLEAR_DRAW_STROKES' };
 
-// ─── Auto-deduction ───────────────────────────────────────────────────────────
+// ─── Solar/lunar hint computation (exported for grid component) ───────────────
 
-function computeSolarLunarAutoMarks(worlds: WorldSet): SolarLunarMarks {
+export function computeSolarLunarAutoMarks(worlds: WorldSet): SolarLunarMarks {
   const marks: SolarLunarMarks = {};
   for (let s = 0; s < 8; s++) {
     if (worlds.length === 0) { marks[s + 1] = null; continue; }
@@ -184,53 +189,9 @@ function computeSolarLunarAutoMarks(worlds: WorldSet): SolarLunarMarks {
 }
 
 function applyAutoDeduction(state: ExpandedSolverState): ExpandedSolverState {
-  if (!state.autoDeduction) return state;
-
-  // Grid cells
-  const eliminated = getEliminatedCells(state.worlds);
-  const newGrid = { ...state.gridState };
-  for (let i = 1; i <= 8; i++) {
-    newGrid[i] = { ...newGrid[i] };
-    for (let a = 1; a <= 8; a++) {
-      const key = `${i}-${a}`;
-      if (eliminated.has(key) && newGrid[i][a] === 'unknown') newGrid[i][a] = 'eliminated';
-      const possible = Object.entries(newGrid[i]).filter(([ak]) => !eliminated.has(`${i}-${ak}`));
-      if (possible.length === 1) {
-        const onlyAlch = Number(possible[0][0]);
-        if (newGrid[i][onlyAlch] !== 'confirmed') newGrid[i] = { ...newGrid[i], [onlyAlch]: 'confirmed' };
-      }
-    }
-  }
-
-  // Solar/lunar column marks
-  const autoMarks = computeSolarLunarAutoMarks(state.worlds);
-  const newMarks: SolarLunarMarks = { ...state.solarLunarMarks };
-  for (let s = 1; s <= 8; s++) {
-    if (autoMarks[s] !== null) newMarks[s] = autoMarks[s];
-  }
-
-  // Golem notepad auto-deduction
-  let newNotepad: GolemNotepad = state.golemNotepad ?? emptyGolemNotepad();
-  const params = state.puzzle.golem;
-  if (params) {
-    // Fill chest/ears alch property deduction
-    if (!newNotepad.chest) newNotepad = { ...newNotepad, chest: params.chest };
-    if (!newNotepad.ears)  newNotepad = { ...newNotepad, ears:  params.ears  };
-    // Fill ingredient reaction marks from golem_test clues
-    const newIngMarks = { ...newNotepad.ingredientMarks };
-    for (const clue of state.puzzle.clues) {
-      if (clue.kind !== 'golem_test') continue;
-      const s = (clue as import('../types').GolemTestClue).ingredient;
-      const prev = newIngMarks[s] ?? { chest: null, ears: null };
-      newIngMarks[s] = {
-        chest: prev.chest ?? ((clue as import('../types').GolemTestClue).chest_reacted ? 'reacts' : 'no-react'),
-        ears:  prev.ears  ?? ((clue as import('../types').GolemTestClue).ears_reacted  ? 'reacts' : 'no-react'),
-      };
-    }
-    newNotepad = { ...newNotepad, ingredientMarks: newIngMarks };
-  }
-
-  return { ...state, gridState: newGrid, solarLunarMarks: newMarks, golemNotepad: newNotepad };
+  // Solar/lunar and golem hints are now visual-only overlays computed in the
+  // grid component. This function is kept as a no-op for call-site compatibility.
+  return state;
 }
 
 // ─── Reducer ──────────────────────────────────────────────────────────────────
@@ -384,6 +345,12 @@ function reducer(state: ExpandedSolverState, action: ExpandedAction): ExpandedSo
       return loaded;
     }
 
+    case 'ADD_DRAW_STROKE':
+      return { ...state, drawStrokes: [...state.drawStrokes, action.d] };
+
+    case 'CLEAR_DRAW_STROKES':
+      return { ...state, drawStrokes: [] };
+
     default:
       return state;
   }
@@ -415,6 +382,7 @@ export function ExpandedSolverProvider({ puzzle, children }: { puzzle: ExpandedP
     notes:           savedState?.notes           ?? {},
     solarLunarMarks: savedState?.solarLunarMarks ?? emptySolarLunarMarks(),
     golemNotepad:    savedState?.golemNotepad    ?? emptyGolemNotepad(),
+    drawStrokes:     savedState?.drawStrokes     ?? [],
     autoDeduction:   false,
     hintLevel:       savedState?.hintLevel ?? 0,
     wrongAttempts:   0,
@@ -438,6 +406,7 @@ export function ExpandedSolverProvider({ puzzle, children }: { puzzle: ExpandedP
           answers:         state.answers,
           solarLunarMarks: state.solarLunarMarks,
           golemNotepad:    state.golemNotepad,
+          drawStrokes:     state.drawStrokes,
         };
         // Legacy per-puzzle key (backwards compat)
         localStorage.setItem(`exp-solver-${puzzle.id}`, JSON.stringify(progress));
@@ -445,7 +414,7 @@ export function ExpandedSolverProvider({ puzzle, children }: { puzzle: ExpandedP
         mergeIntoUnifiedStore('alch-save-expanded', puzzle.id, progress);
       }
     } catch { /**/ }
-  }, [state.gridState, state.notes, state.hintLevel, state.wrongAttempts, state.answers, state.solarLunarMarks, state.golemNotepad, state.completed, puzzle.id]);
+  }, [state.gridState, state.notes, state.hintLevel, state.wrongAttempts, state.answers, state.solarLunarMarks, state.golemNotepad, state.drawStrokes, state.completed, puzzle.id]);
 
   return (
     <ExpandedSolverContext.Provider value={{ state, dispatch }}>

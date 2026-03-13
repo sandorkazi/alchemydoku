@@ -2,7 +2,7 @@
  * src/components/InterfaceQuickReference.tsx
  *
  * Collapsible interface quick-reference for both home pages.
- * Explains the solver tools: grid, marking tools, auto-deduction,
+ * Explains the solver tools: grid, marking tools, visual hints,
  * potion mixing hints, and the Grid/Truth mode switch.
  */
 
@@ -53,10 +53,12 @@ export function BaseInterfaceCards() {
         visual={
           <div className="flex items-center gap-2">
             <div className="flex gap-1">
-              {(['✗✔', '?', 'abc'] as const).map((t, i) => (
+              {(['✗✔', '?', 'abc', '✏'] as const).map((t, i) => (
                 <span key={t} className={`px-2 py-1 rounded text-xs font-bold border
                   ${i === 0
                     ? 'bg-blue-100 border-blue-400 text-blue-700'
+                    : i === 3
+                    ? 'bg-rose-100 border-rose-400 text-rose-700'
                     : 'bg-gray-100 border-gray-300 text-gray-600'}`}>
                   {t}
                 </span>
@@ -65,15 +67,15 @@ export function BaseInterfaceCards() {
             <span className="text-[10px] text-blue-400">Space to cycle</span>
           </div>
         }
-        text="Three tools: ✗✔ cycles a cell through eliminated → confirmed → clear; ? marks an uncertain note; abc lets you write up to 3 characters as a custom label. Press Space to quickly cycle between tools."
+        text="Four tools: ✗✔ cycles a cell through eliminated → confirmed → clear; ? marks an uncertain note; abc lets you write up to 3 characters as a custom label; ✏ lets you sketch freehand lines on the grid as a scratchpad. Press Space to cycle between tools."
       />
 
-      {/* Auto-Deduction */}
+      {/* Visual Hints */}
       <RuleCard
-        icon="⚡" title="Auto-Deduction" accent="indigo"
+        icon="⚡" title="Visual Hints" accent="indigo"
         visual={
           <div className="flex items-center gap-2">
-            <span className="text-xs font-semibold text-indigo-600">Auto</span>
+            <span className="text-xs font-semibold text-indigo-600">Hints</span>
             {/* Styled toggle — on state */}
             <span className="relative inline-flex h-5 w-9 items-center rounded-full bg-indigo-600 shrink-0">
               <span className="inline-block h-3.5 w-3.5 rounded-full bg-white shadow translate-x-4" />
@@ -81,7 +83,7 @@ export function BaseInterfaceCards() {
             <span className="text-[10px] text-indigo-400">in the grid toolbar</span>
           </div>
         }
-        text="When enabled, the grid automatically eliminates cells that contradict the clues and confirms any cell that is the only remaining possibility for an ingredient. A confirmation dialog appears before enabling — it cannot be undone without manually clearing marks."
+        text="When enabled, the grid shows faint circles on cells that are logically eliminated (red squiggly) or confirmed (green circle) by the clues — without touching your own marks. The shapes also differ for colorblind accessibility."
       />
 
       {/* Potion Mixing Hints */}

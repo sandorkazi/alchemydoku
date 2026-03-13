@@ -1,6 +1,5 @@
 import { createContext, useContext, useReducer, useEffect, useMemo, type ReactNode } from 'react';
 import { generateAllWorlds, applyClues } from '../logic/worldSet';
-import { getEliminatedCells } from '../logic/deducer';
 import { checkAnswers, checkDebunkAnswers } from '../puzzles/schema';
 import { makeDisplayMap, loadDisplayMap, saveDisplayMap, emptyGrid, mergeIntoUnifiedStore } from '../utils/solverStorage';
 import type { Puzzle, CellState, WorldSet } from '../types';
@@ -15,7 +14,7 @@ type DisplayMap = import('../utils/solverStorage').DisplayMap;
 
 // ─── State ────────────────────────────────────────────────────────────────────
 
-function loadSolverState(puzzleId: string): { gridState: GridState; notes: Record<string,string>; hintLevel: number } | null {
+function loadSolverState(puzzleId: string): { gridState: GridState; notes: Record<string,string>; hintLevel: number; drawStrokes: string[] } | null {
   try {
     // 1. Try new unified key (written by save-file load + auto-save)
     const unified = localStorage.getItem('alch-save-base');
@@ -24,9 +23,10 @@ function loadSolverState(puzzleId: string): { gridState: GridState; notes: Recor
       const entry = file?.puzzles?.[puzzleId];
       if (entry?.gridState) {
         return {
-          gridState: entry.gridState as GridState,
-          notes:     (entry.notes ?? {}) as Record<string,string>,
-          hintLevel: typeof entry.hintLevel === 'number' ? entry.hintLevel : 0,
+          gridState:   entry.gridState as GridState,
+          notes:       (entry.notes ?? {}) as Record<string,string>,
+          hintLevel:   typeof entry.hintLevel === 'number' ? entry.hintLevel : 0,
+          drawStrokes: (entry.drawStrokes ?? []) as string[],
         };
       }
     }
@@ -36,9 +36,10 @@ function loadSolverState(puzzleId: string): { gridState: GridState; notes: Recor
     const parsed = JSON.parse(raw);
     if (typeof parsed !== 'object' || !parsed.gridState) return null;
     return {
-      gridState:  parsed.gridState  as GridState,
-      notes:      (parsed.notes ?? {}) as Record<string,string>,
-      hintLevel:  typeof parsed.hintLevel === 'number' ? parsed.hintLevel : 0,
+      gridState:   parsed.gridState  as GridState,
+      notes:       (parsed.notes ?? {}) as Record<string,string>,
+      hintLevel:   typeof parsed.hintLevel === 'number' ? parsed.hintLevel : 0,
+      drawStrokes: (parsed.drawStrokes ?? []) as string[],
     };
   } catch { return null; }
 }
@@ -59,6 +60,7 @@ export type SolverState = {
   answers: (PuzzleAnswer | null)[];
   completed: boolean;
   showSolution: boolean;
+  drawStrokes: string[];
 };
 
 // ─── Actions ──────────────────────────────────────────────────────────────────
@@ -74,32 +76,11 @@ export type Action =
   | { type: 'RESHUFFLE' }
   | { type: 'CLEAR_GRID' }
   | { type: 'SET_NOTE'; key: string; value: string }
-  | { type: 'LOAD_PROGRESS'; gridState: GridState; notes: Record<string,string>; hintLevel: number; wrongAttempts: number; answers: (PuzzleAnswer | null)[] };
+  | { type: 'LOAD_PROGRESS'; gridState: GridState; notes: Record<string,string>; hintLevel: number; wrongAttempts: number; answers: (PuzzleAnswer | null)[] }
+  | { type: 'ADD_DRAW_STROKE'; d: string }
+  | { type: 'CLEAR_DRAW_STROKES' };
 
 // ─── Reducer ──────────────────────────────────────────────────────────────────
-
-function applyAutoDeduction(state: SolverState): SolverState {
-  if (!state.autoDeduction) return state;
-  const eliminated = getEliminatedCells(state.worlds);
-  const newGrid = { ...state.gridState };
-  for (let i = 1; i <= 8; i++) {
-    newGrid[i] = { ...newGrid[i] };
-    for (let a = 1; a <= 8; a++) {
-      const key = `${i}-${a}`;
-      if (eliminated.has(key) && newGrid[i][a] === 'unknown') {
-        newGrid[i][a] = 'eliminated';
-      }
-      const possible = Object.entries(newGrid[i]).filter(([ak]) => !eliminated.has(`${i}-${ak}`));
-      if (possible.length === 1) {
-        const onlyAlch = Number(possible[0][0]);
-        if (newGrid[i][onlyAlch] !== 'confirmed') {
-          newGrid[i] = { ...newGrid[i], [onlyAlch]: 'confirmed' };
-        }
-      }
-    }
-  }
-  return { ...state, gridState: newGrid };
-}
 
 function reducer(state: SolverState, action: Action): SolverState {
   switch (action.type) {
@@ -150,7 +131,7 @@ function reducer(state: SolverState, action: Action): SolverState {
       return { ...state, hintLevel: Math.min(state.hintLevel + 1, 3) };
 
     case 'TOGGLE_AUTO_DEDUCTION':
-      return applyAutoDeduction({ ...state, autoDeduction: !state.autoDeduction });
+      return { ...state, autoDeduction: !state.autoDeduction };
 
     case 'REVEAL_SOLUTION':
       return { ...state, showSolution: true };
@@ -158,7 +139,7 @@ function reducer(state: SolverState, action: Action): SolverState {
     case 'RESET': {
       const newMap = makeDisplayMap();
       saveDisplayMap(`display-map-${state.puzzle.id}`, newMap);
-      return applyAutoDeduction({
+      return {
         ...state,
         displayMap: newMap,
         gridState: emptyGrid(),
@@ -167,11 +148,11 @@ function reducer(state: SolverState, action: Action): SolverState {
         answers: state.puzzle.questions.map(() => null),
         completed: false,
         showSolution: false,
-      });
+      };
     }
 
     case 'CLEAR_GRID':
-      return applyAutoDeduction({ ...state, gridState: emptyGrid(), notes: {} });
+      return { ...state, gridState: emptyGrid(), notes: {} };
     case 'SET_NOTE': {
       const notes = { ...state.notes };
       if (action.value === '') delete notes[action.key];
@@ -187,7 +168,7 @@ function reducer(state: SolverState, action: Action): SolverState {
     }
 
     case 'LOAD_PROGRESS': {
-      const loaded = applyAutoDeduction({
+      const loaded = {
         ...state,
         gridState: action.gridState,
         notes: action.notes,
@@ -196,7 +177,7 @@ function reducer(state: SolverState, action: Action): SolverState {
         answers: action.answers,
         completed: false,
         showSolution: false,
-      });
+      };
       // Persist to localStorage too
       try {
         localStorage.setItem(`solver-${state.puzzle.id}`, JSON.stringify(action.gridState));
@@ -211,6 +192,12 @@ function reducer(state: SolverState, action: Action): SolverState {
       } catch { /* ignore */ }
       return loaded;
     }
+
+    case 'ADD_DRAW_STROKE':
+      return { ...state, drawStrokes: [...state.drawStrokes, action.d] };
+
+    case 'CLEAR_DRAW_STROKES':
+      return { ...state, drawStrokes: [] };
 
     default:
       return state;
@@ -239,7 +226,7 @@ export function SolverProvider({ puzzle, children }: { puzzle: Puzzle; children:
 
   const savedState = useMemo(() => loadSolverState(puzzle.id), [puzzle.id]);
 
-  const initialState: SolverState = applyAutoDeduction({
+  const initialState: SolverState = {
     puzzle,
     worlds,
     displayMap,
@@ -251,7 +238,8 @@ export function SolverProvider({ puzzle, children }: { puzzle: Puzzle; children:
     answers: puzzle.questions.map(() => null),
     completed: false,
     showSolution: false,
-  });
+    drawStrokes: savedState?.drawStrokes ?? [],
+  };
 
   const [state, dispatch] = useReducer(reducer, initialState);
 
@@ -265,6 +253,7 @@ export function SolverProvider({ puzzle, children }: { puzzle: Puzzle; children:
           hintLevel:    state.hintLevel,
           wrongAttempts: state.wrongAttempts,
           answers:      state.answers,
+          drawStrokes:  state.drawStrokes,
         };
         // Legacy per-puzzle key (backwards compat)
         localStorage.setItem(`solver-${puzzle.id}`, JSON.stringify(progress));
@@ -272,7 +261,7 @@ export function SolverProvider({ puzzle, children }: { puzzle: Puzzle; children:
         mergeIntoUnifiedStore('alch-save-base', puzzle.id, progress);
       }
     } catch { /* ignore */ }
-  }, [state.gridState, state.notes, state.completed, state.hintLevel, state.wrongAttempts, state.answers, puzzle.id]);
+  }, [state.gridState, state.notes, state.completed, state.hintLevel, state.wrongAttempts, state.answers, state.drawStrokes, puzzle.id]);
 
   return (
     <SolverContext.Provider value={{ state, dispatch }}>
