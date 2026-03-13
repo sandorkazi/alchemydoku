@@ -1,6 +1,6 @@
 {
   "id": "ing-profile-04",
-  "title": "The Waking Stone",
+  "title": "The Complete Picture",
   "description": "Determine all potions that the target ingredient can certainly produce when mixed with at least one partner.",
   "difficulty": "medium",
   "clues": [
@@ -63,7 +63,7 @@
     },
     {
       "level": 2,
-      "text": "Check each of ingredient 7's 7 possible partners. Certain results so far: ing3\u2192B-, ing4\u2192G-, ing8\u2192G-."
+      "text": "Check each of ingredient 7's 7 possible partners. Certain results so far: ing3→B-, ing4→G-, ing8→G-."
     },
     {
       "level": 3,

@@ -7,7 +7,10 @@
     "build": "vite build",
     "preview": "vite preview",
     "test": "vitest run",
-    "test:watch": "vitest"
+    "test:watch": "vitest",
+    "typecheck": "tsc --noEmit",
+    "check": "python3 scripts/check_puzzles.py",
+    "check:deep": "python3 scripts/check_puzzles.py --deep"
   },
   "dependencies": {
     "react": "^18.2.0",

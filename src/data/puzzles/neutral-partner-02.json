@@ -1,6 +1,6 @@
 {
   "id": "neutral-partner-02",
-  "title": "Cross-Reference",
+  "title": "The Neutral Ground",
   "description": "Use the clues to identify the one ingredient that always mixes to neutral with the target ingredient.",
   "difficulty": "medium",
   "clues": [
@@ -69,7 +69,7 @@
   "hints": [
     {
       "level": 1,
-      "text": "Find the ingredient whose alchemical is the direct opposite of ingredient 2. Two alchemicals are direct opposites when their mix is always neutral \u2014 all three colour aspects have opposite signs."
+      "text": "Find the ingredient whose alchemical is the direct opposite of ingredient 2. Two alchemicals are direct opposites when their mix is always neutral — all three colour aspects have opposite signs."
     },
     {
       "level": 2,

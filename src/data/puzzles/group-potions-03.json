@@ -1,6 +1,6 @@
 {
   "id": "group-potions-03",
-  "title": "The Final Entry",
+  "title": "Group Dynamics",
   "description": "Identify all potions that can be certainly produced by some pair within the listed ingredient group.",
   "difficulty": "medium",
   "clues": [
@@ -66,7 +66,7 @@
     },
     {
       "level": 2,
-      "text": "Certain pairs so far: ing3+ing5\u2192R+."
+      "text": "Certain pairs so far: ing3+ing5→R+."
     },
     {
       "level": 3,
