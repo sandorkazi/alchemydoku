@@ -10,13 +10,14 @@
  * The Cell component and marker logic are identical to the base grid.
  */
 
-import { useState, useRef, useEffect, useCallback } from 'react';
+import { useState, useRef, useEffect, useCallback, useMemo } from 'react';
 import { INGREDIENTS } from '../../data/ingredients';
 import { ALCHEMICALS } from '../../data/alchemicals';
-import { useExpandedSolver, useExpandedIngredient } from '../contexts/ExpandedSolverContext';
+import { useExpandedSolver, useExpandedIngredient, computeSolarLunarAutoMarks } from '../contexts/ExpandedSolverContext';
 import type { GolemSlotMark } from '../contexts/ExpandedSolverContext';
 import type { Color, Size } from '../../types';
 import { isSolar } from '../logic/solarLunar';
+import { getEliminatedCells } from '../../logic/deducer';
 import { AlchemicalDisplay } from '../../components/AlchemicalDisplay';
 import { AlchemicalImage, IngredientIcon, ElemImage, PotionImage } from '../../components/GameSprites';
 import type { AlchemicalId, IngredientId, CellState } from '../../types';
@@ -31,8 +32,8 @@ const TINT_COLORS = [
   '#3F6FB6', '#979c91', '#B23A2E', '#23293D',
 ];
 
-export type GridTool = 'mark' | 'question' | 'text';
-const TOOL_CURSOR: Record<GridTool, string> = { mark: 'crosshair', question: 'cell', text: 'text' };
+export type GridTool = 'mark' | 'question' | 'text' | 'draw';
+const TOOL_CURSOR: Record<GridTool, string> = { mark: 'crosshair', question: 'cell', text: 'text', draw: 'crosshair' };
 
 // ─── Shared marker style system ───────────────────────────────────────────────
 // Used by Cell, GolemCell, and SolarLunarButtons corner indicators
@@ -73,12 +74,14 @@ function Cell({
   cellState, alchId, tintColor, tintOpacity, noteText,
   isEditing,
   onMouseDown, ariaLabel, isSolarRow,
-  slotSolarMark, slotLunarMark,
+  slotSolarMark, slotLunarMark, hint, cornerHint,
 }: {
   cellState: CellState; alchId: AlchemicalId; tintColor: string; tintOpacity: number; noteText: string;
   isEditing: boolean;
   onMouseDown: (e: React.MouseEvent) => void; ariaLabel?: string; isSolarRow: boolean;
   slotSolarMark: CellState; slotLunarMark: CellState;
+  hint?: 'eliminated' | 'confirmed';
+  cornerHint?: 'eliminated' | 'confirmed';
 }) {
   const { glyph, textShadow } = MARKER[cellState];
   // Corner indicator: top-left for solar rows, top-right for lunar rows
@@ -103,6 +106,22 @@ function Cell({
         style={{ opacity: 0.22 }}>
         <AlchemicalImage id={alchId} width={44} />
       </span>
+      {/* Visual hint circle — shown when Hints mode is on and cell is unknown */}
+      {hint && (
+        <svg className="absolute inset-0 w-full h-full pointer-events-none" aria-hidden="true">
+          {hint === 'confirmed' && (
+            <circle cx="24" cy="24" r="17" fill="none" stroke="rgba(34,197,94,0.75)" strokeWidth="2.5" />
+          )}
+          {hint === 'eliminated' && (
+            <>
+              <path d="M 24,7 C 34,4 43,14 42,24 C 41,34 33,43 23,42 C 13,42 4,33 5,23 C 6,13 14,6 24,7"
+                fill="none" stroke="rgba(239,68,68,0.7)" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" />
+              <path d="M 26,9 C 35,7 42,17 41,26 C 40,35 32,43 22,43 C 14,43 6,35 7,25 C 8,16 16,9 26,9"
+                fill="none" stroke="rgba(239,68,68,0.45)" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+            </>
+          )}
+        </svg>
+      )}
       {/* Corner solar/lunar indicator */}
       {cornerGlyph && (
         <span
@@ -110,6 +129,21 @@ function Cell({
             ${isSolarRow ? 'top-0.5 left-0.5' : 'top-0.5 right-0.5'}`}
           style={{ color: 'white', textShadow: cornerShadow }}
         >{cornerGlyph}</span>
+      )}
+      {/* Corner visual hint (only when user hasn't set a mark) */}
+      {cornerHint && !cornerGlyph && (
+        <svg width="8" height="8"
+          className={`absolute z-20 pointer-events-none
+            ${isSolarRow ? 'top-0.5 left-0.5' : 'top-0.5 right-0.5'}`}
+          aria-hidden="true">
+          {cornerHint === 'confirmed' && (
+            <circle cx="4" cy="4" r="2.5" fill="none" stroke="rgba(34,197,94,0.9)" strokeWidth="1.5" />
+          )}
+          {cornerHint === 'eliminated' && (
+            <path d="M4,1 C6.5,0.5 7.5,2 7,4 C6.5,6 5,7 3,6.5 C1.5,6 0.5,4.5 1,3 C1.5,1.5 3,1 4,1"
+              fill="none" stroke="rgba(239,68,68,0.8)" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+          )}
+        </svg>
       )}
       {/* Main cell glyph */}
       {glyph && !noteText && (
@@ -212,16 +246,15 @@ function SolarLunarButtons({ slotId, mark, activeTool, onToggle }: {
   );
 }
 
-// ─── Auto-deduction confirm modal ─────────────────────────────────────────────
+// ─── Visual Hints confirm modal ───────────────────────────────────────────────
 
 function AutoDeduceModal({ onConfirm, onCancel }: { onConfirm: () => void; onCancel: () => void }) {
   return (
     <div className="fixed inset-0 z-50 bg-black/30 flex items-center justify-center p-4 animate-fadein">
       <div className="bg-white rounded-2xl shadow-xl p-6 max-w-sm w-full space-y-4">
-        <h3 className="font-bold text-gray-900">Enable Auto-deduction?</h3>
+        <h3 className="font-bold text-gray-900">Enable Visual Hints?</h3>
         <p className="text-sm text-gray-600">
-          Auto-deduction will automatically mark cells as eliminated or confirmed based on the remaining worlds.
-          This may reveal information you haven't deduced yourself.
+          Visual Hints will show faint circles on cells the clues logically eliminate (red squiggly) or confirm (green circle). Your own grid marks are untouched.
         </p>
         <div className="flex gap-3 justify-end">
           <button onClick={onCancel}
@@ -249,10 +282,83 @@ export function ExpandedIngredientGrid({ onRandomize, activeTool, setActiveTool 
   const [showConfirm, setShowConfirm] = useState(false);
 
   const gridRef = useRef<HTMLDivElement>(null);
+  const svgRef = useRef<SVGSVGElement>(null);
+  const livePathRef = useRef<SVGPathElement>(null);
+  const isDrawingRef = useRef(false);
+  const drawPointsRef = useRef<{x: number; y: number}[]>([]);
+
+  // ── Visual hint circles (worlds-derived, never touch gridState) ───────────
+  const hintCells = useMemo(() => {
+    if (!state.autoDeduction) return new Map<string, 'eliminated' | 'confirmed'>();
+    const result = new Map<string, 'eliminated' | 'confirmed'>();
+    const eliminated = getEliminatedCells(state.worlds);
+    for (let i = 1; i <= 8; i++) {
+      let soleAlch: number | null = null;
+      let soleCount = 0;
+      for (let a = 1; a <= 8; a++) {
+        if (!eliminated.has(`${i}-${a}`)) { soleAlch = a; soleCount++; }
+      }
+      for (let a = 1; a <= 8; a++) {
+        const key = `${i}-${a}`;
+        if ((state.gridState[i]?.[a] ?? 'unknown') !== 'unknown') continue;
+        if (eliminated.has(key)) {
+          result.set(key, 'eliminated');
+        } else if (soleCount === 1 && a === soleAlch) {
+          result.set(key, 'confirmed');
+        }
+      }
+    }
+    return result;
+  }, [state.autoDeduction, state.worlds, state.gridState]);
+
+  // ── Solar/lunar visual hint marks (worlds-derived, never touch state) ──────
+  const slHintMarks = useMemo(() => {
+    if (!state.autoDeduction) return {} as Record<number, { solar: CellState; lunar: CellState } | null>;
+    return computeSolarLunarAutoMarks(state.worlds);
+  }, [state.autoDeduction, state.worlds]);
+
+  // ── Reset draw state when switching away from draw tool ───────────────────
+  useEffect(() => {
+    if (activeTool !== 'draw') {
+      isDrawingRef.current = false;
+      drawPointsRef.current = [];
+      if (livePathRef.current) livePathRef.current.setAttribute('d', '');
+    }
+  }, [activeTool]);
+
+  // ── SVG draw helpers ───────────────────────────────────────────────────────
+  const toSvgPoint = (e: React.PointerEvent) => {
+    const rect = svgRef.current!.getBoundingClientRect();
+    return { x: e.clientX - rect.left, y: e.clientY - rect.top };
+  };
+  const buildPath = (pts: {x: number; y: number}[]) =>
+    pts.length < 2 ? '' : 'M ' + pts.map(p => `${p.x.toFixed(1)},${p.y.toFixed(1)}`).join(' L ');
+
+  const handleSvgPointerDown = (e: React.PointerEvent<SVGSVGElement>) => {
+    if (activeTool !== 'draw') return;
+    e.currentTarget.setPointerCapture(e.pointerId);
+    isDrawingRef.current = true;
+    drawPointsRef.current = [toSvgPoint(e)];
+    if (livePathRef.current) livePathRef.current.setAttribute('d', '');
+  };
+  const handleSvgPointerMove = (e: React.PointerEvent<SVGSVGElement>) => {
+    if (!isDrawingRef.current) return;
+    drawPointsRef.current.push(toSvgPoint(e));
+    const d = buildPath(drawPointsRef.current);
+    if (livePathRef.current) livePathRef.current.setAttribute('d', d);
+  };
+  const finalizeDraw = () => {
+    if (!isDrawingRef.current) return;
+    isDrawingRef.current = false;
+    const d = buildPath(drawPointsRef.current);
+    if (d) dispatch({ type: 'ADD_DRAW_STROKE', d });
+    drawPointsRef.current = [];
+    if (livePathRef.current) livePathRef.current.setAttribute('d', '');
+  };
 
   // Keyboard: Space cycles tool
   useEffect(() => {
-    const TOOLS: GridTool[] = ['mark', 'question', 'text'];
+    const TOOLS: GridTool[] = ['mark', 'question', 'text', 'draw'];
     const onKey = (e: KeyboardEvent) => {
       if (e.key === ' ' && !editingCell) {
         e.preventDefault();
@@ -313,6 +419,7 @@ export function ExpandedIngredientGrid({ onRandomize, activeTool, setActiveTool 
     { id: 'mark',     label: '✗✔',  title: 'Mark tool [Space] — cycle ✗ / ✔' },
     { id: 'question', label: '?',    title: '? tool — toggle possible mark' },
     { id: 'text',     label: 'abc',  title: 'Text tool — type up to 4 chars per cell' },
+    { id: 'draw',     label: '✏',   title: 'Draw tool [Space] — freehand pencil' },
   ];
 
   return (
@@ -342,13 +449,20 @@ export function ExpandedIngredientGrid({ onRandomize, activeTool, setActiveTool 
             <button onClick={() => { dispatch({ type: 'CLEAR_GRID' }); setEditingCell(null); }}
               className="text-xs text-gray-400 hover:text-red-500 border border-gray-200
                          hover:border-red-300 rounded-lg px-2.5 py-1 transition-colors">✕ Clear</button>
+            {state.drawStrokes.length > 0 && (
+              <button
+                onClick={() => dispatch({ type: 'CLEAR_DRAW_STROKES' })}
+                className="text-xs text-rose-400 hover:text-red-500 border border-rose-200
+                           hover:border-red-300 rounded-lg px-2.5 py-1 transition-colors"
+              >✕ Drawing</button>
+            )}
             {onRandomize && (
               <button onClick={onRandomize}
                 className="text-xs text-gray-400 hover:text-indigo-600 border border-gray-200
                            hover:border-indigo-300 rounded-lg px-2.5 py-1 transition-colors">🔀</button>
             )}
             <label className="flex items-center gap-1.5 text-xs cursor-pointer select-none">
-              <span className={autoDeduction ? 'text-indigo-600 font-semibold' : 'text-gray-500'}>Auto</span>
+              <span className={autoDeduction ? 'text-indigo-600 font-semibold' : 'text-gray-500'}>Hints</span>
               <button role="switch" aria-checked={autoDeduction}
                 onClick={() => { if (!autoDeduction) setShowConfirm(true); else dispatch({ type: 'TOGGLE_AUTO_DEDUCTION' }); }}
                 className={`relative inline-flex h-5 w-9 items-center rounded-full transition-colors
@@ -382,10 +496,12 @@ export function ExpandedIngredientGrid({ onRandomize, activeTool, setActiveTool 
               text-[10px] font-bold select-none pointer-events-none transition-all
               ${activeTool === 'mark'     ? 'bg-gray-800/70 text-white' : ''}
               ${activeTool === 'question' ? 'bg-indigo-600/80 text-white' : ''}
-              ${activeTool === 'text'     ? 'bg-amber-500/80 text-white' : ''}`}>
+              ${activeTool === 'text'     ? 'bg-amber-500/80 text-white' : ''}
+              ${activeTool === 'draw'     ? 'bg-rose-500/80 text-white' : ''}`}>
             {activeTool === 'mark'     && <><span>✗✔</span><span>mark</span></>}
             {activeTool === 'question' && <><span>?</span><span>question</span></>}
             {activeTool === 'text'     && <><span>abc</span><span>text</span></>}
+            {activeTool === 'draw'     && <><span>✏</span><span>draw</span></>}
             <kbd className="ml-0.5 opacity-60 font-mono text-[9px] border border-current/40 rounded px-0.5">Space</kbd>
           </div>
 
@@ -449,6 +565,12 @@ export function ExpandedIngredientGrid({ onRandomize, activeTool, setActiveTool 
                       const slotMark = solarLunarMarks[slotId] ?? null;
                       const slotSolarMark: CellState = slotMark?.solar ?? 'unknown';
                       const slotLunarMark: CellState = slotMark?.lunar ?? 'unknown';
+                      const userCornerMark = solar ? slotSolarMark : slotLunarMark;
+                      const slotHintMark = slHintMarks[slotId] ?? null;
+                      const hintValCorner = slotHintMark ? (solar ? slotHintMark.solar : slotHintMark.lunar) : null;
+                      const cornerHint: 'confirmed' | 'eliminated' | undefined =
+                        (userCornerMark === 'unknown' && (hintValCorner === 'confirmed' || hintValCorner === 'eliminated'))
+                          ? hintValCorner : undefined;
                       return (
                         <td key={slotId} className="px-0.5 py-0 text-center align-middle">
                           <div className="relative">
@@ -462,6 +584,8 @@ export function ExpandedIngredientGrid({ onRandomize, activeTool, setActiveTool 
                               isSolarRow={solar}
                               slotSolarMark={slotSolarMark}
                               slotLunarMark={slotLunarMark}
+                              hint={hintCells.get(key)}
+                              cornerHint={cornerHint}
                               onMouseDown={e => handleCellMouseDown(e, slotId, alchId)}
                               ariaLabel={`${INGREDIENTS[getIngredient(slotId).displayId as 1]?.name ?? slotId} / ${ALCHEMICALS[alchId].code} (${solar ? 'Solar' : 'Lunar'}): ${gridState[slotId]?.[alchId] ?? 'unknown'}`}
                             />
@@ -481,6 +605,21 @@ export function ExpandedIngredientGrid({ onRandomize, activeTool, setActiveTool 
               })}
             </tbody>
           </table>
+          {/* SVG draw overlay — intercepts pointer events only when draw tool is active */}
+          <svg
+            ref={svgRef}
+            className="absolute inset-0 w-full h-full"
+            style={{ zIndex: 10, pointerEvents: activeTool === 'draw' ? 'all' : 'none' }}
+            onPointerDown={handleSvgPointerDown}
+            onPointerMove={handleSvgPointerMove}
+            onPointerUp={finalizeDraw}
+            onPointerLeave={finalizeDraw}
+          >
+            {state.drawStrokes.map((d, i) => (
+              <path key={i} d={d} fill="none" stroke="rgba(239,68,68,0.75)" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" />
+            ))}
+            <path ref={livePathRef} d="" fill="none" stroke="rgba(239,68,68,0.75)" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" />
+          </svg>
           </div>{/* /neutral-pair wrapper */}
         </div>
 
@@ -488,6 +627,7 @@ export function ExpandedIngredientGrid({ onRandomize, activeTool, setActiveTool 
           {activeTool === 'mark' && <>Tap to cycle: <span className="font-mono">· unknown</span>{' → '}<span className="font-mono font-bold text-red-500">✗ eliminated</span>{' → '}<span className="font-mono font-bold text-green-600">✔ confirmed</span><span className="ml-2 opacity-60">· Space to switch tool</span></>}
           {activeTool === 'question' && <>Tap to toggle <span className="font-mono font-bold text-indigo-500">? possible</span> on/off<span className="ml-2 opacity-60">· Space to switch tool</span></>}
           {activeTool === 'text' && <>Tap any cell to type a note (max 4 chars)<span className="ml-2 opacity-60">· Space to switch tool</span></>}
+          {activeTool === 'draw' && <>Draw freehand lines on the grid<span className="ml-2 opacity-60">· Space to switch tool</span></>}
         </p>
       </div>
     </>
@@ -508,7 +648,7 @@ const GOLEM_CHEST_IMG = '/alchemydoku/images/golem_chest.png';
 
 export function GolemPanel({ activeTool }: { activeTool: GridTool }) {
   const { state, dispatch } = useExpandedSolver();
-  const { puzzle, golemNotepad } = state;
+  const { puzzle, golemNotepad, autoDeduction } = state;
   const getIngredient = useExpandedIngredient();
 
   if (!puzzle.golem) return null;
@@ -533,6 +673,20 @@ export function GolemPanel({ activeTool }: { activeTool: GridTool }) {
       ears:  c.ears_reacted  ? 'reacts' : 'no-react',
     };
   });
+
+  // Visual hints (circles on unmarked cells when Hints mode is on)
+  const ingHints: Record<string, 'eliminated' | 'confirmed'> = {};
+  const bottomHints: Record<string, 'confirmed'> = {};
+  if (autoDeduction) {
+    for (const [slotStr, reactions] of Object.entries(clueMap)) {
+      for (const part of ['chest', 'ears'] as const) {
+        const reaction = reactions[part];
+        ingHints[`${slotStr}-${part}`] = reaction === 'reacts' ? 'confirmed' : 'eliminated';
+      }
+    }
+    bottomHints[`chest-${puzzle.golem.chest.color}${puzzle.golem.chest.size}`] = 'confirmed';
+    bottomHints[`ears-${puzzle.golem.ears.color}${puzzle.golem.ears.size}`] = 'confirmed';
+  }
 
   // Image is 760×400 → AR = 400/760 ≈ 0.526. Explicit height avoids distortion.
   const CELL_W = 48;
@@ -563,9 +717,11 @@ export function GolemPanel({ activeTool }: { activeTool: GridTool }) {
    *            mark-state colour overlay (so colour always shows through).
    *   false → normal coloured image on top of white bg (top grid behaviour).
    */
-  function GolemCell({ mark, isClue, img, noteKey, orbColor, orbSize, tint, isBottomGrid, onMark }: {
+  function GolemCell({ mark, isClue, img, noteKey, orbColor, orbSize, tint, isBottomGrid, hint, onMark }: {
     mark: GolemSlotMark; isClue?: boolean; img: string; noteKey: string;
-    orbColor?: Color; orbSize?: number; tint?: string; isBottomGrid?: boolean; onMark: () => void;
+    orbColor?: Color; orbSize?: number; tint?: string; isBottomGrid?: boolean;
+    hint?: 'eliminated' | 'confirmed';
+    onMark: () => void;
   }) {
     const [editing, setEditing] = useState(false);
     const note = notes[noteKey] ?? '';
@@ -622,6 +778,23 @@ export function GolemPanel({ activeTool }: { activeTool: GridTool }) {
           <span style={{ position: 'absolute', opacity: 0.22, pointerEvents: 'none' }}>
             <ElemImage color={orbColor} size="L" width={orbSize} />
           </span>
+        )}
+
+        {/* Visual hint circle — shown when Hints mode is on and cell is unmarked */}
+        {hint && (
+          <svg className="absolute inset-0 w-full h-full pointer-events-none" aria-hidden="true">
+            {hint === 'confirmed' && (
+              <circle cx="24" cy="12" r="9" fill="none" stroke="rgba(34,197,94,0.75)" strokeWidth="2" />
+            )}
+            {hint === 'eliminated' && (
+              <>
+                <path d="M 24,3 C 34,1 43,6 42,12 C 41,18 32,22 22,22 C 12,22 4,17 5,11 C 6,5 14,2 24,3"
+                  fill="none" stroke="rgba(239,68,68,0.7)" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+                <path d="M 26,4 C 35,2 43,8 42,14 C 41,19 31,23 21,23 C 12,23 4,18 5,12 C 6,6 16,3 26,4"
+                  fill="none" stroke="rgba(239,68,68,0.45)" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+              </>
+            )}
+          </svg>
         )}
 
         {editing ? (
@@ -683,6 +856,7 @@ export function GolemPanel({ activeTool }: { activeTool: GridTool }) {
                     noteKey={`g1-${slotId}-${part}`}
                     tint={tint}
                     isBottomGrid={false}
+                    hint={mark === null ? ingHints[`${slotId}-${part}`] : undefined}
                     onMark={() => dispatch({
                       type: 'SET_GOLEM_INGREDIENT_MARK',
                       slot: slotId, part,
@@ -707,15 +881,17 @@ export function GolemPanel({ activeTool }: { activeTool: GridTool }) {
               const orbSize = col.size === 'L' ? Math.round(CELL_W * 0.70) : Math.round(CELL_W * 0.25);
               const colKey = `${col.color}${col.size}`;
               const qMark = notes[`g2-${part}-${colKey}`] === '?' ? 'possible' as const : null;
+              const effectiveMark = active ? 'reacts' : qMark;
               return (
                 <GolemCell
                   key={colKey}
-                  mark={active ? 'reacts' : qMark}
+                  mark={effectiveMark}
                   img={img}
                   noteKey={`g2-${part}-${colKey}`}
                   orbColor={col.color}
                   orbSize={orbSize}
                   isBottomGrid={true}
+                  hint={effectiveMark === null ? bottomHints[`${part}-${colKey}`] : undefined}
                   onMark={() => {
                     if (activeTool === 'question') {
                       dispatch({ type: 'SET_NOTE', key: `g2-${part}-${colKey}`, value: qMark ? '' : '?' });

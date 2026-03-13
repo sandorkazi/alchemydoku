@@ -115,7 +115,7 @@ function QuestionHeader({ q }: { q: AnyQuestion }) {
   if (q.kind === 'encyclopedia_fourth') {
     return (
       <span className="inline-flex items-center gap-1.5 flex-wrap text-xs">
-        <span className="font-semibold text-emerald-600">📜 {colorLabel(q.aspect)} article:</span>
+        <span className="font-semibold text-emerald-600">📜 {{ R: 'Red', G: 'Green', B: 'Blue' }[q.aspect as Color]} article:</span>
         {q.known.map((e, i) => (
           <span key={i} className="inline-flex items-center gap-0.5">
             <Ing slotId={e.ingredient} size={20} />
