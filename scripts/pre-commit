@@ -1,0 +1,71 @@
+#!/bin/sh
+#
+# scripts/pre-commit  —  Alchemydoku pre-commit hook
+#
+# Install once with:   sh scripts/install-hooks.sh
+# Skip all checks:     git commit --no-verify
+# Skip TS check only:  NO_TYPECHECK=1 git commit
+# Skip puzzle check:   NO_PUZZLE_CHECK=1 git commit
+#
+set -e
+
+REPO_ROOT=$(git rev-parse --show-toplevel)
+cd "$REPO_ROOT"
+
+STAGED=$(git diff --cached --name-only --diff-filter=ACMR 2>/dev/null || true)
+
+if [ -z "$STAGED" ]; then
+  exit 0
+fi
+
+PASS=0
+
+# ── 1. Puzzle integrity ────────────────────────────────────────────────────────
+#
+# Runs when any puzzle JSON or the index files are staged.
+
+if [ -z "${NO_PUZZLE_CHECK:-}" ]; then
+  PUZZLE_FILES=$(printf '%s\n' "$STAGED" \
+    | grep -E '(src/(expanded/)?data/puzzles/.*\.json|src/data/puzzles/index\.ts|src/expanded/data/puzzlesIndex\.ts)' \
+    || true)
+
+  if [ -n "$PUZZLE_FILES" ]; then
+    echo "🧪  Checking puzzle integrity..."
+
+    if command -v python3 >/dev/null 2>&1; then
+      python3 scripts/check_puzzles.py || PASS=1
+    elif command -v python >/dev/null 2>&1; then
+      python scripts/check_puzzles.py || PASS=1
+    else
+      echo "    ⚠  python3 not found — skipping puzzle checks"
+    fi
+    echo ""
+  fi
+fi
+
+# ── 2. TypeScript type-check ──────────────────────────────────────────────────
+#
+# Runs when any .ts/.tsx file is staged.
+
+if [ -z "${NO_TYPECHECK:-}" ]; then
+  TS_FILES=$(printf '%s\n' "$STAGED" | grep -E '\.(ts|tsx)$' || true)
+
+  if [ -n "$TS_FILES" ]; then
+    echo "🔷  Type-checking TypeScript..."
+
+    if [ -f node_modules/.bin/tsc ]; then
+      node_modules/.bin/tsc --noEmit || PASS=1
+    elif command -v npx >/dev/null 2>&1; then
+      npx tsc --noEmit || PASS=1
+    else
+      echo "    ⚠  tsc not found — skipping TypeScript check"
+    fi
+
+    if [ "$PASS" -eq 0 ]; then
+      echo "    TypeScript OK"
+    fi
+    echo ""
+  fi
+fi
+
+exit $PASS

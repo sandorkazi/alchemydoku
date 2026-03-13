@@ -6,7 +6,7 @@
  * potion mixing hints, and the Grid/Truth mode switch.
  */
 
-import { IngredientIcon, AlchemicalImage, PotionImage, ElemImage } from './GameSprites';
+import { IngredientIcon, AlchemicalImage, PotionImage } from './GameSprites';
 import { RuleCard } from './RulesQuickReference';
 import type { AlchemicalId, PotionResult } from '../types';
 
