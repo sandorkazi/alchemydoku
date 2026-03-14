@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="3.1 2.4 73.8 69.2" width="80" height="80">
+  <defs><radialGradient id="shell" cx="38%" cy="30%" r="68%"><stop offset="0%" stop-color="#e2e8f0"/><stop offset="70%" stop-color="#94a3b8"/><stop offset="100%" stop-color="#475569"/></radialGradient><radialGradient id="rg13" cx="33%" cy="28%" r="70%"><stop offset="0%" stop-color="#79d79b"/><stop offset="55%" stop-color="#149343"/><stop offset="100%" stop-color="#124b28"/></radialGradient><radialGradient id="rg14" cx="33%" cy="28%" r="70%"><stop offset="0%" stop-color="#84b1e4"/><stop offset="55%" stop-color="#2159d4"/><stop offset="100%" stop-color="#1b347c"/></radialGradient><radialGradient id="rg15" cx="33%" cy="28%" r="70%"><stop offset="0%" stop-color="#ffb6b6"/><stop offset="55%" stop-color="#ff4b4b"/><stop offset="100%" stop-color="#8c2020"/></radialGradient></defs>
+  <circle cx="40.0" cy="35.3" r="19" fill="url(#shell)" stroke="#334155" stroke-width="1.5"/>  <circle cx="40.0" cy="35.3" r="17" fill="none" stroke="rgba(0,0,0,0.18)" stroke-width="4"/>  <circle cx="22.7" cy="52.0" r="13" fill="url(#rg13)" stroke="rgba(0,0,0,0.5)" stroke-width="1.2"/>
+  <rect x="11.7" y="50.0" width="22" height="4" rx="2" fill="white"/>  <circle cx="57.3" cy="52.0" r="13" fill="url(#rg14)" stroke="rgba(0,0,0,0.5)" stroke-width="1.2"/>
+  <rect x="46.3" y="50.0" width="22" height="4" rx="2" fill="white"/>
+  <rect x="55.3" y="41.0" width="4" height="22" rx="2" fill="white"/>  <circle cx="40.0" cy="22.0" r="18" fill="url(#rg15)" stroke="rgba(0,0,0,0.5)" stroke-width="1.2"/>
+  <rect x="29.0" y="20.0" width="22" height="4" rx="2" fill="white"/>  <ellipse cx="28" cy="22" rx="9" ry="5" fill="white" opacity="0.22" transform="rotate(-30 28 22)"/>
+</svg>
