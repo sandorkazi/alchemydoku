@@ -20,3 +20,7 @@ dist/
 
 # Test coverage
 coverage/
+
+# Python
+__pycache__/
+*.pyc
