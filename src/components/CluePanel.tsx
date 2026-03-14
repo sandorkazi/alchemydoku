@@ -1,5 +1,5 @@
 import { ClueCard } from './ClueCard';
-import { groupClues, MultiAspectGroupCard, InferredAlchemicalGroupCard } from './ClueGrouping';
+import { groupClues, MultiAspectGroupCard, InferredAlchemicalGroupCard, CollapsibleClueWrapper, clueGroupLabel } from './ClueGrouping';
 import { useIngredient } from '../contexts/SolverContext';
 import type { Clue } from '../types';
 
@@ -22,11 +22,16 @@ export function CluePanel({ clues }: { clues: Clue[] }) {
         Given Clues
       </h2>
       <div className="flex flex-col gap-2">
-        {groups.map((g, i) => {
-          if (g.type === 'single') return <ClueCard key={i} clue={g.clue} />;
-          if (g.type === 'multi')  return <MultiAspectGroupCard        key={i} clues={g.clues} ingWidth={36} getIngredient={getIngredient} />;
-          return               <InferredAlchemicalGroupCard key={i} clues={g.clues} ingWidth={36} getIngredient={getIngredient} />;
-        })}
+        {groups.map((g, i) => (
+          <CollapsibleClueWrapper key={i} label={clueGroupLabel(g)}>
+            {g.type === 'single'
+              ? <ClueCard clue={g.clue} />
+              : g.type === 'multi'
+                ? <MultiAspectGroupCard clues={g.clues} ingWidth={36} getIngredient={getIngredient} />
+                : <InferredAlchemicalGroupCard clues={g.clues} ingWidth={36} getIngredient={getIngredient} />
+            }
+          </CollapsibleClueWrapper>
+        ))}
       </div>
     </div>
   );
