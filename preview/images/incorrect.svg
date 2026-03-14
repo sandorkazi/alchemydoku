@@ -1,0 +1,4 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48" width="48" height="48">
+  <defs><radialGradient id="ig" cx="35%" cy="30%" r="70%"><stop offset="0%" stop-color="#fca5a5"/><stop offset="100%" stop-color="#dc2626"/></radialGradient></defs>
+  <circle cx="24" cy="24" r="22" fill="url(#ig)" stroke="#0f172a" stroke-width="2.5"/><path d="M 13,13 L 35,35 M 35,13 L 13,35" stroke="white" stroke-width="5.5" stroke-linecap="round"/>
+</svg>
