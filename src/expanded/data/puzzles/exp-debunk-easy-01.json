@@ -47,15 +47,15 @@
   "hints": [
     {
       "level": 1,
-      "text": "Two publications need to go: Fern (ingredient 1) claims pNn, and Scorpion (ingredient 6) claims nPp. Try to find a way to remove at least one without a plain apprentice reveal — a single master debunk might be cheaper than you think."
+      "text": "Two publications need to go: ing1 claims pNn, and ing6 claims nPp. Try to find a way to remove at least one without a plain apprentice reveal — a single master debunk might be cheaper than you think."
     },
     {
       "level": 2,
-      "text": "Mix Fern + Flower (ingredients 1 + 4). True result: R−.\nThe publication claims Fern is pNn. Predicted mix(pNn + nPp) = neutral ≠ R−, so there is a conflict on Fern's publication.\nFlower has no wrong publication, so the conflict is unambiguous — Fern's publication is removed.\n\nNow only Scorpion's publication remains. One apprentice reveal of R+ or B− on Scorpion finishes the job."
+      "text": "Mix ing1 + ing4. True result: R−.\nThe publication claims ing1 is pNn. Predicted mix(pNn + nPp) = neutral ≠ R−, so there is a conflict on ing1's publication.\ning4 has no wrong publication, so the conflict is unambiguous — ing1's publication is removed.\n\nNow only ing6's publication remains. One apprentice reveal of R+ or B− on ing6 finishes the job."
     },
     {
       "level": 3,
-      "text": "Optimal 2-step plan:\n① Master debunk: mix Fern + Flower (1 + 4) → true result R−. Contradicts Fern's claimed pNn. Flower has no publication, so blame is unambiguous → Fern's publication removed.\n② Apprentice debunk: reveal R+ (or B−) on Scorpion (6). Scorpion's true alchemical Ppn has R+; the publication claims nPp which has R−. Contradiction → Scorpion's publication removed.\n\nUsing two apprentice reveals instead (R− on Fern, then R+ or B− on Scorpion) also takes 2 steps and is equally valid."
+      "text": "Optimal 2-step plan:\n① Master debunk: mix ing1 + ing4 → true result R−. Contradicts ing1's claimed pNn. ing4 has no publication, so blame is unambiguous → ing1's publication removed.\n② Apprentice debunk: reveal R+ (or B−) on ing6. ing6's true alchemical Ppn has R+; the publication claims nPp which has R−. Contradiction → ing6's publication removed.\n\nUsing two apprentice reveals instead (R− on ing1, then R+ or B− on ing6) also takes 2 steps and is equally valid."
     }
   ]
 }

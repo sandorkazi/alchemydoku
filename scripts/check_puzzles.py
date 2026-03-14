@@ -12,11 +12,13 @@ Checks performed (always, ~0.1 s):
   7. mode-field     — expanded puzzles have mode='expanded'
   8. trivial-answer — no question is directly answered by a single clue
                       (suppress per-puzzle with "trivial_answer_ok": true)
+  9. hint-tokens    — hint text must not contain raw ingredient names
+                      (Fern, Bird Claw, etc.) — use ing1–ing8 tokens instead
 
 Additional checks with --deep (~2–5 s per puzzle, runs world simulation):
-  9. logical        — clues don't eliminate the solution; all questions have
+ 10. logical        — clues don't eliminate the solution; all questions have
                       unique answers given the clue set
- 10. redundancy     — warns if any clue can be removed without losing uniqueness
+ 11. redundancy     — warns if any clue can be removed without losing uniqueness
 
 Usage:
   python scripts/check_puzzles.py           # structural checks (fast)
@@ -253,7 +255,30 @@ def check_trivial_answers(path: Path, puz: dict, r: Results):
             )
 
 
-# ── 9–10. Deep logical validation ──────────────────────────────────────────────
+# ── 9. Hint-token check ────────────────────────────────────────────────────────
+
+# Ingredient display names that must NOT appear raw in hint text.
+# Authors must use ing1–ing8 (or "ingredient N") tokens instead.
+_INGREDIENT_NAMES = [
+    "fern", "bird claw", "mushroom", "flower",
+    "mandrake", "scorpion", "toad", "raven's feather", "raven",
+]
+
+def check_hint_tokens(path: Path, puz: dict, r: Results):
+    name = path.name
+    for hint in puz.get("hints", []):
+        text_lower = hint.get("text", "").lower()
+        for ing_name in _INGREDIENT_NAMES:
+            if ing_name in text_lower:
+                r.error(
+                    f"[hint-tokens] {name} (hint level {hint.get('level','?')}): "
+                    f"raw ingredient name '{ing_name}' found — "
+                    f"use ing1–ing8 tokens instead."
+                )
+                break  # one error per hint is enough
+
+
+# ── 10–11. Deep logical validation ─────────────────────────────────────────────
 
 def _load_alchemydoku():
     """Import validate_puzzle from alchemydoku.py without executing its CLI."""
@@ -351,6 +376,12 @@ def main():
     _section("trivial answers")
     for puz, path, _ in all_puzzles:
         check_trivial_answers(path, puz, r)
+    _done()
+
+    # ── Step 9: Hint-token check ───────────────────────────────────────────────
+    _section("hint tokens")
+    for puz, path, _ in all_puzzles:
+        check_hint_tokens(path, puz, r)
     _done()
 
     # ── Step 3–4: Duplicates + similar titles ─────────────────────────────────
