@@ -124,15 +124,26 @@ export function computeGolemAnimatePotion(
   params: GolemParams,
 ): PotionResult | null {
   if (worlds.length === 0) return null;
-  const animators = getGroupIngredients(worlds, params, 'animators');
-  if (animators.length !== 2) return null;
-  const [s1, s2] = [animators[0] - 1, animators[1] - 1];
 
-  // Check all worlds agree on the mix result
-  const firstCode = MIX_TABLE[WORLD_DATA[worlds[0] * 8 + s1] * 8 + WORLD_DATA[worlds[0] * 8 + s2]];
-  for (let i = 1; i < worlds.length; i++) {
-    const code = MIX_TABLE[WORLD_DATA[worlds[i] * 8 + s1] * 8 + WORLD_DATA[worlds[i] * 8 + s2]];
-    if (code !== firstCode) return null;
+  // For each world find the 2 animator slots and the potion they produce.
+  // We only require all worlds to agree on the *potion*, not on the identity
+  // of the animators (which may still be ambiguous).
+  let firstCode = -1;
+  for (let i = 0; i < worlds.length; i++) {
+    const animSlots: number[] = [];
+    for (let s = 0; s < 8; s++) {
+      if (golemReacts0(WORLD_DATA[worlds[i] * 8 + s], params, 'chest') &&
+          golemReacts0(WORLD_DATA[worlds[i] * 8 + s], params, 'ears')) {
+        animSlots.push(s);
+      }
+    }
+    if (animSlots.length !== 2) return null;
+    const code = MIX_TABLE[WORLD_DATA[worlds[i] * 8 + animSlots[0]] * 8 + WORLD_DATA[worlds[i] * 8 + animSlots[1]]];
+    if (firstCode === -1) {
+      firstCode = code;
+    } else if (code !== firstCode) {
+      return null;
+    }
   }
 
   if (firstCode === 0) return { type: 'neutral' };

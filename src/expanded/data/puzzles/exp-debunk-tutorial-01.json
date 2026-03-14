@@ -56,15 +56,15 @@
   "hints": [
     {
       "level": 1,
-      "text": "There is one publication and one encyclopedia article to debunk. Look at what the publication claims about Scorpion (ingredient 6) and compare it to your clues."
+      "text": "There is one publication and one encyclopedia article to debunk. Look at what the publication claims about ing6 and compare it to your clues."
     },
     {
       "level": 2,
-      "text": "The publication claims Scorpion is pNn (G−). Your clues show Scorpion's true G aspect is +. Revealing G+ on Scorpion contradicts the publication directly.\n\nNow check the encyclopedia article — it also has a G entry for Scorpion, claiming G−. The same reveal (G+ on Scorpion) will contradict that entry too."
+      "text": "The publication claims ing6 is pNn (G−). Your clues show ing6's true G aspect is G+. Revealing G+ on ing6 contradicts the publication directly.\n\nNow check the encyclopedia article — it also has a G entry for ing6, claiming G−. The same reveal (G+ on ing6) will contradict that entry too."
     },
     {
       "level": 3,
-      "text": "One apprentice debunk: reveal G+ on Scorpion (ingredient 6).\n— The publication claims Scorpion is pNn, which has G−. True G+ contradicts it → publication removed.\n— Art-1 also claims Scorpion has G−. True G+ contradicts it → article removed.\nBoth targets gone in a single action."
+      "text": "One apprentice debunk: reveal G+ on ing6.\n— The publication claims ing6 is pNn, which has G−. True G+ contradicts it → publication removed.\n— Art-1 also claims ing6 has G−. True G+ contradicts it → article removed.\nBoth targets gone in a single action."
     }
   ]
 }
