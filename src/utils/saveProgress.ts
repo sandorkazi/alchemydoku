@@ -14,7 +14,7 @@
  * per-puzzle keys for backwards compatibility).
  */
 
-export const SAVE_VERSION = 2;
+export const SAVE_VERSION = 3;
 
 // ─── Types ────────────────────────────────────────────────────────────────────
 
@@ -40,6 +40,81 @@ export type SaveFile<T extends PuzzleProgress = PuzzleProgress> = {
   exportedAt: string;
   puzzles: Record<string, T>;
 };
+
+// ─── Migration ────────────────────────────────────────────────────────────────
+
+/** Puzzles whose questions changed in the v2→v3 migration */
+const BASE_QUESTIONS_CHANGED = new Set([
+  'easy-2003', 'easy-2006', 'medium-6000', 'medium-6003',
+  'hard-among-01', 'hard-among-02', 'tutorial-debunk-03',
+]);
+/** Expanded puzzles where a question was removed in the v2→v3 migration */
+const EXPANDED_QUESTIONS_CHANGED = new Set([
+  'exp-hard-among-golem-01',
+]);
+
+/**
+ * Run once on startup.  Detects a v2 save file and resets answers / completed
+ * status for puzzles whose questions changed between v2 and v3.
+ */
+export function runMigrations(): void {
+  // Base ──────────────────────────────────────────────────────────────────────
+  try {
+    const raw = localStorage.getItem(BASE_KEY);
+    if (raw) {
+      const file = JSON.parse(raw) as SaveFile<PuzzleProgress>;
+      if (file.version < SAVE_VERSION) {
+        for (const id of BASE_QUESTIONS_CHANGED) {
+          if (file.puzzles[id]) {
+            file.puzzles[id].answers = file.puzzles[id].answers.map(() => null);
+          }
+          try { localStorage.removeItem(`solver-${id}`); } catch { /* ignore */ }
+        }
+        file.version = SAVE_VERSION;
+        localStorage.setItem(BASE_KEY, JSON.stringify(file));
+      }
+    }
+    // Remove changed puzzles from the completed-set
+    const raw2 = localStorage.getItem('alch-completed-base');
+    if (raw2) {
+      const ids: string[] = JSON.parse(raw2);
+      const cleaned = ids.filter(id => !BASE_QUESTIONS_CHANGED.has(id));
+      if (cleaned.length !== ids.length) {
+        localStorage.setItem('alch-completed-base', JSON.stringify(cleaned));
+      }
+    }
+  } catch { /* ignore */ }
+
+  // Expanded ──────────────────────────────────────────────────────────────────
+  try {
+    const raw = localStorage.getItem(EXPANDED_KEY);
+    if (raw) {
+      const file = JSON.parse(raw) as SaveFile<ExpandedPuzzleProgress>;
+      if (file.version < SAVE_VERSION) {
+        for (const id of EXPANDED_QUESTIONS_CHANGED) {
+          if (file.puzzles[id]) {
+            // Second question was removed — keep only the first answer slot
+            file.puzzles[id].answers = [file.puzzles[id].answers[0] ?? null];
+          }
+          try { localStorage.removeItem(`exp-solver-${id}`); } catch { /* ignore */ }
+        }
+        file.version = SAVE_VERSION;
+        localStorage.setItem(EXPANDED_KEY, JSON.stringify(file));
+      }
+    }
+    // Remove from both expanded completed keys
+    for (const key of ['alch-completed-expanded', 'alch-exp-completed']) {
+      const raw2 = localStorage.getItem(key);
+      if (raw2) {
+        const ids: string[] = JSON.parse(raw2);
+        const cleaned = ids.filter(id => !EXPANDED_QUESTIONS_CHANGED.has(id));
+        if (cleaned.length !== ids.length) {
+          localStorage.setItem(key, JSON.stringify(cleaned));
+        }
+      }
+    }
+  } catch { /* ignore */ }
+}
 
 // ─── localStorage helpers ─────────────────────────────────────────────────────
 

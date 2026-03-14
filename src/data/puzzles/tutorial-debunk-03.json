@@ -1,7 +1,7 @@
 {
   "id": "tutorial-debunk-03",
   "title": "Proof by Contradiction",
-  "description": "A failed debunk tells you what the mix is NOT. Use that, plus the other clues, to nail down the answer.",
+  "description": "A failed debunk tells you what the mix is NOT. Use that, plus the aspect clues, to nail down the answer by elimination.",
   "difficulty": "tutorial",
   "clues": [
     {
@@ -10,23 +10,17 @@
       "alchemical": 7
     },
     {
-      "kind": "mixing",
-      "ingredient1": 2,
-      "ingredient2": 3,
-      "result": { "type": "potion", "color": "B", "sign": "+" }
-    },
-    {
       "kind": "aspect",
       "ingredient": 2,
-      "color": "B",
-      "sign": "+"
+      "color": "R",
+      "sign": "-"
     },
     {
       "kind": "debunk",
       "variant": "master",
       "ingredient1": 2,
-      "ingredient2": 7,
-      "claimedPotion": { "type": "potion", "color": "G", "sign": "+" },
+      "ingredient2": 4,
+      "claimedPotion": { "type": "potion", "color": "R", "sign": "-" },
       "outcome": "failure"
     }
   ],
@@ -43,15 +37,15 @@
   "hints": [
     {
       "level": 1,
-      "text": "The failed master debunk tells you the true mix of ingredients 2 and 7 is NOT G+. The aspect clue pins ingredient 2's Blue component. Together these narrow down which alchemical ingredient 2 can be."
+      "text": "Ingredient 4 is a known alchemical. Ingredient 2 has R−. List out all possible results for mix(ing2, ing4) given these two facts."
     },
     {
       "level": 2,
-      "text": "Ingredient 2 has B+. The mixing clue says mix(2,3) = B+. Ingredient 4 is alchemical NNN (all Large Negative). The failure clue eliminates any world where mix(ing2, ing7) = G+, which rules out alchemicals where G components match across ingredients 2 and 7."
+      "text": "Ingredient 4 is alchemical NNN (all Large Negative). Both ingredient 2 and ingredient 4 have R−, so R is a candidate colour in the result. But G could also dominate depending on ingredient 2's G aspect. The failed debunk eliminates one of the two candidates."
     },
     {
       "level": 3,
-      "text": "Ingredient 2's B+ and the mix(2,3)=B+ clue significantly constrain ingredient 3. The failure on mix(2,7) eliminates the remaining ambiguity. In all consistent worlds, mix(2,4) = G−."
+      "text": "With ing2 R− matching ing4 R−, mix(2,4) can only produce R− or G−. The failed debunk proves mix(2,4) ≠ R−. By elimination, the answer must be G−."
     }
   ],
   "questions": [
@@ -60,5 +54,10 @@
       "ingredient1": 2,
       "ingredient2": 4
     }
-  ]
+  ],
+  "complexity": {
+    "score": 2,
+    "raw": 1.5,
+    "residual_worlds": 720
+  }
 }

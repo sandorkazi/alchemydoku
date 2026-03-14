@@ -10,11 +10,13 @@ Checks performed (always, ~0.1 s):
   5. required-fields— id, title, difficulty, clues, questions, solution present
   6. solution-shape — solution is a valid 1→8 bijection
   7. mode-field     — expanded puzzles have mode='expanded'
+  8. trivial-answer — no question is directly answered by a single clue
+                      (suppress per-puzzle with "trivial_answer_ok": true)
 
 Additional checks with --deep (~2–5 s per puzzle, runs world simulation):
-  8. logical        — clues don't eliminate the solution; all questions have
+  9. logical        — clues don't eliminate the solution; all questions have
                       unique answers given the clue set
-  9. redundancy     — warns if any clue can be removed without losing uniqueness
+ 10. redundancy     — warns if any clue can be removed without losing uniqueness
 
 Usage:
   python scripts/check_puzzles.py           # structural checks (fast)
@@ -181,7 +183,77 @@ def check_duplicates(puzzles: list, r: Results):
                 )
 
 
-# ── 8–9. Deep logical validation ───────────────────────────────────────────────
+# ── 8. Trivial-answer check ────────────────────────────────────────────────────
+
+def _trivial_reason(question: dict, clues: list) -> str | None:
+    """Return a human-readable reason if a clue directly answers the question,
+    or None if no trivial answer is detected."""
+    kind = question["kind"]
+
+    if kind == "mixing-result":
+        q_pair = frozenset([question["ingredient1"], question["ingredient2"]])
+        for c in clues:
+            ck = c["kind"]
+            if ck == "mixing":
+                if frozenset([c["ingredient1"], c["ingredient2"]]) == q_pair:
+                    return (
+                        f"mixing clue for pair "
+                        f"({question['ingredient1']},{question['ingredient2']}) "
+                        f"directly states the result"
+                    )
+            elif ck == "debunk" and c.get("variant") == "master" and c.get("outcome") == "success":
+                if frozenset([c["ingredient1"], c["ingredient2"]]) == q_pair:
+                    return (
+                        f"successful master-debunk clue for pair "
+                        f"({question['ingredient1']},{question['ingredient2']}) "
+                        f"directly confirms the mix result"
+                    )
+            elif ck == "sell" and c.get("sellResult") == "total_match":
+                if frozenset([c["ingredient1"], c["ingredient2"]]) == q_pair:
+                    return (
+                        f"sell clue (total_match) for pair "
+                        f"({question['ingredient1']},{question['ingredient2']}) "
+                        f"directly confirms the mix result"
+                    )
+
+    elif kind == "aspect":
+        ing, color = question["ingredient"], question["color"]
+        for c in clues:
+            ck = c["kind"]
+            if ck == "aspect" and c["ingredient"] == ing and c["color"] == color:
+                return (
+                    f"aspect clue directly reveals the {color} sign "
+                    f"of ingredient {ing}"
+                )
+            if (
+                ck == "debunk"
+                and c.get("variant") == "apprentice"
+                and c["ingredient"] == ing
+                and c["color"] == color
+            ):
+                return (
+                    f"apprentice-debunk clue directly reveals the {color} sign "
+                    f"of ingredient {ing}"
+                )
+
+    return None
+
+
+def check_trivial_answers(path: Path, puz: dict, r: Results):
+    if puz.get("trivial_answer_ok"):
+        return
+    name = path.name
+    for i, q in enumerate(puz.get("questions", [])):
+        reason = _trivial_reason(q, puz.get("clues", []))
+        if reason:
+            r.error(
+                f"[trivial-answer] {name}: question[{i}] ({q['kind']}): "
+                f"{reason}. "
+                f'Add "trivial_answer_ok": true to suppress.'
+            )
+
+
+# ── 9–10. Deep logical validation ──────────────────────────────────────────────
 
 def _load_alchemydoku():
     """Import validate_puzzle from alchemydoku.py without executing its CLI."""
@@ -273,6 +345,12 @@ def main():
     _section(f"structure of {total} puzzles")
     for puz, path, is_exp in all_puzzles:
         check_structure(path, puz, is_exp, r)
+    _done()
+
+    # ── Step 8: Trivial-answer check ──────────────────────────────────────────
+    _section("trivial answers")
+    for puz, path, _ in all_puzzles:
+        check_trivial_answers(path, puz, r)
     _done()
 
     # ── Step 3–4: Duplicates + similar titles ─────────────────────────────────

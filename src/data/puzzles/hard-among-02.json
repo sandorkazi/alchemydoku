@@ -64,9 +64,9 @@
     }
   ],
   "questions": [
-    { "kind": "mixing-result", "ingredient1": 2, "ingredient2": 6 },
-    { "kind": "mixing-result", "ingredient1": 3, "ingredient2": 7 },
-    { "kind": "mixing-result", "ingredient1": 4, "ingredient2": 7 }
+    { "kind": "mixing-result", "ingredient1": 1, "ingredient2": 4 },
+    { "kind": "mixing-result", "ingredient1": 2, "ingredient2": 3 },
+    { "kind": "mixing-result", "ingredient1": 7, "ingredient2": 8 }
   ],
   "solution": {
     "1": 5, "2": 8, "3": 2, "4": 7, "5": 4, "6": 3, "7": 6, "8": 1

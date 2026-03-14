@@ -80,8 +80,8 @@
   "questions": [
     {
       "kind": "mixing-result",
-      "ingredient1": 1,
-      "ingredient2": 2
+      "ingredient1": 2,
+      "ingredient2": 3
     }
   ],
   "complexity": {
