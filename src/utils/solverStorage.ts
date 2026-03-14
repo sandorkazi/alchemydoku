@@ -4,6 +4,7 @@
  */
 
 import type { CellState } from '../types';
+import { SAVE_VERSION } from './saveProgress';
 
 // ─── Display map ──────────────────────────────────────────────────────────────
 
@@ -64,7 +65,7 @@ export function mergeIntoUnifiedStore(
 ): void {
   try {
     const raw  = localStorage.getItem(storeKey);
-    const file = raw ? JSON.parse(raw) : { version: 2, exportedAt: '', puzzles: {} };
+    const file = raw ? JSON.parse(raw) : { version: SAVE_VERSION, exportedAt: '', puzzles: {} };
     file.puzzles[puzzleId] = progress;
     localStorage.setItem(storeKey, JSON.stringify(file));
   } catch { /* ignore */ }

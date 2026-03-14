@@ -1,0 +1,2 @@
+npx tsc --noEmit
+python3 scripts/check_puzzles.py
