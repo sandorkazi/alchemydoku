@@ -227,7 +227,6 @@ export function IngredientGrid({ onRandomize }: { onRandomize?: () => void }) {
       }
       for (let a = 1; a <= 8; a++) {
         const key = `${i}-${a}`;
-        if ((state.gridState[i]?.[a] ?? 'unknown') !== 'unknown') continue;
         if (eliminated.has(key)) {
           result.set(key, 'eliminated');
         } else if (soleCount === 1 && a === soleAlch) {
@@ -236,7 +235,7 @@ export function IngredientGrid({ onRandomize }: { onRandomize?: () => void }) {
       }
     }
     return result;
-  }, [state.autoDeduction, state.worlds, state.gridState]);
+  }, [state.autoDeduction, state.worlds]);
 
   // ── Spacebar cycles tools ──────────────────────────────────────────────────
   useEffect(() => {

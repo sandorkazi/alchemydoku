@@ -300,7 +300,6 @@ export function ExpandedIngredientGrid({ onRandomize, activeTool, setActiveTool 
       }
       for (let a = 1; a <= 8; a++) {
         const key = `${i}-${a}`;
-        if ((state.gridState[i]?.[a] ?? 'unknown') !== 'unknown') continue;
         if (eliminated.has(key)) {
           result.set(key, 'eliminated');
         } else if (soleCount === 1 && a === soleAlch) {
@@ -309,7 +308,7 @@ export function ExpandedIngredientGrid({ onRandomize, activeTool, setActiveTool 
       }
     }
     return result;
-  }, [state.autoDeduction, state.worlds, state.gridState]);
+  }, [state.autoDeduction, state.worlds]);
 
   // ── Solar/lunar visual hint marks (worlds-derived, never touch state) ──────
   const slHintMarks = useMemo(() => {
@@ -565,11 +564,10 @@ export function ExpandedIngredientGrid({ onRandomize, activeTool, setActiveTool 
                       const slotMark = solarLunarMarks[slotId] ?? null;
                       const slotSolarMark: CellState = slotMark?.solar ?? 'unknown';
                       const slotLunarMark: CellState = slotMark?.lunar ?? 'unknown';
-                      const userCornerMark = solar ? slotSolarMark : slotLunarMark;
                       const slotHintMark = slHintMarks[slotId] ?? null;
                       const hintValCorner = slotHintMark ? (solar ? slotHintMark.solar : slotHintMark.lunar) : null;
                       const cornerHint: 'confirmed' | 'eliminated' | undefined =
-                        (userCornerMark === 'unknown' && !hintCells.has(key) && (hintValCorner === 'confirmed' || hintValCorner === 'eliminated'))
+                        (!hintCells.has(key) && (hintValCorner === 'confirmed' || hintValCorner === 'eliminated'))
                           ? hintValCorner : undefined;
                       return (
                         <td key={slotId} className="px-0.5 py-0 text-center align-middle">
@@ -856,7 +854,7 @@ export function GolemPanel({ activeTool }: { activeTool: GridTool }) {
                     noteKey={`g1-${slotId}-${part}`}
                     tint={tint}
                     isBottomGrid={false}
-                    hint={mark === null ? ingHints[`${slotId}-${part}`] : undefined}
+                    hint={ingHints[`${slotId}-${part}`]}
                     onMark={() => dispatch({
                       type: 'SET_GOLEM_INGREDIENT_MARK',
                       slot: slotId, part,
@@ -891,7 +889,7 @@ export function GolemPanel({ activeTool }: { activeTool: GridTool }) {
                   orbColor={col.color}
                   orbSize={orbSize}
                   isBottomGrid={true}
-                  hint={effectiveMark === null ? bottomHints[`${part}-${colKey}`] : undefined}
+                  hint={bottomHints[`${part}-${colKey}`]}
                   onMark={() => {
                     if (activeTool === 'question') {
                       dispatch({ type: 'SET_NOTE', key: `g2-${part}-${colKey}`, value: qMark ? '' : '?' });

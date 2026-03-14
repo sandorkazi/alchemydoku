@@ -7,7 +7,7 @@
  * zero context dependencies.
  */
 
-import React from 'react';
+import React, { useState } from 'react';
 import { ALCHEMICALS } from '../data/alchemicals';
 import { INGREDIENTS } from '../data/ingredients';
 import { AlchemicalImage, IngredientIcon, SignedElemImage } from './GameSprites';
@@ -171,6 +171,79 @@ export function InferredAlchemicalGroupCard({ clues, ingWidth, getIngredient }: 
           : <span className="text-xs text-green-600 italic">3 aspects known</span>
         }
       </div>
+    </div>
+  );
+}
+
+// ─── Collapsible wrapper ──────────────────────────────────────────────────────
+
+/** Short label shown in the collapsed pill for each group type / clue kind. */
+export function clueGroupLabel(g: ClueGroup): string {
+  if (g.type === 'full')  return '📌 Known Alchemical';
+  if (g.type === 'multi') return '📋 Known Components';
+  switch (g.clue.kind) {
+    case 'mixing':                 return '🧪 Mixing Result';
+    case 'aspect':                 return '📋 Known Component';
+    case 'assignment':             return '📌 Known Alchemical';
+    case 'sell':                   return '💰 Sell Result';
+    case 'debunk':                 return '🔬 Debunking';
+    case 'mixing_among':           return '👀 Observed Mix';
+    case 'sell_result_among':      return '💰 Ambiguous Sale';
+    case 'sell_among':             return '💰 Sell Among';
+    case 'book':                   return '📖 Book Token';
+    case 'encyclopedia':           return '📜 Verified Publication';
+    case 'encyclopedia_uncertain': return '📄 Uncertain Article';
+    case 'debunk_apprentice':      return '🔍 Debunk — Apprentice';
+    case 'debunk_master':          return '⚗️ Debunk — Master';
+    case 'golem_test':             return '🧿 Golem Test';
+    case 'golem_hint_color':
+    case 'golem_hint_size':        return '🔬 Golem Research';
+    case 'golem_reaction_among':   return '🤖 Observed Golem Test';
+    default:                       return '📋 Clue';
+  }
+}
+
+/**
+ * Wraps a rendered clue card with a collapse/expand toggle.
+ * When expanded: a "−" button appears on hover (top-right corner).
+ * When collapsed: a compact pill shows the clue type label; clicking expands.
+ */
+export function CollapsibleClueWrapper({ label, children }: {
+  label: string;
+  children: React.ReactNode;
+}) {
+  const [collapsed, setCollapsed] = useState(false);
+
+  if (collapsed) {
+    return (
+      <button
+        onClick={() => setCollapsed(false)}
+        className="w-full text-left rounded-lg border border-gray-200 px-2 py-1.5
+                   flex items-center gap-1.5 text-[10px] font-semibold uppercase tracking-wide
+                   text-gray-400 hover:text-gray-600 hover:border-gray-300 transition-colors"
+        title="Expand clue"
+        aria-expanded={false}
+      >
+        <span aria-hidden="true" className="opacity-60 text-[8px]">▶</span>
+        {label}
+      </button>
+    );
+  }
+
+  return (
+    <div className="relative group">
+      {children}
+      <button
+        onClick={() => setCollapsed(true)}
+        className="absolute top-1 right-1 z-10 w-5 h-5 flex items-center justify-center
+                   rounded text-base leading-none text-gray-400 hover:text-gray-700
+                   opacity-0 group-hover:opacity-100 transition-opacity"
+        title="Collapse clue"
+        aria-label="Collapse clue"
+        aria-expanded={true}
+      >
+        −
+      </button>
     </div>
   );
 }

@@ -8,7 +8,7 @@
  */
 
 import { ExpandedClueCard } from './ExpandedClueCard';
-import { groupClues, MultiAspectGroupCard, InferredAlchemicalGroupCard } from '../../components/ClueGrouping';
+import { groupClues, MultiAspectGroupCard, InferredAlchemicalGroupCard, CollapsibleClueWrapper, clueGroupLabel } from '../../components/ClueGrouping';
 import { useExpandedIngredient } from '../contexts/ExpandedSolverContext';
 import type { AnyClue } from '../types';
 
@@ -25,11 +25,16 @@ export function ExpandedCluePanel({ clues }: { clues: AnyClue[] }) {
         Clues ({clues.length})
       </h3>
       <div className="flex flex-col gap-2">
-        {groups.map((g, i) => {
-          if (g.type === 'full')  return <InferredAlchemicalGroupCard key={i} clues={g.clues} ingWidth={28} getIngredient={getIngredient} />;
-          if (g.type === 'multi') return <MultiAspectGroupCard        key={i} clues={g.clues} ingWidth={28} getIngredient={getIngredient} />;
-          return <ExpandedClueCard key={i} clue={g.clue as AnyClue} />;
-        })}
+        {groups.map((g, i) => (
+          <CollapsibleClueWrapper key={i} label={clueGroupLabel(g)}>
+            {g.type === 'full'
+              ? <InferredAlchemicalGroupCard clues={g.clues} ingWidth={28} getIngredient={getIngredient} />
+              : g.type === 'multi'
+                ? <MultiAspectGroupCard clues={g.clues} ingWidth={28} getIngredient={getIngredient} />
+                : <ExpandedClueCard clue={g.clue as AnyClue} />
+            }
+          </CollapsibleClueWrapper>
+        ))}
       </div>
     </div>
   );
