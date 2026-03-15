@@ -22,7 +22,9 @@ Usage:
 Available generate profiles:
   tutorial_golem, easy_enc, easy_sl, easy_golem,
   medium_enc_sl, medium_golem_enc, medium_golem_sl,
-  hard_all, hard_golem_mix
+  hard_all, hard_golem_mix,
+  combo_b_easy, combo_b_med_asp, combo_b_med_np, combo_b_hard_pp, combo_b_hard_ip,
+  combo_exp_easy, combo_exp_med_sl, combo_exp_med_all, combo_exp_hard_wha, combo_exp_hard_sl
 """
 
 import json, math, random, itertools, argparse, sys
@@ -291,7 +293,9 @@ def answer(worlds: frozenset, q: dict, golem: Optional[dict] = None):
 
     if k == 'possible-potions':
         i1, i2 = q['ingredient1'] - 1, q['ingredient2'] - 1
-        return frozenset(MIX_TABLE[w[i1]][w[i2]] for w in worlds)
+        pots = frozenset(MIX_TABLE[w[i1]][w[i2]] for w in worlds)
+        # Return None when all 7 results are still possible — not a useful deduction
+        return pots if len(pots) < 7 else None
 
     if k == 'aspect-set':
         col    = q['color']
@@ -696,6 +700,18 @@ PROFILES = {
     'q_group_potions':   Profile('group-potions',         ['base'],                               'group-possible-potions',   'medium',   8,  False),
     'q_best_mix':        Profile('best-mix',              ['base'],                               'most-informative-mix',     'medium',   8,  False),
     'q_non_producer':    Profile('non-producer',          ['base'],                               'guaranteed-non-producer',  'medium',   8,  False),
+    # Base combination profiles (The Full Arsenal)
+    'combo_b_easy':      Profile('combo-b-easy',          ['base', 'sell'],                       'mixing-result',            'easy',     10, False),
+    'combo_b_med_asp':   Profile('combo-b-med-asp',       ['base', 'sell', 'debunk'],             'aspect',                   'medium',   12, False),
+    'combo_b_med_np':    Profile('combo-b-med-np',        ['base', 'sell', 'debunk'],             'neutral-partner',          'medium',   12, False),
+    'combo_b_hard_pp':   Profile('combo-b-hard-pp',       ['base', 'sell', 'debunk', 'among'],    'possible-potions',         'hard',     14, False),
+    'combo_b_hard_ip':   Profile('combo-b-hard-ip',       ['base', 'sell', 'debunk', 'among'],    'ingredient-potion-profile','hard',     14, False),
+    # Expanded combination profiles (Grand Synthesis)
+    'combo_exp_easy':     Profile('combo-exp-easy',       ['base', 'encyclopedia', 'solar_lunar'],             'encyclopedia_fourth',      'easy',   12, False),
+    'combo_exp_med_sl':   Profile('combo-exp-med-sl',     ['base', 'encyclopedia', 'solar_lunar'],             'solar_lunar',              'medium', 13, False),
+    'combo_exp_med_all':  Profile('combo-exp-med-all',    ['base', 'encyclopedia', 'solar_lunar', 'golem'],    'encyclopedia_fourth',      'medium', 14, True),
+    'combo_exp_hard_wha': Profile('combo-exp-hard-wha',   ['base', 'encyclopedia', 'solar_lunar', 'golem'],    'encyclopedia_which_aspect','hard',   16, True),
+    'combo_exp_hard_sl':  Profile('combo-exp-hard-sl',    ['base', 'encyclopedia', 'solar_lunar', 'golem'],    'solar_lunar',              'hard',   15, True),
 }
 
 # ── Clue pool ─────────────────────────────────────────────────────────────────
@@ -732,6 +748,58 @@ def candidate_pool(mechanics: list, sol: dict, golem: Optional[dict],
                         'kind': 'encyclopedia', 'aspect': col,
                         'entries': [{'ingredient': s, 'sign': st} for s in sorted(combo)],
                     }))
+    if 'sell' in mechanics:
+        for i1, i2 in itertools.combinations(SLOTS, 2):
+            actual = MIX_TABLE[sol[i1]][sol[i2]]
+            if actual == 'neutral':
+                pool.append(('sell', 2, {
+                    'kind': 'sell', 'ingredient1': i1, 'ingredient2': i2,
+                    'claimedResult': {'type': 'potion', 'color': 'R', 'sign': '+'},
+                    'sellResult': 'neutral',
+                }))
+            else:
+                for col in COLORS:
+                    for sgn in [1, -1]:
+                        if actual == (col, sgn):
+                            sr = 'total_match'
+                        elif actual[1] == sgn:
+                            sr = 'sign_ok'
+                        else:
+                            sr = 'opposite'
+                        pool.append(('sell', 2, {
+                            'kind': 'sell', 'ingredient1': i1, 'ingredient2': i2,
+                            'claimedResult': {'type': 'potion', 'color': col, 'sign': sgn_str(sgn)},
+                            'sellResult': sr,
+                        }))
+    if 'debunk' in mechanics:
+        for s in SLOTS:
+            for col in COLORS:
+                sgn, _ = ALCH_DATA[sol[s]][col]
+                pool.append(('debunk', 3, {
+                    'kind': 'debunk', 'variant': 'apprentice', 'ingredient': s,
+                    'color': col, 'sign': sgn_str(sgn), 'outcome': 'success',
+                }))
+        for i1, i2 in itertools.combinations(SLOTS, 2):
+            actual = MIX_TABLE[sol[i1]][sol[i2]]
+            pool.append(('debunk', 3, {
+                'kind': 'debunk', 'variant': 'master',
+                'ingredient1': i1, 'ingredient2': i2,
+                'claimedPotion': r2d(actual), 'outcome': 'success',
+            }))
+    if 'among' in mechanics:
+        for group in itertools.combinations(SLOTS, 3):
+            seen_results = set()
+            for a, b in itertools.combinations(group, 2):
+                r = MIX_TABLE[sol[a]][sol[b]]
+                key = json.dumps(r2d(r), sort_keys=True)
+                if key in seen_results:
+                    continue
+                seen_results.add(key)
+                pool.append(('among', 1, {
+                    'kind': 'mixing_among',
+                    'ingredients': sorted(list(group)),
+                    'result': r2d(r),
+                }))
     if 'golem' in mechanics and golem:
         for s in SLOTS:
             pool.append(('golem_test', 15, {
@@ -770,6 +838,26 @@ def build_question_anchor(profile: Profile, sol: dict, golem: Optional[dict],
                          {'kind': 'encyclopedia', 'aspect': col, 'entries': known_e},
                          {col})
         return None, None, set()
+
+    if k == 'encyclopedia_which_aspect':
+        col    = rng.choice(COLORS)
+        chosen = sorted(rng.sample(SLOTS, 4))
+        entries = [{'ingredient': s, 'sign': sgn_str(ALCH_DATA[sol[s]][col][0])} for s in chosen]
+        q = {'kind': 'encyclopedia_which_aspect', 'entries': entries}
+        return q, None, {col}
+
+    if k == 'mixing-result':
+        i1, i2 = sorted(rng.sample(SLOTS, 2))
+        return {'kind': 'mixing-result', 'ingredient1': i1, 'ingredient2': i2}, None, set()
+
+    if k == 'aspect':
+        s   = rng.choice(SLOTS)
+        col = rng.choice(COLORS)
+        return {'kind': 'aspect', 'ingredient': s, 'color': col}, None, set()
+
+    if k == 'possible-potions':
+        i1, i2 = sorted(rng.sample(SLOTS, 2))
+        return {'kind': 'possible-potions', 'ingredient1': i1, 'ingredient2': i2}, None, set()
 
     if k == 'alchemical':
         return {'kind': 'alchemical', 'ingredient': rng.choice(SLOTS)}, None, set()
@@ -1391,6 +1479,25 @@ def gen_hints(raw: dict) -> list:
     elif k == 'safe-publish':
         hints = gen_safe_publish_hints(worlds, clues, q, sol, golem)
 
+    elif k == 'encyclopedia_which_aspect':
+        entries = q['entries']
+        entry_descs = ', '.join(f"ingredient {e['ingredient']} {e['sign']}" for e in entries)
+        h1 = (
+            f"For each colour R/G/B, check whether all four ingredient–sign pairs "
+            f"({entry_descs}) hold across the remaining worlds."
+        )
+        h2 = (
+            "Eliminate any colour where at least one remaining world disagrees. "
+            "Only one colour will survive."
+        )
+        ans_col = answer(worlds, q, golem)
+        col_name = {'R': 'Red', 'G': 'Green', 'B': 'Blue'}[ans_col]
+        h3 = (
+            f"The answer is {ans_col} ({col_name}): every remaining world maps all four "
+            f"entries onto the {col_name} aspect."
+        )
+        hints = [{'level': 1, 'text': h1}, {'level': 2, 'text': h2}, {'level': 3, 'text': h3}]
+
     else:
         ans = answer(worlds, q, golem)
         hints.append({'level': 1, 'text': 'Use all clues to eliminate impossible worlds.'})
@@ -1414,16 +1521,20 @@ TITLES = [
 ]
 
 DESCS = {
-    'encyclopedia_fourth':      "A partial encyclopedia article lists three ingredients on the same aspect. Use the supporting clues to identify the fourth.",
-    'golem_group':              "The golem has been tested with several ingredients. Deduce the reaction pattern and identify the target group.",
-    'golem_animate_potion':     "The golem stirred during testing. Identify the animators and determine what potion their mix would produce.",
-    'alchemical':               "Use the clues to deduce which alchemical belongs to the target ingredient.",
-    'solar_lunar':              "Use the clues to determine whether the target ingredient is Solar or Lunar.",
-    'neutral-partner':          "Use the clues to identify the one ingredient that always mixes to neutral with the target ingredient.",
-    'ingredient-potion-profile':"Determine all potions that the target ingredient can certainly produce when mixed with at least one partner.",
-    'group-possible-potions':   "Identify all potions that can be certainly produced by some pair within the listed ingredient group.",
-    'most-informative-mix':     "Decide which partner provides the most information (maximum entropy) when mixed with the target ingredient.",
-    'guaranteed-non-producer':  "Find all ingredients that can never produce the target potion with any partner in any remaining world.",
+    'encyclopedia_fourth':       "A partial encyclopedia article lists three ingredients on the same aspect. Use the supporting clues to identify the fourth.",
+    'encyclopedia_which_aspect': "Four ingredient–sign pairs form a valid encyclopedia article. All the clue types are in play — deduce which aspect colour they share.",
+    'golem_group':               "The golem has been tested with several ingredients. Deduce the reaction pattern and identify the target group.",
+    'golem_animate_potion':      "The golem stirred during testing. Identify the animators and determine what potion their mix would produce.",
+    'alchemical':                "Use the clues to deduce which alchemical belongs to the target ingredient.",
+    'solar_lunar':               "Use the clues to determine whether the target ingredient is Solar or Lunar.",
+    'mixing-result':             "Mixing, selling, and debunking records all point toward a single pair. Deduce what potion they produce.",
+    'aspect':                    "Multiple clue types constrain the world. Identify the sign of the target colour aspect.",
+    'possible-potions':          "The evidence narrows things down — but not all the way. Mark every potion this pair could still produce.",
+    'neutral-partner':           "Use the clues to identify the one ingredient that always mixes to neutral with the target ingredient.",
+    'ingredient-potion-profile': "Determine all potions that the target ingredient can certainly produce when mixed with at least one partner.",
+    'group-possible-potions':    "Identify all potions that can be certainly produced by some pair within the listed ingredient group.",
+    'most-informative-mix':      "Decide which partner provides the most information (maximum entropy) when mixed with the target ingredient.",
+    'guaranteed-non-producer':   "Find all ingredients that can never produce the target potion with any partner in any remaining world.",
 }
 
 EXP_PUZZLE_DIR = Path(__file__).parent.parent / 'src' / 'expanded' / 'data' / 'puzzles'
@@ -1436,13 +1547,11 @@ def _next_num(prefix: str, out_dir: Path) -> int:
     return max(nums, default=1) + 1
 
 
-BASE_QUESTION_PROFILES = {
-    'neutral-partner', 'ingredient-potion-profile', 'group-possible-potions',
-    'most-informative-mix', 'guaranteed-non-producer',
-}
+_EXPANDED_MECHANICS = {'encyclopedia', 'solar_lunar', 'golem'}
 
 def is_base_profile(profile: Profile) -> bool:
-    return profile.mechanics == ['base'] and profile.question_kind in BASE_QUESTION_PROFILES
+    """True when the puzzle belongs in BASE_PUZZLE_DIR (no mode='expanded')."""
+    return not any(m in _EXPANDED_MECHANICS for m in profile.mechanics)
 
 def assemble(raw: dict, profile: Profile, num: int, rng: random.Random) -> dict:
     hints = gen_hints(raw)
@@ -1614,7 +1723,8 @@ def cmd_analyze(_args):
 # ══════════════════════════════════════════════════════════════════════════════
 
 def cmd_validate(_args):
-    puzzles = sorted(EXP_PUZZLE_DIR.glob('exp-*.json'))
+    all_json = sorted(EXP_PUZZLE_DIR.glob('*.json'))
+    puzzles = [f for f in all_json if f.name != 'collections.json']
     print(f"Validating {len(puzzles)} expanded puzzle(s) …\n")
     all_ok = True
     for f in puzzles:
@@ -1762,7 +1872,9 @@ def cmd_check_hints(args):
                 expected.append(str(ans))
             elif k == 'safe-publish':
                 expected.append(ans)
-            # aspect-set / large-component answers are sets; skip token check
+            elif k == 'encyclopedia_which_aspect':
+                expected.append(ans)   # ans is a color string like 'G'
+            # aspect-set / large-component / set-type answers: skip token check
             else:
                 checked += 1
                 continue

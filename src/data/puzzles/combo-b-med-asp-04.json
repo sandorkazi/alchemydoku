@@ -1,0 +1,60 @@
+{
+  "id": "combo-b-med-asp-04",
+  "title": "The Sealed Chamber",
+  "description": "Multiple clue types constrain the world. Identify the sign of the target colour aspect.",
+  "difficulty": "medium",
+  "clues": [
+    {
+      "kind": "debunk",
+      "variant": "master",
+      "ingredient1": 5,
+      "ingredient2": 7,
+      "claimedPotion": {
+        "color": "G",
+        "sign": "-"
+      },
+      "outcome": "success"
+    }
+  ],
+  "questions": [
+    {
+      "kind": "aspect",
+      "ingredient": 7,
+      "color": "G"
+    }
+  ],
+  "solution": {
+    "1": 2,
+    "2": 3,
+    "3": 8,
+    "4": 1,
+    "5": 5,
+    "6": 4,
+    "7": 7,
+    "8": 6
+  },
+  "hints": [
+    {
+      "level": 1,
+      "text": "Determine the G sign of ing7. There are 4 alchemicals still consistent with the clues for slot 7. Check whether they all agree on the G sign."
+    },
+    {
+      "level": 2,
+      "text": "Remaining alchemicals for ing7: pnP(G-), pNn(G-), Nnp(G-), NNN(G-). All share G-."
+    },
+    {
+      "level": 3,
+      "text": "ing7 has G-."
+    }
+  ],
+  "complexity": {
+    "raw": 1.209,
+    "avg_clue_strength": 2.807,
+    "ambig_penalty": 0.0,
+    "chain_depth": 0,
+    "stuck": false,
+    "requires_complement_set": false,
+    "question_requires_enumeration": false,
+    "residual_worlds": 5760
+  }
+}

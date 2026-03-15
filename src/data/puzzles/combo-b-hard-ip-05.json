@@ -1,0 +1,59 @@
+{
+  "id": "combo-b-hard-ip-05",
+  "title": "A Scholar's Note",
+  "description": "Determine all potions that the target ingredient can certainly produce when mixed with at least one partner.",
+  "difficulty": "hard",
+  "clues": [
+    {
+      "kind": "debunk",
+      "variant": "master",
+      "ingredient1": 3,
+      "ingredient2": 7,
+      "claimedPotion": {
+        "color": "B",
+        "sign": "-"
+      },
+      "outcome": "success"
+    }
+  ],
+  "questions": [
+    {
+      "kind": "ingredient-potion-profile",
+      "ingredient": 7
+    }
+  ],
+  "solution": {
+    "1": 3,
+    "2": 8,
+    "3": 7,
+    "4": 4,
+    "5": 2,
+    "6": 5,
+    "7": 6,
+    "8": 1
+  },
+  "hints": [
+    {
+      "level": 1,
+      "text": "Find all potions that ingredient 7 can certainly produce with at least one partner. A potion is 'certain' when the mix result is the same in every remaining possible world."
+    },
+    {
+      "level": 2,
+      "text": "Check each of ingredient 7's 7 possible partners. Certain results so far: ing3\u2192B-."
+    },
+    {
+      "level": 3,
+      "text": "Ingredient 7 = Ppn. Certain potions: ['B-']."
+    }
+  ],
+  "complexity": {
+    "raw": 3.009,
+    "avg_clue_strength": 2.807,
+    "ambig_penalty": 0.0,
+    "chain_depth": 0,
+    "stuck": false,
+    "requires_complement_set": false,
+    "question_requires_enumeration": true,
+    "residual_worlds": 5760
+  }
+}

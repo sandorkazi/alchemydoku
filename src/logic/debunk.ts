@@ -136,11 +136,12 @@ export function evaluatePlan(
 // ─── Validators ───────────────────────────────────────────────────────────────
 
 /**
- * Validate a player's min-steps plan.
+ * Validate a player's min-steps plan (master-only mode).
  * Valid when:
- * 1. Plan length equals refLen (the pre-computed optimal length stored in the puzzle).
- * 2. Every step removes at least one publication (no wasted steps).
- * 3. All publications are removed by the end.
+ * 1. All steps are master debunks.
+ * 2. Plan length equals refLen (the pre-computed optimal length stored in the puzzle).
+ * 3. Every step removes at least one publication (no wasted steps).
+ * 4. All publications are removed by the end.
  */
 export function validateMinStepsAnswer(
   steps: DebunkStep[],
@@ -149,6 +150,7 @@ export function validateMinStepsAnswer(
   worlds: WorldSet,
   refLen: number,
 ): boolean {
+  if (steps.some(s => s.kind !== 'master')) return false;
   if (steps.length !== refLen) return false;
   if (publications.length === 0) return steps.length === 0;
 

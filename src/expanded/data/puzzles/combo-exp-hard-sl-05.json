@@ -1,0 +1,101 @@
+{
+  "id": "combo-exp-hard-sl-05",
+  "mode": "expanded",
+  "title": "The Incomplete Article",
+  "description": "Use the clues to determine whether the target ingredient is Solar or Lunar.",
+  "difficulty": "hard",
+  "golem": {
+    "chest": {
+      "color": "G",
+      "size": "L"
+    },
+    "ears": {
+      "color": "R",
+      "size": "S"
+    }
+  },
+  "clues": [
+    {
+      "kind": "golem_test",
+      "ingredient": 6,
+      "chest_reacted": false,
+      "ears_reacted": true
+    },
+    {
+      "kind": "encyclopedia",
+      "aspect": "R",
+      "entries": [
+        {
+          "ingredient": 1,
+          "sign": "+"
+        },
+        {
+          "ingredient": 2,
+          "sign": "+"
+        },
+        {
+          "ingredient": 4,
+          "sign": "+"
+        }
+      ]
+    },
+    {
+      "kind": "encyclopedia",
+      "aspect": "G",
+      "entries": [
+        {
+          "ingredient": 3,
+          "sign": "-"
+        },
+        {
+          "ingredient": 5,
+          "sign": "-"
+        },
+        {
+          "ingredient": 7,
+          "sign": "-"
+        }
+      ]
+    }
+  ],
+  "questions": [
+    {
+      "kind": "solar_lunar",
+      "ingredient": 6
+    }
+  ],
+  "solution": {
+    "1": 8,
+    "2": 6,
+    "3": 2,
+    "4": 3,
+    "5": 5,
+    "6": 1,
+    "7": 7,
+    "8": 4
+  },
+  "hints": [
+    {
+      "level": 1,
+      "text": "Is ingredient 6 Solar or Lunar? Solar = odd alch IDs {1,3,5,7}, Lunar = even {2,4,6,8}."
+    },
+    {
+      "level": 2,
+      "text": "Remaining alch for slot 6: [1]. Solar: [1]. Lunar: []."
+    },
+    {
+      "level": 3,
+      "text": "Ingredient 6 = npN, which is SOLAR."
+    }
+  ],
+  "complexity": {
+    "raw": 3.129,
+    "avg_clue_strength": 3.043,
+    "ambig_penalty": 0.0,
+    "chain_depth": 0,
+    "stuck": false,
+    "requires_complement_set": false,
+    "question_requires_enumeration": false,
+    "residual_worlds": 72
+  }
+}

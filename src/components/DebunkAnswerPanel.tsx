@@ -307,8 +307,10 @@ export function DebunkAnswerPanel({ onNext, isTutorial = false }: {
     ? (puzzle.questions.find(q => q.kind === 'debunk_conflict_only') as { fixedIngredient?: IngredientId }).fixedIngredient ?? null
     : null;
 
-  const initialDraft = (): DraftStep => isConflictOnly
-    ? { kind: 'master', ingredient1: fixedIngredient, ingredient2: null }
+  const isMasterOnly = !isConflictOnly && !isApprenticeOnly;
+
+  const initialDraft = (): DraftStep => isConflictOnly || isMasterOnly
+    ? { kind: 'master', ingredient1: isConflictOnly ? fixedIngredient : null, ingredient2: null }
     : { kind: 'apprentice', ingredient: null, color: null };
 
   const [drafts, setDrafts] = useState<DraftStep[]>([initialDraft()]);
@@ -393,15 +395,17 @@ export function DebunkAnswerPanel({ onNext, isTutorial = false }: {
           {/* Add step buttons — hidden for conflict-only (exactly 1 step) */}
           {!isConflictOnly && (
             <div className="flex gap-2">
-              <button
-                onClick={() => addStep('apprentice')}
-                className="flex-1 border-2 border-dashed border-gray-200 hover:border-indigo-300
-                           text-gray-400 hover:text-indigo-500 rounded-lg py-2 text-xs font-semibold
-                           transition-colors"
-              >
-                + Apprentice step
-              </button>
-              {!isApprenticeOnly && (
+              {isApprenticeOnly && (
+                <button
+                  onClick={() => addStep('apprentice')}
+                  className="flex-1 border-2 border-dashed border-gray-200 hover:border-indigo-300
+                             text-gray-400 hover:text-indigo-500 rounded-lg py-2 text-xs font-semibold
+                             transition-colors"
+                >
+                  + Apprentice step
+                </button>
+              )}
+              {isMasterOnly && (
                 <button
                   onClick={() => addStep('master')}
                   className="flex-1 border-2 border-dashed border-gray-200 hover:border-indigo-300
