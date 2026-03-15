@@ -136,12 +136,14 @@ export function evaluatePlan(
 // ─── Validators ───────────────────────────────────────────────────────────────
 
 /**
- * Validate a player's min-steps plan (master-only mode).
+ * Core plan validator (step-kind-agnostic).
  * Valid when:
- * 1. All steps are master debunks.
- * 2. Plan length equals refLen (the pre-computed optimal length stored in the puzzle).
- * 3. Every step removes at least one publication (no wasted steps).
- * 4. All publications are removed by the end.
+ * 1. Plan length equals refLen.
+ * 2. Every step removes at least one publication (no wasted steps).
+ * 3. All publications are removed by the end.
+ *
+ * Step-kind constraints (master-only, apprentice-only) are enforced by the
+ * callers validateMasterPlanAnswer and validateApprenticePlanAnswer.
  */
 export function validateMinStepsAnswer(
   steps: DebunkStep[],
@@ -150,7 +152,6 @@ export function validateMinStepsAnswer(
   worlds: WorldSet,
   refLen: number,
 ): boolean {
-  if (steps.some(s => s.kind !== 'master')) return false;
   if (steps.length !== refLen) return false;
   if (publications.length === 0) return steps.length === 0;
 
@@ -166,6 +167,21 @@ export function validateMinStepsAnswer(
 
   // All publications removed
   return activePubs.size === 0;
+}
+
+/**
+ * Validate a master-only plan (debunk_min_steps mode).
+ * Same as validateMinStepsAnswer but additionally rejects any non-master steps.
+ */
+export function validateMasterPlanAnswer(
+  steps: DebunkStep[],
+  solution: Assignment,
+  publications: Publication[],
+  worlds: WorldSet,
+  refLen: number,
+): boolean {
+  if (steps.some(s => s.kind !== 'master')) return false;
+  return validateMinStepsAnswer(steps, solution, publications, worlds, refLen);
 }
 
 /**

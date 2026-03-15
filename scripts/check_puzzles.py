@@ -244,6 +244,41 @@ def _trivial_reason(question: dict, clues: list) -> str | None:
     return None
 
 
+# ── Debunk-answer step-kind check ──────────────────────────────────────────────
+
+_DEBUNK_STEP_KIND = {
+    'debunk_min_steps':       'master',
+    'debunk_apprentice_plan': 'apprentice',
+    'debunk_conflict_only':   'master',
+}
+
+def check_debunk_answers(path: Path, puz: dict, r: Results):
+    """Verify debunk_answers reference steps have the kind the question mode enforces."""
+    name = path.name
+    answers = puz.get('debunk_answers', {})
+    for q in puz.get('questions', []):
+        qk = q.get('kind')
+        if qk not in _DEBUNK_STEP_KIND:
+            continue
+        expected = _DEBUNK_STEP_KIND[qk]
+        ref = answers.get(qk)
+        if not ref:
+            r.error(f"[debunk-answers] {name}: question '{qk}' has no entry in debunk_answers")
+            continue
+        for i, step in enumerate(ref):
+            actual = step.get('kind')
+            if actual != expected:
+                r.error(
+                    f"[debunk-answers] {name}: {qk} step[{i}] "
+                    f"has kind='{actual}', expected '{expected}'"
+                )
+        if qk == 'debunk_conflict_only' and len(ref) != 1:
+            r.error(
+                f"[debunk-answers] {name}: debunk_conflict_only must have exactly 1 step "
+                f"(found {len(ref)})"
+            )
+
+
 def check_trivial_answers(path: Path, puz: dict, r: Results):
     if puz.get("trivial_answer_ok"):
         return
@@ -467,6 +502,12 @@ def main():
     _section("hint tokens")
     for puz, path, _ in all_puzzles:
         check_hint_tokens(path, puz, r)
+    _done()
+
+    # ── Step 10: Debunk-answer step-kind check ─────────────────────────────────
+    _section("debunk answers")
+    for puz, path, _ in all_puzzles:
+        check_debunk_answers(path, puz, r)
     _done()
 
     # ── Step 3–4: Duplicates + similar titles ─────────────────────────────────

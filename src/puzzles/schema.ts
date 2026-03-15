@@ -1,7 +1,7 @@
 import { generateAllWorlds, applyClues } from '../logic/worldSet';
 import { deduceMixingResult, deduceAlchemical, deduceAspect, deduceUncertainAspect, getPossibleResults, deduceNeutralPartner, getIngredientPotionProfile, getGroupPossiblePotions, getMostInformativeMix, getGuaranteedNonProducers } from '../logic/deducer';
 import { COLOR_INDEX, WORLD_DATA, SIGN_TABLE, SIZE_TABLE } from '../logic/worldPack';
-import { validateMinStepsAnswer, validateApprenticePlanAnswer, validateConflictOnlyAnswer } from '../logic/debunk';
+import { validateMasterPlanAnswer, validateApprenticePlanAnswer, validateConflictOnlyAnswer } from '../logic/debunk';
 import type {
   Puzzle, QuestionTarget, PotionResult, AlchemicalId, IngredientId, Sign, Color, WorldSet,
   DebunkStep, Publication,
@@ -207,7 +207,7 @@ export function checkDebunkAnswers(
 
     if (q.kind === 'debunk_min_steps') {
       const refLen = (puzzle.debunk_answers?.debunk_min_steps ?? []).length;
-      return validateMinStepsAnswer(steps, sol, pubs, worlds, refLen);
+      return validateMasterPlanAnswer(steps, sol, pubs, worlds, refLen);
     }
     if (q.kind === 'debunk_apprentice_plan') {
       const refLen = (puzzle.debunk_answers?.debunk_apprentice_plan ?? []).length;
