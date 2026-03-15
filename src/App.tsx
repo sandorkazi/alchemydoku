@@ -13,6 +13,7 @@ import { InterfaceQuickReference } from './components/InterfaceQuickReference';
 import type { Puzzle } from './types';
 import { clearPuzzleState } from './contexts/SolverContext';
 import { ExpandedHome as ExpandedHomeImpl } from './expanded/ExpandedHome';
+import { parsePermalink } from './utils/permalink';
 import { DriveProvider, useDrive } from './contexts/DriveContext';
 import { DriveSync } from './components/DriveSync';
 
@@ -269,19 +270,36 @@ const TUTORIAL_STEPS = {
   'debunk-master':    DEBUNK_MASTER_TUTORIAL_STEPS,
 };
 
-// ─── Expanded home (under construction) ──────────────────────────────────────
+// ─── Expanded home wrapper ────────────────────────────────────────────────────
 
-function ExpandedHome({ onModeChange }: { onModeChange: (m: 'base' | 'expanded') => void }) {
-  return <ExpandedHomeImpl onModeChange={onModeChange} />;
+function ExpandedHome({ onModeChange, initialPuzzleId }: {
+  onModeChange: (m: 'base' | 'expanded') => void;
+  initialPuzzleId?: string;
+}) {
+  return <ExpandedHomeImpl onModeChange={onModeChange} initialPuzzleId={initialPuzzleId} />;
 }
 
 // ─── Base-game App ────────────────────────────────────────────────────────────
 
 function AppInner() {
-  const [mode, setMode]                 = useState<'base' | 'expanded'>(loadMode);
-  const [view, setView]                 = useState<View>({ kind: 'home' });
-  const [completed, setCompleted]       = useState<Set<string>>(() => loadCompleted(loadMode()));
-  const [lastPuzzleId, setLastPuzzleId] = useState<string | null>(() => loadLastPuzzle(loadMode()));
+  // ── Permalink bootstrap ────────────────────────────────────────────────────
+  // Read once at mount — window.location.hash is synchronous and stable.
+  const [permalink] = useState(parsePermalink);
+  const initMode = permalink?.mode ?? loadMode();
+
+  const [mode, setMode]                 = useState<'base' | 'expanded'>(initMode);
+  const [view, setView]                 = useState<View>(() => {
+    if (permalink?.mode === 'base') {
+      const puzzle = PUZZLE_MAP[permalink.puzzleId];
+      if (puzzle) {
+        const col = (COLLECTIONS as Collection[]).find(c => c.puzzleIds.includes(permalink.puzzleId));
+        if (col) return { kind: 'puzzle', puzzleId: permalink.puzzleId, colId: col.id };
+      }
+    }
+    return { kind: 'home' };
+  });
+  const [completed, setCompleted]       = useState<Set<string>>(() => loadCompleted(initMode));
+  const [lastPuzzleId, setLastPuzzleId] = useState<string | null>(() => loadLastPuzzle(initMode));
   /** Incremented on reset to force SolverProvider remount even for same puzzleId */
   const [resetVersion, setResetVersion] = useState(0);
 
@@ -307,7 +325,12 @@ function AppInner() {
 
   // ── Expanded mode: completely separate experience ──────────────────────────
   if (mode === 'expanded') {
-    return <ExpandedHome onModeChange={handleModeChange} />;
+    return (
+      <ExpandedHome
+        onModeChange={handleModeChange}
+        initialPuzzleId={permalink?.mode === 'expanded' ? permalink.puzzleId : undefined}
+      />
+    );
   }
 
   // ── Helpers ────────────────────────────────────────────────────────────────

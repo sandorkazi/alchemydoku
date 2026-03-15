@@ -7,6 +7,7 @@ import { HintDrawer } from '../components/HintDrawer';
 import { AnswerPanel } from '../components/AnswerPanel';
 import { PuzzleToolbar } from '../components/PuzzleToolbar';
 import { downloadBothFiles, uploadBaseProgress } from '../utils/saveProgress';
+import { applyPermalink } from '../utils/permalink';
 import type { Puzzle } from '../types';
 
 // ─── Mobile clue drawer ───────────────────────────────────────────────────────
@@ -151,6 +152,7 @@ function SolverInner({
         onSave={handleSave}
         onLoad={handleLoad}
         onReset={() => dispatch({ type: 'RESET' })}
+        onPermalink={() => applyPermalink(puzzle.id, 'base')}
       />
 
       {/* ── Mobile clue drawer ─────────────────────────────────────────────── */}

@@ -15,6 +15,7 @@ import { ExpandedMixSimulator } from '../components/ExpandedMixSimulator';
 import { ExpandedHintDrawer } from '../components/ExpandedHintDrawer';
 import { PuzzleToolbar } from '../../components/PuzzleToolbar';
 import { downloadBothFiles, uploadExpandedProgress } from '../../utils/saveProgress';
+import { applyPermalink } from '../../utils/permalink';
 import type { ExpandedPuzzle } from '../types';
 
 // ─── Mobile clue drawer ───────────────────────────────────────────────────────
@@ -160,6 +161,7 @@ function SolverInner({ onBack, onNext, isTutorial = false }: {
         onSave={handleSave}
         onLoad={handleLoad}
         onReset={() => dispatch({ type: 'RESET' })}
+        onPermalink={() => applyPermalink(puzzle.id, 'expanded')}
       />
 
       <MobileClueDrawer puzzle={puzzle} />
