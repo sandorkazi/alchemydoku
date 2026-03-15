@@ -3,9 +3,11 @@
 alchemydoku.py  —  Puzzle toolchain for Alchemydoku.
 
 Subcommands:
-  generate   Generate new expanded puzzles from a profile
-  analyze    Score difficulty of base-game puzzles and write back
-  validate   Validate existing expanded puzzles
+  generate     Generate new expanded puzzles from a profile
+  analyze      Score difficulty of base-game puzzles and write back
+  validate     Validate existing expanded puzzles
+  regen-hints  Regenerate hints for puzzle files
+  check-hints  Detect wrong/stale hints in puzzle files
 
 Usage:
   python scripts/alchemydoku.py generate --profile easy_enc --count 3
@@ -13,6 +15,9 @@ Usage:
   python scripts/alchemydoku.py generate --profiles
   python scripts/alchemydoku.py analyze
   python scripts/alchemydoku.py validate
+  python scripts/alchemydoku.py regen-hints --all --missing-only
+  python scripts/alchemydoku.py regen-hints src/data/puzzles/medium-pp-01.json
+  python scripts/alchemydoku.py check-hints --all
 
 Available generate profiles:
   tutorial_golem, easy_enc, easy_sl, easy_golem,
@@ -940,6 +945,228 @@ def _dc(c: dict) -> str:
     if k == 'golem_hint_size':  return f"{c['part']} reacts to {c['size']}"
     return str(c)
 
+
+def _aspect_chain(worlds, clues, slot_1based: int, color: str, sol: dict,
+                  _depth: int = 0) -> list:
+    """Return human-readable deduction steps explaining ingredient slot_1based's color sign."""
+    si = slot_1based - 1
+    signs = {ALCH_DATA[w[si]][color][0] for w in worlds}
+    if len(signs) != 1:
+        return [f"ing{slot_1based} {color}?: (sign undetermined)"]
+    sgn = signs.pop()
+    sgn_s = sgn_str(sgn)
+
+    # Priority 1: direct aspect clue
+    for c in clues:
+        if c['kind'] == 'aspect' and c['ingredient'] == slot_1based and c['color'] == color:
+            return [f"ing{slot_1based} {color}{sgn_s}: direct aspect clue"]
+
+    # Priority 2: mixing clue producing this color result involving this slot
+    for c in clues:
+        if c['kind'] == 'mixing':
+            r = d2r(c['result'])
+            if r != 'neutral' and r[0] == color and r[1] == sgn:
+                a, b = c['ingredient1'], c['ingredient2']
+                if a == slot_1based or b == slot_1based:
+                    return [f"ing{a}+ing{b}={color}{sgn_s}: both share {color}{sgn_s}"]
+
+    # Priority 3: neutral partner chain (opposites, max depth 2)
+    if _depth < 2:
+        for c in clues:
+            if c['kind'] == 'mixing':
+                r = d2r(c['result'])
+                if r == 'neutral':
+                    a, b = c['ingredient1'], c['ingredient2']
+                    partner = b if a == slot_1based else (a if b == slot_1based else None)
+                    if partner is not None:
+                        sub = _aspect_chain(worlds, clues, partner, color, sol, _depth + 1)
+                        return sub + [f"ing{a}+ing{b}=neutral → ing{slot_1based} has {color}{sgn_s}"]
+
+    # Fallback
+    return [f"ing{slot_1based} has {color}{sgn_s}"]
+
+
+def gen_mixing_result_hints(worlds, clues, q, sol, golem=None) -> list:
+    i1, i2 = q['ingredient1'], q['ingredient2']
+    a1, a2 = sol[i1], sol[i2]
+    result = MIX_TABLE[a1][a2]
+    result_str = fmt_r(result)
+    hints = []
+    hints.append({'level': 1, 'text': (
+        f"To find the result of mixing ing{i1} and ing{i2}, apply the mixing rule: "
+        f"scan colours R→G→B in order. The first colour where both ingredients share "
+        f"the same sign determines the result potion. "
+        f"If all three colours have opposing signs, the result is neutral."
+    )})
+    walk_lines = []
+    resolved = False
+    for color in COLORS:
+        s1 = ALCH_DATA[a1][color][0]
+        s2 = ALCH_DATA[a2][color][0]
+        chain1 = '; '.join(_aspect_chain(worlds, clues, i1, color, sol))
+        chain2 = '; '.join(_aspect_chain(worlds, clues, i2, color, sol))
+        walk_lines.append(
+            f"  {color}: ing{i1}={color}{sgn_str(s1)} ({chain1}), "
+            f"ing{i2}={color}{sgn_str(s2)} ({chain2})"
+        )
+        if s1 == s2:
+            walk_lines.append(f"      → SAME sign {sgn_str(s1)} → {color}{sgn_str(s1)} resolves.")
+            resolved = True
+            break
+        else:
+            walk_lines.append(f"      → opposite signs → skip.")
+    if not resolved:
+        walk_lines.append("  All colours opposite → neutral.")
+    hints.append({'level': 2, 'text': "Step through each colour:\n" + "\n".join(walk_lines)})
+    hints.append({'level': 3, 'text': (
+        f"ing{i1}={ALCH_CODES[a1]}, ing{i2}={ALCH_CODES[a2]}. "
+        f"Mix result: {result_str}."
+    )})
+    return hints
+
+
+def gen_possible_potions_hints(worlds, clues, q, sol, golem=None) -> list:
+    i1, i2 = q['ingredient1'], q['ingredient2']
+    counts = Counter(MIX_TABLE[w[i1 - 1]][w[i2 - 1]] for w in worlds)
+    total = len(worlds)
+    dist_lines = sorted(
+        f"  {fmt_r(r)}: {c} world{'s' if c != 1 else ''} ({100 * c // total}%)"
+        for r, c in counts.items()
+    )
+    possible_set = sorted(fmt_r(r) for r in counts)
+    hints = []
+    hints.append({'level': 1, 'text': (
+        f"\"Possible potions\" means every outcome that occurs in at least one of the "
+        f"remaining {total} possible worlds. "
+        f"The clues haven't pinned down the exact alchemicals for ing{i1} and ing{i2}, "
+        f"so multiple outcomes are possible — collect all of them."
+    )})
+    hints.append({'level': 2, 'text': (
+        f"Distribution across {total} worlds (ing{i1}+ing{i2}):\n" + "\n".join(dist_lines)
+    )})
+    hints.append({'level': 3, 'text': (
+        f"Possible potions for ing{i1}+ing{i2}: {possible_set}."
+    )})
+    return hints
+
+
+def gen_aspect_hints(worlds, clues, q, sol, golem=None) -> list:
+    slot = q['ingredient']
+    color = q['color']
+    a = sol[slot]
+    sgn = ALCH_DATA[a][color][0]
+    sgn_s = sgn_str(sgn)
+    remaining = {w[slot - 1] for w in worlds}
+    signs_in_remaining = {ALCH_DATA[alch][color][0] for alch in remaining}
+    alch_signs = ', '.join(
+        f"{ALCH_CODES[alch]}({color}{sgn_str(ALCH_DATA[alch][color][0])})"
+        for alch in sorted(remaining)
+    )
+    hints = []
+    hints.append({'level': 1, 'text': (
+        f"Determine the {color} sign of ing{slot}. "
+        f"There are {len(remaining)} alchemical{'s' if len(remaining) != 1 else ''} "
+        f"still consistent with the clues for slot {slot}. "
+        f"Check whether they all agree on the {color} sign."
+    )})
+    hints.append({'level': 2, 'text': (
+        f"Remaining alchemicals for ing{slot}: {alch_signs}. "
+        f"{'All share ' + color + sgn_s + '.' if len(signs_in_remaining) == 1 else 'Signs differ — reduce worlds further.'}"
+    )})
+    hints.append({'level': 3, 'text': f"ing{slot} has {color}{sgn_s}."})
+    return hints
+
+
+def gen_aspect_set_hints(worlds, clues, q, sol, golem=None) -> list:
+    color = q['color']
+    target_sign = sgn_int(q['sign'])
+    target_sgn_s = q['sign']
+    confirmed = [si + 1 for si in range(8)
+                 if {ALCH_DATA[w[si]][color][0] for w in worlds} == {target_sign}]
+    ans_slots = sorted(s for s in SLOTS if ALCH_DATA[sol[s]][color][0] == target_sign)
+    clue_evidence = []
+    for c in clues:
+        if c['kind'] == 'mixing':
+            r = d2r(c['result'])
+            if r != 'neutral' and r[0] == color and r[1] == target_sign:
+                clue_evidence.append(
+                    f"ing{c['ingredient1']}+ing{c['ingredient2']}={color}{target_sgn_s}: "
+                    f"both have {color}{target_sgn_s}"
+                )
+        elif c['kind'] == 'aspect':
+            if c['color'] == color and sgn_int(c['sign']) == target_sign:
+                clue_evidence.append(f"ing{c['ingredient']} {color}{target_sgn_s}: direct clue")
+    hints = []
+    hints.append({'level': 1, 'text': (
+        f"Find the 4 ingredients with {color}{target_sgn_s}. "
+        f"Exactly 4 of the 8 alchemicals carry each sign per colour. "
+        f"A colored mixing result of {color}{target_sgn_s} directly reveals that both "
+        f"mixed ingredients share {color}{target_sgn_s}."
+    )})
+    evidence_str = "\n".join(f"  {e}" for e in clue_evidence) if clue_evidence else "  (none direct — use elimination)"
+    hints.append({'level': 2, 'text': (
+        f"Evidence:\n{evidence_str}\nConfirmed {color}{target_sgn_s}: {confirmed}."
+    )})
+    hints.append({'level': 3, 'text': f"The 4 ingredients with {color}{target_sgn_s}: {ans_slots}."})
+    return hints
+
+
+def gen_large_component_hints(worlds, clues, q, sol, golem=None) -> list:
+    color = q['color']
+    confirmed = [si + 1 for si in range(8)
+                 if {ALCH_DATA[w[si]][color][1] for w in worlds} == {1}]
+    ans_slots = sorted(s for s in SLOTS if ALCH_DATA[sol[s]][color][1] == 1)
+    size_evidence = []
+    for c in clues:
+        if c['kind'] == 'mixing':
+            r = d2r(c['result'])
+            if r != 'neutral' and r[0] == color:
+                size_evidence.append(
+                    f"ing{c['ingredient1']}+ing{c['ingredient2']}={fmt_r(r)}: "
+                    f"one of these holds Large-{color}"
+                )
+    hints = []
+    hints.append({'level': 1, 'text': (
+        f"Find the 4 ingredients that hold the Large component of {color}. "
+        f"When two ingredients share the same {color} sign, the Large one (vs Small) "
+        f"produces the coloured potion. "
+        f"Mixing clues with {color} results reveal which ingredients interact on this colour."
+    )})
+    evidence_str = "\n".join(f"  {e}" for e in size_evidence) if size_evidence else f"  (no direct {color} mixing clues)"
+    hints.append({'level': 2, 'text': (
+        f"Mixing clues for {color}:\n{evidence_str}\nConfirmed Large-{color} so far: {confirmed}."
+    )})
+    hints.append({'level': 3, 'text': f"The 4 Large-{color} ingredients: {ans_slots}."})
+    return hints
+
+
+def gen_safe_publish_hints(worlds, clues, q, sol, golem=None) -> list:
+    slot = q['ingredient']
+    certain = {}
+    uncertain = []
+    for color in COLORS:
+        signs = {ALCH_DATA[w[slot - 1]][color][0] for w in worlds}
+        if len(signs) == 1:
+            certain[color] = sgn_str(signs.pop())
+        else:
+            uncertain.append(color)
+    safe_color = uncertain[0] if len(uncertain) == 1 else None
+    certain_strs = [f"{col}{certain[col]}" for col in COLORS if col in certain]
+    hints = []
+    hints.append({'level': 1, 'text': (
+        f"When publishing a theory about ing{slot}, you hedge the one colour whose sign "
+        f"is still uncertain — that protects you if you're wrong about it. "
+        f"Check which of R, G, B still has an ambiguous sign across the remaining worlds."
+    )})
+    hints.append({'level': 2, 'text': (
+        f"For ing{slot}: "
+        f"confirmed aspects: {', '.join(certain_strs) if certain_strs else 'none'}. "
+        f"Uncertain colour(s): {uncertain}."
+    )})
+    hints.append({'level': 3, 'text': f"Safe colour to hedge for ing{slot}: {safe_color}."})
+    return hints
+
+
 def gen_hints(raw: dict) -> list:
     clues = raw['clues']; q = raw['q']; golem = raw['golem']
     sol = raw['sol']; worlds = raw['worlds']; k = q['kind']; hints = []
@@ -1145,6 +1372,24 @@ def gen_hints(raw: dict) -> list:
             f"with some partner? Non-producers found: {non_producers or 'keep checking'}."
         )})
         hints.append({'level': 3, 'text': f"Guaranteed non-producers of {target_str}: {non_producers}."})
+
+    elif k == 'mixing-result':
+        hints = gen_mixing_result_hints(worlds, clues, q, sol, golem)
+
+    elif k == 'possible-potions':
+        hints = gen_possible_potions_hints(worlds, clues, q, sol, golem)
+
+    elif k == 'aspect':
+        hints = gen_aspect_hints(worlds, clues, q, sol, golem)
+
+    elif k == 'aspect-set':
+        hints = gen_aspect_set_hints(worlds, clues, q, sol, golem)
+
+    elif k == 'large-component':
+        hints = gen_large_component_hints(worlds, clues, q, sol, golem)
+
+    elif k == 'safe-publish':
+        hints = gen_safe_publish_hints(worlds, clues, q, sol, golem)
 
     else:
         ans = answer(worlds, q, golem)
@@ -1384,6 +1629,160 @@ def cmd_validate(_args):
     print('\n' + ('All puzzles valid.' if all_ok else 'ERRORS found — see above.'))
 
 # ══════════════════════════════════════════════════════════════════════════════
+# SUBCOMMAND: regen-hints
+# ══════════════════════════════════════════════════════════════════════════════
+
+def _build_raw_for_puzzle(puz: dict) -> Optional[dict]:
+    """Build the raw dict that gen_hints expects from a loaded puzzle JSON."""
+    sol_raw = puz.get('solution', {})
+    if not sol_raw:
+        return None
+    sol   = {int(k): v for k, v in sol_raw.items()}
+    golem = puz.get('golem')
+    clues = puz.get('clues', [])
+    worlds = apply_all(all_worlds(), clues, golem)
+    return {'sol': sol, 'golem': golem, 'clues': clues, 'worlds': worlds}
+
+
+def _puzzle_files(args) -> list:
+    """Return list of Path objects based on args.all / args.files."""
+    if args.all:
+        files = (sorted(BASE_PUZZLE_DIR.glob('*.json'))
+                 + sorted(EXP_PUZZLE_DIR.glob('*.json')))
+        return [f for f in files if f.name != 'collections.json']
+    return [Path(f) for f in args.files]
+
+
+def cmd_regen_hints(args):
+    files   = _puzzle_files(args)
+    updated = skipped = 0
+
+    for f in files:
+        puz = json.loads(f.read_text())
+        pid = puz.get('id', f.stem)
+
+        if not args.include_tutorials and puz.get('difficulty') == 'tutorial':
+            skipped += 1
+            continue
+
+        if args.missing_only and puz.get('hints'):
+            skipped += 1
+            continue
+
+        questions = puz.get('questions', [])
+        if not questions:
+            skipped += 1
+            continue
+
+        raw = _build_raw_for_puzzle(puz)
+        if raw is None:
+            print(f"  SKIP {pid}: no solution")
+            skipped += 1
+            continue
+
+        # Generate hints per question, renumber levels sequentially
+        all_hints   = []
+        level_offset = 0
+        for q in questions:
+            q_raw  = dict(raw, q=q)
+            q_hints = gen_hints(q_raw)
+            for h in q_hints:
+                all_hints.append({'level': h['level'] + level_offset, 'text': h['text']})
+            if q_hints:
+                level_offset += max(h['level'] for h in q_hints)
+
+        puz['hints'] = all_hints
+        f.write_text(json.dumps(puz, indent=2))
+        print(f"  ✓  {pid}: {len(all_hints)} hint level(s)")
+        updated += 1
+
+    print(f"\nUpdated {updated} file(s), skipped {skipped}.")
+
+# ══════════════════════════════════════════════════════════════════════════════
+# SUBCOMMAND: check-hints
+# ══════════════════════════════════════════════════════════════════════════════
+
+def cmd_check_hints(args):
+    files  = _puzzle_files(args)
+    wrong  = checked = 0
+
+    for f in files:
+        puz   = json.loads(f.read_text())
+        pid   = puz.get('id', f.stem)
+        hints = puz.get('hints')
+        if not hints:
+            continue
+
+        sol_raw = puz.get('solution', {})
+        if not sol_raw:
+            continue
+        sol   = {int(k): v for k, v in sol_raw.items()}
+        golem = puz.get('golem')
+        clues = puz.get('clues', [])
+        worlds = apply_all(all_worlds(), clues, golem)
+        questions = puz.get('questions', [])
+        if not questions:
+            continue
+
+        total_levels = max(h['level'] for h in hints)
+        num_q        = len(questions)
+        # For regenerated hints: N questions × 3 levels each → block of 3 per question.
+        # Determine per-question last level.  If total_levels is divisible by num_q, each
+        # question occupies (total_levels // num_q) levels and we can pin-point each block.
+        # Otherwise (hand-crafted hints with uneven distribution) fall back to max_level.
+        if num_q > 0 and total_levels % num_q == 0:
+            levels_per_q = total_levels // num_q
+        else:
+            levels_per_q = None  # fallback: use max_level for all
+
+        def _last_text_for_q(qi: int) -> str:
+            if levels_per_q is not None:
+                target = (qi + 1) * levels_per_q
+            else:
+                target = total_levels
+            raw = ' '.join(h['text'] for h in hints if h['level'] == target)
+            return raw.replace('\u2212', '-')   # U+2212 → ASCII hyphen
+
+        for qi, q in enumerate(questions):
+            k   = q['kind']
+            ans = answer(worlds, q, golem)
+            if ans is None:
+                continue
+
+            expected = []
+            if k == 'mixing-result':
+                expected.append(fmt_r(ans))
+            elif k == 'possible-potions':
+                expected.extend(fmt_r(r) for r in ans)
+            elif k == 'aspect':
+                expected.append(q['color'] + sgn_str(ans))
+            elif k == 'alchemical':
+                expected.append(ALCH_CODES[ans])
+            elif k == 'neutral-partner':
+                expected.append(str(ans))
+            elif k == 'safe-publish':
+                expected.append(ans)
+            # aspect-set / large-component answers are sets; skip token check
+            else:
+                checked += 1
+                continue
+
+            last_text  = _last_text_for_q(qi)
+            last_lower = last_text.lower()
+            missing = [t for t in expected
+                       if t not in last_text and t.lower() not in last_lower]
+            if missing:
+                print(f"  WRONG  {pid}  q={k}  missing={missing}  "
+                      f"last_hint={last_text[:120]!r}")
+                wrong += 1
+            else:
+                checked += 1
+
+    print(f"\nChecked {checked} question(s). Wrong/stale hints: {wrong}.")
+    if wrong > 0:
+        sys.exit(1)
+
+# ══════════════════════════════════════════════════════════════════════════════
 # ENTRY POINT
 # ══════════════════════════════════════════════════════════════════════════════
 
@@ -1409,6 +1808,18 @@ if __name__ == '__main__':
     # validate
     sub.add_parser('validate', help='Validate expanded puzzles')
 
+    # regen-hints
+    rh_p = sub.add_parser('regen-hints', help='Regenerate hints for puzzle files')
+    rh_p.add_argument('files', nargs='*', help='Puzzle JSON file paths')
+    rh_p.add_argument('--all',              action='store_true', help='Process all base + expanded puzzles')
+    rh_p.add_argument('--missing-only',     action='store_true', help='Only update puzzles that have no hints')
+    rh_p.add_argument('--include-tutorials',action='store_true', help='Allow overwriting tutorial-difficulty puzzles')
+
+    # check-hints
+    ch_p = sub.add_parser('check-hints', help='Detect wrong/stale hints in puzzle files')
+    ch_p.add_argument('files', nargs='*', help='Puzzle JSON file paths')
+    ch_p.add_argument('--all', action='store_true', help='Check all base + expanded puzzles')
+
     args = parser.parse_args()
 
     if args.cmd == 'generate':
@@ -1417,5 +1828,9 @@ if __name__ == '__main__':
         cmd_analyze(args)
     elif args.cmd == 'validate':
         cmd_validate(args)
+    elif args.cmd == 'regen-hints':
+        cmd_regen_hints(args)
+    elif args.cmd == 'check-hints':
+        cmd_check_hints(args)
     else:
         parser.print_help()

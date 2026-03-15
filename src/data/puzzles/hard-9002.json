@@ -91,5 +91,43 @@
     "requires_complement_set": false,
     "question_requires_enumeration": false,
     "residual_worlds": 6
-  }
+  },
+  "hints": [
+    {
+      "level": 1,
+      "text": "To find the result of mixing ing1 and ing4, apply the mixing rule: scan colours R\u2192G\u2192B in order. The first colour where both ingredients share the same sign determines the result potion. If all three colours have opposing signs, the result is neutral."
+    },
+    {
+      "level": 2,
+      "text": "Step through each colour:\n  R: ing1=R+ (ing1 has R+), ing4=R+ (ing4 has R+)\n      \u2192 SAME sign + \u2192 R+ resolves."
+    },
+    {
+      "level": 3,
+      "text": "ing1=PPP, ing4=pnP. Mix result: R+."
+    },
+    {
+      "level": 4,
+      "text": "To find the result of mixing ing2 and ing5, apply the mixing rule: scan colours R\u2192G\u2192B in order. The first colour where both ingredients share the same sign determines the result potion. If all three colours have opposing signs, the result is neutral."
+    },
+    {
+      "level": 5,
+      "text": "Step through each colour:\n  R: ing2=R- (ing2+ing3=R-: both share R-), ing5=R- (ing5 has R-)\n      \u2192 SAME sign - \u2192 R- resolves."
+    },
+    {
+      "level": 6,
+      "text": "ing2=Nnp, ing5=nPp. Mix result: R-."
+    },
+    {
+      "level": 7,
+      "text": "To find the result of mixing ing3 and ing4, apply the mixing rule: scan colours R\u2192G\u2192B in order. The first colour where both ingredients share the same sign determines the result potion. If all three colours have opposing signs, the result is neutral."
+    },
+    {
+      "level": 8,
+      "text": "Step through each colour:\n  R: ing3=R- (ing2+ing3=R-: both share R-), ing4=R+ (ing4 has R+)\n      \u2192 opposite signs \u2192 skip.\n  G: ing3=G+ (ing1+ing3=G+: both share G+), ing4=G- (ing4 has G-)\n      \u2192 opposite signs \u2192 skip.\n  B: ing3=B- (ing3 has B-), ing4=B+ (ing2+ing4=B+: both share B+)\n      \u2192 opposite signs \u2192 skip.\n  All colours opposite \u2192 neutral."
+    },
+    {
+      "level": 9,
+      "text": "ing3=npN, ing4=pnP. Mix result: neutral."
+    }
+  ]
 }

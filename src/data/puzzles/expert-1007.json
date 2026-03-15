@@ -115,5 +115,43 @@
     "requires_complement_set": false,
     "question_requires_enumeration": false,
     "residual_worlds": 8
-  }
+  },
+  "hints": [
+    {
+      "level": 1,
+      "text": "To find the result of mixing ing2 and ing4, apply the mixing rule: scan colours R\u2192G\u2192B in order. The first colour where both ingredients share the same sign determines the result potion. If all three colours have opposing signs, the result is neutral."
+    },
+    {
+      "level": 2,
+      "text": "Step through each colour:\n  R: ing2=R- (ing2+ing3=R-: both share R-), ing4=R- (ing3+ing4=R-: both share R-)\n      \u2192 SAME sign - \u2192 R- resolves."
+    },
+    {
+      "level": 3,
+      "text": "ing2=NNN, ing4=Nnp. Mix result: G-."
+    },
+    {
+      "level": 4,
+      "text": "To find the result of mixing ing1 and ing2, apply the mixing rule: scan colours R\u2192G\u2192B in order. The first colour where both ingredients share the same sign determines the result potion. If all three colours have opposing signs, the result is neutral."
+    },
+    {
+      "level": 5,
+      "text": "Step through each colour:\n  R: ing1=R- (ing1 has R-), ing2=R- (ing2+ing3=R-: both share R-)\n      \u2192 SAME sign - \u2192 R- resolves."
+    },
+    {
+      "level": 6,
+      "text": "ing1=npN, ing2=NNN. Mix result: R-."
+    },
+    {
+      "level": 7,
+      "text": "To find the result of mixing ing1 and ing4, apply the mixing rule: scan colours R\u2192G\u2192B in order. The first colour where both ingredients share the same sign determines the result potion. If all three colours have opposing signs, the result is neutral."
+    },
+    {
+      "level": 8,
+      "text": "Step through each colour:\n  R: ing1=R- (ing1 has R-), ing4=R- (ing3+ing4=R-: both share R-)\n      \u2192 SAME sign - \u2192 R- resolves."
+    },
+    {
+      "level": 9,
+      "text": "ing1=npN, ing4=Nnp. Mix result: R-."
+    }
+  ]
 }

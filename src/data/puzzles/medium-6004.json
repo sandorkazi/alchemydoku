@@ -79,5 +79,19 @@
     "requires_complement_set": false,
     "question_requires_enumeration": false,
     "residual_worlds": 2
-  }
+  },
+  "hints": [
+    {
+      "level": 1,
+      "text": "To find the result of mixing ing2 and ing4, apply the mixing rule: scan colours R\u2192G\u2192B in order. The first colour where both ingredients share the same sign determines the result potion. If all three colours have opposing signs, the result is neutral."
+    },
+    {
+      "level": 2,
+      "text": "Step through each colour:\n  R: ing2=R- (ing2 has R-), ing4=R+ (ing3+ing6=R-: both share R-; ing3+ing4=neutral \u2192 ing4 has R+)\n      \u2192 opposite signs \u2192 skip.\n  G: ing2=G- (ing2+ing6=G-: both share G-), ing4=G- (ing4 has G-; ing3+ing4=neutral \u2192 ing3 has G+; ing3+ing4=neutral \u2192 ing4 has G-)\n      \u2192 SAME sign - \u2192 G- resolves."
+    },
+    {
+      "level": 3,
+      "text": "ing2=Nnp, ing4=pnP. Mix result: B+."
+    }
+  ]
 }
