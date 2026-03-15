@@ -16,6 +16,8 @@ import { ExpandedHome as ExpandedHomeImpl } from './expanded/ExpandedHome';
 import { parsePermalink } from './utils/permalink';
 import { DriveProvider, useDrive } from './contexts/DriveContext';
 import { DriveSync } from './components/DriveSync';
+import { shouldShowReleaseNotes, markReleaseNotesSeen, getCurrentReleaseEntry } from './utils/releaseNotes';
+import { WhatsNewBanner } from './components/WhatsNewBanner';
 
 type Collection = {
   id: string;
@@ -272,11 +274,20 @@ const TUTORIAL_STEPS = {
 
 // ─── Expanded home wrapper ────────────────────────────────────────────────────
 
-function ExpandedHome({ onModeChange, initialPuzzleId }: {
+function ExpandedHome({ onModeChange, initialPuzzleId, showReleaseNotes, onDismissReleaseNotes }: {
   onModeChange: (m: 'base' | 'expanded') => void;
   initialPuzzleId?: string;
+  showReleaseNotes: boolean;
+  onDismissReleaseNotes: () => void;
 }) {
-  return <ExpandedHomeImpl onModeChange={onModeChange} initialPuzzleId={initialPuzzleId} />;
+  return (
+    <ExpandedHomeImpl
+      onModeChange={onModeChange}
+      initialPuzzleId={initialPuzzleId}
+      showReleaseNotes={showReleaseNotes}
+      onDismissReleaseNotes={onDismissReleaseNotes}
+    />
+  );
 }
 
 // ─── Base-game App ────────────────────────────────────────────────────────────
@@ -286,6 +297,9 @@ function AppInner() {
   // Read once at mount — window.location.hash is synchronous and stable.
   const [permalink] = useState(parsePermalink);
   const initMode = permalink?.mode ?? loadMode();
+
+  const [showReleaseNotes, setShowReleaseNotes] = useState(() => shouldShowReleaseNotes());
+  const releaseEntry = getCurrentReleaseEntry();
 
   const [mode, setMode]                 = useState<'base' | 'expanded'>(initMode);
   const [view, setView]                 = useState<View>(() => {
@@ -309,10 +323,16 @@ function AppInner() {
   useEffect(() => {
     function handleCloudSync() {
       setCompleted(loadCompleted('base'));
+      setShowReleaseNotes(shouldShowReleaseNotes());
     }
     window.addEventListener('alch-cloud-sync', handleCloudSync);
     return () => window.removeEventListener('alch-cloud-sync', handleCloudSync);
   }, []);
+
+  function handleDismissReleaseNotes() {
+    markReleaseNotesSeen();
+    setShowReleaseNotes(false);
+  }
 
   // When mode switches, reload per-mode state and reset to home
   function handleModeChange(m: 'base' | 'expanded') {
@@ -329,6 +349,8 @@ function AppInner() {
       <ExpandedHome
         onModeChange={handleModeChange}
         initialPuzzleId={permalink?.mode === 'expanded' ? permalink.puzzleId : undefined}
+        showReleaseNotes={showReleaseNotes}
+        onDismissReleaseNotes={handleDismissReleaseNotes}
       />
     );
   }
@@ -449,6 +471,11 @@ function AppInner() {
           <ModeSwitcher mode="base" onChange={handleModeChange} />
           <DriveSync />
         </div>
+
+        {/* What's New banner */}
+        {showReleaseNotes && releaseEntry && (
+          <WhatsNewBanner entry={releaseEntry} onDismiss={handleDismissReleaseNotes} variant="base" />
+        )}
 
         {/* Hero */}
         <div className="text-center space-y-2">

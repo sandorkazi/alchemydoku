@@ -14,6 +14,8 @@ import { ExpandedPuzzleSolverPage } from './pages/ExpandedPuzzleSolverPage';
 import { clearExpandedPuzzleState } from './contexts/ExpandedSolverContext';
 import type { ExpandedPuzzle } from './types';
 import type { ExpandedCollection } from './data/puzzlesIndex';
+import { WhatsNewBanner } from '../components/WhatsNewBanner';
+import { getCurrentReleaseEntry } from '../utils/releaseNotes';
 
 // ─── Progress persistence ─────────────────────────────────────────────────────
 
@@ -179,9 +181,11 @@ function computeInitialExpanded(puzzleId?: string): { puzzle: ExpandedPuzzle | n
   return { puzzle, queue };
 }
 
-export function ExpandedHome({ onModeChange, initialPuzzleId }: {
+export function ExpandedHome({ onModeChange, initialPuzzleId, showReleaseNotes, onDismissReleaseNotes }: {
   onModeChange: (m: 'base' | 'expanded') => void;
   initialPuzzleId?: string;
+  showReleaseNotes?: boolean;
+  onDismissReleaseNotes?: () => void;
 }) {
   const { puzzle: initPuzzle, queue: initQueue } = computeInitialExpanded(initialPuzzleId);
 
@@ -262,6 +266,8 @@ export function ExpandedHome({ onModeChange, initialPuzzleId }: {
     .flatMap(c => c.puzzleIds)
     .filter(id => completed.has(id)).length;
 
+  const releaseEntry = getCurrentReleaseEntry();
+
   return (
     <div className="min-h-screen bg-amber-50 animate-fadein">
       <div className="max-w-xl mx-auto px-4 py-10 space-y-8">
@@ -280,6 +286,11 @@ export function ExpandedHome({ onModeChange, initialPuzzleId }: {
             </button>
           ))}
         </div>
+
+        {/* What's New banner */}
+        {showReleaseNotes && releaseEntry && onDismissReleaseNotes && (
+          <WhatsNewBanner entry={releaseEntry} onDismiss={onDismissReleaseNotes} variant="expanded" />
+        )}
 
         {/* Hero */}
         <div className="text-center space-y-2">

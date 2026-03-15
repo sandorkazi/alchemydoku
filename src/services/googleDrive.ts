@@ -17,6 +17,7 @@ export interface SaveData {
   savedAt: string;
   base: ModeSave;
   expanded: ModeSave;
+  seenRelease?: string;
 }
 
 export interface ModeSave {
@@ -285,6 +286,9 @@ function mergeSaveData(a: SaveData, b: SaveData): SaveData {
       lastPuzzle: a.expanded.lastPuzzle ?? b.expanded.lastPuzzle,
       freePlay:   a.expanded.freePlay || b.expanded.freePlay,
     },
+    seenRelease: a.seenRelease && b.seenRelease
+      ? (a.seenRelease >= b.seenRelease ? a.seenRelease : b.seenRelease)
+      : (a.seenRelease ?? b.seenRelease),
   };
 }
 
@@ -359,6 +363,7 @@ export function snapshotLocal(): SaveData {
       lastPuzzle: getLastPuzzle('expanded'),
       freePlay:   getFreePlay('expanded'),
     },
+    seenRelease: localStorage.getItem('alch-seen-release') ?? undefined,
   };
 }
 
@@ -388,6 +393,12 @@ export function mergeIntoLocal(cloud: SaveData): void {
   }
   if (cloud.expanded.lastPuzzle && !localStorage.getItem('alch-last-puzzle-expanded')) {
     localStorage.setItem('alch-last-puzzle-expanded', cloud.expanded.lastPuzzle);
+  }
+
+  const cloudSeen = cloud.seenRelease;
+  const localSeen = localStorage.getItem('alch-seen-release');
+  if (cloudSeen && (!localSeen || cloudSeen > localSeen)) {
+    localStorage.setItem('alch-seen-release', cloudSeen);
   }
 
   window.dispatchEvent(new CustomEvent('alch-cloud-sync'));
