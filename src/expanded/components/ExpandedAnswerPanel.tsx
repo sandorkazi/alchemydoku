@@ -247,6 +247,7 @@ function RevealedAnswer({ q, answer }: { q: AnyQuestion; answer: AnyAnswer }) {
     const ids = (answer as unknown as IngredientSetAnswer).ingredients;
     return <span className="inline-flex flex-wrap gap-1.5">{ids.map(id => <IngredientIcon key={id} index={(id-1) as 0|1|2|3|4|5|6|7} width={32} />)}{ids.length===0&&<span className="text-xs text-gray-400 italic">None</span>}</span>;
   }
+  if (q.kind === 'encyclopedia_fourth') return <Ing slotId={answer as number} size={36} />;
   if (typeof answer === 'number') return <AlchemicalImage id={answer as AlchemicalId} width={40} />;
   if (typeof answer === 'object' && 'type' in (answer as object)) return <PotionImage result={answer as PotionResult} width={36} />;
   if (typeof answer === 'object' && 'sign' in (answer as object)) {
