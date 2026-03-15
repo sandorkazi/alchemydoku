@@ -11,7 +11,7 @@ export function shouldShowReleaseNotes(): boolean {
         !!localStorage.getItem('alch-save-base') ||
         !!localStorage.getItem('alch-save-expanded') ||
         !!localStorage.getItem('alch-completed-base') ||
-        !!localStorage.getItem('alch-completed-expanded');
+        !!localStorage.getItem('alch-exp-completed');
       return hasProgress;
     }
     return seen !== RELEASE_VERSION;

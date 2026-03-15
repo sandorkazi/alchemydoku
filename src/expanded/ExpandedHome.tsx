@@ -198,6 +198,13 @@ export function ExpandedHome({ onModeChange, initialPuzzleId, showReleaseNotes, 
   // Persist completed set
   useEffect(() => { saveCompleted(completed); }, [completed]);
 
+  // Re-read completed set when Drive sync merges cloud data
+  useEffect(() => {
+    function handleCloudSync() { setCompleted(loadCompleted()); }
+    window.addEventListener('alch-cloud-sync', handleCloudSync);
+    return () => window.removeEventListener('alch-cloud-sync', handleCloudSync);
+  }, []);
+
   // ── Puzzle selection ───────────────────────────────────────────────────────
 
   const openPuzzle = (puzzle: ExpandedPuzzle) => {
