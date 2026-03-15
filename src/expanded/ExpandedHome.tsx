@@ -164,11 +164,31 @@ function CollectionView({ collection, completed, onSelectPuzzle, onBack }: {
 
 // ─── Main ExpandedHome ────────────────────────────────────────────────────────
 
-export function ExpandedHome({ onModeChange }: { onModeChange: (m: 'base' | 'expanded') => void }) {
+function computeInitialExpanded(puzzleId?: string): { puzzle: ExpandedPuzzle | null; queue: ExpandedPuzzle[] } {
+  if (!puzzleId) return { puzzle: null, queue: [] };
+  const puzzle = EXPANDED_PUZZLE_MAP[puzzleId];
+  if (!puzzle) return { puzzle: null, queue: [] };
+  const coll = EXPANDED_COLLECTIONS.find(c => c.puzzleIds.includes(puzzleId));
+  const queue: ExpandedPuzzle[] = [];
+  if (coll) {
+    const idx = coll.puzzleIds.indexOf(puzzleId);
+    coll.puzzleIds.slice(idx + 1).forEach(id => {
+      if (EXPANDED_PUZZLE_MAP[id]) queue.push(EXPANDED_PUZZLE_MAP[id]);
+    });
+  }
+  return { puzzle, queue };
+}
+
+export function ExpandedHome({ onModeChange, initialPuzzleId }: {
+  onModeChange: (m: 'base' | 'expanded') => void;
+  initialPuzzleId?: string;
+}) {
+  const { puzzle: initPuzzle, queue: initQueue } = computeInitialExpanded(initialPuzzleId);
+
   const [completed, setCompleted] = useState<Set<string>>(loadCompleted as () => Set<string>);
-  const [activePuzzle, setActivePuzzle] = useState<ExpandedPuzzle | null>(null);
+  const [activePuzzle, setActivePuzzle] = useState<ExpandedPuzzle | null>(initPuzzle);
   const [activeCollection, setActiveCollection] = useState<ExpandedCollection | null>(null);
-  const [puzzleQueue, setPuzzleQueue] = useState<ExpandedPuzzle[]>([]);
+  const [puzzleQueue, setPuzzleQueue] = useState<ExpandedPuzzle[]>(initQueue);
   const [resetVersion, setResetVersion] = useState(0);
 
   // Persist completed set

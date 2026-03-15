@@ -24,14 +24,23 @@ export type PuzzleToolbarProps = {
   onSave: () => void;
   onLoad: () => void;
   onReset: () => void;
+  /** Called when the user clicks the chain-link button; should update the URL and copy to clipboard. */
+  onPermalink?: () => void;
 };
 
 export function PuzzleToolbar({
   title, difficulty, worldsLeft,
   isTutorial = false, subtitle,
-  onBack, onSave, onLoad, onReset,
+  onBack, onSave, onLoad, onReset, onPermalink,
 }: PuzzleToolbarProps) {
   const [menuOpen, setMenuOpen] = useState(false);
+  const [copied, setCopied]     = useState(false);
+
+  function handlePermalink() {
+    onPermalink?.();
+    setCopied(true);
+    setTimeout(() => setCopied(false), 2000);
+  }
 
   const iconBtn = 'text-xs text-gray-400 hover:text-gray-700 px-2 py-1 rounded-lg hover:bg-gray-100 transition-colors';
   const menuItem = 'w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-50 flex items-center gap-2';
@@ -68,6 +77,11 @@ export function PuzzleToolbar({
 
         {/* Desktop actions */}
         <div className="hidden sm:flex items-center gap-1">
+          {onPermalink && (
+            <button onClick={handlePermalink} aria-label="Copy permalink" title="Copy link to this puzzle" className={iconBtn}>
+              {copied ? '✓' : '🔗'}
+            </button>
+          )}
           <button onClick={onSave}  aria-label="Save progress"  title="Save progress to file"  className={iconBtn}>💾</button>
           <button onClick={onLoad}  aria-label="Load progress"  title="Load progress from file" className={iconBtn}>📂</button>
           <button onClick={onReset} aria-label="Reset puzzle"   title="Reset all progress"      className={iconBtn}>↺</button>
@@ -85,6 +99,11 @@ export function PuzzleToolbar({
           </button>
           {menuOpen && (
             <div className="absolute right-0 top-full mt-1 bg-white border rounded-xl shadow-lg py-1 z-30 min-w-[140px] animate-fadein">
+              {onPermalink && (
+                <button onClick={() => { handlePermalink(); setMenuOpen(false); }} className={menuItem}>
+                  {copied ? '✓ Copied!' : '🔗 Copy link'}
+                </button>
+              )}
               <button onClick={() => { onSave();  setMenuOpen(false); }} className={menuItem}>💾 Save progress</button>
               <button onClick={() => { onLoad();  setMenuOpen(false); }} className={menuItem}>📂 Load progress</button>
               <button onClick={() => { onReset(); setMenuOpen(false); }} className={menuItem}>↺ Reset</button>

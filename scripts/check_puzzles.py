@@ -14,11 +14,14 @@ Checks performed (always, ~0.1 s):
                       (suppress per-puzzle with "trivial_answer_ok": true)
   9. hint-tokens    — hint text must not contain raw ingredient names
                       (Fern, Bird Claw, etc.) — use ing1–ing8 tokens instead
+ 10. permalink      — each puzzle ID appears in exactly one collection;
+                      no ID is shared across base/expanded;
+                      all collection refs point to registered puzzles
 
 Additional checks with --deep (~2–5 s per puzzle, runs world simulation):
- 10. logical        — clues don't eliminate the solution; all questions have
+ 11. logical        — clues don't eliminate the solution; all questions have
                       unique answers given the clue set
- 11. redundancy     — warns if any clue can be removed without losing uniqueness
+ 12. redundancy     — warns if any clue can be removed without losing uniqueness
 
 Usage:
   python scripts/check_puzzles.py           # structural checks (fast)
@@ -278,7 +281,89 @@ def check_hint_tokens(path: Path, puz: dict, r: Results):
                 break  # one error per hint is enough
 
 
-# ── 10–11. Deep logical validation ─────────────────────────────────────────────
+# ── 10. Permalink uniqueness ───────────────────────────────────────────────────
+
+def _puzzleids_from_ts_collections(text: str) -> list[list[str]]:
+    """Extract each puzzleIds array from a TypeScript collections constant.
+
+    Matches blocks of the form:   puzzleIds: [ 'id-a', 'id-b', ... ]
+    The arrays must not contain nested brackets (they don't in this codebase).
+    """
+    result = []
+    for match in re.finditer(r'puzzleIds\s*:\s*\[([^\]]*)\]', text, re.DOTALL):
+        ids = re.findall(r"""['"]([a-z0-9][a-z0-9-]*[a-z0-9])['"]""", match.group(1))
+        if ids:
+            result.append(ids)
+    return result
+
+
+def check_permalink_uniqueness(all_puzzles: list, r: Results):
+    """Verify the permalink invariant: each puzzle ID is wired into the site
+    exactly once — in at most one collection, in at most one mode.
+
+    Three sub-checks:
+      a) No puzzle ID appears in more than one base collection (collections.json)
+      b) No puzzle ID appears in more than one expanded collection (puzzlesIndex.ts)
+      c) No puzzle ID is shared between base and expanded collections
+      d) Every collection reference points to a registered puzzle
+    """
+    registered_base = {puz.get("id") for puz, _path, is_exp in all_puzzles if not is_exp}
+    registered_exp  = {puz.get("id") for puz, _path, is_exp in all_puzzles if     is_exp}
+
+    # ── Base: collections.json ───────────────────────────────────────────────
+    base_pid_to_col: dict[str, str] = {}
+    collections_json = BASE_DIR / "collections.json"
+    if collections_json.exists():
+        try:
+            data = json.loads(collections_json.read_text(encoding="utf-8"))
+            for col in data:
+                col_id = col.get("id", "?")
+                for pid in col.get("puzzleIds", []):
+                    if pid in base_pid_to_col:
+                        r.error(
+                            f"[permalink] Base puzzle '{pid}' is listed in multiple "
+                            f"collections: '{base_pid_to_col[pid]}' and '{col_id}'"
+                        )
+                    else:
+                        base_pid_to_col[pid] = col_id
+                    if pid not in registered_base:
+                        r.error(
+                            f"[permalink] Base collection '{col_id}' references "
+                            f"unregistered puzzle '{pid}'"
+                        )
+        except json.JSONDecodeError as exc:
+            r.error(f"[permalink] collections.json: invalid JSON — {exc}")
+
+    # ── Expanded: puzzlesIndex.ts ────────────────────────────────────────────
+    exp_pid_to_coll_idx: dict[str, int] = {}
+    try:
+        exp_text = EXP_IDX.read_text(encoding="utf-8")
+        for coll_idx, pids in enumerate(_puzzleids_from_ts_collections(exp_text)):
+            for pid in pids:
+                if pid in exp_pid_to_coll_idx:
+                    r.error(
+                        f"[permalink] Expanded puzzle '{pid}' is listed in multiple "
+                        f"collections (collection indices "
+                        f"{exp_pid_to_coll_idx[pid]} and {coll_idx} in puzzlesIndex.ts)"
+                    )
+                else:
+                    exp_pid_to_coll_idx[pid] = coll_idx
+                if pid not in registered_exp:
+                    r.error(
+                        f"[permalink] Expanded collection (index {coll_idx}) references "
+                        f"unregistered puzzle '{pid}'"
+                    )
+    except OSError as exc:
+        r.error(f"[permalink] Could not read {EXP_IDX.name}: {exc}")
+
+    # ── Cross-mode: no ID shared between base and expanded ───────────────────
+    for pid in sorted(set(base_pid_to_col) & set(exp_pid_to_coll_idx)):
+        r.error(
+            f"[permalink] Puzzle '{pid}' is listed in both base and expanded collections"
+        )
+
+
+# ── 11–12. Deep logical validation ─────────────────────────────────────────────
 
 def _load_alchemydoku():
     """Import validate_puzzle from alchemydoku.py without executing its CLI."""
@@ -389,7 +474,12 @@ def main():
     check_duplicates([(puz, path) for puz, path, _ in all_puzzles], r)
     _done()
 
-    # ── Steps 8–9: Deep logical validation (optional) ─────────────────────────
+    # ── Step 10: Permalink uniqueness ─────────────────────────────────────────
+    _section("permalink uniqueness")
+    check_permalink_uniqueness(all_puzzles, r)
+    _done()
+
+    # ── Steps 11–12: Deep logical validation (optional) ───────────────────────
     if args.deep:
         _section("loading alchemydoku logic")
         alch_mod = None

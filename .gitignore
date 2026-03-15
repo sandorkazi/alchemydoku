@@ -24,3 +24,7 @@ coverage/
 # Python
 __pycache__/
 *.pyc
+
+# Tool-local config (not project settings)
+.claude/settings.local.json
+.codemie/
