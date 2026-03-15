@@ -133,6 +133,70 @@ export function BaseInterfaceCards() {
         }
         text="Puzzles may include up to 3 progressive hints, each more specific than the last. Hints are revealed one at a time via the button in the clue panel — once shown they cannot be hidden again."
       />
+
+      {/* Toolbar actions */}
+      <RuleCard
+        icon="🔧" title="Toolbar Actions" accent="slate"
+        visual={
+          <div className="flex flex-col gap-1.5">
+            <div className="flex items-center gap-1.5">
+              {(['💾', '📂', '↺', '🔗'] as const).map(icon => (
+                <span key={icon} className="w-7 h-7 flex items-center justify-center rounded-lg
+                  border border-gray-200 bg-white text-sm hover:bg-gray-100 shadow-sm">{icon}</span>
+              ))}
+            </div>
+            <span className="text-[10px] text-gray-400 tabular-nums">
+              <span className="font-semibold text-gray-600">42w</span> worlds remaining
+            </span>
+          </div>
+        }
+        text="The top toolbar has four action buttons: 💾 saves your progress to a local file, 📂 loads a previously saved file, ↺ resets the puzzle to its blank state, and 🔗 copies a permalink to this puzzle to your clipboard and updates the URL. The 'Xw' counter shows how many possible alchemical assignments remain consistent with the clues."
+      />
+
+      {/* Grid toolbar extras */}
+      <RuleCard
+        icon="🛠️" title="Grid Toolbar Extras" accent="rose"
+        visual={
+          <div className="flex flex-col gap-1.5">
+            <div className="flex items-center gap-1.5 flex-wrap">
+              <span className="px-2 py-0.5 rounded border border-gray-200 text-[10px] text-gray-500 bg-white">✕ Clear</span>
+              <span className="px-2 py-0.5 rounded border border-rose-200 text-[10px] text-rose-400 bg-white">✕ Drawing</span>
+              <span className="px-2 py-0.5 rounded border border-gray-200 text-[10px] text-gray-500 bg-white">🔀</span>
+            </div>
+            <div className="flex items-center gap-1.5 flex-wrap">
+              <span className="px-1.5 py-0.5 rounded bg-gray-100 text-[9px] font-mono text-gray-600">⇧ click</span>
+              <span className="text-[9px] text-gray-400">mark tool</span>
+              <span className="px-1.5 py-0.5 rounded bg-gray-100 text-[9px] font-mono text-gray-600">⌃ click</span>
+              <span className="text-[9px] text-gray-400">? tool</span>
+            </div>
+          </div>
+        }
+        text="Inside the ingredient grid: ✕ Clear wipes all cell marks and notes; ✕ Drawing (appears when you have strokes) clears only the freehand sketches; 🔀 reshuffles which ingredient icon appears in each column (the underlying slot assignments stay the same). Keyboard modifiers work as overrides: Shift+click always uses the ✗✔ mark tool, Ctrl/⌘+click always uses the ? tool, regardless of which tool is selected."
+      />
+
+      {/* Collapsible clues */}
+      <RuleCard
+        icon="📌" title="Collapsible Clues" accent="violet"
+        visual={
+          <div className="flex flex-col gap-1.5">
+            {/* Expanded clue with hover minus */}
+            <div className="relative rounded-lg border border-gray-200 px-2 py-1.5 bg-white group/demo
+              flex items-center justify-between">
+              <span className="text-[10px] text-gray-600">🔬 Aspect clue</span>
+              <span className="w-5 h-5 flex items-center justify-center rounded text-xs
+                text-gray-400 bg-gray-50 border border-gray-200">−</span>
+            </div>
+            {/* Collapsed pill */}
+            <button className="w-full text-left rounded-lg border border-gray-200 px-2 py-1.5
+              flex items-center gap-1.5 text-[10px] font-semibold uppercase tracking-wide
+              text-gray-400 bg-white">
+              <span className="text-[8px]">▶</span>
+              🔀 Mixing clue
+            </button>
+          </div>
+        }
+        text="Each clue group has a − button that appears on hover in its top-right corner. Clicking it collapses the clue to a small pill showing only its type label — useful for hiding clues you've already used. Click the pill (▶ label) to expand it again."
+      />
     </>
   );
 }
