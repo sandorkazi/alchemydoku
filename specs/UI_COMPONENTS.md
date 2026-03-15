@@ -166,12 +166,13 @@ After wrong attempts ≥ 3 (or on demand), "Show Solution" reveals correct answe
 
 ## 4b. DebunkAnswerPanel (`src/components/DebunkAnswerPanel.tsx`)
 
-Handles `debunk_min_steps` and `debunk_conflict_only` question types.
+Handles all three debunk question kinds: `debunk_min_steps`, `debunk_apprentice_plan`, and `debunk_conflict_only`.
 
-| Question kind          | UI                                                                |
-|------------------------|-------------------------------------------------------------------|
-| `debunk_min_steps`     | Multi-step plan builder: ordered list of steps, add/remove steps |
-| `debunk_conflict_only` | Single locked step (kind=master, ingredient1 pre-filled)         |
+| Question kind            | UI                                                                |
+|--------------------------|-------------------------------------------------------------------|
+| `debunk_min_steps`       | Multi-step plan builder: ordered list of steps, add/remove steps |
+| `debunk_apprentice_plan` | Multi-step plan builder (apprentice steps only; master steps rejected at validation) |
+| `debunk_conflict_only`   | Single locked step (kind=master, ingredient1 pre-filled)         |
 
 Each step is one of:
 - **Apprentice**: ingredient picker + color (R/G/B) picker
@@ -182,8 +183,9 @@ For `debunk_conflict_only` the step is locked to `master` with ingredient1 fixed
 
 The Submit button is disabled until every step has all required fields filled.
 
-`AnswerPanel.tsx` acts as a routing wrapper: it renders `DebunkAnswerPanel` for debunk
-questions and `StandardAnswerPanel` for all others. This satisfies React's hooks constraint
+`AnswerPanel.tsx` acts as a routing wrapper: it renders `DebunkAnswerPanel` when any
+question has kind `debunk_min_steps`, `debunk_apprentice_plan`, or `debunk_conflict_only`,
+and `StandardAnswerPanel` for all other puzzles. This satisfies React's hooks constraint
 (no conditional hook calls).
 
 ---

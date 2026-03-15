@@ -347,9 +347,35 @@ def generate_hints(puzzle: MinimalPuzzle) -> list[Hint]:
     return hints
 ```
 
+**Per-question-kind hint content:**
+
+| Kind                      | Level 1                                             | Level 2                                                  | Level 3                            |
+|---------------------------|-----------------------------------------------------|----------------------------------------------------------|------------------------------------|
+| `mixing-result`           | Explain the mixing rule (scan R→G→B, first same-sign wins) | Walk each colour: show aspect-chain for both ingredients; verdict SAME/opposite | Answer + alchemical codes for both ingredients |
+| `possible-potions`        | Explain that all outcomes across remaining worlds count | Distribution table: each outcome with world count and % | Full list of possible outcomes     |
+| `aspect`                  | Ask for the C sign of ingredient N; note how many alchemicals remain | List remaining alchemicals with their C sign; confirm they all agree | "ingredient N has C±"             |
+| `aspect-set`              | Explain that 4 of 8 ingredients share each sign; colored mix results directly reveal sign membership | List clue evidence + confirmed slots so far | The 4 confirmed ingredients        |
+| `large-component`         | Explain size-difference + same-sign → colored potion | List mixing clues for C; confirmed large holders so far | The 4 large-C ingredients          |
+| `safe-publish`            | Explain hedging the uncertain color protects against mistakes | List confirmed aspects vs uncertain colors for the target ingredient | "Safe color to hedge: C"          |
+| `alchemical`              | Identify direct clues for the slot                  | List eliminated and remaining alchemicals                | "ingredient N = CODE (R± G± B±)"  |
+| `solar_lunar`             | Solar = odd IDs, Lunar = even                       | Remaining alchemicals split by solar/lunar               | "ingredient N = CODE, SOLAR/LUNAR" |
+| `neutral-partner`         | Explain direct-opposite = always-neutral mix        | Remaining alchemicals + their aspect signatures          | "ingredient N = CODE; partner = ingredient M = CODE" |
+| `ingredient-potion-profile` | "Certain" = same result in every world            | Check each of 7 partners; list certain results           | All certain potions                |
+| `group-possible-potions`  | Check all C(n,2) pairs                              | Certain pairs so far                                     | All certain potions for the group  |
+| `most-informative-mix`    | Explain Shannon entropy                             | Top partners by entropy with distribution                | Best partner + entropy value       |
+| `guaranteed-non-producer` | Explain non-producer = can never produce the potion | Per-ingredient check; non-producers found so far         | Final non-producer list            |
+| golem (`golem_group` / `golem_animate_potion`) | Known test results + reaction-group table | Chest/ears colors/sizes; cross-reference untested | The target group or animator potion |
+| `encyclopedia_fourth`     | Three known entries + sign given; narrow from non-known slots | Eliminate candidates with reasons | "Only ingredient N remains; it has the missing sign" |
+
 **For golem puzzles**, Level 1 should summarize which reaction groups are partially
 or fully determined, Level 2 traces which group the question target belongs to, and
 Level 3 confirms the final answer.
+
+**Implementation note:** `gen_hints()` in `scripts/alchemydoku.py` dispatches to a
+per-kind generator function (e.g. `gen_mixing_result_hints`, `gen_aspect_hints`).
+The `_aspect_chain()` helper traces how a colour sign is established from clues (priority:
+direct aspect clue → coloured mix result → neutral-partner chain → fallback).
+For multi-question puzzles, levels are renumbered sequentially (Q1: 1–3, Q2: 4–6, …).
 
 ### 4e. Profile definitions
 

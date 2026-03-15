@@ -201,6 +201,13 @@ agrees has `missing_sign` on `aspect`. Returns `null` if not uniquely determined
 **Answer UI:** Grid of ingredient icons excluding `known` ingredients; click to select one.
 The sign is displayed in the question header — the player only needs to identify the ingredient.
 
+**Answer reveal:** When the solution is shown (wrong attempt or explicit reveal), the correct
+answer must be displayed as an **ingredient icon** (`<Ing>` / `<IngredientIcon>`), not an
+alchemical icon. The answer is an `IngredientId` (plain number), which is the same JS type
+as `AlchemicalId` — any generic `typeof answer === 'number' → AlchemicalImage` fallback in
+`RevealedAnswer` will produce the wrong display. The `encyclopedia_fourth` case must be
+handled explicitly before that fallback.
+
 ---
 
 ### 3b. Which Aspect (`kind: 'encyclopedia_which_aspect'`)
