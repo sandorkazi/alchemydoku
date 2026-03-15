@@ -1,0 +1,58 @@
+{
+  "id": "combo-b-med-np-02",
+  "title": "Reaction Chains",
+  "description": "Use the clues to identify the one ingredient that always mixes to neutral with the target ingredient.",
+  "difficulty": "medium",
+  "clues": [
+    {
+      "kind": "debunk",
+      "variant": "master",
+      "ingredient1": 2,
+      "ingredient2": 3,
+      "claimedPotion": {
+        "type": "neutral"
+      },
+      "outcome": "success"
+    }
+  ],
+  "questions": [
+    {
+      "kind": "neutral-partner",
+      "ingredient": 2
+    }
+  ],
+  "solution": {
+    "1": 7,
+    "2": 2,
+    "3": 1,
+    "4": 6,
+    "5": 4,
+    "6": 8,
+    "7": 3,
+    "8": 5
+  },
+  "hints": [
+    {
+      "level": 1,
+      "text": "Find the ingredient whose alchemical is the direct opposite of ingredient 2. Two alchemicals are direct opposites when their mix is always neutral \u2014 all three colour aspects have opposite signs."
+    },
+    {
+      "level": 2,
+      "text": "Ingredient 2 has alchemical properties: R+ G- B+. Its direct opposite has all signs flipped. Check which remaining possible alchemicals always mix to neutral with it."
+    },
+    {
+      "level": 3,
+      "text": "Ingredient 2 = pnP. Its direct opposite is ingredient 3 = npN."
+    }
+  ],
+  "complexity": {
+    "raw": 1.709,
+    "avg_clue_strength": 2.807,
+    "ambig_penalty": 0.0,
+    "chain_depth": 0,
+    "stuck": false,
+    "requires_complement_set": false,
+    "question_requires_enumeration": false,
+    "residual_worlds": 5760
+  }
+}

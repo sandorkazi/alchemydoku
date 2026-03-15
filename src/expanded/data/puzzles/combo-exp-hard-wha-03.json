@@ -1,0 +1,136 @@
+{
+  "id": "combo-exp-hard-wha-03",
+  "mode": "expanded",
+  "title": "Secrets of the Guild",
+  "description": "Four ingredient\u2013sign pairs form a valid encyclopedia article. All the clue types are in play \u2014 deduce which aspect colour they share.",
+  "difficulty": "hard",
+  "golem": {
+    "chest": {
+      "color": "G",
+      "size": "L"
+    },
+    "ears": {
+      "color": "B",
+      "size": "S"
+    }
+  },
+  "clues": [
+    {
+      "kind": "golem_test",
+      "ingredient": 3,
+      "chest_reacted": true,
+      "ears_reacted": true
+    },
+    {
+      "kind": "golem_test",
+      "ingredient": 7,
+      "chest_reacted": false,
+      "ears_reacted": false
+    },
+    {
+      "kind": "encyclopedia",
+      "aspect": "R",
+      "entries": [
+        {
+          "ingredient": 3,
+          "sign": "+"
+        },
+        {
+          "ingredient": 4,
+          "sign": "+"
+        },
+        {
+          "ingredient": 5,
+          "sign": "+"
+        }
+      ]
+    },
+    {
+      "kind": "encyclopedia",
+      "aspect": "B",
+      "entries": [
+        {
+          "ingredient": 1,
+          "sign": "-"
+        },
+        {
+          "ingredient": 4,
+          "sign": "-"
+        },
+        {
+          "ingredient": 8,
+          "sign": "-"
+        }
+      ]
+    },
+    {
+      "kind": "golem_test",
+      "ingredient": 1,
+      "chest_reacted": true,
+      "ears_reacted": false
+    },
+    {
+      "kind": "golem_test",
+      "ingredient": 2,
+      "chest_reacted": false,
+      "ears_reacted": true
+    }
+  ],
+  "questions": [
+    {
+      "kind": "encyclopedia_which_aspect",
+      "entries": [
+        {
+          "ingredient": 1,
+          "sign": "-"
+        },
+        {
+          "ingredient": 2,
+          "sign": "-"
+        },
+        {
+          "ingredient": 6,
+          "sign": "+"
+        },
+        {
+          "ingredient": 8,
+          "sign": "+"
+        }
+      ]
+    }
+  ],
+  "solution": {
+    "1": 7,
+    "2": 5,
+    "3": 3,
+    "4": 6,
+    "5": 8,
+    "6": 4,
+    "7": 2,
+    "8": 1
+  },
+  "hints": [
+    {
+      "level": 1,
+      "text": "For each colour R/G/B, check whether all four ingredient\u2013sign pairs (ingredient 1 -, ingredient 2 -, ingredient 6 +, ingredient 8 +) hold across the remaining worlds."
+    },
+    {
+      "level": 2,
+      "text": "Eliminate any colour where at least one remaining world disagrees. Only one colour will survive."
+    },
+    {
+      "level": 3,
+      "text": "The answer is G (Green): every remaining world maps all four entries onto the Green aspect."
+    }
+  ],
+  "complexity": {
+    "raw": 3.612,
+    "avg_clue_strength": 2.55,
+    "ambig_penalty": 0.0,
+    "chain_depth": 0,
+    "stuck": false,
+    "requires_complement_set": false,
+    "question_requires_enumeration": false,
+    "residual_worlds": 1
+  }
+}

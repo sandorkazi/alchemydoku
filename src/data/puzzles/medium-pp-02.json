@@ -88,15 +88,15 @@
   "hints": [
     {
       "level": 1,
-      "text": "There are 4 possible outcomes for this mix. Start by ruling out clearly impossible ones."
+      "text": "\"Possible potions\" means every outcome that occurs in at least one of the remaining 24 possible worlds. The clues haven't pinned down the exact alchemicals for ing1 and ing2, so multiple outcomes are possible \u2014 collect all of them."
     },
     {
       "level": 2,
-      "text": "Each clue constrains the alchemical assignments \u2014 trace which potions survive all constraints."
+      "text": "Distribution across 24 worlds (ing1+ing2):\n  B-: 8 worlds (33%)\n  R-: 7 worlds (29%)\n  neutral: 9 worlds (37%)"
     },
     {
       "level": 3,
-      "text": "The answer has 4 potions: B+, G-, R+, neutral."
+      "text": "Possible potions for ing1+ing2: ['B-', 'R-', 'neutral']."
     }
   ],
   "complexity": {

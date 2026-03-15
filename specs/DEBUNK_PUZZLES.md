@@ -232,6 +232,15 @@ publications/articles are guaranteed to be wrong.
 *[DEFERRED for initial content: hold this question type until puzzles with correct
 publications mixed in are designed.]*
 
+### 4b-ii. `debunk_apprentice_plan` — apprentice-only plan
+
+Identical to `debunk_min_steps` except **only apprentice steps are permitted**.
+A valid answer must contain no master steps. Use this question type for tutorial
+and easy puzzles where master debunking hasn't been introduced yet.
+
+The validation logic rejects any plan that contains a master step, even if the
+plan would otherwise satisfy the minimum-step requirement.
+
 ### 4c. `debunk_conflict_only` — demonstrate a conflict without removal
 
 **Variant**: master only in v1.
@@ -413,9 +422,9 @@ approach takes one extra step, is ideal for medium/hard difficulty.
 
 | ID                          | Difficulty | Questions                                       |
 |-----------------------------|------------|-------------------------------------------------|
-| `debunk-plan-tutorial-01`   | tutorial   | `debunk_min_steps` (1 step, single apprentice)  |
-| `debunk-plan-easy-01`       | easy       | `debunk_min_steps` (1–2 steps)                  |
-| `debunk-plan-easy-02`       | easy       | `debunk_min_steps` (1–2 steps)                  |
+| `debunk-plan-tutorial-01`   | tutorial   | `debunk_apprentice_plan` (1 step, single apprentice) |
+| `debunk-plan-easy-01`       | easy       | `debunk_apprentice_plan` (1–2 apprentice steps) |
+| `debunk-plan-easy-02`       | easy       | `debunk_min_steps` (mixed: 1 master + 1 apprentice) |
 | `debunk-plan-conflict-01`   | easy       | `debunk_conflict_only`                          |
 
 ### Expanded game (registered in `src/expanded/data/puzzlesIndex.ts`)
@@ -437,7 +446,7 @@ approach takes one extra step, is ideal for medium/hard difficulty.
 | `src/contexts/SolverContext.tsx`               | `SUBMIT_ANSWER` dispatches to `checkDebunkAnswers()` for debunk questions |
 | `src/components/AnswerPanel.tsx`               | Wrapper: routes to `DebunkAnswerPanel` or `StandardAnswerPanel` |
 | `src/components/DebunkAnswerPanel.tsx`         | Full plan-builder UI (PublicationsBoard, StepEditor, etc.) |
-| `src/types.ts`                                 | `DebunkStep`, `Publication`, `debunk_min_steps`, `debunk_conflict_only` types |
+| `src/types.ts`                                 | `DebunkStep`, `Publication`, `debunk_min_steps`, `debunk_apprentice_plan`, `debunk_conflict_only` types |
 
 ---
 

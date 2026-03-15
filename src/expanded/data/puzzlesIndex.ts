@@ -81,6 +81,29 @@ import expDebunkTutorial01  from './puzzles/exp-debunk-tutorial-01.json';
 import expDebunkEasy01      from './puzzles/exp-debunk-easy-01.json';
 import expDebunkMedium01    from './puzzles/exp-debunk-medium-01.json';
 
+// ── Combination: Grand Synthesis ──────────────────────────────────────────────
+import comboExpEasy02       from './puzzles/combo-exp-easy-02.json';
+import comboExpEasy03       from './puzzles/combo-exp-easy-03.json';
+import comboExpEasy04       from './puzzles/combo-exp-easy-04.json';
+import comboExpEasy05       from './puzzles/combo-exp-easy-05.json';
+import comboExpEasy06       from './puzzles/combo-exp-easy-06.json';
+import comboExpMedSl02      from './puzzles/combo-exp-med-sl-02.json';
+import comboExpMedSl03      from './puzzles/combo-exp-med-sl-03.json';
+import comboExpMedSl04      from './puzzles/combo-exp-med-sl-04.json';
+import comboExpMedSl05      from './puzzles/combo-exp-med-sl-05.json';
+import comboExpMedAll02     from './puzzles/combo-exp-med-all-02.json';
+import comboExpMedAll03     from './puzzles/combo-exp-med-all-03.json';
+import comboExpMedAll04     from './puzzles/combo-exp-med-all-04.json';
+import comboExpMedAll05     from './puzzles/combo-exp-med-all-05.json';
+import comboExpHardWha02    from './puzzles/combo-exp-hard-wha-02.json';
+import comboExpHardWha03    from './puzzles/combo-exp-hard-wha-03.json';
+import comboExpHardWha04    from './puzzles/combo-exp-hard-wha-04.json';
+import comboExpHardWha05    from './puzzles/combo-exp-hard-wha-05.json';
+import comboExpHardSl02     from './puzzles/combo-exp-hard-sl-02.json';
+import comboExpHardSl03     from './puzzles/combo-exp-hard-sl-03.json';
+import comboExpHardSl04     from './puzzles/combo-exp-hard-sl-04.json';
+import comboExpHardSl05     from './puzzles/combo-exp-hard-sl-05.json';
+
 import type { ExpandedPuzzle } from '../types';
 
 export const ALL_EXPANDED_PUZZLES: ExpandedPuzzle[] = [
@@ -96,6 +119,11 @@ export const ALL_EXPANDED_PUZZLES: ExpandedPuzzle[] = [
   expHardGolemMix02, expHardGolemMix03, expHardGolemMix04, expHardGolemMix05, expHardGolemMix06,
   expHardAmongGolem01, expHardAmongGolem02,
   expDebunkTutorial01, expDebunkEasy01, expDebunkMedium01,
+  comboExpEasy02, comboExpEasy03, comboExpEasy04, comboExpEasy05, comboExpEasy06,
+  comboExpMedSl02, comboExpMedSl03, comboExpMedSl04, comboExpMedSl05,
+  comboExpMedAll02, comboExpMedAll03, comboExpMedAll04, comboExpMedAll05,
+  comboExpHardWha02, comboExpHardWha03, comboExpHardWha04, comboExpHardWha05,
+  comboExpHardSl02, comboExpHardSl03, comboExpHardSl04, comboExpHardSl05,
 ] as unknown as ExpandedPuzzle[];
 
 export const EXPANDED_PUZZLE_MAP: Record<string, ExpandedPuzzle> =
@@ -222,5 +250,19 @@ export const EXPANDED_COLLECTIONS: ExpandedCollection[] = [
     difficulty: 'medium',
     puzzleIds: ['exp-debunk-tutorial-01', 'exp-debunk-easy-01', 'exp-debunk-medium-01'],
     unlockedAfter: 'exp-tutorials',
+  },
+  {
+    id: 'combo-exp',
+    title: 'Grand Synthesis',
+    description: 'All expanded mechanics at once — encyclopedia articles, Solar/Lunar classifications, and golem reactions. The hardest deductions require every tool.',
+    difficulty: 'hard',
+    puzzleIds: [
+      'combo-exp-easy-02', 'combo-exp-easy-03', 'combo-exp-easy-04', 'combo-exp-easy-05', 'combo-exp-easy-06',
+      'combo-exp-med-sl-02', 'combo-exp-med-sl-03', 'combo-exp-med-sl-04', 'combo-exp-med-sl-05',
+      'combo-exp-med-all-02', 'combo-exp-med-all-03', 'combo-exp-med-all-04', 'combo-exp-med-all-05',
+      'combo-exp-hard-wha-02', 'combo-exp-hard-wha-03', 'combo-exp-hard-wha-04', 'combo-exp-hard-wha-05',
+      'combo-exp-hard-sl-02', 'combo-exp-hard-sl-03', 'combo-exp-hard-sl-04', 'combo-exp-hard-sl-05',
+    ],
+    unlockedAfter: 'exp-hard-all',
   },
 ];

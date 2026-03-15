@@ -113,7 +113,7 @@ function isComplete(s: DraftStep): s is DebunkStep {
 }
 
 function StepEditor({
-  index, draft, outcome, onUpdate, onRemove, isConflictOnly, isApprenticeOnly,
+  index, draft, outcome, onUpdate, onRemove, isConflictOnly,
 }: {
   index: number;
   draft: DraftStep;
@@ -121,7 +121,6 @@ function StepEditor({
   onUpdate: (d: DraftStep) => void;
   onRemove: () => void;
   isConflictOnly: boolean;
-  isApprenticeOnly?: boolean;
 }) {
   const getIngredient = useIngredient();
   void getIngredient;
@@ -150,45 +149,17 @@ function StepEditor({
   return (
     <div className="bg-white border border-gray-200 rounded-lg p-3 space-y-2">
       <div className="flex items-center justify-between">
-        <span className="text-xs font-bold text-gray-500">Step {index + 1}</span>
-        <div className="flex items-center gap-2">
-          {/* Switch type — locked for conflict_only (must be master) or apprentice_plan (must be apprentice) */}
-          {!isConflictOnly && !isApprenticeOnly && (
-            <div className="flex rounded overflow-hidden border border-gray-200 text-xs">
-              {(['apprentice', 'master'] as const).map(k => (
-                <button
-                  key={k}
-                  onClick={() => {
-                    if (draft.kind === k) return;
-                    onUpdate(k === 'apprentice'
-                      ? { kind: 'apprentice', ingredient: null, color: null }
-                      : { kind: 'master', ingredient1: null, ingredient2: null });
-                  }}
-                  className={`px-2 py-0.5 font-semibold capitalize transition-colors ${
-                    draft.kind === k
-                      ? 'bg-indigo-600 text-white'
-                      : 'bg-white text-gray-500 hover:bg-gray-50'
-                  }`}
-                >
-                  {k}
-                </button>
-              ))}
-            </div>
-          )}
-          {isConflictOnly && (
-            <span className="text-[10px] uppercase tracking-widest text-indigo-400 font-bold">Master only</span>
-          )}
-          {isApprenticeOnly && (
-            <span className="text-[10px] uppercase tracking-widest text-indigo-400 font-bold">Apprentice only</span>
-          )}
-          <button
-            onClick={onRemove}
-            className="text-gray-300 hover:text-red-400 transition-colors text-sm font-bold leading-none"
-            title="Remove step"
-          >
-            ×
-          </button>
-        </div>
+        <span className="text-xs font-bold text-gray-500">
+          Step {index + 1}
+          <span className="ml-1.5 normal-case font-normal text-gray-400 capitalize">{draft.kind}</span>
+        </span>
+        <button
+          onClick={onRemove}
+          className="text-gray-300 hover:text-red-400 transition-colors text-sm font-bold leading-none"
+          title="Remove step"
+        >
+          ×
+        </button>
       </div>
 
       {/* Pickers */}
@@ -336,8 +307,10 @@ export function DebunkAnswerPanel({ onNext, isTutorial = false }: {
     ? (puzzle.questions.find(q => q.kind === 'debunk_conflict_only') as { fixedIngredient?: IngredientId }).fixedIngredient ?? null
     : null;
 
-  const initialDraft = (): DraftStep => isConflictOnly
-    ? { kind: 'master', ingredient1: fixedIngredient, ingredient2: null }
+  const isMasterOnly = !isConflictOnly && !isApprenticeOnly;
+
+  const initialDraft = (): DraftStep => isConflictOnly || isMasterOnly
+    ? { kind: 'master', ingredient1: isConflictOnly ? fixedIngredient : null, ingredient2: null }
     : { kind: 'apprentice', ingredient: null, color: null };
 
   const [drafts, setDrafts] = useState<DraftStep[]>([initialDraft()]);
@@ -358,8 +331,11 @@ export function DebunkAnswerPanel({ onNext, isTutorial = false }: {
       : puzzle.debunk_answers?.debunk_min_steps;
   const refLen = refAnswer?.length ?? 1;
 
-  function addStep() {
-    setDrafts(prev => [...prev, initialDraft()]);
+  function addStep(kind: 'apprentice' | 'master') {
+    const newDraft: DraftStep = kind === 'master'
+      ? { kind: 'master', ingredient1: null, ingredient2: null }
+      : { kind: 'apprentice', ingredient: null, color: null };
+    setDrafts(prev => [...prev, newDraft]);
   }
 
   function removeStep(i: number) {
@@ -413,20 +389,33 @@ export function DebunkAnswerPanel({ onNext, isTutorial = false }: {
               onUpdate={d => updateStep(i, d)}
               onRemove={() => removeStep(i)}
               isConflictOnly={isConflictOnly && i === 0}
-              isApprenticeOnly={isApprenticeOnly}
             />
           ))}
 
-          {/* Add step button — hidden for conflict-only (exactly 1 step) */}
+          {/* Add step buttons — hidden for conflict-only (exactly 1 step) */}
           {!isConflictOnly && (
-            <button
-              onClick={addStep}
-              className="w-full border-2 border-dashed border-gray-200 hover:border-indigo-300
-                         text-gray-400 hover:text-indigo-500 rounded-lg py-2 text-xs font-semibold
-                         transition-colors"
-            >
-              + Add step
-            </button>
+            <div className="flex gap-2">
+              {isApprenticeOnly && (
+                <button
+                  onClick={() => addStep('apprentice')}
+                  className="flex-1 border-2 border-dashed border-gray-200 hover:border-indigo-300
+                             text-gray-400 hover:text-indigo-500 rounded-lg py-2 text-xs font-semibold
+                             transition-colors"
+                >
+                  + Apprentice step
+                </button>
+              )}
+              {isMasterOnly && (
+                <button
+                  onClick={() => addStep('master')}
+                  className="flex-1 border-2 border-dashed border-gray-200 hover:border-indigo-300
+                             text-gray-400 hover:text-indigo-500 rounded-lg py-2 text-xs font-semibold
+                             transition-colors"
+                >
+                  + Master step
+                </button>
+              )}
+            </div>
           )}
         </div>
       )}

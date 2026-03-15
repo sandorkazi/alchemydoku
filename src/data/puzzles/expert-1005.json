@@ -94,5 +94,43 @@
     "requires_complement_set": false,
     "question_requires_enumeration": false,
     "residual_worlds": 4
-  }
+  },
+  "hints": [
+    {
+      "level": 1,
+      "text": "To find the result of mixing ing1 and ing6, apply the mixing rule: scan colours R\u2192G\u2192B in order. The first colour where both ingredients share the same sign determines the result potion. If all three colours have opposing signs, the result is neutral."
+    },
+    {
+      "level": 2,
+      "text": "Step through each colour:\n  R: ing1=R- (ing1 has R-), ing6=R+ (ing6 has R+)\n      \u2192 opposite signs \u2192 skip.\n  G: ing1=G- (ing1+ing4=G-: both share G-), ing6=G+ (ing6 has G+)\n      \u2192 opposite signs \u2192 skip.\n  B: ing1=B- (ing1 has B-), ing6=B+ (ing6+ing8=B+: both share B+)\n      \u2192 opposite signs \u2192 skip.\n  All colours opposite \u2192 neutral."
+    },
+    {
+      "level": 3,
+      "text": "ing1=NNN, ing6=PPP. Mix result: neutral."
+    },
+    {
+      "level": 4,
+      "text": "To find the result of mixing ing1 and ing8, apply the mixing rule: scan colours R\u2192G\u2192B in order. The first colour where both ingredients share the same sign determines the result potion. If all three colours have opposing signs, the result is neutral."
+    },
+    {
+      "level": 5,
+      "text": "Step through each colour:\n  R: ing1=R- (ing1 has R-), ing8=R- (ing8 has R-)\n      \u2192 SAME sign - \u2192 R- resolves."
+    },
+    {
+      "level": 6,
+      "text": "ing1=NNN, ing8=Nnp. Mix result: G-."
+    },
+    {
+      "level": 7,
+      "text": "To find the result of mixing ing4 and ing5, apply the mixing rule: scan colours R\u2192G\u2192B in order. The first colour where both ingredients share the same sign determines the result potion. If all three colours have opposing signs, the result is neutral."
+    },
+    {
+      "level": 8,
+      "text": "Step through each colour:\n  R: ing4=R+ (ing4 has R+), ing5=R- (ing5 has R-)\n      \u2192 opposite signs \u2192 skip.\n  G: ing4=G- (ing1+ing4=G-: both share G-), ing5=G+ (ing5 has G+)\n      \u2192 opposite signs \u2192 skip.\n  B: ing4=B+ (ing4 has B+), ing5=B+ (ing5 has B+)\n      \u2192 SAME sign + \u2192 B+ resolves."
+    },
+    {
+      "level": 9,
+      "text": "ing4=pnP, ing5=nPp. Mix result: B+."
+    }
+  ]
 }
