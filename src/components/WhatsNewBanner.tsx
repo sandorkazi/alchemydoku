@@ -23,14 +23,19 @@ export function WhatsNewBanner({ entry, onDismiss, variant }: WhatsNewBannerProp
       aria-label="What's New"
       className={`rounded-2xl px-4 py-3 animate-fadein ${wrapperClass}`}
     >
-      <div className="flex items-center justify-between gap-2">
-        <span className="text-sm font-semibold text-gray-800">
-          ✨ {entry.title}
-        </span>
+      <div className="flex items-start justify-between gap-2">
+        <div>
+          <p className="text-[10px] uppercase tracking-widest text-gray-400 font-bold mb-0.5">
+            Recent updates to Alchemy Sudoku Training
+          </p>
+          <span className="text-sm font-semibold text-gray-800">
+            ✨ {entry.title}
+          </span>
+        </div>
         <button
           onClick={onDismiss}
           aria-label="Dismiss release notes"
-          className={`text-xs font-semibold shrink-0 focus-visible:outline-none focus-visible:ring-2 rounded ${dismissClass}`}
+          className={`text-xs font-semibold shrink-0 mt-0.5 focus-visible:outline-none focus-visible:ring-2 rounded ${dismissClass}`}
         >
           Got it
         </button>
