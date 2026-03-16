@@ -4,7 +4,7 @@ import { PotionImage, AlchemicalImage, SignedElemImage, IngredientIcon,
 import { ALCHEMICALS } from '../data/alchemicals';
 import { INGREDIENTS } from '../data/ingredients';
 import { useIngredient } from '../contexts/SolverContext';
-import type { Clue, SellResult, DebunkClue, AlchemicalId, Color, Sign, MixingAmongClue, SellResultAmongClue } from '../types';
+import type { Clue, SellResult, DebunkClue, AlchemicalId, Color, Sign, MixingAmongClue, SellAmongClue, SellResultAmongClue, MixingCountAmongClue } from '../types';
 
 const ING_W        = 36;  // ingredient icon — matches grid header
 const ASPECT_BADGE = 22;  // aspect orb badge — half overlaps top of ingredient
@@ -308,6 +308,51 @@ function MixingAmongClueCard({ clue }: { clue: MixingAmongClue }) {
 
 // ─── SellAmong clue card ──────────────────────────────────────────────────────
 
+function SellAmongClueCard({ clue }: { clue: SellAmongClue }) {
+  const getIngredient = useIngredient();
+  const n = clue.ingredients.length;
+  const soldWord = clue.result === 'sold' ? 'sold as' : 'rejected for';
+  const countLabel = `Exactly ${clue.count} of ${n} ${soldWord}`;
+  return (
+    <Card icon={<SellIcon width={18} />} label="Sell Count" accent="purple">
+      <div className="flex items-center gap-1.5 flex-wrap">
+        <span className="text-[10px] text-gray-500 shrink-0">{countLabel}</span>
+        <SignedElemImage color={clue.potion.color} sign={clue.potion.sign} width={22} />
+      </div>
+      <div className="flex flex-wrap gap-1 mt-1">
+        {clue.ingredients.map(id => {
+          const { index } = getIngredient(id);
+          return <IngredientIcon key={id} index={index} width={ING_W} />;
+        })}
+      </div>
+    </Card>
+  );
+}
+
+// ─── MixingCountAmong clue card ───────────────────────────────────────────────
+
+function MixingCountAmongClueCard({ clue }: { clue: MixingCountAmongClue }) {
+  const getIngredient = useIngredient();
+  const n = clue.ingredients.length;
+  const pairCount = (n * (n - 1)) / 2;
+  return (
+    <Card icon="🔢" label="Counted Mix" accent="blue">
+      <div className="flex items-center gap-1.5 flex-wrap">
+        <span className="text-[10px] text-gray-500 shrink-0">
+          {clue.count} of {pairCount} pairs mixed
+        </span>
+        <PotionImage result={clue.result} width={POT_W} />
+      </div>
+      <div className="flex flex-wrap gap-1 mt-1">
+        {clue.ingredients.map(id => {
+          const { index } = getIngredient(id);
+          return <IngredientIcon key={id} index={index} width={ING_W} />;
+        })}
+      </div>
+    </Card>
+  );
+}
+
 // ─── SellResultAmong clue card ─────────────────────────────────────────────────
 
 function SellResultAmongClueCard({ clue }: { clue: SellResultAmongClue }) {
@@ -340,12 +385,14 @@ function SellResultAmongClueCard({ clue }: { clue: SellResultAmongClue }) {
 
 export function ClueCard({ clue }: { clue: Clue }) {
   switch (clue.kind) {
-    case 'mixing':     return <MixingClueCard     clue={clue} />;
-    case 'aspect':     return <AspectClueCard     clue={clue} />;
-    case 'assignment': return <AssignmentClueCard clue={clue} />;
-    case 'sell':       return <SellClueCard       clue={clue} />;
-    case 'debunk':        return <DebunkClueCard       clue={clue} />;
-    case 'mixing_among':  return <MixingAmongClueCard  clue={clue} />;
-    case 'sell_result_among':  return <SellResultAmongClueCard clue={clue} />;
+    case 'mixing':              return <MixingClueCard            clue={clue} />;
+    case 'aspect':              return <AspectClueCard            clue={clue} />;
+    case 'assignment':          return <AssignmentClueCard        clue={clue} />;
+    case 'sell':                return <SellClueCard              clue={clue} />;
+    case 'debunk':              return <DebunkClueCard            clue={clue} />;
+    case 'mixing_among':        return <MixingAmongClueCard       clue={clue} />;
+    case 'sell_among':          return <SellAmongClueCard         clue={clue} />;
+    case 'mixing_count_among':  return <MixingCountAmongClueCard  clue={clue} />;
+    case 'sell_result_among':   return <SellResultAmongClueCard   clue={clue} />;
   }
 }

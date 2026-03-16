@@ -121,6 +121,17 @@ def check_structure(path: Path, puz: dict, is_expanded: bool, r: Results):
     if is_expanded and puz.get("mode") != "expanded":
         r.error(f"[mode-field] {name}: expanded puzzle must have mode='expanded'")
 
+    # mixing_count_among clues: requires ≥ 3 ingredients, count in [1, C(n,2)]
+    for c in puz.get("clues", []):
+        if c.get("kind") == "mixing_count_among":
+            n = len(c.get("ingredients", []))
+            count = c.get("count", 0)
+            max_pairs = n * (n - 1) // 2
+            if n < 3:
+                r.error(f"[clue-shape] {name}: mixing_count_among requires ≥ 3 ingredients, got {n}")
+            if not (1 <= count <= max_pairs):
+                r.error(f"[clue-shape] {name}: mixing_count_among count={count} out of range [1, {max_pairs}]")
+
     # Solution must be a valid 1–8 bijection
     sol = puz.get("solution", {})
     if sol:

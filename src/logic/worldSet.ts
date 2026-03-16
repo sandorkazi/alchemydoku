@@ -11,7 +11,7 @@ import {
 } from './worldPack';
 import type {
   WorldSet, Clue, MixingClue, AspectClue, FullAssignmentClue, SellClue, DebunkClue,
-  MixingAmongClue, SellAmongClue, SellResultAmongClue,
+  MixingAmongClue, SellAmongClue, SellResultAmongClue, MixingCountAmongClue,
 } from '../types';
 
 // ─── World generation ─────────────────────────────────────────────────────────
@@ -168,17 +168,31 @@ export function filterBySellResultAmong(worlds: WorldSet, clue: SellResultAmongC
   });
 }
 
+export function filterByMixingCountAmong(worlds: WorldSet, clue: MixingCountAmongClue): WorldSet {
+  const slots    = clue.ingredients.map(id => id - 1);
+  const expected = encodePotionResult(clue.result);
+  return filterWorlds(worlds, w => {
+    let hits = 0;
+    for (let a = 0; a < slots.length; a++)
+      for (let b = a + 1; b < slots.length; b++)
+        if (MIX_TABLE[WORLD_DATA[w * 8 + slots[a]] * 8 + WORLD_DATA[w * 8 + slots[b]]] === expected)
+          hits++;
+    return hits === clue.count;
+  });
+}
+
 /** Apply a single clue. */
 export function filterByClue(worlds: WorldSet, clue: Clue): WorldSet {
   switch (clue.kind) {
-    case 'mixing':             return filterByMixing(worlds, clue);
-    case 'mixing_among':       return filterByMixingAmong(worlds, clue as MixingAmongClue);
-    case 'sell_among':         return filterBySellAmong(worlds, clue as SellAmongClue);
-    case 'sell_result_among':  return filterBySellResultAmong(worlds, clue as SellResultAmongClue);
-    case 'aspect':             return filterByAspect(worlds, clue);
-    case 'assignment':         return filterByAssignment(worlds, clue);
-    case 'sell':               return filterBySell(worlds, clue);
-    case 'debunk':             return filterByDebunk(worlds, clue);
+    case 'mixing':                return filterByMixing(worlds, clue);
+    case 'mixing_among':          return filterByMixingAmong(worlds, clue as MixingAmongClue);
+    case 'mixing_count_among':    return filterByMixingCountAmong(worlds, clue as MixingCountAmongClue);
+    case 'sell_among':            return filterBySellAmong(worlds, clue as SellAmongClue);
+    case 'sell_result_among':     return filterBySellResultAmong(worlds, clue as SellResultAmongClue);
+    case 'aspect':                return filterByAspect(worlds, clue);
+    case 'assignment':            return filterByAssignment(worlds, clue);
+    case 'sell':                  return filterBySell(worlds, clue);
+    case 'debunk':                return filterByDebunk(worlds, clue);
   }
 }
 

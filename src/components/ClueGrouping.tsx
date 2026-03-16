@@ -188,6 +188,7 @@ export function clueGroupLabel(g: ClueGroup): string {
     case 'sell':                   return '💰 Sell Result';
     case 'debunk':                 return '🔬 Debunking';
     case 'mixing_among':           return '👀 Observed Mix';
+    case 'mixing_count_among':     return '🔢 Counted Mix';
     case 'sell_result_among':      return '💰 Ambiguous Sale';
     case 'sell_among':             return '💰 Sell Among';
     case 'book':                   return '📖 Book Token';
