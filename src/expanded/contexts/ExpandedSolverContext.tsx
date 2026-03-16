@@ -27,6 +27,31 @@ import type { Color, Size } from '../../types';
 
 export type { DisplayMap, GridState } from '../../utils/solverStorage';
 
+// ─── Undo / Redo ──────────────────────────────────────────────────────────────
+
+export type UndoSnapshot = {
+  gridState:   import('../../utils/solverStorage').GridState;
+  notes:       Record<string, string>;
+  drawStrokes: string[];
+};
+
+export type ExpandedUndoSnapshot = UndoSnapshot & {
+  solarLunarMarks: SolarLunarMarks;
+  golemNotepad:    GolemNotepad;
+};
+
+const MAX_UNDO = 100;
+
+function snap(s: ExpandedSolverState): ExpandedUndoSnapshot {
+  return {
+    gridState:       s.gridState,
+    notes:           s.notes,
+    drawStrokes:     s.drawStrokes,
+    solarLunarMarks: s.solarLunarMarks,
+    golemNotepad:    s.golemNotepad,
+  };
+}
+
 // ─── Debunk answer validator ──────────────────────────────────────────────────
 
 function checkExpandedDebunkAnswers(
@@ -144,6 +169,8 @@ export type ExpandedSolverState = {
   drawStrokes:     string[];
   completed:       boolean;
   showSolution:    boolean;
+  undoStack:       ExpandedUndoSnapshot[];
+  redoStack:       ExpandedUndoSnapshot[];
 };
 
 // ─── Actions ──────────────────────────────────────────────────────────────────
@@ -164,7 +191,9 @@ export type ExpandedAction =
   | { type: 'SET_GOLEM_INGREDIENT_MARK'; slot: number; part: 'chest' | 'ears'; mark: GolemSlotMark }
   | { type: 'LOAD_PROGRESS'; gridState: GridState; notes: Record<string,string>; hintLevel: number; wrongAttempts: number; answers: (AnyAnswer | null)[]; solarLunarMarks: SolarLunarMarks; golemNotepad: GolemNotepad }
   | { type: 'ADD_DRAW_STROKE'; d: string }
-  | { type: 'CLEAR_DRAW_STROKES' };
+  | { type: 'CLEAR_DRAW_STROKES' }
+  | { type: 'UNDO' }
+  | { type: 'REDO' };
 
 // ─── Solar/lunar hint computation (exported for grid component) ───────────────
 
@@ -204,19 +233,25 @@ function reducer(state: ExpandedSolverState, action: ExpandedAction): ExpandedSo
       const cycle: CellState[] = ['unknown', 'eliminated', 'confirmed'];
       const current = state.gridState[ingredient][alchemical];
       const next = cycle[(cycle.indexOf(current) + 1) % cycle.length];
+      const undoStack = [snap(state), ...state.undoStack].slice(0, MAX_UNDO);
       return {
         ...state,
         gridState: { ...state.gridState, [ingredient]: { ...state.gridState[ingredient], [alchemical]: next } },
+        undoStack,
+        redoStack: [],
       };
     }
 
     case 'SET_CELL': {
+      const undoStack = [snap(state), ...state.undoStack].slice(0, MAX_UNDO);
       return {
         ...state,
         gridState: {
           ...state.gridState,
           [action.ingredient]: { ...state.gridState[action.ingredient], [action.alchemical]: action.state },
         },
+        undoStack,
+        redoStack: [],
       };
     }
 
@@ -253,6 +288,7 @@ function reducer(state: ExpandedSolverState, action: ExpandedAction): ExpandedSo
     case 'RESET': {
       const newMap = makeDisplayMap();
       saveDisplayMap(`exp-display-map-${state.puzzle.id}`, newMap);
+      const undoStack = [snap(state), ...state.undoStack].slice(0, MAX_UNDO);
       return applyAutoDeduction({
         ...state,
         displayMap:      newMap,
@@ -265,6 +301,8 @@ function reducer(state: ExpandedSolverState, action: ExpandedAction): ExpandedSo
         completed:       false,
         showSolution:    false,
         notes:           {},
+        undoStack,
+        redoStack:       [],
       });
     }
 
@@ -274,35 +312,49 @@ function reducer(state: ExpandedSolverState, action: ExpandedAction): ExpandedSo
       return { ...state, displayMap: newMap };
     }
 
-    case 'CLEAR_GRID':
+    case 'CLEAR_GRID': {
+      const undoStack = [snap(state), ...state.undoStack].slice(0, MAX_UNDO);
       return applyAutoDeduction({
         ...state,
         gridState:       emptyGrid(),
         solarLunarMarks: emptySolarLunarMarks(),
         golemNotepad:    emptyGolemNotepad(),
         notes:           {},
+        undoStack,
+        redoStack:       [],
       });
+    }
 
     case 'SET_NOTE': {
+      const undoStack = [snap(state), ...state.undoStack].slice(0, MAX_UNDO);
       const notes = { ...state.notes };
       if (action.value === '') delete notes[action.key];
       else notes[action.key] = action.value.slice(0, 4);
-      return { ...state, notes };
+      return { ...state, notes, undoStack, redoStack: [] };
     }
 
-    case 'SET_SOLAR_LUNAR_MARK':
+    case 'SET_SOLAR_LUNAR_MARK': {
+      const undoStack = [snap(state), ...state.undoStack].slice(0, MAX_UNDO);
       return {
         ...state,
         solarLunarMarks: { ...state.solarLunarMarks, [action.slot]: action.mark },
+        undoStack,
+        redoStack: [],
       };
+    }
 
-    case 'SET_GOLEM_NOTEPAD':
+    case 'SET_GOLEM_NOTEPAD': {
+      const undoStack = [snap(state), ...state.undoStack].slice(0, MAX_UNDO);
       return {
         ...state,
         golemNotepad: { ...state.golemNotepad, [action.part]: action.value },
+        undoStack,
+        redoStack: [],
       };
+    }
 
     case 'SET_GOLEM_INGREDIENT_MARK': {
+      const undoStack = [snap(state), ...state.undoStack].slice(0, MAX_UNDO);
       const prev = state.golemNotepad.ingredientMarks[action.slot] ?? { chest: null, ears: null };
       return {
         ...state,
@@ -313,6 +365,8 @@ function reducer(state: ExpandedSolverState, action: ExpandedAction): ExpandedSo
             [action.slot]: { ...prev, [action.part]: action.mark },
           },
         },
+        undoStack,
+        redoStack: [],
       };
     }
 
@@ -328,6 +382,8 @@ function reducer(state: ExpandedSolverState, action: ExpandedAction): ExpandedSo
         golemNotepad: action.golemNotepad,
         completed: false,
         showSolution: false,
+        undoStack: [] as ExpandedUndoSnapshot[],
+        redoStack: [] as ExpandedUndoSnapshot[],
       });
       try {
         localStorage.setItem(`exp-solver-${state.puzzle.id}`, JSON.stringify(action.gridState));
@@ -345,11 +401,37 @@ function reducer(state: ExpandedSolverState, action: ExpandedAction): ExpandedSo
       return loaded;
     }
 
-    case 'ADD_DRAW_STROKE':
-      return { ...state, drawStrokes: [...state.drawStrokes, action.d] };
+    case 'ADD_DRAW_STROKE': {
+      const undoStack = [snap(state), ...state.undoStack].slice(0, MAX_UNDO);
+      return { ...state, drawStrokes: [...state.drawStrokes, action.d], undoStack, redoStack: [] };
+    }
 
-    case 'CLEAR_DRAW_STROKES':
-      return { ...state, drawStrokes: [] };
+    case 'CLEAR_DRAW_STROKES': {
+      const undoStack = [snap(state), ...state.undoStack].slice(0, MAX_UNDO);
+      return { ...state, drawStrokes: [], undoStack, redoStack: [] };
+    }
+
+    case 'UNDO': {
+      if (!state.undoStack.length) return state;
+      const [prev, ...rest] = state.undoStack;
+      return {
+        ...state,
+        ...prev,
+        undoStack: rest,
+        redoStack: [snap(state), ...state.redoStack].slice(0, MAX_UNDO),
+      };
+    }
+
+    case 'REDO': {
+      if (!state.redoStack.length) return state;
+      const [next, ...rest] = state.redoStack;
+      return {
+        ...state,
+        ...next,
+        undoStack: [snap(state), ...state.undoStack].slice(0, MAX_UNDO),
+        redoStack: rest,
+      };
+    }
 
     default:
       return state;
@@ -389,6 +471,8 @@ export function ExpandedSolverProvider({ puzzle, children }: { puzzle: ExpandedP
     answers:         puzzle.questions.map(() => null),
     completed:       false,
     showSolution:    false,
+    undoStack:       [],
+    redoStack:       [],
   });
 
   const [state, dispatch] = useReducer(reducer, initialState);

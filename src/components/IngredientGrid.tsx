@@ -553,19 +553,19 @@ export function IngredientGrid({ onRandomize }: { onRandomize?: () => void }) {
             <span className="font-mono">· unknown</span>{' → '}
             <span className="font-mono font-bold text-red-500">✗ eliminated</span>{' → '}
             <span className="font-mono font-bold text-green-600">✔ confirmed</span>
-            <span className="ml-2 opacity-60">· Space to switch tool</span>
+            <span className="ml-2 opacity-60">· Space to switch tool · ↩ ↪ in toolbar to undo/redo</span>
           </>}
           {activeTool === 'question' && <>
             Tap to toggle <span className="font-mono font-bold text-indigo-500">? possible</span> on/off
-            <span className="ml-2 opacity-60">· Space to switch tool · Shift+click for mark</span>
+            <span className="ml-2 opacity-60">· Space to switch tool · Shift+click for mark · ↩ ↪ to undo/redo</span>
           </>}
           {activeTool === 'text' && <>
             Tap any cell to type a note (max 3 chars)
-            <span className="ml-2 opacity-60">· Space to switch tool · Shift+click for mark</span>
+            <span className="ml-2 opacity-60">· Space to switch tool · Shift+click for mark · ↩ ↪ to undo/redo</span>
           </>}
           {activeTool === 'draw' && <>
             Draw freehand lines on the grid
-            <span className="ml-2 opacity-60">· Space to switch tool</span>
+            <span className="ml-2 opacity-60">· Space to switch tool · ↩ ↪ in toolbar to undo/redo</span>
           </>}
         </p>
       </div>

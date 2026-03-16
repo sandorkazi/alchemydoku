@@ -153,6 +153,10 @@ function SolverInner({
         onLoad={handleLoad}
         onReset={() => dispatch({ type: 'RESET' })}
         onPermalink={() => applyPermalink(puzzle.id, 'base')}
+        onUndo={() => dispatch({ type: 'UNDO' })}
+        onRedo={() => dispatch({ type: 'REDO' })}
+        canUndo={state.undoStack.length > 0}
+        canRedo={state.redoStack.length > 0}
       />
 
       {/* ── Mobile clue drawer ─────────────────────────────────────────────── */}
