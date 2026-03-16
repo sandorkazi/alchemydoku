@@ -265,6 +265,25 @@ def _trivial_reason(question: dict, clues: list) -> str | None:
                     f"of ingredient {ing}"
                 )
 
+    elif kind == "possible-potions":
+        q_pair = frozenset([question["ingredient1"], question["ingredient2"]])
+        for c in clues:
+            ck = c["kind"]
+            if ck == "mixing":
+                if frozenset([c["ingredient1"], c["ingredient2"]]) == q_pair:
+                    return (
+                        f"mixing clue for pair "
+                        f"({question['ingredient1']},{question['ingredient2']}) "
+                        f"already pins the exact result — possible-potions is trivially {{that result}}"
+                    )
+            elif ck == "debunk" and c.get("variant") == "master" and c.get("outcome") == "success":
+                if frozenset([c["ingredient1"], c["ingredient2"]]) == q_pair:
+                    return (
+                        f"master-debunk success clue for pair "
+                        f"({question['ingredient1']},{question['ingredient2']}) "
+                        f"already confirms the exact result — possible-potions is trivially {{claimedPotion}}"
+                    )
+
     return None
 
 

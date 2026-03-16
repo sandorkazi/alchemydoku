@@ -18,7 +18,7 @@
     {
       "kind": "possible-potions",
       "ingredient1": 4,
-      "ingredient2": 5
+      "ingredient2": 6
     }
   ],
   "solution": {
@@ -34,15 +34,15 @@
   "hints": [
     {
       "level": 1,
-      "text": "\"Possible potions\" means every outcome that occurs in at least one of the remaining 5760 possible worlds. The clues haven't pinned down the exact alchemicals for ing4 and ing5, so multiple outcomes are possible \u2014 collect all of them."
+      "text": "\"Possible potions\" means every outcome that occurs in at least one of the remaining 5760 possible worlds. The clues haven't pinned down the exact alchemicals for ing4 and ing6, so multiple outcomes are possible \u2014 collect all of them."
     },
     {
       "level": 2,
-      "text": "Distribution across 5760 worlds (ing4+ing5):\n  G-: 5760 worlds (100%)"
+      "text": "Distribution across 5760 worlds (ing4+ing6):\n  R+: 960 worlds (16%)\n  R-: 960 worlds (16%)\n  G-: 960 worlds (16%)\n  B+: 960 worlds (16%)\n  B-: 960 worlds (16%)\n  neutral: 960 worlds (16%)"
     },
     {
       "level": 3,
-      "text": "Possible potions for ing4+ing5: ['G-']."
+      "text": "Possible potions for ing4+ing6: ['R+', 'R-', 'G-', 'B+', 'B-', 'neutral']."
     }
   ],
   "complexity": {
