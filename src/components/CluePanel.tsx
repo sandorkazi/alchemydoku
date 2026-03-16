@@ -25,7 +25,7 @@ export function CluePanel({ clues }: { clues: Clue[] }) {
         {groups.map((g, i) => (
           <CollapsibleClueWrapper key={i} label={clueGroupLabel(g)}>
             {g.type === 'single'
-              ? <ClueCard clue={g.clue} />
+              ? <ClueCard clue={g.clue} clueIndex={clues.indexOf(g.clue)} />
               : g.type === 'multi'
                 ? <MultiAspectGroupCard clues={g.clues} ingWidth={36} getIngredient={getIngredient} />
                 : <InferredAlchemicalGroupCard clues={g.clues} ingWidth={36} getIngredient={getIngredient} />

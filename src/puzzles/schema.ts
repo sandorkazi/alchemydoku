@@ -267,7 +267,7 @@ export function questionText(question: QuestionTarget, ingredientName: (id: numb
     case 'group-possible-potions':
       return `Which potions can certainly be produced by some pair among ingredients ${question.ingredients.map(ingredientName).join(', ')}?`;
     case 'most-informative-mix':
-      return `Which ingredient gives the most information when mixed with ${ingredientName(question.ingredient)}?`;
+      return `Which ingredient gives the most information (highest Shannon entropy of mixing results) when mixed with ${ingredientName(question.ingredient)}?`;
     case 'guaranteed-non-producer':
       return `Which ingredients can never produce ${potionKey(question.potion)} with any partner?`;
   }

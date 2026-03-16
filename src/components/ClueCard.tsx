@@ -3,7 +3,7 @@ import { PotionImage, AlchemicalImage, SignedElemImage, IngredientIcon,
          SellIcon, SellResultIcon, DebunkIcon, CorrectIcon, IncorrectIcon } from './GameSprites';
 import { ALCHEMICALS } from '../data/alchemicals';
 import { INGREDIENTS } from '../data/ingredients';
-import { useIngredient } from '../contexts/SolverContext';
+import { useIngredient, useSolver } from '../contexts/SolverContext';
 import type { Clue, SellResult, DebunkClue, AlchemicalId, Color, Sign, MixingAmongClue, SellAmongClue, SellResultAmongClue, MixingCountAmongClue } from '../types';
 
 const ING_W        = 36;  // ingredient icon — matches grid header
@@ -131,6 +131,46 @@ function Card({
       </div>
       <div className="text-sm">{children}</div>
     </div>
+  );
+}
+
+// ─── IngMarkable — ingredient icon with click-to-cycle ✗/✓ annotation ─────────
+
+const MARK_BADGE = 16;
+
+function IngMarkable({ slotId, clueIndex }: { slotId: number; clueIndex: number }) {
+  const getIngredient = useIngredient();
+  const { state, dispatch } = useSolver();
+  const { displayId, index } = getIngredient(slotId);
+  const name = INGREDIENTS[displayId as 1].name;
+  const noteKey = `ck-${clueIndex}-${slotId}`;
+  const mark = (state.notes[noteKey] ?? '') as '' | 'x' | 'c';
+  const cycle = () => {
+    const next = mark === '' ? 'x' : mark === 'x' ? 'c' : '';
+    dispatch({ type: 'SET_NOTE', key: noteKey, value: next });
+  };
+  const markLabel = mark === 'x' ? 'Ruled out' : mark === 'c' ? 'Confirmed' : 'Unmark';
+  return (
+    <button
+      onClick={cycle}
+      className="relative inline-flex shrink-0 select-none cursor-pointer p-0 bg-transparent border-0"
+      style={{ paddingRight: MARK_BADGE / 2, paddingBottom: MARK_BADGE / 2 }}
+      title={`${name}: ${markLabel} (click to cycle)`}
+      aria-label={`${name}: ${markLabel}`}
+    >
+      <IngredientIcon index={index} width={ING_W} />
+      {mark !== '' && (
+        <span
+          className={`absolute bottom-0 right-0 z-10 flex items-center justify-center
+            rounded-full text-white font-bold leading-none shadow
+            ${mark === 'x' ? 'bg-red-500' : 'bg-green-500'}`}
+          style={{ width: MARK_BADGE, height: MARK_BADGE, fontSize: 10 }}
+          aria-hidden
+        >
+          {mark === 'x' ? '✗' : '✓'}
+        </span>
+      )}
+    </button>
   );
 }
 
@@ -285,8 +325,7 @@ function DebunkClueCard({ clue }: { clue: DebunkClue }) {
 
 // ─── MixingAmong clue card ────────────────────────────────────────────────────
 
-function MixingAmongClueCard({ clue }: { clue: MixingAmongClue }) {
-  const getIngredient = useIngredient();
+function MixingAmongClueCard({ clue, clueIndex }: { clue: MixingAmongClue; clueIndex: number }) {
   const count = clue.ingredients.length;
   return (
     <Card icon="👀" label="Observed Mix" accent="blue">
@@ -297,10 +336,7 @@ function MixingAmongClueCard({ clue }: { clue: MixingAmongClue }) {
         <PotionImage result={clue.result} width={POT_W} />
       </div>
       <div className="flex flex-wrap gap-1 mt-1">
-        {clue.ingredients.map(id => {
-          const { index } = getIngredient(id);
-          return <IngredientIcon key={id} index={index} width={ING_W} />;
-        })}
+        {clue.ingredients.map(id => <IngMarkable key={id} slotId={id} clueIndex={clueIndex} />)}
       </div>
     </Card>
   );
@@ -308,8 +344,7 @@ function MixingAmongClueCard({ clue }: { clue: MixingAmongClue }) {
 
 // ─── SellAmong clue card ──────────────────────────────────────────────────────
 
-function SellAmongClueCard({ clue }: { clue: SellAmongClue }) {
-  const getIngredient = useIngredient();
+function SellAmongClueCard({ clue, clueIndex }: { clue: SellAmongClue; clueIndex: number }) {
   const n = clue.ingredients.length;
   const pairCount = (n * (n - 1)) / 2;
   return (
@@ -327,10 +362,7 @@ function SellAmongClueCard({ clue }: { clue: SellAmongClue }) {
       </div>
       <p className="text-[9px] text-gray-400 mt-0.5">{SELL_RESULT_DESC[clue.result]}</p>
       <div className="flex flex-wrap gap-1 mt-1">
-        {clue.ingredients.map(id => {
-          const { index } = getIngredient(id);
-          return <IngredientIcon key={id} index={index} width={ING_W} />;
-        })}
+        {clue.ingredients.map(id => <IngMarkable key={id} slotId={id} clueIndex={clueIndex} />)}
       </div>
     </Card>
   );
@@ -338,8 +370,7 @@ function SellAmongClueCard({ clue }: { clue: SellAmongClue }) {
 
 // ─── MixingCountAmong clue card ───────────────────────────────────────────────
 
-function MixingCountAmongClueCard({ clue }: { clue: MixingCountAmongClue }) {
-  const getIngredient = useIngredient();
+function MixingCountAmongClueCard({ clue, clueIndex }: { clue: MixingCountAmongClue; clueIndex: number }) {
   const n = clue.ingredients.length;
   const pairCount = (n * (n - 1)) / 2;
   return (
@@ -351,10 +382,7 @@ function MixingCountAmongClueCard({ clue }: { clue: MixingCountAmongClue }) {
         <PotionImage result={clue.result} width={POT_W} />
       </div>
       <div className="flex flex-wrap gap-1 mt-1">
-        {clue.ingredients.map(id => {
-          const { index } = getIngredient(id);
-          return <IngredientIcon key={id} index={index} width={ING_W} />;
-        })}
+        {clue.ingredients.map(id => <IngMarkable key={id} slotId={id} clueIndex={clueIndex} />)}
       </div>
     </Card>
   );
@@ -362,8 +390,7 @@ function MixingCountAmongClueCard({ clue }: { clue: MixingCountAmongClue }) {
 
 // ─── SellResultAmong clue card ─────────────────────────────────────────────────
 
-function SellResultAmongClueCard({ clue }: { clue: SellResultAmongClue }) {
-  const getIngredient = useIngredient();
+function SellResultAmongClueCard({ clue, clueIndex }: { clue: SellResultAmongClue; clueIndex: number }) {
   const count = clue.ingredients.length;
   const ambigLabel = count === 2 ? 'One of these 2 pairs' : `A pair from these ${count}`;
   return (
@@ -379,10 +406,7 @@ function SellResultAmongClueCard({ clue }: { clue: SellResultAmongClue }) {
       </div>
       <p className="text-[9px] text-gray-400 mt-0.5">{SELL_RESULT_DESC[clue.sellResult]}</p>
       <div className="flex flex-wrap gap-1 mt-1">
-        {clue.ingredients.map(id => {
-          const { index } = getIngredient(id);
-          return <IngredientIcon key={id} index={index} width={ING_W} />;
-        })}
+        {clue.ingredients.map(id => <IngMarkable key={id} slotId={id} clueIndex={clueIndex} />)}
       </div>
     </Card>
   );
@@ -390,16 +414,16 @@ function SellResultAmongClueCard({ clue }: { clue: SellResultAmongClue }) {
 
 // ─── Main export ──────────────────────────────────────────────────────────────
 
-export function ClueCard({ clue }: { clue: Clue }) {
+export function ClueCard({ clue, clueIndex = 0 }: { clue: Clue; clueIndex?: number }) {
   switch (clue.kind) {
     case 'mixing':              return <MixingClueCard            clue={clue} />;
     case 'aspect':              return <AspectClueCard            clue={clue} />;
     case 'assignment':          return <AssignmentClueCard        clue={clue} />;
     case 'sell':                return <SellClueCard              clue={clue} />;
     case 'debunk':              return <DebunkClueCard            clue={clue} />;
-    case 'mixing_among':        return <MixingAmongClueCard       clue={clue} />;
-    case 'sell_among':          return <SellAmongClueCard         clue={clue} />;
-    case 'mixing_count_among':  return <MixingCountAmongClueCard  clue={clue} />;
-    case 'sell_result_among':   return <SellResultAmongClueCard   clue={clue} />;
+    case 'mixing_among':        return <MixingAmongClueCard       clue={clue} clueIndex={clueIndex} />;
+    case 'sell_among':          return <SellAmongClueCard         clue={clue} clueIndex={clueIndex} />;
+    case 'mixing_count_among':  return <MixingCountAmongClueCard  clue={clue} clueIndex={clueIndex} />;
+    case 'sell_result_among':   return <SellResultAmongClueCard   clue={clue} clueIndex={clueIndex} />;
   }
 }

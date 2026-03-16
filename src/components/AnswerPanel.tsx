@@ -150,6 +150,7 @@ function QuestionHeader({ q }: { q: QuestionTarget }) {
       <span className="text-xs font-semibold text-indigo-500">best partner to mix with</span>
       <Ing slotId={q.ingredient} />
       <span className="text-indigo-400">?</span>
+      <span className="text-xs text-indigo-300">(most info revealed)</span>
     </span>
   );
 
@@ -197,7 +198,7 @@ function RevealedAnswer({ q, answer }: { q: QuestionTarget; answer: PuzzleAnswer
     const ids = (answer as { ingredients: number[] }).ingredients;
     return (
       <span className="inline-flex flex-wrap gap-1.5">
-        {ids.map(id => <IngredientIcon key={id} index={(id - 1) as 0|1|2|3|4|5|6|7} width={36} />)}
+        {ids.map(id => <Ing key={id} slotId={id} size={36} />)}
         {ids.length === 0 && <span className="text-xs text-gray-400 italic">None</span>}
       </span>
     );
