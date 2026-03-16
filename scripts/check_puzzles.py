@@ -14,14 +14,18 @@ Checks performed (always, ~0.1 s):
                       (suppress per-puzzle with "trivial_answer_ok": true)
   9. hint-tokens    — hint text must not contain raw ingredient names
                       (Fern, Bird Claw, etc.) — use ing1–ing8 tokens instead
- 10. permalink      — each puzzle ID appears in exactly one collection;
+ 10. base-only-lang — base puzzle titles/hints must not mention expanded-mode
+                      concepts (golem, encyclopedia, solar, lunar, etc.)
+ 11. all-possible   — possible-potions answer must not be all 7 potions
+                      (uses world simulation; only for puzzles with pp questions)
+ 12. permalink      — each puzzle ID appears in exactly one collection;
                       no ID is shared across base/expanded;
                       all collection refs point to registered puzzles
 
 Additional checks with --deep (~2–5 s per puzzle, runs world simulation):
- 11. logical        — clues don't eliminate the solution; all questions have
+ 13. logical        — clues don't eliminate the solution; all questions have
                       unique answers given the clue set
- 12. redundancy     — warns if any clue can be removed without losing uniqueness
+ 14. redundancy     — warns if any clue can be removed without losing uniqueness
 
 Usage:
   python scripts/check_puzzles.py           # structural checks (fast)
@@ -33,6 +37,7 @@ Exit codes: 0 = pass (warnings may appear), 1 = one or more errors.
 
 import argparse
 import importlib.util
+import itertools
 import json
 import re
 import sys
@@ -131,6 +136,17 @@ def check_structure(path: Path, puz: dict, is_expanded: bool, r: Results):
                 r.error(f"[clue-shape] {name}: mixing_count_among requires ≥ 3 ingredients, got {n}")
             if not (1 <= count <= max_pairs):
                 r.error(f"[clue-shape] {name}: mixing_count_among count={count} out of range [1, {max_pairs}]")
+
+    # sell_among clues: requires ≥ 3 ingredients, count in [1, C(n,2)]
+    for c in puz.get("clues", []):
+        if c.get("kind") == "sell_among":
+            n = len(c.get("ingredients", []))
+            count = c.get("count", 0)
+            max_pairs = n * (n - 1) // 2
+            if n < 3:
+                r.error(f"[clue-shape] {name}: sell_among requires ≥ 3 ingredients, got {n}")
+            if not (1 <= count <= max_pairs):
+                r.error(f"[clue-shape] {name}: sell_among count={count} out of range [1, {max_pairs}]")
 
     # Solution must be a valid 1–8 bijection
     sol = puz.get("solution", {})
@@ -252,6 +268,25 @@ def _trivial_reason(question: dict, clues: list) -> str | None:
                     f"of ingredient {ing}"
                 )
 
+    elif kind == "possible-potions":
+        q_pair = frozenset([question["ingredient1"], question["ingredient2"]])
+        for c in clues:
+            ck = c["kind"]
+            if ck == "mixing":
+                if frozenset([c["ingredient1"], c["ingredient2"]]) == q_pair:
+                    return (
+                        f"mixing clue for pair "
+                        f"({question['ingredient1']},{question['ingredient2']}) "
+                        f"already pins the exact result — possible-potions is trivially {{that result}}"
+                    )
+            elif ck == "debunk" and c.get("variant") == "master" and c.get("outcome") == "success":
+                if frozenset([c["ingredient1"], c["ingredient2"]]) == q_pair:
+                    return (
+                        f"master-debunk success clue for pair "
+                        f"({question['ingredient1']},{question['ingredient2']}) "
+                        f"already confirms the exact result — possible-potions is trivially {{claimedPotion}}"
+                    )
+
     return None
 
 
@@ -327,7 +362,91 @@ def check_hint_tokens(path: Path, puz: dict, r: Results):
                 break  # one error per hint is enough
 
 
-# ── 10. Permalink uniqueness ───────────────────────────────────────────────────
+# ── 10. Base-only language check ──────────────────────────────────────────────
+
+# Terms that belong exclusively to the expanded ruleset and must not appear in
+# base puzzle titles or hint text.
+_EXPANDED_TERMS = [
+    "golem", "encyclopedia", "encyclopaedia", "solar", "lunar",
+    "royal society", "royal", "article",
+]
+
+def check_base_only_language(path: Path, puz: dict, is_expanded: bool, r: Results):
+    """Base puzzles must not mention expanded-mode concepts in title or hints."""
+    if is_expanded:
+        return
+    name = path.name
+    title_lower = puz.get("title", "").lower()
+    for term in _EXPANDED_TERMS:
+        if re.search(r'\b' + re.escape(term) + r'\b', title_lower):
+            r.error(
+                f"[base-only-lang] {name}: title contains expanded-mode term '{term}' — "
+                f"expanded concepts (golem, encyclopedia, solar, lunar, …) must not appear "
+                f"in base puzzle titles or hints"
+            )
+            break
+
+    for hint in puz.get("hints", []):
+        text_lower = hint.get("text", "").lower()
+        for term in _EXPANDED_TERMS:
+            if re.search(r'\b' + re.escape(term) + r'\b', text_lower):
+                r.error(
+                    f"[base-only-lang] {name} (hint level {hint.get('level', '?')}): "
+                    f"hint contains expanded-mode term '{term}'"
+                )
+                break  # one error per hint
+
+
+# ── 11. All-possible check ────────────────────────────────────────────────────
+
+_PP_QUESTION_KINDS = {'possible-potions', 'group-possible-potions'}
+
+
+def check_all_possible(all_puzzles: list, r: Results):
+    """Flag possible-potions / group-possible-potions questions whose answer
+    is all 7 potions — the player just marks everything with no deduction."""
+    targets = [
+        (puz, path)
+        for puz, path, _ in all_puzzles
+        if any(q['kind'] in _PP_QUESTION_KINDS for q in puz.get('questions', []))
+    ]
+    if not targets:
+        return
+
+    alch_mod = _load_alchemydoku()
+
+    for puz, path in targets:
+        worlds = alch_mod.apply_all(alch_mod.all_worlds(), puz.get('clues', []))
+        for q in puz.get('questions', []):
+            kind = q['kind']
+            if kind not in _PP_QUESTION_KINDS:
+                continue
+
+            if kind == 'possible-potions':
+                s1, s2 = q['ingredient1'] - 1, q['ingredient2'] - 1
+                results = {alch_mod.MIX_TABLE[w[s1]][w[s2]] for w in worlds}
+                if len(results) == 7:
+                    r.error(
+                        f"[all-possible] {path.name}: possible-potions("
+                        f"ing{q['ingredient1']}, ing{q['ingredient2']}) has all 7 outcomes "
+                        f"— trivially 'mark everything', no deduction required"
+                    )
+
+            elif kind == 'group-possible-potions':
+                slots = [i - 1 for i in q['ingredients']]
+                results: set = set()
+                for a, b in itertools.combinations(slots, 2):
+                    for w in worlds:
+                        results.add(alch_mod.MIX_TABLE[w[a]][w[b]])
+                if len(results) == 7:
+                    r.error(
+                        f"[all-possible] {path.name}: group-possible-potions("
+                        f"{q['ingredients']}) has all 7 outcomes "
+                        f"— trivially 'mark everything', no deduction required"
+                    )
+
+
+# ── 12. Permalink uniqueness ───────────────────────────────────────────────────
 
 def _puzzleids_from_ts_collections(text: str) -> list[list[str]]:
     """Extract each puzzleIds array from a TypeScript collections constant.
@@ -515,6 +634,12 @@ def main():
         check_hint_tokens(path, puz, r)
     _done()
 
+    # ── Step 10: Base-only language check ─────────────────────────────────────
+    _section("base-only language")
+    for puz, path, is_exp in all_puzzles:
+        check_base_only_language(path, puz, is_exp, r)
+    _done()
+
     # ── Step 10: Debunk-answer step-kind check ─────────────────────────────────
     _section("debunk answers")
     for puz, path, _ in all_puzzles:
@@ -526,7 +651,12 @@ def main():
     check_duplicates([(puz, path) for puz, path, _ in all_puzzles], r)
     _done()
 
-    # ── Step 10: Permalink uniqueness ─────────────────────────────────────────
+    # ── Step 11: All-possible check ───────────────────────────────────────────
+    _section("all-possible potions")
+    check_all_possible(all_puzzles, r)
+    _done()
+
+    # ── Step 12: Permalink uniqueness ─────────────────────────────────────────
     _section("permalink uniqueness")
     check_permalink_uniqueness(all_puzzles, r)
     _done()

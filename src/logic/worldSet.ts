@@ -118,16 +118,30 @@ export function filterByMixingAmong(worlds: WorldSet, clue: MixingAmongClue): Wo
 }
 
 export function filterBySellAmong(worlds: WorldSet, clue: SellAmongClue): WorldSet {
-  const slots    = clue.ingredients.map(id => id - 1);
-  const ci       = COLOR_INDEX[clue.potion.color];
-  const wantSign = clue.result === 'sold'
-    ? (clue.potion.sign === '+' ? 1 : 0)
-    : (clue.potion.sign === '+' ? 0 : 1);
+  const slots       = clue.ingredients.map(id => id - 1);
+  const ci          = COLOR_INDEX[clue.claimedPotion.color];
+  const claimedSign = clue.claimedPotion.sign === '+' ? 1 : 0;
+  const claimedCode = ci * 2 + (claimedSign === 1 ? 1 : 2);
+
+  function pairMatch(actual: number): boolean {
+    switch (clue.result) {
+      case 'total_match': return actual === claimedCode;
+      case 'neutral':     return actual === 0;
+      case 'sign_ok': {
+        if (actual === 0 || actual === claimedCode) return false;
+        return (actual % 2 === 1 ? 1 : 0) === claimedSign && (actual - 1) >> 1 !== ci;
+      }
+      case 'opposite':
+        return actual !== 0 && (actual % 2 === 1 ? 1 : 0) !== claimedSign;
+    }
+  }
+
   return filterWorlds(worlds, w => {
-    let matches = 0;
-    for (const s of slots)
-      if (SIGN_TABLE[WORLD_DATA[w * 8 + s] * 3 + ci] === wantSign) matches++;
-    return matches === clue.count;
+    let hits = 0;
+    for (let a = 0; a < slots.length; a++)
+      for (let b = a + 1; b < slots.length; b++)
+        if (pairMatch(MIX_TABLE[WORLD_DATA[w * 8 + slots[a]] * 8 + WORLD_DATA[w * 8 + slots[b]]])) hits++;
+    return hits === clue.count;
   });
 }
 

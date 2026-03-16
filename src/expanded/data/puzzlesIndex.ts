@@ -8,122 +8,122 @@
 import expTutorialBook01    from './puzzles/exp-tutorial-book-01.json';
 import expTutorialEnc01     from './puzzles/exp-tutorial-enc-01.json';
 
-// ── Easy: Encyclopedia ────────────────────────────────────────────────────────
-import expEasyEnc01         from './puzzles/exp-easy-enc-01.json';
-import expEasyEnc02         from './puzzles/exp-easy-enc-02.json';
-import expEasyEnc03         from './puzzles/exp-easy-enc-03.json';
-import expEasyEnc04         from './puzzles/exp-easy-enc-04.json';
-import expEasyEnc05         from './puzzles/exp-easy-enc-05.json';
-import expEasyEnc06         from './puzzles/exp-easy-enc-06.json';
-import expEasyEnc07         from './puzzles/exp-easy-enc-07.json';
-import expEasyEnc08         from './puzzles/exp-easy-enc-08.json';
-import expEasyEnc09         from './puzzles/exp-easy-enc-09.json';
-import expEasyEnc10         from './puzzles/exp-easy-enc-10.json';
+// ── Encyclopedia ──────────────────────────────────────────────────────────────
+import enc01                from './puzzles/enc-01.json';
+import enc02                from './puzzles/enc-02.json';
+import enc03                from './puzzles/enc-03.json';
+import enc04                from './puzzles/enc-04.json';
+import enc05                from './puzzles/enc-05.json';
+import enc06                from './puzzles/enc-06.json';
+import enc07                from './puzzles/enc-07.json';
+import enc08                from './puzzles/enc-08.json';
+import enc09                from './puzzles/enc-09.json';
+import enc10                from './puzzles/enc-10.json';
 
-// ── Easy: Solar/Lunar ─────────────────────────────────────────────────────────
-import expEasySolar01       from './puzzles/exp-easy-solar-01.json';
-import expEasySl02          from './puzzles/exp-easy-sl-02.json';
-import expEasySl03          from './puzzles/exp-easy-sl-03.json';
-import expEasySl04          from './puzzles/exp-easy-sl-04.json';
-import expEasySl05          from './puzzles/exp-easy-sl-05.json';
-import expEasySl06          from './puzzles/exp-easy-sl-06.json';
-import expEasySl07          from './puzzles/exp-easy-sl-07.json';
+// ── Solar/Lunar ───────────────────────────────────────────────────────────────
+import sl01                 from './puzzles/sl-01.json';
+import sl02                 from './puzzles/sl-02.json';
+import sl03                 from './puzzles/sl-03.json';
+import sl04                 from './puzzles/sl-04.json';
+import sl05                 from './puzzles/sl-05.json';
+import sl06                 from './puzzles/sl-06.json';
+import sl07                 from './puzzles/sl-07.json';
 
-// ── Easy: Golem ───────────────────────────────────────────────────────────────
+// ── Golem ─────────────────────────────────────────────────────────────────────
 import expGolemTutorial01   from './puzzles/exp-golem-tutorial-01.json';
-import expEasyGolem02       from './puzzles/exp-easy-golem-02.json';
-import expEasyGolem03       from './puzzles/exp-easy-golem-03.json';
-import expEasyGolem04       from './puzzles/exp-easy-golem-04.json';
-import expEasyGolem05       from './puzzles/exp-easy-golem-05.json';
-import expEasyGolem06       from './puzzles/exp-easy-golem-06.json';
+import golem02              from './puzzles/golem-02.json';
+import golem03              from './puzzles/golem-03.json';
+import golem04              from './puzzles/golem-04.json';
+import golem05              from './puzzles/golem-05.json';
+import golem06              from './puzzles/golem-06.json';
 
-// ── Medium: Encyclopedia + Solar/Lunar ────────────────────────────────────────
-import expMediumEncSl02     from './puzzles/exp-medium-enc-sl-02.json';
-import expMediumEncSl03     from './puzzles/exp-medium-enc-sl-03.json';
-import expMediumEncSl04     from './puzzles/exp-medium-enc-sl-04.json';
-import expMediumEncSl05     from './puzzles/exp-medium-enc-sl-05.json';
-import expMediumEncSl06     from './puzzles/exp-medium-enc-sl-06.json';
+// ── Encyclopedia + Solar/Lunar ────────────────────────────────────────────────
+import encSl02              from './puzzles/enc-sl-02.json';
+import encSl03              from './puzzles/enc-sl-03.json';
+import encSl04              from './puzzles/enc-sl-04.json';
+import encSl05              from './puzzles/enc-sl-05.json';
+import encSl06              from './puzzles/enc-sl-06.json';
 
-// ── Medium: Golem + Encyclopedia ──────────────────────────────────────────────
-import expMediumGolemEnc02  from './puzzles/exp-medium-golem-enc-02.json';
-import expMediumGolemEnc03  from './puzzles/exp-medium-golem-enc-03.json';
-import expMediumGolemEnc04  from './puzzles/exp-medium-golem-enc-04.json';
-import expMediumGolemEnc05  from './puzzles/exp-medium-golem-enc-05.json';
-import expMediumGolemEnc06  from './puzzles/exp-medium-golem-enc-06.json';
+// ── Golem + Encyclopedia ──────────────────────────────────────────────────────
+import golemEnc02           from './puzzles/golem-enc-02.json';
+import golemEnc03           from './puzzles/golem-enc-03.json';
+import golemEnc04           from './puzzles/golem-enc-04.json';
+import golemEnc05           from './puzzles/golem-enc-05.json';
+import golemEnc06           from './puzzles/golem-enc-06.json';
 
-// ── Medium: Golem + Solar/Lunar ───────────────────────────────────────────────
-import expMediumGolemSl02   from './puzzles/exp-medium-golem-sl-02.json';
-import expMediumGolemSl03   from './puzzles/exp-medium-golem-sl-03.json';
-import expMediumGolemSl04   from './puzzles/exp-medium-golem-sl-04.json';
-import expMediumGolemSl05   from './puzzles/exp-medium-golem-sl-05.json';
-import expMediumGolemSl06   from './puzzles/exp-medium-golem-sl-06.json';
+// ── Golem + Solar/Lunar ───────────────────────────────────────────────────────
+import golemSl02            from './puzzles/golem-sl-02.json';
+import golemSl03            from './puzzles/golem-sl-03.json';
+import golemSl04            from './puzzles/golem-sl-04.json';
+import golemSl05            from './puzzles/golem-sl-05.json';
+import golemSl06            from './puzzles/golem-sl-06.json';
 
-// ── Hard: All Mechanics ───────────────────────────────────────────────────────
-import expHardAll02         from './puzzles/exp-hard-all-02.json';
-import expHardAll03         from './puzzles/exp-hard-all-03.json';
-import expHardAll04         from './puzzles/exp-hard-all-04.json';
-import expHardAll05         from './puzzles/exp-hard-all-05.json';
-import expHardAll06         from './puzzles/exp-hard-all-06.json';
+// ── All Mechanics ─────────────────────────────────────────────────────────────
+import all02                from './puzzles/all-02.json';
+import all03                from './puzzles/all-03.json';
+import all04                from './puzzles/all-04.json';
+import all05                from './puzzles/all-05.json';
+import all06                from './puzzles/all-06.json';
 
-// ── Hard: Golem + Mixing ──────────────────────────────────────────────────────
-import expHardGolemMix02    from './puzzles/exp-hard-golem-mix-02.json';
-import expHardGolemMix03    from './puzzles/exp-hard-golem-mix-03.json';
-import expHardGolemMix04    from './puzzles/exp-hard-golem-mix-04.json';
-import expHardGolemMix05    from './puzzles/exp-hard-golem-mix-05.json';
-import expHardGolemMix06    from './puzzles/exp-hard-golem-mix-06.json';
+// ── Golem + Mixing ────────────────────────────────────────────────────────────
+import golemMix02           from './puzzles/golem-mix-02.json';
+import golemMix03           from './puzzles/golem-mix-03.json';
+import golemMix04           from './puzzles/golem-mix-04.json';
+import golemMix05           from './puzzles/golem-mix-05.json';
+import golemMix06           from './puzzles/golem-mix-06.json';
 
-// ── Hard: Among / Probabilistic ───────────────────────────────────────────────
-import expHardAmongGolem01  from './puzzles/exp-hard-among-golem-01.json';
-import expHardAmongGolem02  from './puzzles/exp-hard-among-golem-02.json';
+// ── Among / Probabilistic ─────────────────────────────────────────────────────
+import amongGolem01         from './puzzles/among-golem-01.json';
+import amongGolem02         from './puzzles/among-golem-02.json';
 
 // ── Debunk ────────────────────────────────────────────────────────────────────
 import expDebunkTutorial01  from './puzzles/exp-debunk-tutorial-01.json';
-import expDebunkEasy01      from './puzzles/exp-debunk-easy-01.json';
-import expDebunkMedium01    from './puzzles/exp-debunk-medium-01.json';
+import debunk01             from './puzzles/debunk-01.json';
+import debunk02             from './puzzles/debunk-02.json';
 
 // ── Combination: Grand Synthesis ──────────────────────────────────────────────
-import comboExpEasy02       from './puzzles/combo-exp-easy-02.json';
-import comboExpEasy03       from './puzzles/combo-exp-easy-03.json';
-import comboExpEasy04       from './puzzles/combo-exp-easy-04.json';
-import comboExpEasy05       from './puzzles/combo-exp-easy-05.json';
-import comboExpEasy06       from './puzzles/combo-exp-easy-06.json';
-import comboExpMedSl02      from './puzzles/combo-exp-med-sl-02.json';
-import comboExpMedSl03      from './puzzles/combo-exp-med-sl-03.json';
-import comboExpMedSl04      from './puzzles/combo-exp-med-sl-04.json';
-import comboExpMedSl05      from './puzzles/combo-exp-med-sl-05.json';
-import comboExpMedAll02     from './puzzles/combo-exp-med-all-02.json';
-import comboExpMedAll03     from './puzzles/combo-exp-med-all-03.json';
-import comboExpMedAll04     from './puzzles/combo-exp-med-all-04.json';
-import comboExpMedAll05     from './puzzles/combo-exp-med-all-05.json';
-import comboExpHardWha02    from './puzzles/combo-exp-hard-wha-02.json';
-import comboExpHardWha03    from './puzzles/combo-exp-hard-wha-03.json';
-import comboExpHardWha04    from './puzzles/combo-exp-hard-wha-04.json';
-import comboExpHardWha05    from './puzzles/combo-exp-hard-wha-05.json';
-import comboExpHardSl02     from './puzzles/combo-exp-hard-sl-02.json';
-import comboExpHardSl03     from './puzzles/combo-exp-hard-sl-03.json';
-import comboExpHardSl04     from './puzzles/combo-exp-hard-sl-04.json';
-import comboExpHardSl05     from './puzzles/combo-exp-hard-sl-05.json';
+import comboExp02           from './puzzles/combo-exp-02.json';
+import comboExp03           from './puzzles/combo-exp-03.json';
+import comboExp04           from './puzzles/combo-exp-04.json';
+import comboExp05           from './puzzles/combo-exp-05.json';
+import comboExp06           from './puzzles/combo-exp-06.json';
+import comboExpSl02         from './puzzles/combo-exp-sl-02.json';
+import comboExpSl03         from './puzzles/combo-exp-sl-03.json';
+import comboExpSl04         from './puzzles/combo-exp-sl-04.json';
+import comboExpSl05         from './puzzles/combo-exp-sl-05.json';
+import comboExpAll02        from './puzzles/combo-exp-all-02.json';
+import comboExpAll03        from './puzzles/combo-exp-all-03.json';
+import comboExpAll04        from './puzzles/combo-exp-all-04.json';
+import comboExpAll05        from './puzzles/combo-exp-all-05.json';
+import comboExpWha02        from './puzzles/combo-exp-wha-02.json';
+import comboExpWha03        from './puzzles/combo-exp-wha-03.json';
+import comboExpWha04        from './puzzles/combo-exp-wha-04.json';
+import comboExpWha05        from './puzzles/combo-exp-wha-05.json';
+import comboExpXsl02        from './puzzles/combo-exp-xsl-02.json';
+import comboExpXsl03        from './puzzles/combo-exp-xsl-03.json';
+import comboExpXsl04        from './puzzles/combo-exp-xsl-04.json';
+import comboExpXsl05        from './puzzles/combo-exp-xsl-05.json';
 
 import type { ExpandedPuzzle } from '../types';
 
 export const ALL_EXPANDED_PUZZLES: ExpandedPuzzle[] = [
   expTutorialBook01, expTutorialEnc01,
-  expEasyEnc01, expEasyEnc02, expEasyEnc03, expEasyEnc04, expEasyEnc05,
-  expEasyEnc06, expEasyEnc07, expEasyEnc08, expEasyEnc09, expEasyEnc10,
-  expEasySolar01, expEasySl02, expEasySl03, expEasySl04, expEasySl05, expEasySl06, expEasySl07,
-  expGolemTutorial01, expEasyGolem02, expEasyGolem03, expEasyGolem04, expEasyGolem05, expEasyGolem06,
-  expMediumEncSl02, expMediumEncSl03, expMediumEncSl04, expMediumEncSl05, expMediumEncSl06,
-  expMediumGolemEnc02, expMediumGolemEnc03, expMediumGolemEnc04, expMediumGolemEnc05, expMediumGolemEnc06,
-  expMediumGolemSl02, expMediumGolemSl03, expMediumGolemSl04, expMediumGolemSl05, expMediumGolemSl06,
-  expHardAll02, expHardAll03, expHardAll04, expHardAll05, expHardAll06,
-  expHardGolemMix02, expHardGolemMix03, expHardGolemMix04, expHardGolemMix05, expHardGolemMix06,
-  expHardAmongGolem01, expHardAmongGolem02,
-  expDebunkTutorial01, expDebunkEasy01, expDebunkMedium01,
-  comboExpEasy02, comboExpEasy03, comboExpEasy04, comboExpEasy05, comboExpEasy06,
-  comboExpMedSl02, comboExpMedSl03, comboExpMedSl04, comboExpMedSl05,
-  comboExpMedAll02, comboExpMedAll03, comboExpMedAll04, comboExpMedAll05,
-  comboExpHardWha02, comboExpHardWha03, comboExpHardWha04, comboExpHardWha05,
-  comboExpHardSl02, comboExpHardSl03, comboExpHardSl04, comboExpHardSl05,
+  enc01, enc02, enc03, enc04, enc05,
+  enc06, enc07, enc08, enc09, enc10,
+  sl01, sl02, sl03, sl04, sl05, sl06, sl07,
+  expGolemTutorial01, golem02, golem03, golem04, golem05, golem06,
+  encSl02, encSl03, encSl04, encSl05, encSl06,
+  golemEnc02, golemEnc03, golemEnc04, golemEnc05, golemEnc06,
+  golemSl02, golemSl03, golemSl04, golemSl05, golemSl06,
+  all02, all03, all04, all05, all06,
+  golemMix02, golemMix03, golemMix04, golemMix05, golemMix06,
+  amongGolem01, amongGolem02,
+  expDebunkTutorial01, debunk01, debunk02,
+  comboExp02, comboExp03, comboExp04, comboExp05, comboExp06,
+  comboExpSl02, comboExpSl03, comboExpSl04, comboExpSl05,
+  comboExpAll02, comboExpAll03, comboExpAll04, comboExpAll05,
+  comboExpWha02, comboExpWha03, comboExpWha04, comboExpWha05,
+  comboExpXsl02, comboExpXsl03, comboExpXsl04, comboExpXsl05,
 ] as unknown as ExpandedPuzzle[];
 
 export const EXPANDED_PUZZLE_MAP: Record<string, ExpandedPuzzle> =
@@ -152,8 +152,8 @@ export const EXPANDED_COLLECTIONS: ExpandedCollection[] = [
     description: 'Apply encyclopedia entries to narrow down alchemical identities. Short, focused deductions.',
     difficulty: 'easy',
     puzzleIds: [
-      'exp-easy-enc-01', 'exp-easy-enc-02', 'exp-easy-enc-03', 'exp-easy-enc-04', 'exp-easy-enc-05',
-      'exp-easy-enc-06', 'exp-easy-enc-07', 'exp-easy-enc-08', 'exp-easy-enc-09', 'exp-easy-enc-10',
+      'enc-01', 'enc-02', 'enc-03', 'enc-04', 'enc-05',
+      'enc-06', 'enc-07', 'enc-08', 'enc-09', 'enc-10',
     ],
     unlockedAfter: 'exp-tutorials',
   },
@@ -163,8 +163,8 @@ export const EXPANDED_COLLECTIONS: ExpandedCollection[] = [
     description: 'Use the Book Token to classify ingredients as Solar or Lunar, then deduce from there.',
     difficulty: 'easy',
     puzzleIds: [
-      'exp-easy-solar-01', 'exp-easy-sl-02', 'exp-easy-sl-03',
-      'exp-easy-sl-04', 'exp-easy-sl-05', 'exp-easy-sl-06', 'exp-easy-sl-07',
+      'sl-01', 'sl-02', 'sl-03',
+      'sl-04', 'sl-05', 'sl-06', 'sl-07',
     ],
     unlockedAfter: 'exp-tutorials',
   },
@@ -175,8 +175,8 @@ export const EXPANDED_COLLECTIONS: ExpandedCollection[] = [
     difficulty: 'easy',
     puzzleIds: [
       'exp-golem-tutorial-01',
-      'exp-easy-golem-02', 'exp-easy-golem-03', 'exp-easy-golem-04',
-      'exp-easy-golem-05', 'exp-easy-golem-06',
+      'golem-02', 'golem-03', 'golem-04',
+      'golem-05', 'golem-06',
     ],
     unlockedAfter: 'exp-tutorials',
   },
@@ -186,8 +186,8 @@ export const EXPANDED_COLLECTIONS: ExpandedCollection[] = [
     description: 'Encyclopedia and Solar/Lunar clues interlock — neither alone is enough.',
     difficulty: 'medium',
     puzzleIds: [
-      'exp-medium-enc-sl-02', 'exp-medium-enc-sl-03', 'exp-medium-enc-sl-04',
-      'exp-medium-enc-sl-05', 'exp-medium-enc-sl-06',
+      'enc-sl-02', 'enc-sl-03', 'enc-sl-04',
+      'enc-sl-05', 'enc-sl-06',
     ],
     unlockedAfter: 'exp-easy-enc',
   },
@@ -197,8 +197,8 @@ export const EXPANDED_COLLECTIONS: ExpandedCollection[] = [
     description: 'Golem reactions and published articles constrain each other. Cross-reference to find the animators.',
     difficulty: 'medium',
     puzzleIds: [
-      'exp-medium-golem-enc-02', 'exp-medium-golem-enc-03', 'exp-medium-golem-enc-04',
-      'exp-medium-golem-enc-05', 'exp-medium-golem-enc-06',
+      'golem-enc-02', 'golem-enc-03', 'golem-enc-04',
+      'golem-enc-05', 'golem-enc-06',
     ],
     unlockedAfter: 'exp-golem',
   },
@@ -208,8 +208,8 @@ export const EXPANDED_COLLECTIONS: ExpandedCollection[] = [
     description: 'Combine golem reactions with mixing results to deduce the animate potion.',
     difficulty: 'medium',
     puzzleIds: [
-      'exp-medium-golem-sl-02', 'exp-medium-golem-sl-03', 'exp-medium-golem-sl-04',
-      'exp-medium-golem-sl-05', 'exp-medium-golem-sl-06',
+      'golem-sl-02', 'golem-sl-03', 'golem-sl-04',
+      'golem-sl-05', 'golem-sl-06',
     ],
     unlockedAfter: 'exp-golem',
   },
@@ -219,8 +219,8 @@ export const EXPANDED_COLLECTIONS: ExpandedCollection[] = [
     description: 'All expanded mechanics in play — golem tests, encyclopedia entries, Solar/Lunar. No single clue type is sufficient.',
     difficulty: 'hard',
     puzzleIds: [
-      'exp-hard-all-02', 'exp-hard-all-03', 'exp-hard-all-04',
-      'exp-hard-all-05', 'exp-hard-all-06',
+      'all-02', 'all-03', 'all-04',
+      'all-05', 'all-06',
     ],
     unlockedAfter: 'exp-medium-golem-enc',
   },
@@ -230,8 +230,8 @@ export const EXPANDED_COLLECTIONS: ExpandedCollection[] = [
     description: 'You must deduce not just the reaction pattern but the exact potion needed — using only golem tests and mixing results.',
     difficulty: 'hard',
     puzzleIds: [
-      'exp-hard-golem-mix-02', 'exp-hard-golem-mix-03', 'exp-hard-golem-mix-04',
-      'exp-hard-golem-mix-05', 'exp-hard-golem-mix-06',
+      'golem-mix-02', 'golem-mix-03', 'golem-mix-04',
+      'golem-mix-05', 'golem-mix-06',
     ],
     unlockedAfter: 'exp-medium-golem-sl',
   },
@@ -240,7 +240,7 @@ export const EXPANDED_COLLECTIONS: ExpandedCollection[] = [
     title: 'Whispers & Reactions',
     description: 'You overheard partial results — reactions from unnamed ingredients, sell outcomes without knowing whose potion it was. Piece it together.',
     difficulty: 'hard',
-    puzzleIds: ['exp-hard-among-golem-01', 'exp-hard-among-golem-02'],
+    puzzleIds: ['among-golem-01', 'among-golem-02'],
     unlockedAfter: 'exp-hard-all',
   },
   {
@@ -248,7 +248,7 @@ export const EXPANDED_COLLECTIONS: ExpandedCollection[] = [
     title: 'Debunking',
     description: "Rivals have published false alchemical theories. You know the truth — plan the fewest possible debunk actions to clear the board.",
     difficulty: 'medium',
-    puzzleIds: ['exp-debunk-tutorial-01', 'exp-debunk-easy-01', 'exp-debunk-medium-01'],
+    puzzleIds: ['exp-debunk-tutorial-01', 'debunk-01', 'debunk-02'],
     unlockedAfter: 'exp-tutorials',
   },
   {
@@ -257,11 +257,11 @@ export const EXPANDED_COLLECTIONS: ExpandedCollection[] = [
     description: 'All expanded mechanics at once — encyclopedia articles, Solar/Lunar classifications, and golem reactions. The hardest deductions require every tool.',
     difficulty: 'hard',
     puzzleIds: [
-      'combo-exp-easy-02', 'combo-exp-easy-03', 'combo-exp-easy-04', 'combo-exp-easy-05', 'combo-exp-easy-06',
-      'combo-exp-med-sl-02', 'combo-exp-med-sl-03', 'combo-exp-med-sl-04', 'combo-exp-med-sl-05',
-      'combo-exp-med-all-02', 'combo-exp-med-all-03', 'combo-exp-med-all-04', 'combo-exp-med-all-05',
-      'combo-exp-hard-wha-02', 'combo-exp-hard-wha-03', 'combo-exp-hard-wha-04', 'combo-exp-hard-wha-05',
-      'combo-exp-hard-sl-02', 'combo-exp-hard-sl-03', 'combo-exp-hard-sl-04', 'combo-exp-hard-sl-05',
+      'combo-exp-02', 'combo-exp-03', 'combo-exp-04', 'combo-exp-05', 'combo-exp-06',
+      'combo-exp-sl-02', 'combo-exp-sl-03', 'combo-exp-sl-04', 'combo-exp-sl-05',
+      'combo-exp-all-02', 'combo-exp-all-03', 'combo-exp-all-04', 'combo-exp-all-05',
+      'combo-exp-wha-02', 'combo-exp-wha-03', 'combo-exp-wha-04', 'combo-exp-wha-05',
+      'combo-exp-xsl-02', 'combo-exp-xsl-03', 'combo-exp-xsl-04', 'combo-exp-xsl-05',
     ],
     unlockedAfter: 'exp-hard-all',
   },

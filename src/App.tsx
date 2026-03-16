@@ -3,6 +3,7 @@ import { ALL_PUZZLES, COLLECTIONS, PUZZLE_MAP } from './data/puzzles/index';
 import { PuzzleSolverPage } from './pages/PuzzleSolverPage';
 import { TutorialPage } from './pages/TutorialPage';
 import { MIXING_TUTORIAL_STEPS } from './data/tutorials/mixing';
+import { ASPECT_BALANCE_TUTORIAL_STEPS } from './data/tutorials/aspect-balance';
 import { SELLING_TUTORIAL_STEPS } from './data/tutorials/selling';
 import { TWO_COLOR_TUTORIAL_STEPS } from './data/tutorials/two-color';
 import { DEBUNK_APPRENTICE_TUTORIAL_STEPS } from './data/tutorials/debunk-apprentice';
@@ -265,11 +266,12 @@ function PuzzleRow({
 // ─── Tutorial steps registry ──────────────────────────────────────────────────
 
 const TUTORIAL_STEPS = {
-  mixing:             MIXING_TUTORIAL_STEPS,
-  selling:            SELLING_TUTORIAL_STEPS,
-  'two-color':        TWO_COLOR_TUTORIAL_STEPS,
+  mixing:              MIXING_TUTORIAL_STEPS,
+  'aspect-balance':    ASPECT_BALANCE_TUTORIAL_STEPS,
+  selling:             SELLING_TUTORIAL_STEPS,
+  'two-color':         TWO_COLOR_TUTORIAL_STEPS,
   'debunk-apprentice': DEBUNK_APPRENTICE_TUTORIAL_STEPS,
-  'debunk-master':    DEBUNK_MASTER_TUTORIAL_STEPS,
+  'debunk-master':     DEBUNK_MASTER_TUTORIAL_STEPS,
 };
 
 // ─── Expanded home wrapper ────────────────────────────────────────────────────
@@ -519,6 +521,7 @@ function AppInner() {
               onOpen={() => {
                 const tutorialMap: Record<string, TutorialId> = {
                   'tutorial-mixing':              'mixing',
+                  'tutorial-aspect-balance':      'aspect-balance',
                   'tutorial-selling':             'selling',
                   'tutorial-two-color':           'two-color',
                   'tutorial-debunking-apprentice': 'debunk-apprentice',

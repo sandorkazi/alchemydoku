@@ -5,7 +5,7 @@ import {
 import {
   initAuth, requestToken, signOut as driveSignOut, isSignedIn,
   fetchUserInfo, loadFromDrive, saveToDrive, snapshotLocal, mergeIntoLocal,
-  migrateStorage,
+  migrateStorage, saveUserToStorage, loadUserFromStorage,
   type DriveUser, type DriveMode,
 } from '../services/googleDrive';
 
@@ -38,6 +38,8 @@ interface DriveContextValue {
   authStatus:  AuthStatus;
   syncStatus:  SyncStatus;
   user:        DriveUser | null;
+  /** Previously-authenticated user loaded from localStorage — shown in the reconnect UI. */
+  savedUser:   DriveUser | null;
   lastSynced:  Date | null;
   errorMsg:    string | null;
   driveMode:   DriveMode;
@@ -67,6 +69,7 @@ export function DriveProvider({ children }: { children: ReactNode }) {
   const [authStatus,  setAuthStatus]  = useState<AuthStatus>('idle');
   const [syncStatus,  setSyncStatus]  = useState<SyncStatus>('idle');
   const [user,        setUser]        = useState<DriveUser | null>(null);
+  const [savedUser,   setSavedUser]   = useState<DriveUser | null>(() => loadUserFromStorage());
   const [lastSynced,  setLastSynced]  = useState<Date | null>(null);
   const [errorMsg,    setErrorMsg]    = useState<string | null>(null);
   const [driveMode,   setDriveModeState] = useState<DriveMode>(loadDriveMode);
@@ -75,20 +78,45 @@ export function DriveProvider({ children }: { children: ReactNode }) {
   // Debounce auto-sync (don't spam on rapid completions)
   const syncTimeout = useRef<ReturnType<typeof setTimeout> | null>(null);
 
-  // ── Init GIS on mount ──────────────────────────────────────────────────────
+  // ── Init GIS on mount — attempt silent session restore ────────────────────
   useEffect(() => {
     const clientId = import.meta.env.VITE_GOOGLE_CLIENT_ID as string | undefined;
     if (!clientId) {
-      // No client ID configured — Drive sync silently unavailable
       setAuthStatus('signed-out');
       return;
     }
-    initAuth().catch(() => {
-      // GIS failed to load (e.g. ad blocker) — degrade gracefully
+
+    const savedUser = loadUserFromStorage();
+    if (savedUser) setAuthStatus('loading');
+
+    initAuth().then(async () => {
+      if (!savedUser) { setAuthStatus('signed-out'); return; }
+      // Attempt silent token restore — prompt:'' never shows a popup
+      try {
+        await requestToken('');
+        const profile = await fetchUserInfo();
+        setUser(profile);
+        setSavedUser(profile);
+        saveUserToStorage(profile);
+        setAuthStatus('signed-in');
+        setSyncStatus('syncing');
+        try {
+          const cloud = await loadFromDrive(driveMode);
+          if (cloud) mergeIntoLocal(cloud);
+          await saveToDrive(snapshotLocal(), driveMode);
+          setLastSynced(new Date());
+          setSyncStatus('success');
+        } catch {
+          setSyncStatus('error');
+        }
+      } catch {
+        // Silent restore failed (session expired or revoked) — sign out quietly
+        setAuthStatus('signed-out');
+      }
+    }).catch(() => {
       setAuthStatus('signed-out');
     });
-    setAuthStatus('signed-out');
-  }, []);
+  }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
   // ── Sign in ────────────────────────────────────────────────────────────────
   const signIn = useCallback(async () => {
@@ -100,6 +128,8 @@ export function DriveProvider({ children }: { children: ReactNode }) {
       // Fetch user profile
       const profile = await fetchUserInfo();
       setUser(profile);
+      setSavedUser(profile);
+      saveUserToStorage(profile);
       setAuthStatus('signed-in');
 
       // Download cloud save and merge into localStorage
@@ -135,6 +165,7 @@ export function DriveProvider({ children }: { children: ReactNode }) {
     setAuthStatus('signed-out');
     setSyncStatus('idle');
     setUser(null);
+    setSavedUser(null);
     setLastSynced(null);
     setErrorMsg(null);
   }, []);
@@ -185,7 +216,7 @@ export function DriveProvider({ children }: { children: ReactNode }) {
   }, [driveMode]);
 
   const value: DriveContextValue = {
-    authStatus, syncStatus, user, lastSynced, errorMsg, driveMode, isMigrating,
+    authStatus, syncStatus, user, savedUser, lastSynced, errorMsg, driveMode, isMigrating,
     signIn, signOut, syncNow, setDriveMode, onPuzzleComplete,
   };
 

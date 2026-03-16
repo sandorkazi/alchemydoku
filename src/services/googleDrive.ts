@@ -8,6 +8,8 @@
  * Setup: set VITE_GOOGLE_CLIENT_ID in your .env (see README for Google Cloud steps).
  */
 
+import { ID_RENAMES } from '../utils/saveProgress';
+
 // ─── Types ───────────────────────────────────────────────────────────────────
 
 export type DriveMode = 'hidden' | 'visible';
@@ -66,6 +68,7 @@ declare global {
 
 // ─── Constants ───────────────────────────────────────────────────────────────
 
+const SAVED_USER_KEY   = 'alch-drive-user';
 const DRIVE_FILES_URL  = 'https://www.googleapis.com/drive/v3/files';
 const DRIVE_UPLOAD_URL = 'https://www.googleapis.com/upload/drive/v3/files';
 const USERINFO_URL     = 'https://www.googleapis.com/oauth2/v3/userinfo';
@@ -161,6 +164,18 @@ export function signOut(): void {
   accessToken      = null;
   tokenExpiresAt   = 0;
   visibleFolderId  = null;
+  try { localStorage.removeItem(SAVED_USER_KEY); } catch { /* ignore */ }
+}
+
+export function saveUserToStorage(user: DriveUser): void {
+  try { localStorage.setItem(SAVED_USER_KEY, JSON.stringify(user)); } catch { /* ignore */ }
+}
+
+export function loadUserFromStorage(): DriveUser | null {
+  try {
+    const raw = localStorage.getItem(SAVED_USER_KEY);
+    return raw ? JSON.parse(raw) as DriveUser : null;
+  } catch { return null; }
 }
 
 export function isSignedIn(): boolean {
@@ -388,15 +403,17 @@ export function mergeIntoLocal(cloud: SaveData): void {
     } catch { /* ignore */ }
   }
 
-  mergeCompleted('base',     cloud.base.completed);
-  mergeCompleted('expanded', cloud.expanded.completed);
+  mergeCompleted('base',     cloud.base.completed.map(id => ID_RENAMES[id] ?? id));
+  mergeCompleted('expanded', cloud.expanded.completed.map(id => ID_RENAMES[id] ?? id));
 
   // Only set lastPuzzle if local has none (first sign-in on new device)
   if (cloud.base.lastPuzzle && !localStorage.getItem(KEYS.base.lastPuzzle)) {
-    localStorage.setItem(KEYS.base.lastPuzzle, cloud.base.lastPuzzle);
+    const bp = cloud.base.lastPuzzle;
+    localStorage.setItem(KEYS.base.lastPuzzle, ID_RENAMES[bp] ?? bp);
   }
   if (cloud.expanded.lastPuzzle && !localStorage.getItem(KEYS.expanded.lastPuzzle)) {
-    localStorage.setItem(KEYS.expanded.lastPuzzle, cloud.expanded.lastPuzzle);
+    const ep = cloud.expanded.lastPuzzle;
+    localStorage.setItem(KEYS.expanded.lastPuzzle, ID_RENAMES[ep] ?? ep);
   }
 
   const cloudSeen = cloud.seenRelease;

@@ -205,12 +205,21 @@ def filter_clue(worlds: frozenset, clue: dict, golem: Optional[dict] = None) -> 
 
     if k == 'sell_among':
         slots = [i - 1 for i in clue['ingredients']]
-        col = clue['potion']['color']
-        sgn_val = sgn_int(clue['potion']['sign'])
-        want = sgn_val if clue['result'] == 'sold' else (1 - sgn_val)
-        count = clue['count']
+        cp_col  = clue['claimedPotion']['color']
+        cp_sgn  = sgn_int(clue['claimedPotion']['sign'])
+        tgt     = clue['result']
+        count   = clue['count']
+
+        def _sr(mix_result, _cp_col=cp_col, _cp_sgn=cp_sgn, _tgt=tgt):
+            if mix_result == 'neutral':                                      return 'neutral'
+            act_col, act_sgn = mix_result
+            if act_col == _cp_col and act_sgn == _cp_sgn:                   return 'total_match'
+            if act_sgn == _cp_sgn:                                          return 'sign_ok'
+            return 'opposite'
+
         return frozenset(w for w in worlds
-                         if sum(ALCH_DATA[w[s]][col][0] == want for s in slots) == count)
+                         if sum(_sr(MIX_TABLE[w[a]][w[b]]) == tgt
+                                for a, b in itertools.combinations(slots, 2)) == count)
 
     if k == 'mixing_among':
         slots = [i - 1 for i in clue['ingredients']]
@@ -400,14 +409,16 @@ def answer(worlds: frozenset, q: dict, golem: Optional[dict] = None):
 
     if k == 'ingredient-potion-profile':
         si = q['ingredient'] - 1
-        certain_potions = set()
+        # Neutral is always certain — every alchemical has a direct opposite.
+        certain_potions = {'neutral'}
         for s2 in range(8):
             if s2 == si:
                 continue
             results = {MIX_TABLE[w[si]][w[s2]] for w in worlds}
             if len(results) == 1:
                 certain_potions.add(results.pop())
-        return sorted(fmt_r(p) for p in certain_potions) if certain_potions else None
+        # Return None if only neutral (trivially known, no useful puzzle info).
+        return sorted(fmt_r(p) for p in certain_potions) if len(certain_potions) > 1 else None
 
     if k == 'group-possible-potions':
         slots = [i - 1 for i in q['ingredients']]
@@ -1416,18 +1427,21 @@ def gen_hints(raw: dict) -> list:
                 continue
             results = {MIX_TABLE[w[slot - 1]][w[s2 - 1]] for w in worlds}
             if len(results) == 1:
-                profile.append(f"ing{s2}→{fmt_r(results.pop())}")
+                r = results.pop()
+                if r != 'neutral':
+                    profile.append(f"ing{s2}→{fmt_r(r)}")
         hints.append({'level': 1, 'text': (
-            f"Find all potions that ingredient {slot} can certainly produce with at least one partner. "
-            f"A potion is 'certain' when the mix result is the same in every remaining possible world."
+            f"Find all potions that ingredient {slot} can certainly produce. "
+            f"Neutral is always certain — every alchemical has a direct opposite, and mixing them always yields neutral. "
+            f"For the other potions, a result is 'certain' when it's the same across every remaining possible world."
         )})
         hints.append({'level': 2, 'text': (
-            f"Check each of ingredient {slot}'s 7 possible partners. "
-            f"Certain results so far: {', '.join(profile) or 'none yet — keep reducing worlds'}."
+            f"Check each of ingredient {slot}'s 7 partners for non-neutral certain results. "
+            f"Non-neutral certain results: {', '.join(profile) or 'none yet — keep reducing worlds'}."
         )})
         ans = answer(worlds, q, golem)
         hints.append({'level': 3, 'text':
-            f"Ingredient {slot} = {ALCH_CODES[alch]}. Certain potions: {ans}."
+            f"Ingredient {slot} = {ALCH_CODES[alch]}. Certain potions (neutral always included): {ans}."
         })
 
     elif k == 'group-possible-potions':

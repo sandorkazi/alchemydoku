@@ -124,16 +124,16 @@ export type MixingAmongClue = {
 };
 
 /**
- * "Among" clue: exactly `count` of the listed 2-4 ingredients sold for this potion.
- * A sold result means the ingredient has that color+sign aspect; rejected means it does not.
- * Typical puzzle usage: count=2, result='sold'.
+ * Counted ambiguous sale: exactly `count` of the C(n,2) pairs from `ingredients`
+ * produce `result` when sold as `claimedPotion`. Requires ≥ 3 ingredients
+ * (with 2 it collapses to a plain sell clue).
  */
 export type SellAmongClue = {
   kind: 'sell_among';
-  ingredients: [IngredientId, IngredientId, ...IngredientId[]]; // 2-4
-  potion: { color: Color; sign: Sign };
-  result: 'sold' | 'rejected';
-  count: number;
+  ingredients: [IngredientId, IngredientId, IngredientId, ...IngredientId[]]; // ≥ 3
+  claimedPotion: { color: Color; sign: Sign };
+  result: SellResult;
+  count: number; // exactly this many of the C(n,2) pairs produce `result`
 };
 
 /**
