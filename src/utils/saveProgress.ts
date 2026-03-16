@@ -14,7 +14,93 @@
  * per-puzzle keys for backwards compatibility).
  */
 
-export const SAVE_VERSION = 3;
+export const SAVE_VERSION = 4;
+
+// ─── ID rename map (v3 → v4) ──────────────────────────────────────────────────
+
+export const ID_RENAMES: Record<string, string> = {
+  // Base — easy → mix
+  'easy-2000': 'mix-2000', 'easy-2001': 'mix-2001', 'easy-2002': 'mix-2002',
+  'easy-2003': 'mix-2003', 'easy-2004': 'mix-2004', 'easy-2005': 'mix-2005',
+  'easy-2006': 'mix-2006', 'easy-2007': 'mix-2007', 'easy-2008': 'mix-2008',
+  'easy-2009': 'mix-2009',
+  // Base — medium → mix
+  'medium-6000': 'mix-6000', 'medium-6001': 'mix-6001', 'medium-6002': 'mix-6002',
+  'medium-6003': 'mix-6003', 'medium-6004': 'mix-6004', 'medium-6005': 'mix-6005',
+  'medium-6006': 'mix-6006', 'medium-6007': 'mix-6007',
+  // Base — hard → ded
+  'hard-9000': 'ded-9000', 'hard-9001': 'ded-9001', 'hard-9002': 'ded-9002',
+  'hard-9003': 'ded-9003', 'hard-9004': 'ded-9004', 'hard-9005': 'ded-9005',
+  // Base — expert → cross
+  'expert-1001': 'cross-1001', 'expert-1002': 'cross-1002', 'expert-1003': 'cross-1003',
+  'expert-1004': 'cross-1004', 'expert-1005': 'cross-1005', 'expert-1006': 'cross-1006',
+  'expert-1007': 'cross-1007', 'expert-1008': 'cross-1008',
+  // Base — medium-pp / hard-pp → pp
+  'medium-pp-01': 'pp-01', 'medium-pp-02': 'pp-02', 'medium-pp-03': 'pp-03',
+  'hard-pp-01': 'pp-04', 'hard-pp-02': 'pp-05',
+  // Base — hard-among → among
+  'hard-among-01': 'among-01', 'hard-among-02': 'among-02',
+  // Base — combo strips difficulty component
+  'combo-b-easy-02': 'combo-b-02', 'combo-b-easy-03': 'combo-b-03',
+  'combo-b-easy-04': 'combo-b-04', 'combo-b-easy-05': 'combo-b-05',
+  'combo-b-easy-06': 'combo-b-06',
+  'combo-b-easy-pp-02': 'combo-b-pp-02', 'combo-b-easy-pp-03': 'combo-b-pp-03',
+  'combo-b-easy-pp-04': 'combo-b-pp-04', 'combo-b-hard-pp-03': 'combo-b-pp-05',
+  'combo-b-med-asp-02': 'combo-b-asp-02', 'combo-b-med-asp-03': 'combo-b-asp-03',
+  'combo-b-med-asp-04': 'combo-b-asp-04', 'combo-b-med-asp-05': 'combo-b-asp-05',
+  'combo-b-med-np-02': 'combo-b-np-02', 'combo-b-med-np-03': 'combo-b-np-03',
+  'combo-b-med-np-04': 'combo-b-np-04', 'combo-b-med-np-05': 'combo-b-np-05',
+  'combo-b-hard-ip-02': 'combo-b-ip-02', 'combo-b-hard-ip-03': 'combo-b-ip-03',
+  'combo-b-hard-ip-04': 'combo-b-ip-04', 'combo-b-hard-ip-05': 'combo-b-ip-05',
+  // Expanded — enc
+  'exp-easy-enc-01': 'enc-01', 'exp-easy-enc-02': 'enc-02', 'exp-easy-enc-03': 'enc-03',
+  'exp-easy-enc-04': 'enc-04', 'exp-easy-enc-05': 'enc-05', 'exp-easy-enc-06': 'enc-06',
+  'exp-easy-enc-07': 'enc-07', 'exp-easy-enc-08': 'enc-08', 'exp-easy-enc-09': 'enc-09',
+  'exp-easy-enc-10': 'enc-10',
+  // Expanded — sl
+  'exp-easy-solar-01': 'sl-01', 'exp-easy-sl-02': 'sl-02', 'exp-easy-sl-03': 'sl-03',
+  'exp-easy-sl-04': 'sl-04', 'exp-easy-sl-05': 'sl-05', 'exp-easy-sl-06': 'sl-06',
+  'exp-easy-sl-07': 'sl-07',
+  // Expanded — golem
+  'exp-easy-golem-02': 'golem-02', 'exp-easy-golem-03': 'golem-03',
+  'exp-easy-golem-04': 'golem-04', 'exp-easy-golem-05': 'golem-05',
+  'exp-easy-golem-06': 'golem-06',
+  // Expanded — debunk
+  'exp-debunk-easy-01': 'debunk-01', 'exp-debunk-medium-01': 'debunk-02',
+  // Expanded — enc-sl
+  'exp-medium-enc-sl-02': 'enc-sl-02', 'exp-medium-enc-sl-03': 'enc-sl-03',
+  'exp-medium-enc-sl-04': 'enc-sl-04', 'exp-medium-enc-sl-05': 'enc-sl-05',
+  'exp-medium-enc-sl-06': 'enc-sl-06',
+  // Expanded — golem-enc
+  'exp-medium-golem-enc-02': 'golem-enc-02', 'exp-medium-golem-enc-03': 'golem-enc-03',
+  'exp-medium-golem-enc-04': 'golem-enc-04', 'exp-medium-golem-enc-05': 'golem-enc-05',
+  'exp-medium-golem-enc-06': 'golem-enc-06',
+  // Expanded — golem-sl
+  'exp-medium-golem-sl-02': 'golem-sl-02', 'exp-medium-golem-sl-03': 'golem-sl-03',
+  'exp-medium-golem-sl-04': 'golem-sl-04', 'exp-medium-golem-sl-05': 'golem-sl-05',
+  'exp-medium-golem-sl-06': 'golem-sl-06',
+  // Expanded — all
+  'exp-hard-all-02': 'all-02', 'exp-hard-all-03': 'all-03', 'exp-hard-all-04': 'all-04',
+  'exp-hard-all-05': 'all-05', 'exp-hard-all-06': 'all-06',
+  // Expanded — golem-mix
+  'exp-hard-golem-mix-02': 'golem-mix-02', 'exp-hard-golem-mix-03': 'golem-mix-03',
+  'exp-hard-golem-mix-04': 'golem-mix-04', 'exp-hard-golem-mix-05': 'golem-mix-05',
+  'exp-hard-golem-mix-06': 'golem-mix-06',
+  // Expanded — among-golem
+  'exp-hard-among-golem-01': 'among-golem-01', 'exp-hard-among-golem-02': 'among-golem-02',
+  // Expanded — combo strips difficulty component
+  'combo-exp-easy-02': 'combo-exp-02', 'combo-exp-easy-03': 'combo-exp-03',
+  'combo-exp-easy-04': 'combo-exp-04', 'combo-exp-easy-05': 'combo-exp-05',
+  'combo-exp-easy-06': 'combo-exp-06',
+  'combo-exp-med-sl-02': 'combo-exp-sl-02', 'combo-exp-med-sl-03': 'combo-exp-sl-03',
+  'combo-exp-med-sl-04': 'combo-exp-sl-04', 'combo-exp-med-sl-05': 'combo-exp-sl-05',
+  'combo-exp-med-all-02': 'combo-exp-all-02', 'combo-exp-med-all-03': 'combo-exp-all-03',
+  'combo-exp-med-all-04': 'combo-exp-all-04', 'combo-exp-med-all-05': 'combo-exp-all-05',
+  'combo-exp-hard-wha-02': 'combo-exp-wha-02', 'combo-exp-hard-wha-03': 'combo-exp-wha-03',
+  'combo-exp-hard-wha-04': 'combo-exp-wha-04', 'combo-exp-hard-wha-05': 'combo-exp-wha-05',
+  'combo-exp-hard-sl-02': 'combo-exp-xsl-02', 'combo-exp-hard-sl-03': 'combo-exp-xsl-03',
+  'combo-exp-hard-sl-04': 'combo-exp-xsl-04', 'combo-exp-hard-sl-05': 'combo-exp-xsl-05',
+};
 
 // ─── Types ────────────────────────────────────────────────────────────────────
 
@@ -54,64 +140,116 @@ const EXPANDED_QUESTIONS_CHANGED = new Set([
 ]);
 
 /**
- * Run once on startup.  Detects a v2 save file and resets answers / completed
- * status for puzzles whose questions changed between v2 and v3.
+ * Run once on startup.  Applies all pending migrations in order:
+ *   v2 → v3  reset answers for puzzles whose questions changed
+ *   v3 → v4  rename all puzzle IDs to difficulty-neutral names
+ *
+ * Each step is guarded by the original file version so it only fires once
+ * and never clobbers data that was saved under the new IDs.
  */
 export function runMigrations(): void {
   // Base ──────────────────────────────────────────────────────────────────────
   try {
     const raw = localStorage.getItem(BASE_KEY);
+    // Track the version as it was on disk (before we mutate anything).
+    // Default to SAVE_VERSION so the completed-array rename below is skipped
+    // when there is no save file yet (nothing to rename).
+    let originalVersion = SAVE_VERSION;
+
     if (raw) {
       const file = JSON.parse(raw) as SaveFile<PuzzleProgress>;
+      originalVersion = file.version;
+
       if (file.version < SAVE_VERSION) {
-        for (const id of BASE_QUESTIONS_CHANGED) {
-          if (file.puzzles[id]) {
-            file.puzzles[id].answers = file.puzzles[id].answers.map(() => null);
+        // v2 → v3: reset answers for puzzles whose questions changed
+        if (file.version < 3) {
+          for (const id of BASE_QUESTIONS_CHANGED) {
+            if (file.puzzles[id]) {
+              file.puzzles[id].answers = file.puzzles[id].answers.map(() => null);
+            }
+            try { localStorage.removeItem(`solver-${id}`); } catch { /* ignore */ }
           }
-          try { localStorage.removeItem(`solver-${id}`); } catch { /* ignore */ }
+        }
+        // v3 → v4: rename puzzle IDs
+        for (const oldId of Object.keys(file.puzzles)) {
+          const newId = ID_RENAMES[oldId];
+          if (newId) {
+            file.puzzles[newId] = file.puzzles[oldId];
+            delete file.puzzles[oldId];
+          }
         }
         file.version = SAVE_VERSION;
         localStorage.setItem(BASE_KEY, JSON.stringify(file));
       }
     }
-    // Remove changed puzzles from the completed-set
+
+    // Migrate the completed-set.
+    // • Only invalidate BASE_QUESTIONS_CHANGED entries when coming from v2
+    //   (they were validly re-completed by v3 users and must survive as-is).
+    // • Always apply ID_RENAMES (idempotent: new IDs are not in the map).
     const raw2 = localStorage.getItem('alch-completed-base');
-    if (raw2) {
+    if (raw2 && originalVersion < SAVE_VERSION) {
       const ids: string[] = JSON.parse(raw2);
-      const cleaned = ids.filter(id => !BASE_QUESTIONS_CHANGED.has(id));
-      if (cleaned.length !== ids.length) {
-        localStorage.setItem('alch-completed-base', JSON.stringify(cleaned));
-      }
+      const renamed = ids
+        .filter(id => originalVersion >= 3 || !BASE_QUESTIONS_CHANGED.has(id))
+        .map(id => ID_RENAMES[id] ?? id);
+      localStorage.setItem('alch-completed-base', JSON.stringify(renamed));
+    }
+    // Rename last-puzzle key
+    const lastRaw = localStorage.getItem('alch-last-puzzle-base');
+    if (lastRaw && ID_RENAMES[lastRaw]) {
+      localStorage.setItem('alch-last-puzzle-base', ID_RENAMES[lastRaw]);
     }
   } catch { /* ignore */ }
 
   // Expanded ──────────────────────────────────────────────────────────────────
   try {
     const raw = localStorage.getItem(EXPANDED_KEY);
+    let originalVersion = SAVE_VERSION;
+
     if (raw) {
       const file = JSON.parse(raw) as SaveFile<ExpandedPuzzleProgress>;
+      originalVersion = file.version;
+
       if (file.version < SAVE_VERSION) {
-        for (const id of EXPANDED_QUESTIONS_CHANGED) {
-          if (file.puzzles[id]) {
-            // Second question was removed — keep only the first answer slot
-            file.puzzles[id].answers = [file.puzzles[id].answers[0] ?? null];
+        // v2 → v3: remove second question slot for changed puzzles
+        if (file.version < 3) {
+          for (const id of EXPANDED_QUESTIONS_CHANGED) {
+            if (file.puzzles[id]) {
+              // Second question was removed — keep only the first answer slot
+              file.puzzles[id].answers = [file.puzzles[id].answers[0] ?? null];
+            }
+            try { localStorage.removeItem(`exp-solver-${id}`); } catch { /* ignore */ }
           }
-          try { localStorage.removeItem(`exp-solver-${id}`); } catch { /* ignore */ }
+        }
+        // v3 → v4: rename puzzle IDs
+        for (const oldId of Object.keys(file.puzzles)) {
+          const newId = ID_RENAMES[oldId];
+          if (newId) {
+            file.puzzles[newId] = file.puzzles[oldId];
+            delete file.puzzles[oldId];
+          }
         }
         file.version = SAVE_VERSION;
         localStorage.setItem(EXPANDED_KEY, JSON.stringify(file));
       }
     }
-    // Remove from both expanded completed keys
+
+    // Migrate both expanded completed keys
     for (const key of ['alch-completed-expanded', 'alch-exp-completed']) {
       const raw2 = localStorage.getItem(key);
-      if (raw2) {
+      if (raw2 && originalVersion < SAVE_VERSION) {
         const ids: string[] = JSON.parse(raw2);
-        const cleaned = ids.filter(id => !EXPANDED_QUESTIONS_CHANGED.has(id));
-        if (cleaned.length !== ids.length) {
-          localStorage.setItem(key, JSON.stringify(cleaned));
-        }
+        const renamed = ids
+          .filter(id => originalVersion >= 3 || !EXPANDED_QUESTIONS_CHANGED.has(id))
+          .map(id => ID_RENAMES[id] ?? id);
+        localStorage.setItem(key, JSON.stringify(renamed));
       }
+    }
+    // Rename last-puzzle key
+    const lastRaw = localStorage.getItem('alch-exp-last');
+    if (lastRaw && ID_RENAMES[lastRaw]) {
+      localStorage.setItem('alch-exp-last', ID_RENAMES[lastRaw]);
     }
   } catch { /* ignore */ }
 }

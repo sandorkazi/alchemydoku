@@ -49,16 +49,16 @@
     "description": "Simple deductions from mixing results.",
     "difficulty": "easy",
     "puzzleIds": [
-      "easy-2001",
-      "easy-2000",
-      "easy-2004",
-      "easy-2002",
-      "easy-2005",
-      "easy-2008",
-      "easy-2009",
-      "easy-2007",
-      "easy-2003",
-      "easy-2006"
+      "mix-2001",
+      "mix-2000",
+      "mix-2004",
+      "mix-2002",
+      "mix-2005",
+      "mix-2008",
+      "mix-2009",
+      "mix-2007",
+      "mix-2003",
+      "mix-2006"
     ],
     "unlockedAfter": "tutorial-two-color"
   },
@@ -68,14 +68,14 @@
     "description": "Multi-step deductions.",
     "difficulty": "medium",
     "puzzleIds": [
-      "medium-6004",
-      "medium-6005",
-      "medium-6006",
-      "medium-6001",
-      "medium-6002",
-      "medium-6000",
-      "medium-6007",
-      "medium-6003"
+      "mix-6004",
+      "mix-6005",
+      "mix-6006",
+      "mix-6001",
+      "mix-6002",
+      "mix-6000",
+      "mix-6007",
+      "mix-6003"
     ],
     "unlockedAfter": "easy-mixing"
   },
@@ -96,11 +96,11 @@
     "description": "The evidence narrows things down — but not all the way. Mark every potion this pair could still produce.",
     "difficulty": "hard",
     "puzzleIds": [
-      "medium-pp-02",
-      "medium-pp-01",
-      "medium-pp-03",
-      "hard-pp-02",
-      "hard-pp-01"
+      "pp-02",
+      "pp-01",
+      "pp-03",
+      "pp-05",
+      "pp-04"
     ],
     "unlockedAfter": "medium-mixing"
   },
@@ -110,12 +110,12 @@
     "description": "Identify alchemicals from all clue types.",
     "difficulty": "medium",
     "puzzleIds": [
-      "hard-9005",
-      "hard-9002",
-      "hard-9001",
-      "hard-9004",
-      "hard-9003",
-      "hard-9000"
+      "ded-9005",
+      "ded-9002",
+      "ded-9001",
+      "ded-9004",
+      "ded-9003",
+      "ded-9000"
     ],
     "unlockedAfter": "medium-mixing"
   },
@@ -159,14 +159,14 @@
     "description": "Puzzles combining mixing, selling, and debunking clues — every tool at once.",
     "difficulty": "hard",
     "puzzleIds": [
-      "expert-1002",
-      "expert-1006",
-      "expert-1005",
-      "expert-1001",
-      "expert-1003",
-      "expert-1008",
-      "expert-1004",
-      "expert-1007"
+      "cross-1002",
+      "cross-1006",
+      "cross-1005",
+      "cross-1001",
+      "cross-1003",
+      "cross-1008",
+      "cross-1004",
+      "cross-1007"
     ],
     "unlockedAfter": "hard-deduction"
   },
@@ -208,8 +208,8 @@
     "description": "You never saw whose ingredients were involved — only overheard the outcomes. Deduce the full picture from fragmentary crowd knowledge.",
     "difficulty": "hard",
     "puzzleIds": [
-      "hard-among-01",
-      "hard-among-02"
+      "among-01",
+      "among-02"
     ],
     "unlockedAfter": "hard-deduction"
   },
@@ -238,27 +238,27 @@
     "description": "Mixing, selling, debunking, and overheard reactions — all in play at once. No single clue type is sufficient; you'll need to cross-reference everything.",
     "difficulty": "hard",
     "puzzleIds": [
-      "combo-b-easy-02",
-      "combo-b-easy-03",
-      "combo-b-easy-04",
-      "combo-b-easy-05",
-      "combo-b-easy-06",
-      "combo-b-med-asp-02",
-      "combo-b-med-asp-03",
-      "combo-b-med-asp-04",
-      "combo-b-med-asp-05",
-      "combo-b-med-np-02",
-      "combo-b-med-np-03",
-      "combo-b-med-np-04",
-      "combo-b-med-np-05",
-      "combo-b-easy-pp-02",
-      "combo-b-easy-pp-03",
-      "combo-b-easy-pp-04",
-      "combo-b-hard-pp-03",
-      "combo-b-hard-ip-02",
-      "combo-b-hard-ip-03",
-      "combo-b-hard-ip-04",
-      "combo-b-hard-ip-05"
+      "combo-b-02",
+      "combo-b-03",
+      "combo-b-04",
+      "combo-b-05",
+      "combo-b-06",
+      "combo-b-asp-02",
+      "combo-b-asp-03",
+      "combo-b-asp-04",
+      "combo-b-asp-05",
+      "combo-b-np-02",
+      "combo-b-np-03",
+      "combo-b-np-04",
+      "combo-b-np-05",
+      "combo-b-pp-02",
+      "combo-b-pp-03",
+      "combo-b-pp-04",
+      "combo-b-pp-05",
+      "combo-b-ip-02",
+      "combo-b-ip-03",
+      "combo-b-ip-04",
+      "combo-b-ip-05"
     ],
     "unlockedAfter": "expert-cross"
   }
