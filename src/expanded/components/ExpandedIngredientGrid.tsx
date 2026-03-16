@@ -368,24 +368,6 @@ export function ExpandedIngredientGrid({ onRandomize, activeTool, setActiveTool 
     return () => window.removeEventListener('keydown', onKey);
   }, [editingCell, activeTool, setActiveTool]);
 
-  // Keyboard: Ctrl/Cmd+Z = undo; Ctrl/Cmd+Shift+Z = redo
-  useEffect(() => {
-    const onKey = (e: KeyboardEvent) => {
-      const inInput = document.activeElement instanceof HTMLInputElement
-                   || document.activeElement instanceof HTMLTextAreaElement;
-      if (inInput) return;
-      if ((e.ctrlKey || e.metaKey) && !e.shiftKey && e.key === 'z') {
-        e.preventDefault();
-        dispatch({ type: 'UNDO' });
-      } else if ((e.ctrlKey || e.metaKey) && e.shiftKey && e.key === 'z') {
-        e.preventDefault();
-        dispatch({ type: 'REDO' });
-      }
-    };
-    window.addEventListener('keydown', onKey);
-    return () => window.removeEventListener('keydown', onKey);
-  }, []); // eslint-disable-line react-hooks/exhaustive-deps
-
   const noteKey = (ing: number, alch: number) => `${ing}-${alch}`;
 
   const setNote = useCallback((key: string, value: string) => {
@@ -640,10 +622,10 @@ export function ExpandedIngredientGrid({ onRandomize, activeTool, setActiveTool 
         </div>
 
         <p className="text-[10px] text-gray-400">
-          {activeTool === 'mark' && <>Tap to cycle: <span className="font-mono">· unknown</span>{' → '}<span className="font-mono font-bold text-red-500">✗ eliminated</span>{' → '}<span className="font-mono font-bold text-green-600">✔ confirmed</span><span className="ml-2 opacity-60">· Space to switch tool</span></>}
-          {activeTool === 'question' && <>Tap to toggle <span className="font-mono font-bold text-indigo-500">? possible</span> on/off<span className="ml-2 opacity-60">· Space to switch tool</span></>}
-          {activeTool === 'text' && <>Tap any cell to type a note (max 4 chars)<span className="ml-2 opacity-60">· Space to switch tool</span></>}
-          {activeTool === 'draw' && <>Draw freehand lines on the grid<span className="ml-2 opacity-60">· Space to switch tool</span></>}
+          {activeTool === 'mark' && <>Tap to cycle: <span className="font-mono">· unknown</span>{' → '}<span className="font-mono font-bold text-red-500">✗ eliminated</span>{' → '}<span className="font-mono font-bold text-green-600">✔ confirmed</span><span className="ml-2 opacity-60">· Space to switch tool · ↩ ↪ in toolbar to undo/redo</span></>}
+          {activeTool === 'question' && <>Tap to toggle <span className="font-mono font-bold text-indigo-500">? possible</span> on/off<span className="ml-2 opacity-60">· Space to switch tool · ↩ ↪ to undo/redo</span></>}
+          {activeTool === 'text' && <>Tap any cell to type a note (max 4 chars)<span className="ml-2 opacity-60">· Space to switch tool · ↩ ↪ to undo/redo</span></>}
+          {activeTool === 'draw' && <>Draw freehand lines on the grid<span className="ml-2 opacity-60">· Space to switch tool · ↩ ↪ in toolbar to undo/redo</span></>}
         </p>
       </div>
     </>

@@ -237,20 +237,14 @@ export function IngredientGrid({ onRandomize }: { onRandomize?: () => void }) {
     return result;
   }, [state.autoDeduction, state.worlds]);
 
-  // ── Spacebar cycles tools; Ctrl/Cmd+Z = undo; Ctrl/Cmd+Shift+Z = redo ────
+  // ── Spacebar cycles tools ──────────────────────────────────────────────────
   useEffect(() => {
     const onKey = (e: KeyboardEvent) => {
       // Only act when focus is inside the grid or no input is focused
       const active = document.activeElement;
       const inInput = active instanceof HTMLInputElement || active instanceof HTMLTextAreaElement;
       if (inInput) return;
-      if ((e.ctrlKey || e.metaKey) && !e.shiftKey && e.key === 'z') {
-        e.preventDefault();
-        dispatch({ type: 'UNDO' });
-      } else if ((e.ctrlKey || e.metaKey) && e.shiftKey && e.key === 'z') {
-        e.preventDefault();
-        dispatch({ type: 'REDO' });
-      } else if (e.code === 'Space' && !e.ctrlKey && !e.metaKey && !e.altKey) {
+      if (e.code === 'Space' && !e.ctrlKey && !e.metaKey && !e.altKey) {
         e.preventDefault();
         setActiveTool(cur => TOOL_CYCLE[(TOOL_CYCLE.indexOf(cur) + 1) % TOOL_CYCLE.length]);
         setEditingCell(null);
@@ -258,7 +252,7 @@ export function IngredientGrid({ onRandomize }: { onRandomize?: () => void }) {
     };
     window.addEventListener('keydown', onKey);
     return () => window.removeEventListener('keydown', onKey);
-  }, []); // eslint-disable-line react-hooks/exhaustive-deps
+  }, []);
 
   // ── Reset draw state when switching away from draw tool ───────────────────
   useEffect(() => {
@@ -559,19 +553,19 @@ export function IngredientGrid({ onRandomize }: { onRandomize?: () => void }) {
             <span className="font-mono">· unknown</span>{' → '}
             <span className="font-mono font-bold text-red-500">✗ eliminated</span>{' → '}
             <span className="font-mono font-bold text-green-600">✔ confirmed</span>
-            <span className="ml-2 opacity-60">· Space to switch tool</span>
+            <span className="ml-2 opacity-60">· Space to switch tool · ↩ ↪ in toolbar to undo/redo</span>
           </>}
           {activeTool === 'question' && <>
             Tap to toggle <span className="font-mono font-bold text-indigo-500">? possible</span> on/off
-            <span className="ml-2 opacity-60">· Space to switch tool · Shift+click for mark</span>
+            <span className="ml-2 opacity-60">· Space to switch tool · Shift+click for mark · ↩ ↪ to undo/redo</span>
           </>}
           {activeTool === 'text' && <>
             Tap any cell to type a note (max 3 chars)
-            <span className="ml-2 opacity-60">· Space to switch tool · Shift+click for mark</span>
+            <span className="ml-2 opacity-60">· Space to switch tool · Shift+click for mark · ↩ ↪ to undo/redo</span>
           </>}
           {activeTool === 'draw' && <>
             Draw freehand lines on the grid
-            <span className="ml-2 opacity-60">· Space to switch tool</span>
+            <span className="ml-2 opacity-60">· Space to switch tool · ↩ ↪ in toolbar to undo/redo</span>
           </>}
         </p>
       </div>
