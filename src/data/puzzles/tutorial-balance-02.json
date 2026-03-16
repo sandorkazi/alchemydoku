@@ -1,13 +1,33 @@
 {
   "id": "tutorial-balance-02",
   "title": "The Green Half",
-  "description": "Four ingredients have the G− aspect. All four G− alchemicals are accounted for — what sign must the remaining ingredients have?",
+  "description": "Four ingredients have the G\u2212 aspect. All four G\u2212 alchemicals are accounted for \u2014 what sign must the remaining ingredients have?",
   "difficulty": "tutorial",
   "clues": [
-    { "kind": "aspect", "ingredient": 1, "color": "G", "sign": "-" },
-    { "kind": "aspect", "ingredient": 2, "color": "G", "sign": "-" },
-    { "kind": "aspect", "ingredient": 3, "color": "G", "sign": "-" },
-    { "kind": "aspect", "ingredient": 4, "color": "G", "sign": "-" }
+    {
+      "kind": "aspect",
+      "ingredient": 1,
+      "color": "G",
+      "sign": "-"
+    },
+    {
+      "kind": "aspect",
+      "ingredient": 2,
+      "color": "G",
+      "sign": "-"
+    },
+    {
+      "kind": "aspect",
+      "ingredient": 3,
+      "color": "G",
+      "sign": "-"
+    },
+    {
+      "kind": "aspect",
+      "ingredient": 4,
+      "color": "G",
+      "sign": "-"
+    }
   ],
   "solution": {
     "1": 2,
@@ -20,7 +40,11 @@
     "8": 8
   },
   "questions": [
-    { "kind": "aspect", "ingredient": 6, "color": "G" }
+    {
+      "kind": "aspect",
+      "ingredient": 6,
+      "color": "G"
+    }
   ],
   "hints": [
     {
@@ -33,7 +57,17 @@
     },
     {
       "level": 3,
-      "text": "The four G- alchemicals (pnP, pNn, Nnp, NNN) are fully used by ing1, ing2, ing3, and ing4. The remaining four alchemicals — npN, nPp, Ppn, PPP — are all G+. So ing6 must be G+."
+      "text": "The four G- alchemicals (pnP, pNn, Nnp, NNN) are fully used by ing1, ing2, ing3, and ing4. The remaining four alchemicals \u2014 npN, nPp, Ppn, PPP \u2014 are all G+. So ing6 must be G+."
     }
-  ]
+  ],
+  "complexity": {
+    "score": 1,
+    "raw": 2.568,
+    "avg_clue_strength": 1.532,
+    "chain_depth": 0,
+    "stuck": false,
+    "requires_complement_set": false,
+    "question_requires_enumeration": false,
+    "residual_worlds": 576
+  }
 }

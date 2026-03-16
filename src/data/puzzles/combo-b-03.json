@@ -1,1 +1,113 @@
-{"id":"combo-b-03","title":"The Third Ingredient","description":"Mixing, selling, and debunking records all point toward a single pair. Deduce what potion they produce.","difficulty":"easy","clues":[{"kind":"sell","ingredient1":3,"ingredient2":8,"claimedResult":{"type":"potion","color":"R","sign":"+"},"sellResult":"total_match"},{"kind":"mixing","ingredient1":2,"ingredient2":6,"result":{"color":"R","sign":"+"}},{"kind":"sell","ingredient1":1,"ingredient2":2,"claimedResult":{"type":"potion","color":"B","sign":"+"},"sellResult":"sign_ok"},{"kind":"sell","ingredient1":3,"ingredient2":7,"claimedResult":{"type":"potion","color":"G","sign":"-"},"sellResult":"total_match"},{"kind":"sell","ingredient1":7,"ingredient2":8,"claimedResult":{"type":"potion","color":"B","sign":"-"},"sellResult":"opposite"},{"kind":"sell","ingredient1":4,"ingredient2":8,"claimedResult":{"type":"potion","color":"B","sign":"-"},"sellResult":"opposite"}],"questions":[{"kind":"mixing-result","ingredient1":4,"ingredient2":6}],"solution":{"1":4,"2":6,"3":3,"4":1,"5":7,"6":2,"7":5,"8":8},"hints":[{"level":1,"text":"To find the result of mixing ing4 and ing6, apply the mixing rule: scan colours R→G→B in order. The first colour where both ingredients share the same sign determines the result potion. If all three colours have opposing signs, the result is neutral."},{"level":2,"text":"Step through each colour:\n  R: ing4=R- (ing4 has R-), ing6=R+ (ing2+ing6=R+: both share R+)\n      → opposite signs → skip.\n  G: ing4=G+ (ing4 has G+), ing6=G- (ing6 has G-)\n      → opposite signs → skip.\n  B: ing4=B- (ing4 has B-), ing6=B+ (ing6 has B+)\n      → opposite signs → skip.\n  All colours opposite → neutral."},{"level":3,"text":"ing4=npN, ing6=pnP. Mix result: neutral."}],"complexity":{"raw":1.845,"avg_clue_strength":2.55,"ambig_penalty":0.267,"chain_depth":0,"stuck":false,"requires_complement_set":false,"question_requires_enumeration":false,"residual_worlds":1}}
+{
+  "id": "combo-b-03",
+  "title": "The Third Ingredient",
+  "description": "Mixing, selling, and debunking records all point toward a single pair. Deduce what potion they produce.",
+  "difficulty": "easy",
+  "clues": [
+    {
+      "kind": "sell",
+      "ingredient1": 3,
+      "ingredient2": 8,
+      "claimedResult": {
+        "type": "potion",
+        "color": "R",
+        "sign": "+"
+      },
+      "sellResult": "total_match"
+    },
+    {
+      "kind": "mixing",
+      "ingredient1": 2,
+      "ingredient2": 6,
+      "result": {
+        "color": "R",
+        "sign": "+"
+      }
+    },
+    {
+      "kind": "sell",
+      "ingredient1": 1,
+      "ingredient2": 2,
+      "claimedResult": {
+        "type": "potion",
+        "color": "B",
+        "sign": "+"
+      },
+      "sellResult": "sign_ok"
+    },
+    {
+      "kind": "sell",
+      "ingredient1": 3,
+      "ingredient2": 7,
+      "claimedResult": {
+        "type": "potion",
+        "color": "G",
+        "sign": "-"
+      },
+      "sellResult": "total_match"
+    },
+    {
+      "kind": "sell",
+      "ingredient1": 7,
+      "ingredient2": 8,
+      "claimedResult": {
+        "type": "potion",
+        "color": "B",
+        "sign": "-"
+      },
+      "sellResult": "opposite"
+    },
+    {
+      "kind": "sell",
+      "ingredient1": 4,
+      "ingredient2": 8,
+      "claimedResult": {
+        "type": "potion",
+        "color": "B",
+        "sign": "-"
+      },
+      "sellResult": "opposite"
+    }
+  ],
+  "questions": [
+    {
+      "kind": "mixing-result",
+      "ingredient1": 4,
+      "ingredient2": 6
+    }
+  ],
+  "solution": {
+    "1": 4,
+    "2": 6,
+    "3": 3,
+    "4": 1,
+    "5": 7,
+    "6": 2,
+    "7": 5,
+    "8": 8
+  },
+  "hints": [
+    {
+      "level": 1,
+      "text": "To find the result of mixing ing4 and ing6, apply the mixing rule: scan colours R\u2192G\u2192B in order. The first colour where both ingredients share the same sign determines the result potion. If all three colours have opposing signs, the result is neutral."
+    },
+    {
+      "level": 2,
+      "text": "Step through each colour:\n  R: ing4=R- (ing4 has R-), ing6=R+ (ing2+ing6=R+: both share R+)\n      \u2192 opposite signs \u2192 skip.\n  G: ing4=G+ (ing4 has G+), ing6=G- (ing6 has G-)\n      \u2192 opposite signs \u2192 skip.\n  B: ing4=B- (ing4 has B-), ing6=B+ (ing6 has B+)\n      \u2192 opposite signs \u2192 skip.\n  All colours opposite \u2192 neutral."
+    },
+    {
+      "level": 3,
+      "text": "ing4=npN, ing6=pnP. Mix result: neutral."
+    }
+  ],
+  "complexity": {
+    "score": 3,
+    "raw": 1.845,
+    "avg_clue_strength": 2.55,
+    "chain_depth": 0,
+    "stuck": false,
+    "requires_complement_set": false,
+    "question_requires_enumeration": false,
+    "residual_worlds": 1
+  }
+}

@@ -53,7 +53,9 @@ ALL_ALCH = list(range(1, 9))
 COLORS   = ['R', 'G', 'B']
 SLOTS    = list(range(1, 9))
 
-def is_solar(a: int) -> bool: return a % 2 == 1
+def is_solar(a: int) -> bool:
+    # 0 or 2 negative aspects = solar; 1 or 3 = lunar
+    return sum(1 for col in COLORS if ALCH_DATA[a][col][0] < 0) % 2 == 0
 def sgn_str(s: int) -> str:   return '+' if s == 1 else '-'
 def sgn_int(s: str) -> int:   return +1 if s == '+' else -1
 def sz_int(s: str) -> int:    return 1 if s == 'L' else 0
@@ -463,8 +465,15 @@ def all_answered(worlds: frozenset, questions: list, golem: Optional[dict] = Non
 
 # Base-game clue type penalties (from analyze_difficulty.py)
 CLUE_TYPE_PENALTY = {
-    'mixing': 0.0, 'assignment': 0.0, 'aspect': 0.3, 'sell': 0.0, 'debunk': 0.0,
-    'mixing_count_among': 0.2,  # harder to reason about than plain mixing_among
+    'mixing':              0.0,
+    'assignment':          0.0,
+    'aspect':              0.3,
+    'sell':                0.0,   # SELL_PENALTY applied separately
+    'debunk':              0.0,
+    'mixing_among':        0.3,   # existential: must consider all pairs
+    'mixing_count_among':  0.4,   # exact count: harder to exploit
+    'sell_result_among':   0.5,   # existential sell: mix + sell-rule indirection
+    'sell_among':          0.5,   # exact count sell: most complex
 }
 SELL_PENALTY = {'total_match': 0.0, 'sign_ok': 0.4, 'neutral': 0.8, 'opposite': 0.6}
 
@@ -563,6 +572,10 @@ def compute_difficulty(puzzle: dict) -> dict:
         p = CLUE_TYPE_PENALTY.get(c['kind'], 0.0)
         if c['kind'] == 'sell':
             p += SELL_PENALTY.get(c.get('sellResult', ''), 0.0)
+        elif c['kind'] == 'sell_result_among':
+            p += SELL_PENALTY.get(c.get('sellResult', ''), 0.0)
+        elif c['kind'] == 'sell_among':
+            p += SELL_PENALTY.get(c.get('result', ''), 0.0)  # sell_among uses 'result' field
         total_penalty += p
     ambig_penalty = total_penalty / len(clues) if clues else 0.0
 
@@ -729,6 +742,7 @@ PROFILES = {
     'q_group_potions':   Profile('group-potions',         ['base'],                               'group-possible-potions',   'medium',   8,  False),
     'q_best_mix':        Profile('best-mix',              ['base'],                               'most-informative-mix',     'medium',   8,  False),
     'q_non_producer':    Profile('non-producer',          ['base'],                               'guaranteed-non-producer',  'medium',   8,  False),
+    'q_among':           Profile('among',                 ['base', 'sell', 'among'],              'mixing-result',            'medium',   10, False),
     # Base combination profiles (The Full Arsenal)
     'combo_b_easy':      Profile('combo-b-easy',          ['base', 'sell'],                       'mixing-result',            'easy',     10, False),
     'combo_b_med_asp':   Profile('combo-b-med-asp',       ['base', 'sell', 'debunk'],             'aspect',                   'medium',   12, False),
@@ -744,6 +758,15 @@ PROFILES = {
 }
 
 # ── Clue pool ─────────────────────────────────────────────────────────────────
+
+def _sell_sr(actual, cp_col: str, cp_sgn: int) -> str:
+    """Sell result string for actual mix result vs claimed potion."""
+    if actual == 'neutral':                                    return 'neutral'
+    act_col, act_sgn = actual
+    if act_col == cp_col and act_sgn == cp_sgn:                return 'total_match'
+    if act_sgn == cp_sgn:                                      return 'sign_ok'
+    return 'opposite'
+
 
 def candidate_pool(mechanics: list, sol: dict, golem: Optional[dict],
                    blocked_enc: set) -> list:
@@ -817,18 +840,80 @@ def candidate_pool(mechanics: list, sol: dict, golem: Optional[dict],
             }))
     if 'among' in mechanics:
         for group in itertools.combinations(SLOTS, 3):
-            seen_results = set()
+            # mixing_among (existential) + mixing_count_among (exact count)
+            seen_results: set = set()
+            result_counts: dict = {}
             for a, b in itertools.combinations(group, 2):
                 r = MIX_TABLE[sol[a]][sol[b]]
                 key = json.dumps(r2d(r), sort_keys=True)
-                if key in seen_results:
-                    continue
-                seen_results.add(key)
+                result_counts[key] = result_counts.get(key, 0) + 1
+                if key not in seen_results:
+                    seen_results.add(key)
+                    pool.append(('among', 1, {
+                        'kind': 'mixing_among',
+                        'ingredients': sorted(list(group)),
+                        'result': r2d(r),
+                    }))
+            for key, count in result_counts.items():
                 pool.append(('among', 1, {
-                    'kind': 'mixing_among',
+                    'kind': 'mixing_count_among',
                     'ingredients': sorted(list(group)),
-                    'result': r2d(r),
+                    'result': json.loads(key),
+                    'count': count,
                 }))
+        # sell variants (only when 'sell' also in mechanics)
+        if 'sell' in mechanics:
+            for group in itertools.combinations(SLOTS, 3):
+                # sell_result_among (existential)
+                seen_sra: set = set()
+                for a, b in itertools.combinations(group, 2):
+                    actual = MIX_TABLE[sol[a]][sol[b]]
+                    if actual == 'neutral':
+                        key = 'neutral'
+                        if key not in seen_sra:
+                            seen_sra.add(key)
+                            pool.append(('among', 1, {
+                                'kind': 'sell_result_among',
+                                'ingredients': sorted(list(group)),
+                                'claimedPotion': {'color': 'R', 'sign': '+'},
+                                'sellResult': 'neutral',
+                            }))
+                    else:
+                        for cp_col in COLORS:
+                            for cp_sgn in [1, -1]:
+                                sr = _sell_sr(actual, cp_col, cp_sgn)
+                                key = (cp_col, cp_sgn, sr)
+                                if key not in seen_sra:
+                                    seen_sra.add(key)
+                                    pool.append(('among', 1, {
+                                        'kind': 'sell_result_among',
+                                        'ingredients': sorted(list(group)),
+                                        'claimedPotion': {'color': cp_col, 'sign': sgn_str(cp_sgn)},
+                                        'sellResult': sr,
+                                    }))
+                # sell_among (exact count)
+                seen_sa: set = set()
+                for cp_col in COLORS:
+                    for cp_sgn in [1, -1]:
+                        sr_counts: dict = {}
+                        for a, b in itertools.combinations(group, 2):
+                            actual = MIX_TABLE[sol[a]][sol[b]]
+                            sr = _sell_sr(actual, cp_col, cp_sgn)
+                            sr_counts[sr] = sr_counts.get(sr, 0) + 1
+                        for sr, count in sr_counts.items():
+                            if sr == 'neutral':
+                                key = ('neutral', count)
+                            else:
+                                key = (cp_col, cp_sgn, sr, count)
+                            if key not in seen_sa:
+                                seen_sa.add(key)
+                                pool.append(('among', 2, {
+                                    'kind': 'sell_among',
+                                    'ingredients': sorted(list(group)),
+                                    'claimedPotion': {'color': cp_col, 'sign': sgn_str(cp_sgn)},
+                                    'result': sr,
+                                    'count': count,
+                                }))
     if 'golem' in mechanics and golem:
         for s in SLOTS:
             pool.append(('golem_test', 15, {
@@ -1385,7 +1470,7 @@ def gen_hints(raw: dict) -> list:
         remaining = {w[slot - 1] for w in w2}
         hints.append({'level': 1, 'text':
             f"Is ingredient {slot} Solar or Lunar? "
-            "Solar = odd alch IDs {1,3,5,7}, Lunar = even {2,4,6,8}."
+            "Solar = 0 or 2 negative aspects {1,3,5,8}, Lunar = 1 or 3 negatives {2,4,6,7}."
         })
         hints.append({'level': 2, 'text':
             f"Remaining alch for slot {slot}: {sorted(remaining)}. "

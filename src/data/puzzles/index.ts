@@ -43,6 +43,9 @@ import cross_1007 from './cross-1007.json';
 import cross_1008 from './cross-1008.json';
 import among_01 from './among-01.json';
 import among_02 from './among-02.json';
+import among_03 from './among-03.json';
+import among_04 from './among-04.json';
+import among_05 from './among-05.json';
 import safe_publish_01 from './safe-publish-01.json';
 import safe_publish_02 from './safe-publish-02.json';
 import safe_publish_03 from './safe-publish-03.json';
@@ -98,7 +101,7 @@ import combo_b_ip_05 from './combo-b-ip-05.json';
 import collectionsData from './collections.json';
 import type { Puzzle } from '../../types';
 
-export const ALL_PUZZLES: Puzzle[] = [mix_2000, mix_2001, mix_2002, mix_2003, mix_2004, mix_2005, mix_2006, mix_2007, mix_2008, mix_2009, ded_9000, ded_9001, ded_9002, ded_9003, ded_9004, ded_9005, mix_6000, mix_6001, mix_6002, mix_6003, mix_6004, mix_6005, mix_6006, mix_6007, tutorial_mix_01, tutorial_mix_02, tutorial_mix_03, tutorial_balance_01, tutorial_balance_02, tutorial_sell_01, tutorial_sell_02, tutorial_debunk_01, tutorial_debunk_02, tutorial_debunk_03, safe_publish_01, safe_publish_02, safe_publish_03, safe_publish_04, cross_1001, cross_1002, cross_1003, cross_1004, cross_1005, cross_1006, cross_1007, cross_1008, among_01, among_02, pp_01, pp_02, pp_03, pp_04, pp_05, tutorial_two_color_01, tutorial_two_color_02, tutorial_pp_01, tutorial_pp_02, aspect_set_01, aspect_set_04, large_comp_01, debunk_plan_tutorial_01, debunk_plan_tutorial_02, debunk_plan_easy_01, debunk_plan_easy_02, debunk_plan_conflict_01, neutral_partner_02, neutral_partner_03, ing_profile_03, ing_profile_04, group_potions_02, group_potions_03, best_mix_02, best_mix_03, non_producer_02, non_producer_03, combo_b_02, combo_b_03, combo_b_04, combo_b_05, combo_b_06, combo_b_asp_02, combo_b_asp_03, combo_b_asp_04, combo_b_asp_05, combo_b_np_02, combo_b_np_03, combo_b_np_04, combo_b_np_05, combo_b_pp_02, combo_b_pp_03, combo_b_pp_04, combo_b_pp_05, combo_b_ip_02, combo_b_ip_03, combo_b_ip_04, combo_b_ip_05] as unknown as Puzzle[];
+export const ALL_PUZZLES: Puzzle[] = [mix_2000, mix_2001, mix_2002, mix_2003, mix_2004, mix_2005, mix_2006, mix_2007, mix_2008, mix_2009, ded_9000, ded_9001, ded_9002, ded_9003, ded_9004, ded_9005, mix_6000, mix_6001, mix_6002, mix_6003, mix_6004, mix_6005, mix_6006, mix_6007, tutorial_mix_01, tutorial_mix_02, tutorial_mix_03, tutorial_balance_01, tutorial_balance_02, tutorial_sell_01, tutorial_sell_02, tutorial_debunk_01, tutorial_debunk_02, tutorial_debunk_03, safe_publish_01, safe_publish_02, safe_publish_03, safe_publish_04, cross_1001, cross_1002, cross_1003, cross_1004, cross_1005, cross_1006, cross_1007, cross_1008, among_01, among_02, among_03, among_04, among_05, pp_01, pp_02, pp_03, pp_04, pp_05, tutorial_two_color_01, tutorial_two_color_02, tutorial_pp_01, tutorial_pp_02, aspect_set_01, aspect_set_04, large_comp_01, debunk_plan_tutorial_01, debunk_plan_tutorial_02, debunk_plan_easy_01, debunk_plan_easy_02, debunk_plan_conflict_01, neutral_partner_02, neutral_partner_03, ing_profile_03, ing_profile_04, group_potions_02, group_potions_03, best_mix_02, best_mix_03, non_producer_02, non_producer_03, combo_b_02, combo_b_03, combo_b_04, combo_b_05, combo_b_06, combo_b_asp_02, combo_b_asp_03, combo_b_asp_04, combo_b_asp_05, combo_b_np_02, combo_b_np_03, combo_b_np_04, combo_b_np_05, combo_b_pp_02, combo_b_pp_03, combo_b_pp_04, combo_b_pp_05, combo_b_ip_02, combo_b_ip_03, combo_b_ip_04, combo_b_ip_05] as unknown as Puzzle[];
 export const COLLECTIONS = collectionsData as Collection[];
 export const PUZZLE_MAP: Record<string, Puzzle> = Object.fromEntries(ALL_PUZZLES.map(p => [p.id, p]));
 

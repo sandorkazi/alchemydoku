@@ -1,1 +1,101 @@
-{"id":"mix-2000","title":"The Village Herbalist","description":"Deduce the mixing result from the clues.","difficulty":"easy","clues":[{"kind":"mixing","ingredient1":2,"ingredient2":8,"result":{"type":"potion","color":"B","sign":"-"}},{"kind":"mixing","ingredient1":5,"ingredient2":8,"result":{"type":"neutral"}},{"kind":"mixing","ingredient1":5,"ingredient2":6,"result":{"type":"potion","color":"R","sign":"-"}},{"kind":"mixing","ingredient1":3,"ingredient2":7,"result":{"type":"potion","color":"B","sign":"-"}}],"solution":{"1":2,"2":1,"3":3,"4":8,"5":5,"6":4,"7":7,"8":6},"metadata":{"generatedAt":"2024-01-01T00:00:00Z","worldsAfterClues":16,"minimumClues":true,"seed":2000,"complexityScore":36,"complexityMetrics":{"minClueSubset":3,"clueSynergies":0,"deductionSteps":3,"redundantClues":1,"avgClueDifficulty":1.0}},"questions":[{"kind":"mixing-result","ingredient1":1,"ingredient2":4}],"complexity":{"score":1,"raw":1.203,"avg_clue_strength":2.825,"chain_depth":0,"stuck":false,"requires_complement_set":false,"question_requires_enumeration":false,"residual_worlds":16},"hints":[{"level":1,"text":"To find the result of mixing ing1 and ing4, apply the mixing rule: scan colours R→G→B in order. The first colour where both ingredients share the same sign determines the result potion. If all three colours have opposing signs, the result is neutral."},{"level":2,"text":"Step through each colour:\n  R: ing1=R+ (ing1 has R+), ing4=R+ (ing4 has R+)\n      → SAME sign + → R+ resolves."},{"level":3,"text":"ing1=pnP, ing4=PPP. Mix result: R+."}]}
+{
+  "id": "mix-2000",
+  "title": "The Village Herbalist",
+  "description": "Deduce the mixing result from the clues.",
+  "difficulty": "easy",
+  "clues": [
+    {
+      "kind": "mixing",
+      "ingredient1": 2,
+      "ingredient2": 8,
+      "result": {
+        "type": "potion",
+        "color": "B",
+        "sign": "-"
+      }
+    },
+    {
+      "kind": "mixing",
+      "ingredient1": 5,
+      "ingredient2": 8,
+      "result": {
+        "type": "neutral"
+      }
+    },
+    {
+      "kind": "mixing",
+      "ingredient1": 5,
+      "ingredient2": 6,
+      "result": {
+        "type": "potion",
+        "color": "R",
+        "sign": "-"
+      }
+    },
+    {
+      "kind": "mixing",
+      "ingredient1": 3,
+      "ingredient2": 7,
+      "result": {
+        "type": "potion",
+        "color": "B",
+        "sign": "-"
+      }
+    }
+  ],
+  "solution": {
+    "1": 2,
+    "2": 1,
+    "3": 3,
+    "4": 8,
+    "5": 5,
+    "6": 4,
+    "7": 7,
+    "8": 6
+  },
+  "metadata": {
+    "generatedAt": "2024-01-01T00:00:00Z",
+    "worldsAfterClues": 16,
+    "minimumClues": true,
+    "seed": 2000,
+    "complexityScore": 36,
+    "complexityMetrics": {
+      "minClueSubset": 3,
+      "clueSynergies": 0,
+      "deductionSteps": 3,
+      "redundantClues": 1,
+      "avgClueDifficulty": 1.0
+    }
+  },
+  "questions": [
+    {
+      "kind": "mixing-result",
+      "ingredient1": 1,
+      "ingredient2": 4
+    }
+  ],
+  "complexity": {
+    "score": 1,
+    "raw": 1.203,
+    "avg_clue_strength": 2.825,
+    "chain_depth": 0,
+    "stuck": false,
+    "requires_complement_set": false,
+    "question_requires_enumeration": false,
+    "residual_worlds": 16
+  },
+  "hints": [
+    {
+      "level": 1,
+      "text": "To find the result of mixing ing1 and ing4, apply the mixing rule: scan colours R\u2192G\u2192B in order. The first colour where both ingredients share the same sign determines the result potion. If all three colours have opposing signs, the result is neutral."
+    },
+    {
+      "level": 2,
+      "text": "Step through each colour:\n  R: ing1=R+ (ing1 has R+), ing4=R+ (ing4 has R+)\n      \u2192 SAME sign + \u2192 R+ resolves."
+    },
+    {
+      "level": 3,
+      "text": "ing1=pnP, ing4=PPP. Mix result: R+."
+    }
+  ]
+}

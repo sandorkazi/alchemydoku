@@ -1,0 +1,87 @@
+{
+  "id": "among-04",
+  "title": "The Missing Entry",
+  "description": "Mixing, selling, and debunking records all point toward a single pair. Deduce what potion they produce.",
+  "difficulty": "medium",
+  "clues": [
+    {
+      "kind": "mixing_count_among",
+      "ingredients": [
+        4,
+        6,
+        7
+      ],
+      "result": {
+        "color": "B",
+        "sign": "-"
+      },
+      "count": 2
+    },
+    {
+      "kind": "sell_among",
+      "ingredients": [
+        1,
+        3,
+        8
+      ],
+      "claimedPotion": {
+        "color": "R",
+        "sign": "-"
+      },
+      "result": "total_match",
+      "count": 2
+    },
+    {
+      "kind": "sell",
+      "ingredient1": 3,
+      "ingredient2": 4,
+      "claimedResult": {
+        "type": "potion",
+        "color": "G",
+        "sign": "+"
+      },
+      "sellResult": "total_match"
+    }
+  ],
+  "questions": [
+    {
+      "kind": "mixing-result",
+      "ingredient1": 2,
+      "ingredient2": 3
+    }
+  ],
+  "solution": {
+    "1": 1,
+    "2": 2,
+    "3": 4,
+    "4": 6,
+    "5": 8,
+    "6": 7,
+    "7": 3,
+    "8": 5
+  },
+  "hints": [
+    {
+      "level": 1,
+      "text": "To find the result of mixing ing2 and ing3, apply the mixing rule: scan colours R\u2192G\u2192B in order. The first colour where both ingredients share the same sign determines the result potion. If all three colours have opposing signs, the result is neutral."
+    },
+    {
+      "level": 2,
+      "text": "Step through each colour:\n  R: ing2=R+ (ing2 has R+), ing3=R- (ing3 has R-)\n      \u2192 opposite signs \u2192 skip.\n  G: ing2=G- (ing2 G?: (sign undetermined)), ing3=G+ (ing3 has G+)\n      \u2192 opposite signs \u2192 skip.\n  B: ing2=B+ (ing2 has B+), ing3=B+ (ing3 has B+)\n      \u2192 SAME sign + \u2192 B+ resolves."
+    },
+    {
+      "level": 3,
+      "text": "ing2=pnP, ing3=nPp. Mix result: B+."
+    }
+  ],
+  "complexity": {
+    "score": 3,
+    "raw": 1.582,
+    "avg_clue_strength": 3.571,
+    "chain_depth": 0,
+    "stuck": false,
+    "requires_complement_set": false,
+    "question_requires_enumeration": false,
+    "residual_worlds": 24
+  }
+}

@@ -98,7 +98,7 @@
   ],
   "complexity": {
     "score": 4,
-    "raw": 2.472,
+    "raw": 2.972,
     "avg_clue_strength": 2.217,
     "chain_depth": 0,
     "stuck": false,

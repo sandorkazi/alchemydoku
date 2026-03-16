@@ -1,1 +1,143 @@
-{"id":"ded-9003","title":"The Master's Trial","description":"Use all the evidence to deduce the mixing results.","difficulty":"hard","clues":[{"kind":"mixing","ingredient1":7,"ingredient2":8,"result":{"type":"potion","color":"R","sign":"+"}},{"kind":"mixing","ingredient1":2,"ingredient2":3,"result":{"type":"potion","color":"R","sign":"-"}},{"kind":"mixing","ingredient1":1,"ingredient2":4,"result":{"type":"potion","color":"R","sign":"+"}},{"kind":"mixing","ingredient1":2,"ingredient2":4,"result":{"type":"potion","color":"B","sign":"+"}},{"kind":"mixing","ingredient1":4,"ingredient2":8,"result":{"type":"potion","color":"R","sign":"+"}},{"kind":"mixing","ingredient1":1,"ingredient2":3,"result":{"type":"potion","color":"G","sign":"+"}}],"questions":[{"kind":"mixing-result","ingredient1":1,"ingredient2":7},{"kind":"mixing-result","ingredient1":1,"ingredient2":8},{"kind":"mixing-result","ingredient1":4,"ingredient2":7}],"solution":{"1":8,"2":5,"3":1,"4":2,"5":4,"6":7,"7":3,"8":6},"complexity":{"score":3,"raw":1.472,"avg_clue_strength":2.217,"chain_depth":0,"stuck":false,"requires_complement_set":false,"question_requires_enumeration":false,"residual_worlds":4},"hints":[{"level":1,"text":"To find the result of mixing ing1 and ing7, apply the mixing rule: scan colours R→G→B in order. The first colour where both ingredients share the same sign determines the result potion. If all three colours have opposing signs, the result is neutral."},{"level":2,"text":"Step through each colour:\n  R: ing1=R+ (ing1+ing4=R+: both share R+), ing7=R+ (ing7+ing8=R+: both share R+)\n      → SAME sign + → R+ resolves."},{"level":3,"text":"ing1=PPP, ing7=pNn. Mix result: R+."},{"level":4,"text":"To find the result of mixing ing1 and ing8, apply the mixing rule: scan colours R→G→B in order. The first colour where both ingredients share the same sign determines the result potion. If all three colours have opposing signs, the result is neutral."},{"level":5,"text":"Step through each colour:\n  R: ing1=R+ (ing1+ing4=R+: both share R+), ing8=R+ (ing7+ing8=R+: both share R+)\n      → SAME sign + → R+ resolves."},{"level":6,"text":"ing1=PPP, ing8=Ppn. Mix result: G+."},{"level":7,"text":"To find the result of mixing ing4 and ing7, apply the mixing rule: scan colours R→G→B in order. The first colour where both ingredients share the same sign determines the result potion. If all three colours have opposing signs, the result is neutral."},{"level":8,"text":"Step through each colour:\n  R: ing4=R+ (ing1+ing4=R+: both share R+), ing7=R+ (ing7+ing8=R+: both share R+)\n      → SAME sign + → R+ resolves."},{"level":9,"text":"ing4=pnP, ing7=pNn. Mix result: G-."}]}
+{
+  "id": "ded-9003",
+  "title": "The Master's Trial",
+  "description": "Use all the evidence to deduce the mixing results.",
+  "difficulty": "hard",
+  "clues": [
+    {
+      "kind": "mixing",
+      "ingredient1": 7,
+      "ingredient2": 8,
+      "result": {
+        "type": "potion",
+        "color": "R",
+        "sign": "+"
+      }
+    },
+    {
+      "kind": "mixing",
+      "ingredient1": 2,
+      "ingredient2": 3,
+      "result": {
+        "type": "potion",
+        "color": "R",
+        "sign": "-"
+      }
+    },
+    {
+      "kind": "mixing",
+      "ingredient1": 1,
+      "ingredient2": 4,
+      "result": {
+        "type": "potion",
+        "color": "R",
+        "sign": "+"
+      }
+    },
+    {
+      "kind": "mixing",
+      "ingredient1": 2,
+      "ingredient2": 4,
+      "result": {
+        "type": "potion",
+        "color": "B",
+        "sign": "+"
+      }
+    },
+    {
+      "kind": "mixing",
+      "ingredient1": 4,
+      "ingredient2": 8,
+      "result": {
+        "type": "potion",
+        "color": "R",
+        "sign": "+"
+      }
+    },
+    {
+      "kind": "mixing",
+      "ingredient1": 1,
+      "ingredient2": 3,
+      "result": {
+        "type": "potion",
+        "color": "G",
+        "sign": "+"
+      }
+    }
+  ],
+  "questions": [
+    {
+      "kind": "mixing-result",
+      "ingredient1": 1,
+      "ingredient2": 7
+    },
+    {
+      "kind": "mixing-result",
+      "ingredient1": 1,
+      "ingredient2": 8
+    },
+    {
+      "kind": "mixing-result",
+      "ingredient1": 4,
+      "ingredient2": 7
+    }
+  ],
+  "solution": {
+    "1": 8,
+    "2": 5,
+    "3": 1,
+    "4": 2,
+    "5": 4,
+    "6": 7,
+    "7": 3,
+    "8": 6
+  },
+  "complexity": {
+    "score": 2,
+    "raw": 1.472,
+    "avg_clue_strength": 2.217,
+    "chain_depth": 0,
+    "stuck": false,
+    "requires_complement_set": false,
+    "question_requires_enumeration": false,
+    "residual_worlds": 4
+  },
+  "hints": [
+    {
+      "level": 1,
+      "text": "To find the result of mixing ing1 and ing7, apply the mixing rule: scan colours R\u2192G\u2192B in order. The first colour where both ingredients share the same sign determines the result potion. If all three colours have opposing signs, the result is neutral."
+    },
+    {
+      "level": 2,
+      "text": "Step through each colour:\n  R: ing1=R+ (ing1+ing4=R+: both share R+), ing7=R+ (ing7+ing8=R+: both share R+)\n      \u2192 SAME sign + \u2192 R+ resolves."
+    },
+    {
+      "level": 3,
+      "text": "ing1=PPP, ing7=pNn. Mix result: R+."
+    },
+    {
+      "level": 4,
+      "text": "To find the result of mixing ing1 and ing8, apply the mixing rule: scan colours R\u2192G\u2192B in order. The first colour where both ingredients share the same sign determines the result potion. If all three colours have opposing signs, the result is neutral."
+    },
+    {
+      "level": 5,
+      "text": "Step through each colour:\n  R: ing1=R+ (ing1+ing4=R+: both share R+), ing8=R+ (ing7+ing8=R+: both share R+)\n      \u2192 SAME sign + \u2192 R+ resolves."
+    },
+    {
+      "level": 6,
+      "text": "ing1=PPP, ing8=Ppn. Mix result: G+."
+    },
+    {
+      "level": 7,
+      "text": "To find the result of mixing ing4 and ing7, apply the mixing rule: scan colours R\u2192G\u2192B in order. The first colour where both ingredients share the same sign determines the result potion. If all three colours have opposing signs, the result is neutral."
+    },
+    {
+      "level": 8,
+      "text": "Step through each colour:\n  R: ing4=R+ (ing1+ing4=R+: both share R+), ing7=R+ (ing7+ing8=R+: both share R+)\n      \u2192 SAME sign + \u2192 R+ resolves."
+    },
+    {
+      "level": 9,
+      "text": "ing4=pnP, ing7=pNn. Mix result: G-."
+    }
+  ]
+}

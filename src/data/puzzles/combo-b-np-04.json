@@ -1,1 +1,58 @@
-{"id":"combo-b-np-04","title":"Trial by Fire","description":"Use the clues to identify the one ingredient that always mixes to neutral with the target ingredient.","difficulty":"medium","clues":[{"kind":"debunk","variant":"master","ingredient1":4,"ingredient2":7,"claimedPotion":{"type":"neutral"},"outcome":"success"}],"questions":[{"kind":"neutral-partner","ingredient":4}],"solution":{"1":6,"2":4,"3":3,"4":7,"5":2,"6":5,"7":8,"8":1},"hints":[{"level":1,"text":"Find the ingredient whose alchemical is the direct opposite of ingredient 4. Two alchemicals are direct opposites when their mix is always neutral — all three colour aspects have opposite signs."},{"level":2,"text":"Ingredient 4 has alchemical properties: R- G- B-. Its direct opposite has all signs flipped. Check which remaining possible alchemicals always mix to neutral with it."},{"level":3,"text":"Ingredient 4 = NNN. Its direct opposite is ingredient 7 = PPP."}],"complexity":{"raw":1.709,"avg_clue_strength":2.807,"ambig_penalty":0.0,"chain_depth":0,"stuck":false,"requires_complement_set":false,"question_requires_enumeration":false,"residual_worlds":5760}}
+{
+  "id": "combo-b-np-04",
+  "title": "Trial by Fire",
+  "description": "Use the clues to identify the one ingredient that always mixes to neutral with the target ingredient.",
+  "difficulty": "medium",
+  "clues": [
+    {
+      "kind": "debunk",
+      "variant": "master",
+      "ingredient1": 4,
+      "ingredient2": 7,
+      "claimedPotion": {
+        "type": "neutral"
+      },
+      "outcome": "success"
+    }
+  ],
+  "questions": [
+    {
+      "kind": "neutral-partner",
+      "ingredient": 4
+    }
+  ],
+  "solution": {
+    "1": 6,
+    "2": 4,
+    "3": 3,
+    "4": 7,
+    "5": 2,
+    "6": 5,
+    "7": 8,
+    "8": 1
+  },
+  "hints": [
+    {
+      "level": 1,
+      "text": "Find the ingredient whose alchemical is the direct opposite of ingredient 4. Two alchemicals are direct opposites when their mix is always neutral \u2014 all three colour aspects have opposite signs."
+    },
+    {
+      "level": 2,
+      "text": "Ingredient 4 has alchemical properties: R- G- B-. Its direct opposite has all signs flipped. Check which remaining possible alchemicals always mix to neutral with it."
+    },
+    {
+      "level": 3,
+      "text": "Ingredient 4 = NNN. Its direct opposite is ingredient 7 = PPP."
+    }
+  ],
+  "complexity": {
+    "score": 3,
+    "raw": 1.709,
+    "avg_clue_strength": 2.807,
+    "chain_depth": 0,
+    "stuck": false,
+    "requires_complement_set": false,
+    "question_requires_enumeration": false,
+    "residual_worlds": 5760
+  }
+}

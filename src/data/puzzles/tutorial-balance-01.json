@@ -1,13 +1,33 @@
 {
   "id": "tutorial-balance-01",
   "title": "The Red Half",
-  "description": "Four ingredients have the R− aspect. There are only 4 R− alchemicals in total — what does that mean for the rest?",
+  "description": "Four ingredients have the R\u2212 aspect. There are only 4 R\u2212 alchemicals in total \u2014 what does that mean for the rest?",
   "difficulty": "tutorial",
   "clues": [
-    { "kind": "aspect", "ingredient": 1, "color": "R", "sign": "-" },
-    { "kind": "aspect", "ingredient": 2, "color": "R", "sign": "-" },
-    { "kind": "aspect", "ingredient": 3, "color": "R", "sign": "-" },
-    { "kind": "aspect", "ingredient": 4, "color": "R", "sign": "-" }
+    {
+      "kind": "aspect",
+      "ingredient": 1,
+      "color": "R",
+      "sign": "-"
+    },
+    {
+      "kind": "aspect",
+      "ingredient": 2,
+      "color": "R",
+      "sign": "-"
+    },
+    {
+      "kind": "aspect",
+      "ingredient": 3,
+      "color": "R",
+      "sign": "-"
+    },
+    {
+      "kind": "aspect",
+      "ingredient": 4,
+      "color": "R",
+      "sign": "-"
+    }
   ],
   "solution": {
     "1": 1,
@@ -20,7 +40,11 @@
     "8": 8
   },
   "questions": [
-    { "kind": "aspect", "ingredient": 5, "color": "R" }
+    {
+      "kind": "aspect",
+      "ingredient": 5,
+      "color": "R"
+    }
   ],
   "hints": [
     {
@@ -33,7 +57,17 @@
     },
     {
       "level": 3,
-      "text": "The four R- alchemicals (npN, nPp, Nnp, NNN) are fully used by ing1, ing2, ing3, and ing4. The remaining four alchemicals — pnP, pNn, Ppn, PPP — are all R+. So ing5 must be R+."
+      "text": "The four R- alchemicals (npN, nPp, Nnp, NNN) are fully used by ing1, ing2, ing3, and ing4. The remaining four alchemicals \u2014 pnP, pNn, Ppn, PPP \u2014 are all R+. So ing5 must be R+."
     }
-  ]
+  ],
+  "complexity": {
+    "score": 1,
+    "raw": 2.568,
+    "avg_clue_strength": 1.532,
+    "chain_depth": 0,
+    "stuck": false,
+    "requires_complement_set": false,
+    "question_requires_enumeration": false,
+    "residual_worlds": 576
+  }
 }

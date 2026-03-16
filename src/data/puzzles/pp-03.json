@@ -1,1 +1,93 @@
-{"id":"pp-03","title":"The Three-Faced Oracle","description":"Three distinct outcomes are consistent with the evidence — mark them all.","difficulty":"medium","clues":[{"kind":"mixing","ingredient1":3,"ingredient2":6,"result":{"type":"potion","color":"R","sign":"-"}},{"kind":"sell","ingredient1":6,"ingredient2":8,"claimedResult":{"type":"potion","color":"R","sign":"-"},"sellResult":"neutral"},{"kind":"mixing","ingredient1":3,"ingredient2":8,"result":{"type":"potion","color":"G","sign":"-"}}],"questions":[{"kind":"possible-potions","ingredient1":5,"ingredient2":8}],"solution":{"1":8,"2":6,"3":7,"4":4,"5":3,"6":1,"7":5,"8":2},"metadata":{"worldsAfterClues":240,"questionType":"possible-potions","possibleCount":4,"complexityScore":54,"complexityMetrics":{"minClueSubset":3,"clueSynergies":0,"deductionSteps":3,"redundantClues":0,"avgClueDifficulty":1.4}},"hints":[{"level":1,"text":"There are 4 possible outcomes for this mix. Start by ruling out clearly impossible ones."},{"level":2,"text":"Each clue constrains the alchemical assignments — trace which potions survive all constraints."},{"level":3,"text":"The answer has 4 potions: B+, B-, G-, R+."}],"complexity":{"score":5,"raw":2.883,"avg_clue_strength":2.464,"chain_depth":0,"stuck":false,"requires_complement_set":false,"question_requires_enumeration":true,"residual_worlds":240}}
+{
+  "id": "pp-03",
+  "title": "The Three-Faced Oracle",
+  "description": "Three distinct outcomes are consistent with the evidence \u2014 mark them all.",
+  "difficulty": "medium",
+  "clues": [
+    {
+      "kind": "mixing",
+      "ingredient1": 3,
+      "ingredient2": 6,
+      "result": {
+        "type": "potion",
+        "color": "R",
+        "sign": "-"
+      }
+    },
+    {
+      "kind": "sell",
+      "ingredient1": 6,
+      "ingredient2": 8,
+      "claimedResult": {
+        "type": "potion",
+        "color": "R",
+        "sign": "-"
+      },
+      "sellResult": "neutral"
+    },
+    {
+      "kind": "mixing",
+      "ingredient1": 3,
+      "ingredient2": 8,
+      "result": {
+        "type": "potion",
+        "color": "G",
+        "sign": "-"
+      }
+    }
+  ],
+  "questions": [
+    {
+      "kind": "possible-potions",
+      "ingredient1": 5,
+      "ingredient2": 8
+    }
+  ],
+  "solution": {
+    "1": 8,
+    "2": 6,
+    "3": 7,
+    "4": 4,
+    "5": 3,
+    "6": 1,
+    "7": 5,
+    "8": 2
+  },
+  "metadata": {
+    "worldsAfterClues": 240,
+    "questionType": "possible-potions",
+    "possibleCount": 4,
+    "complexityScore": 54,
+    "complexityMetrics": {
+      "minClueSubset": 3,
+      "clueSynergies": 0,
+      "deductionSteps": 3,
+      "redundantClues": 0,
+      "avgClueDifficulty": 1.4
+    }
+  },
+  "hints": [
+    {
+      "level": 1,
+      "text": "There are 4 possible outcomes for this mix. Start by ruling out clearly impossible ones."
+    },
+    {
+      "level": 2,
+      "text": "Each clue constrains the alchemical assignments \u2014 trace which potions survive all constraints."
+    },
+    {
+      "level": 3,
+      "text": "The answer has 4 potions: B+, B-, G-, R+."
+    }
+  ],
+  "complexity": {
+    "score": 5,
+    "raw": 3.683,
+    "avg_clue_strength": 2.464,
+    "chain_depth": 0,
+    "stuck": false,
+    "requires_complement_set": false,
+    "question_requires_enumeration": true,
+    "residual_worlds": 240
+  }
+}

@@ -148,6 +148,13 @@ def check_structure(path: Path, puz: dict, is_expanded: bool, r: Results):
             if not (1 <= count <= max_pairs):
                 r.error(f"[clue-shape] {name}: sell_among count={count} out of range [1, {max_pairs}]")
 
+    # sell_result_among clues: requires ≥ 2 ingredients
+    for c in puz.get("clues", []):
+        if c.get("kind") == "sell_result_among":
+            n = len(c.get("ingredients", []))
+            if n < 2:
+                r.error(f"[clue-shape] {name}: sell_result_among requires ≥ 2 ingredients, got {n}")
+
     # Solution must be a valid 1–8 bijection
     sol = puz.get("solution", {})
     if sol:

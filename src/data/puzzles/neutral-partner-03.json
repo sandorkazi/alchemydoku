@@ -68,7 +68,7 @@
   "hints": [
     {
       "level": 1,
-      "text": "Find the ingredient whose alchemical is the direct opposite of ingredient 7. Two alchemicals are direct opposites when their mix is always neutral — all three colour aspects have opposite signs."
+      "text": "Find the ingredient whose alchemical is the direct opposite of ingredient 7. Two alchemicals are direct opposites when their mix is always neutral \u2014 all three colour aspects have opposite signs."
     },
     {
       "level": 2,
@@ -80,9 +80,9 @@
     }
   ],
   "complexity": {
+    "score": 3,
     "raw": 1.691,
     "avg_clue_strength": 2.86,
-    "ambig_penalty": 0.0,
     "chain_depth": 0,
     "stuck": false,
     "requires_complement_set": false,

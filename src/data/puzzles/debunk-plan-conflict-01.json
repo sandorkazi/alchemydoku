@@ -1,45 +1,109 @@
 {
   "id": "debunk-plan-conflict-01",
   "title": "Mutual Suspicion",
-  "description": "Two rivals have each published a wrong theory. You know the truth about both ingredients — find a mix that puts both publications under suspicion at the same time.",
+  "description": "Two rivals have each published a wrong theory. You know the truth about both ingredients \u2014 find a mix that puts both publications under suspicion at the same time.",
   "difficulty": "easy",
   "clues": [
-    { "kind": "aspect", "ingredient": 1, "color": "R", "sign": "-" },
-    { "kind": "aspect", "ingredient": 1, "color": "G", "sign": "+" },
-    { "kind": "aspect", "ingredient": 1, "color": "B", "sign": "-" },
-    { "kind": "aspect", "ingredient": 2, "color": "R", "sign": "+" },
-    { "kind": "aspect", "ingredient": 2, "color": "G", "sign": "-" },
-    { "kind": "aspect", "ingredient": 2, "color": "B", "sign": "+" }
+    {
+      "kind": "aspect",
+      "ingredient": 1,
+      "color": "R",
+      "sign": "-"
+    },
+    {
+      "kind": "aspect",
+      "ingredient": 1,
+      "color": "G",
+      "sign": "+"
+    },
+    {
+      "kind": "aspect",
+      "ingredient": 1,
+      "color": "B",
+      "sign": "-"
+    },
+    {
+      "kind": "aspect",
+      "ingredient": 2,
+      "color": "R",
+      "sign": "+"
+    },
+    {
+      "kind": "aspect",
+      "ingredient": 2,
+      "color": "G",
+      "sign": "-"
+    },
+    {
+      "kind": "aspect",
+      "ingredient": 2,
+      "color": "B",
+      "sign": "+"
+    }
   ],
   "publications": [
-    { "ingredient": 1, "claimedAlchemical": 3 },
-    { "ingredient": 2, "claimedAlchemical": 5 },
-    null, null, null, null, null, null
+    {
+      "ingredient": 1,
+      "claimedAlchemical": 3
+    },
+    {
+      "ingredient": 2,
+      "claimedAlchemical": 5
+    },
+    null,
+    null,
+    null,
+    null,
+    null,
+    null
   ],
   "questions": [
-    { "kind": "debunk_conflict_only", "fixedIngredient": 1 }
+    {
+      "kind": "debunk_conflict_only",
+      "fixedIngredient": 1
+    }
   ],
   "solution": {
-    "1": 1, "2": 2, "3": 3, "4": 4,
-    "5": 5, "6": 6, "7": 7, "8": 8
+    "1": 1,
+    "2": 2,
+    "3": 3,
+    "4": 4,
+    "5": 5,
+    "6": 6,
+    "7": 7,
+    "8": 8
   },
   "debunk_answers": {
     "debunk_conflict_only": [
-      { "kind": "master", "ingredient1": 1, "ingredient2": 2 }
+      {
+        "kind": "master",
+        "ingredient1": 1,
+        "ingredient2": 2
+      }
     ]
   },
   "hints": [
     {
       "level": 1,
-      "text": "The question asks for a conflict without removal: a master mix where both publications are contradicted simultaneously, but the audience can't tell which rival is lying — so neither publication gets removed. Look at both wrong publications and find a pair whose true mix conflicts with both claimed alchemicals."
+      "text": "The question asks for a conflict without removal: a master mix where both publications are contradicted simultaneously, but the audience can't tell which rival is lying \u2014 so neither publication gets removed. Look at both wrong publications and find a pair whose true mix conflicts with both claimed alchemicals."
     },
     {
       "level": 2,
-      "text": "Ingredient 1 is truly npN, but publication 1 claims pNn. Ingredient 2 is truly pnP, but publication 2 claims Nnp. Mix the two: the true result is neutral. Under pub1: mix(pNn, pnP) = G− ≠ neutral → conflict on pub1. Under pub2: mix(npN, Nnp) = R− ≠ neutral → conflict on pub2. Both publications conflict — the audience can't determine which is wrong."
+      "text": "Ingredient 1 is truly npN, but publication 1 claims pNn. Ingredient 2 is truly pnP, but publication 2 claims Nnp. Mix the two: the true result is neutral. Under pub1: mix(pNn, pnP) = G\u2212 \u2260 neutral \u2192 conflict on pub1. Under pub2: mix(npN, Nnp) = R\u2212 \u2260 neutral \u2192 conflict on pub2. Both publications conflict \u2014 the audience can't determine which is wrong."
     },
     {
       "level": 3,
-      "text": "One master debunk: mix ingredient 1 + ingredient 2. True result: neutral. Expected if pub1 correct: G−. Expected if pub2 correct: R−. Both differ from neutral → both conflict → neither publication is removed. That is the conflict-only outcome the puzzle asks for."
+      "text": "One master debunk: mix ingredient 1 + ingredient 2. True result: neutral. Expected if pub1 correct: G\u2212. Expected if pub2 correct: R\u2212. Both differ from neutral \u2192 both conflict \u2192 neither publication is removed. That is the conflict-only outcome the puzzle asks for."
     }
-  ]
+  ],
+  "complexity": {
+    "score": 5,
+    "raw": 3.325,
+    "avg_clue_strength": 0.968,
+    "chain_depth": 0,
+    "stuck": false,
+    "requires_complement_set": false,
+    "question_requires_enumeration": false,
+    "residual_worlds": 720
+  }
 }

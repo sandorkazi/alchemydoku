@@ -20,7 +20,11 @@
       "variant": "master",
       "ingredient1": 2,
       "ingredient2": 4,
-      "claimedPotion": { "type": "potion", "color": "R", "sign": "-" },
+      "claimedPotion": {
+        "type": "potion",
+        "color": "R",
+        "sign": "-"
+      },
       "outcome": "failure"
     }
   ],
@@ -37,15 +41,15 @@
   "hints": [
     {
       "level": 1,
-      "text": "Ingredient 4 is a known alchemical. Ingredient 2 has R−. List out all possible results for mix(ing2, ing4) given these two facts."
+      "text": "Ingredient 4 is a known alchemical. Ingredient 2 has R\u2212. List out all possible results for mix(ing2, ing4) given these two facts."
     },
     {
       "level": 2,
-      "text": "Ingredient 4 is alchemical NNN (all Large Negative). Both ingredient 2 and ingredient 4 have R−, so R is a candidate colour in the result. But G could also dominate depending on ingredient 2's G aspect. The failed debunk eliminates one of the two candidates."
+      "text": "Ingredient 4 is alchemical NNN (all Large Negative). Both ingredient 2 and ingredient 4 have R\u2212, so R is a candidate colour in the result. But G could also dominate depending on ingredient 2's G aspect. The failed debunk eliminates one of the two candidates."
     },
     {
       "level": 3,
-      "text": "With ing2 R− matching ing4 R−, mix(2,4) can only produce R− or G−. The failed debunk proves mix(2,4) ≠ R−. By elimination, the answer must be G−."
+      "text": "With ing2 R\u2212 matching ing4 R\u2212, mix(2,4) can only produce R\u2212 or G\u2212. The failed debunk proves mix(2,4) \u2260 R\u2212. By elimination, the answer must be G\u2212."
     }
   ],
   "questions": [
@@ -56,8 +60,13 @@
     }
   ],
   "complexity": {
-    "score": 2,
-    "raw": 1.5,
+    "score": 1,
+    "raw": 1.842,
+    "avg_clue_strength": 1.936,
+    "chain_depth": 0,
+    "stuck": false,
+    "requires_complement_set": false,
+    "question_requires_enumeration": false,
     "residual_worlds": 720
   }
 }

@@ -1,1 +1,72 @@
-{"id":"sl-03","mode":"expanded","title":"Echoes of the Laboratory","description":"Use the clues to deduce which alchemical belongs to the target ingredient.","difficulty":"easy","clues":[{"kind":"mixing","ingredient1":1,"ingredient2":2,"result":{"color":"B","sign":"-"}},{"kind":"mixing","ingredient1":5,"ingredient2":7,"result":{"color":"B","sign":"-"}},{"kind":"mixing","ingredient1":1,"ingredient2":4,"result":{"color":"R","sign":"-"}},{"kind":"book","ingredient":3,"result":"solar"},{"kind":"mixing","ingredient1":5,"ingredient2":6,"result":{"color":"R","sign":"+"}}],"questions":[{"kind":"alchemical","ingredient":7}],"solution":{"1":7,"2":6,"3":5,"4":4,"5":3,"6":8,"7":1,"8":2},"hints":[{"level":1,"text":"Identify the alchemical for ingredient 7. Direct clues: ing5+ing7=B-."},{"level":2,"text":"Eliminated for slot 7: [2, 3, 4, 5, 6, 7, 8]. Remaining: [1]."},{"level":3,"text":"Ingredient 7 = npN (R- G+ B-)."}],"complexity":{"raw":1.491,"avg_clue_strength":2.86,"q_sur":0.0,"m_sur":0.3,"residual_worlds":2}}
+{
+  "id": "sl-03",
+  "mode": "expanded",
+  "title": "Golem Research Notes",
+  "description": "Use the clues to deduce which alchemical belongs to the target ingredient.",
+  "difficulty": "easy",
+  "clues": [
+    {
+      "kind": "mixing",
+      "ingredient1": 1,
+      "ingredient2": 2,
+      "result": {
+        "color": "B",
+        "sign": "-"
+      }
+    },
+    {
+      "kind": "mixing",
+      "ingredient1": 1,
+      "ingredient2": 7,
+      "result": {
+        "color": "R",
+        "sign": "-"
+      }
+    },
+    {
+      "kind": "book",
+      "ingredient": 2,
+      "result": "lunar"
+    }
+  ],
+  "questions": [
+    {
+      "kind": "alchemical",
+      "ingredient": 2
+    }
+  ],
+  "solution": {
+    "1": 1,
+    "2": 6,
+    "3": 8,
+    "4": 3,
+    "5": 2,
+    "6": 7,
+    "7": 5,
+    "8": 4
+  },
+  "hints": [
+    {
+      "level": 1,
+      "text": "Identify the alchemical for ingredient 2. Direct clues: ing1+ing2=B-, ing2 is lunar."
+    },
+    {
+      "level": 2,
+      "text": "Eliminated for slot 2: [1, 2, 3, 4, 5, 7, 8]. Remaining: [6]."
+    },
+    {
+      "level": 3,
+      "text": "Ingredient 2 = Ppn (R+ G+ B-)."
+    }
+  ],
+  "complexity": {
+    "raw": 1.82,
+    "avg_clue_strength": 2.131,
+    "ambig_penalty": 0.0,
+    "chain_depth": 0,
+    "stuck": false,
+    "requires_complement_set": false,
+    "question_requires_enumeration": false,
+    "residual_worlds": 480
+  }
+}

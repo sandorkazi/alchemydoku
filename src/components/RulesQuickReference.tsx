@@ -135,6 +135,21 @@ export function BaseRulesCards() {
       />
 
       <RuleCard
+        icon="👥" title="Among / Group Clues" accent="green"
+        visual={
+          <>
+            <span className="text-[10px] text-green-500 font-semibold">{`{`}</span>
+            {([0, 1, 2, 3] as const).map(i => <IngredientIcon key={i} index={i} width={22} />)}
+            <span className="text-[10px] text-green-500 font-semibold">{`}`}</span>
+            <span className="text-green-400 text-sm">→</span>
+            <span className="text-[11px] font-bold text-green-700">2×</span>
+            <PotionImage result={R_PLUS} width={26} />
+          </>
+        }
+        text="An Among clue describes mixing or selling outcomes within a group of ingredients. It reveals either an exact count of pairs that produce a given result, or that at least one such pair exists — without naming the specific pair."
+      />
+
+      <RuleCard
         icon="📋" title="Debunking — Apprentice" accent="rose"
         visual={
           <>

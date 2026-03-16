@@ -1,41 +1,87 @@
 {
   "id": "debunk-plan-tutorial-01",
   "title": "The First Deception",
-  "description": "A rival has published a theory about ingredient 1 — but you've run the tests and know better. Expose the lie.",
+  "description": "A rival has published a theory about ingredient 1 \u2014 but you've run the tests and know better. Expose the lie.",
   "difficulty": "tutorial",
   "clues": [
-    { "kind": "aspect", "ingredient": 1, "color": "R", "sign": "-" },
-    { "kind": "aspect", "ingredient": 1, "color": "G", "sign": "+" },
-    { "kind": "aspect", "ingredient": 1, "color": "B", "sign": "-" }
+    {
+      "kind": "aspect",
+      "ingredient": 1,
+      "color": "R",
+      "sign": "-"
+    },
+    {
+      "kind": "aspect",
+      "ingredient": 1,
+      "color": "G",
+      "sign": "+"
+    },
+    {
+      "kind": "aspect",
+      "ingredient": 1,
+      "color": "B",
+      "sign": "-"
+    }
   ],
   "publications": [
-    { "ingredient": 1, "claimedAlchemical": 3 },
-    null, null, null, null, null, null, null
+    {
+      "ingredient": 1,
+      "claimedAlchemical": 3
+    },
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null
   ],
   "questions": [
-    { "kind": "debunk_apprentice_plan" }
+    {
+      "kind": "debunk_apprentice_plan"
+    }
   ],
   "solution": {
-    "1": 1, "2": 2, "3": 3, "4": 4,
-    "5": 5, "6": 6, "7": 7, "8": 8
+    "1": 1,
+    "2": 2,
+    "3": 3,
+    "4": 4,
+    "5": 5,
+    "6": 6,
+    "7": 7,
+    "8": 8
   },
   "debunk_answers": {
     "debunk_apprentice_plan": [
-      { "kind": "apprentice", "ingredient": 1, "color": "R" }
+      {
+        "kind": "apprentice",
+        "ingredient": 1,
+        "color": "R"
+      }
     ]
   },
   "hints": [
     {
       "level": 1,
-      "text": "The publication claims ingredient 1 is alchemical pNn. Your clues give you the true aspects of ingredient 1 — compare each aspect against what the publication claims."
+      "text": "The publication claims ingredient 1 is alchemical pNn. Your clues give you the true aspects of ingredient 1 \u2014 compare each aspect against what the publication claims."
     },
     {
       "level": 2,
-      "text": "Alchemical pNn has R+, G−, B−. Your clues show ingredient 1's true aspects are R−, G+, B−. Any colour where the signs differ is a valid apprentice debunk: R (true − vs claimed +) or G (true + vs claimed −)."
+      "text": "Alchemical pNn has R+, G\u2212, B\u2212. Your clues show ingredient 1's true aspects are R\u2212, G+, B\u2212. Any colour where the signs differ is a valid apprentice debunk: R (true \u2212 vs claimed +) or G (true + vs claimed \u2212)."
     },
     {
       "level": 3,
-      "text": "One apprentice debunk: reveal the R or G aspect of ingredient 1. The true sign contradicts what the publication claims → publication removed. B matches the claim so revealing B would have no effect."
+      "text": "One apprentice debunk: reveal the R or G aspect of ingredient 1. The true sign contradicts what the publication claims \u2192 publication removed. B matches the claim so revealing B would have no effect."
     }
-  ]
+  ],
+  "complexity": {
+    "score": 5,
+    "raw": 6.267,
+    "avg_clue_strength": 1.0,
+    "chain_depth": 2,
+    "stuck": true,
+    "requires_complement_set": false,
+    "question_requires_enumeration": false,
+    "residual_worlds": 5040
+  }
 }

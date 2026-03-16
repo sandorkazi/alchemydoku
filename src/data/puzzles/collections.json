@@ -206,8 +206,11 @@
     "id": "among-witnesses",
     "title": "Among Witnesses",
     "description": "You never saw whose ingredients were involved — only overheard the outcomes. Deduce the full picture from fragmentary crowd knowledge.",
-    "difficulty": "hard",
+    "difficulty": "expert",
     "puzzleIds": [
+      "among-04",
+      "among-05",
+      "among-03",
       "among-01",
       "among-02"
     ],
