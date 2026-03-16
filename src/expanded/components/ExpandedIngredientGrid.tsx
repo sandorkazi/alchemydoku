@@ -368,6 +368,24 @@ export function ExpandedIngredientGrid({ onRandomize, activeTool, setActiveTool 
     return () => window.removeEventListener('keydown', onKey);
   }, [editingCell, activeTool, setActiveTool]);
 
+  // Keyboard: Ctrl/Cmd+Z = undo; Ctrl/Cmd+Shift+Z = redo
+  useEffect(() => {
+    const onKey = (e: KeyboardEvent) => {
+      const inInput = document.activeElement instanceof HTMLInputElement
+                   || document.activeElement instanceof HTMLTextAreaElement;
+      if (inInput) return;
+      if ((e.ctrlKey || e.metaKey) && !e.shiftKey && e.key === 'z') {
+        e.preventDefault();
+        dispatch({ type: 'UNDO' });
+      } else if ((e.ctrlKey || e.metaKey) && e.shiftKey && e.key === 'z') {
+        e.preventDefault();
+        dispatch({ type: 'REDO' });
+      }
+    };
+    window.addEventListener('keydown', onKey);
+    return () => window.removeEventListener('keydown', onKey);
+  }, []); // eslint-disable-line react-hooks/exhaustive-deps
+
   const noteKey = (ing: number, alch: number) => `${ing}-${alch}`;
 
   const setNote = useCallback((key: string, value: string) => {

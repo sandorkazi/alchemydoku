@@ -12,6 +12,20 @@ export type { DisplayMap, GridState } from '../utils/solverStorage';
 type GridState  = import('../utils/solverStorage').GridState;
 type DisplayMap = import('../utils/solverStorage').DisplayMap;
 
+// ─── Undo / Redo ──────────────────────────────────────────────────────────────
+
+export type UndoSnapshot = {
+  gridState:   GridState;
+  notes:       Record<string, string>;
+  drawStrokes: string[];
+};
+
+const MAX_UNDO = 100;
+
+function snap(s: SolverState): UndoSnapshot {
+  return { gridState: s.gridState, notes: s.notes, drawStrokes: s.drawStrokes };
+}
+
 // ─── State ────────────────────────────────────────────────────────────────────
 
 function loadSolverState(puzzleId: string): { gridState: GridState; notes: Record<string,string>; hintLevel: number; drawStrokes: string[] } | null {
@@ -61,6 +75,8 @@ export type SolverState = {
   completed: boolean;
   showSolution: boolean;
   drawStrokes: string[];
+  undoStack: UndoSnapshot[];
+  redoStack: UndoSnapshot[];
 };
 
 // ─── Actions ──────────────────────────────────────────────────────────────────
@@ -78,7 +94,9 @@ export type Action =
   | { type: 'SET_NOTE'; key: string; value: string }
   | { type: 'LOAD_PROGRESS'; gridState: GridState; notes: Record<string,string>; hintLevel: number; wrongAttempts: number; answers: (PuzzleAnswer | null)[] }
   | { type: 'ADD_DRAW_STROKE'; d: string }
-  | { type: 'CLEAR_DRAW_STROKES' };
+  | { type: 'CLEAR_DRAW_STROKES' }
+  | { type: 'UNDO' }
+  | { type: 'REDO' };
 
 // ─── Reducer ──────────────────────────────────────────────────────────────────
 
@@ -89,23 +107,29 @@ function reducer(state: SolverState, action: Action): SolverState {
       const current = state.gridState[ingredient][alchemical];
       const cycle: CellState[] = ['unknown', 'eliminated', 'confirmed'];
       const next = cycle[(cycle.indexOf(current) + 1) % cycle.length];
+      const undoStack = [snap(state), ...state.undoStack].slice(0, MAX_UNDO);
       return {
         ...state,
         gridState: {
           ...state.gridState,
           [ingredient]: { ...state.gridState[ingredient], [alchemical]: next },
         },
+        undoStack,
+        redoStack: [],
       };
     }
 
     case 'SET_CELL': {
       const { ingredient, alchemical, state: cellState } = action;
+      const undoStack = [snap(state), ...state.undoStack].slice(0, MAX_UNDO);
       return {
         ...state,
         gridState: {
           ...state.gridState,
           [ingredient]: { ...state.gridState[ingredient], [alchemical]: cellState },
         },
+        undoStack,
+        redoStack: [],
       };
     }
 
@@ -139,6 +163,7 @@ function reducer(state: SolverState, action: Action): SolverState {
     case 'RESET': {
       const newMap = makeDisplayMap();
       saveDisplayMap(`display-map-${state.puzzle.id}`, newMap);
+      const undoStack = [snap(state), ...state.undoStack].slice(0, MAX_UNDO);
       return {
         ...state,
         displayMap: newMap,
@@ -148,16 +173,21 @@ function reducer(state: SolverState, action: Action): SolverState {
         answers: state.puzzle.questions.map(() => null),
         completed: false,
         showSolution: false,
+        undoStack,
+        redoStack: [],
       };
     }
 
-    case 'CLEAR_GRID':
-      return { ...state, gridState: emptyGrid(), notes: {} };
+    case 'CLEAR_GRID': {
+      const undoStack = [snap(state), ...state.undoStack].slice(0, MAX_UNDO);
+      return { ...state, gridState: emptyGrid(), notes: {}, undoStack, redoStack: [] };
+    }
     case 'SET_NOTE': {
+      const undoStack = [snap(state), ...state.undoStack].slice(0, MAX_UNDO);
       const notes = { ...state.notes };
       if (action.value === '') delete notes[action.key];
       else notes[action.key] = action.value.slice(0, 4);  // max 4 chars
-      return { ...state, notes };
+      return { ...state, notes, undoStack, redoStack: [] };
     }
 
     case 'RESHUFFLE': {
@@ -177,6 +207,8 @@ function reducer(state: SolverState, action: Action): SolverState {
         answers: action.answers,
         completed: false,
         showSolution: false,
+        undoStack: [] as UndoSnapshot[],
+        redoStack: [] as UndoSnapshot[],
       };
       // Persist to localStorage too
       try {
@@ -193,11 +225,37 @@ function reducer(state: SolverState, action: Action): SolverState {
       return loaded;
     }
 
-    case 'ADD_DRAW_STROKE':
-      return { ...state, drawStrokes: [...state.drawStrokes, action.d] };
+    case 'ADD_DRAW_STROKE': {
+      const undoStack = [snap(state), ...state.undoStack].slice(0, MAX_UNDO);
+      return { ...state, drawStrokes: [...state.drawStrokes, action.d], undoStack, redoStack: [] };
+    }
 
-    case 'CLEAR_DRAW_STROKES':
-      return { ...state, drawStrokes: [] };
+    case 'CLEAR_DRAW_STROKES': {
+      const undoStack = [snap(state), ...state.undoStack].slice(0, MAX_UNDO);
+      return { ...state, drawStrokes: [], undoStack, redoStack: [] };
+    }
+
+    case 'UNDO': {
+      if (!state.undoStack.length) return state;
+      const [prev, ...rest] = state.undoStack;
+      return {
+        ...state,
+        ...prev,
+        undoStack: rest,
+        redoStack: [snap(state), ...state.redoStack].slice(0, MAX_UNDO),
+      };
+    }
+
+    case 'REDO': {
+      if (!state.redoStack.length) return state;
+      const [next, ...rest] = state.redoStack;
+      return {
+        ...state,
+        ...next,
+        undoStack: [snap(state), ...state.undoStack].slice(0, MAX_UNDO),
+        redoStack: rest,
+      };
+    }
 
     default:
       return state;
@@ -239,6 +297,8 @@ export function SolverProvider({ puzzle, children }: { puzzle: Puzzle; children:
     completed: false,
     showSolution: false,
     drawStrokes: savedState?.drawStrokes ?? [],
+    undoStack: [],
+    redoStack: [],
   };
 
   const [state, dispatch] = useReducer(reducer, initialState);

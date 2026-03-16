@@ -237,14 +237,20 @@ export function IngredientGrid({ onRandomize }: { onRandomize?: () => void }) {
     return result;
   }, [state.autoDeduction, state.worlds]);
 
-  // ── Spacebar cycles tools ──────────────────────────────────────────────────
+  // ── Spacebar cycles tools; Ctrl/Cmd+Z = undo; Ctrl/Cmd+Shift+Z = redo ────
   useEffect(() => {
     const onKey = (e: KeyboardEvent) => {
       // Only act when focus is inside the grid or no input is focused
       const active = document.activeElement;
       const inInput = active instanceof HTMLInputElement || active instanceof HTMLTextAreaElement;
       if (inInput) return;
-      if (e.code === 'Space' && !e.ctrlKey && !e.metaKey && !e.altKey) {
+      if ((e.ctrlKey || e.metaKey) && !e.shiftKey && e.key === 'z') {
+        e.preventDefault();
+        dispatch({ type: 'UNDO' });
+      } else if ((e.ctrlKey || e.metaKey) && e.shiftKey && e.key === 'z') {
+        e.preventDefault();
+        dispatch({ type: 'REDO' });
+      } else if (e.code === 'Space' && !e.ctrlKey && !e.metaKey && !e.altKey) {
         e.preventDefault();
         setActiveTool(cur => TOOL_CYCLE[(TOOL_CYCLE.indexOf(cur) + 1) % TOOL_CYCLE.length]);
         setEditingCell(null);
@@ -252,7 +258,7 @@ export function IngredientGrid({ onRandomize }: { onRandomize?: () => void }) {
     };
     window.addEventListener('keydown', onKey);
     return () => window.removeEventListener('keydown', onKey);
-  }, []);
+  }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
   // ── Reset draw state when switching away from draw tool ───────────────────
   useEffect(() => {

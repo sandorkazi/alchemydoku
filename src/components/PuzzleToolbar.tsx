@@ -26,12 +26,17 @@ export type PuzzleToolbarProps = {
   onReset: () => void;
   /** Called when the user clicks the chain-link button; should update the URL and copy to clipboard. */
   onPermalink?: () => void;
+  onUndo?:  () => void;
+  onRedo?:  () => void;
+  canUndo?: boolean;
+  canRedo?: boolean;
 };
 
 export function PuzzleToolbar({
   title, difficulty, worldsLeft,
   isTutorial = false, subtitle,
   onBack, onSave, onLoad, onReset, onPermalink,
+  onUndo, onRedo, canUndo = false, canRedo = false,
 }: PuzzleToolbarProps) {
   const [menuOpen, setMenuOpen] = useState(false);
   const [copied, setCopied]     = useState(false);
@@ -84,6 +89,14 @@ export function PuzzleToolbar({
           )}
           <button onClick={onSave}  aria-label="Save progress"  title="Save progress to file"  className={iconBtn}>💾</button>
           <button onClick={onLoad}  aria-label="Load progress"  title="Load progress from file" className={iconBtn}>📂</button>
+          {onUndo && (
+            <button onClick={onUndo} disabled={!canUndo} aria-label="Undo" title="Undo (Ctrl+Z)"
+              className={`${iconBtn} ${!canUndo ? 'opacity-30 cursor-not-allowed' : ''}`}>↩</button>
+          )}
+          {onRedo && (
+            <button onClick={onRedo} disabled={!canRedo} aria-label="Redo" title="Redo (Ctrl+Shift+Z)"
+              className={`${iconBtn} ${!canRedo ? 'opacity-30 cursor-not-allowed' : ''}`}>↪</button>
+          )}
           <button onClick={onReset} aria-label="Reset puzzle"   title="Reset all progress"      className={iconBtn}>↺</button>
         </div>
 
@@ -106,6 +119,14 @@ export function PuzzleToolbar({
               )}
               <button onClick={() => { onSave();  setMenuOpen(false); }} className={menuItem}>💾 Save progress</button>
               <button onClick={() => { onLoad();  setMenuOpen(false); }} className={menuItem}>📂 Load progress</button>
+              {onUndo && (
+                <button onClick={() => { onUndo(); setMenuOpen(false); }} disabled={!canUndo}
+                  className={`${menuItem} ${!canUndo ? 'opacity-30' : ''}`}>↩ Undo</button>
+              )}
+              {onRedo && (
+                <button onClick={() => { onRedo(); setMenuOpen(false); }} disabled={!canRedo}
+                  className={`${menuItem} ${!canRedo ? 'opacity-30' : ''}`}>↪ Redo</button>
+              )}
               <button onClick={() => { onReset(); setMenuOpen(false); }} className={menuItem}>↺ Reset</button>
             </div>
           )}
