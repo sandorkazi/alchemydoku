@@ -5,7 +5,7 @@ import {
 import {
   initAuth, requestToken, signOut as driveSignOut, isSignedIn,
   fetchUserInfo, loadFromDrive, saveToDrive, snapshotLocal, mergeIntoLocal,
-  migrateStorage,
+  migrateStorage, saveUserToStorage, loadUserFromStorage,
   type DriveUser, type DriveMode,
 } from '../services/googleDrive';
 
@@ -75,20 +75,44 @@ export function DriveProvider({ children }: { children: ReactNode }) {
   // Debounce auto-sync (don't spam on rapid completions)
   const syncTimeout = useRef<ReturnType<typeof setTimeout> | null>(null);
 
-  // ── Init GIS on mount ──────────────────────────────────────────────────────
+  // ── Init GIS on mount — attempt silent session restore ────────────────────
   useEffect(() => {
     const clientId = import.meta.env.VITE_GOOGLE_CLIENT_ID as string | undefined;
     if (!clientId) {
-      // No client ID configured — Drive sync silently unavailable
       setAuthStatus('signed-out');
       return;
     }
-    initAuth().catch(() => {
-      // GIS failed to load (e.g. ad blocker) — degrade gracefully
+
+    const savedUser = loadUserFromStorage();
+    if (savedUser) setAuthStatus('loading');
+
+    initAuth().then(async () => {
+      if (!savedUser) { setAuthStatus('signed-out'); return; }
+      // Attempt silent token restore — prompt:'' never shows a popup
+      try {
+        await requestToken('');
+        const profile = await fetchUserInfo();
+        setUser(profile);
+        saveUserToStorage(profile);
+        setAuthStatus('signed-in');
+        setSyncStatus('syncing');
+        try {
+          const cloud = await loadFromDrive(driveMode);
+          if (cloud) mergeIntoLocal(cloud);
+          await saveToDrive(snapshotLocal(), driveMode);
+          setLastSynced(new Date());
+          setSyncStatus('success');
+        } catch {
+          setSyncStatus('error');
+        }
+      } catch {
+        // Silent restore failed (session expired or revoked) — sign out quietly
+        setAuthStatus('signed-out');
+      }
+    }).catch(() => {
       setAuthStatus('signed-out');
     });
-    setAuthStatus('signed-out');
-  }, []);
+  }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
   // ── Sign in ────────────────────────────────────────────────────────────────
   const signIn = useCallback(async () => {
@@ -100,6 +124,7 @@ export function DriveProvider({ children }: { children: ReactNode }) {
       // Fetch user profile
       const profile = await fetchUserInfo();
       setUser(profile);
+      saveUserToStorage(profile);
       setAuthStatus('signed-in');
 
       // Download cloud save and merge into localStorage

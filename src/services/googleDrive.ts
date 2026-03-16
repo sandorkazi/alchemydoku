@@ -66,6 +66,7 @@ declare global {
 
 // ─── Constants ───────────────────────────────────────────────────────────────
 
+const SAVED_USER_KEY   = 'alch-drive-user';
 const DRIVE_FILES_URL  = 'https://www.googleapis.com/drive/v3/files';
 const DRIVE_UPLOAD_URL = 'https://www.googleapis.com/upload/drive/v3/files';
 const USERINFO_URL     = 'https://www.googleapis.com/oauth2/v3/userinfo';
@@ -161,6 +162,18 @@ export function signOut(): void {
   accessToken      = null;
   tokenExpiresAt   = 0;
   visibleFolderId  = null;
+  try { localStorage.removeItem(SAVED_USER_KEY); } catch { /* ignore */ }
+}
+
+export function saveUserToStorage(user: DriveUser): void {
+  try { localStorage.setItem(SAVED_USER_KEY, JSON.stringify(user)); } catch { /* ignore */ }
+}
+
+export function loadUserFromStorage(): DriveUser | null {
+  try {
+    const raw = localStorage.getItem(SAVED_USER_KEY);
+    return raw ? JSON.parse(raw) as DriveUser : null;
+  } catch { return null; }
 }
 
 export function isSignedIn(): boolean {
