@@ -177,9 +177,9 @@
         "ingredient2": 5
       },
       {
-        "kind": "apprentice",
-        "ingredient": 3,
-        "color": "R"
+        "kind": "master",
+        "ingredient1": 1,
+        "ingredient2": 3
       }
     ],
     "debunk_conflict_only": [
@@ -193,15 +193,15 @@
   "hints": [
     {
       "level": 1,
-      "text": "Three targets: ing1's publication (claims Ppn), ing3's publication (claims Nnp), and Art-1 (R aspect, partially wrong). The naive plan is three separate apprentice reveals — but the minimum is two steps. Look for a master mix that handles two targets at once."
+      "text": "Three targets: ing1's publication (claims Ppn), ing3's publication (claims Nnp), and Art-1 (R aspect, partially wrong). The minimum plan for the publications is two master mixes. ing1 is definitively known — use it as your witness for both steps."
     },
     {
       "level": 2,
-      "text": "Consider mixing ing1 + ing5. True result: R−.\n\ning1's publication claims Ppn. Predicted mix(Ppn + Nnp) = neutral ≠ R−, so there is a conflict on ing1's publication. ing5 has no wrong publication, so blame is unambiguous → ing1's publication removed.\n\nBut there is more: the mix result R− also tells you that ing1 and ing5 share R−. Since ing1's true R is − (confirmed by clues), the result confirms ing5's R is also −. Art-1 claims ing5 has R+, which this directly contradicts → Art-1 removed.\n\nTwo targets gone in step 1. Only ing3's publication remains."
+      "text": "Mix ing1 + ing5. True result: R−.\ning1's publication claims Ppn. Predicted mix(Ppn + Nnp) = neutral ≠ R−, conflict is unambiguous → ing1's publication removed. As a bonus: the R− result confirms ing5 is R−, directly contradicting Art-1's claim that ing5 is R+ → Art-1 also cleared.\n\nNow mix ing1 + ing3. True result: B−.\ning3's publication claims Nnp. Predicted mix(npN + Nnp) = R− ≠ B−, conflict is unambiguous → ing3's publication removed."
     },
     {
       "level": 3,
-      "text": "Optimal 2-step plan:\n① Master: mix ing1 + ing5 → true result R−.\n   • Removes ing1's publication: mix(claimed Ppn + true Nnp) = neutral ≠ R−, conflict is unambiguous (only ing1 has a wrong pub in this pair).\n   • Simultaneously: result R− with ing1 known as R−S proves ing5 is R−L. Art-1 claims ing5 is R+, so the contradiction removes Art-1.\n② Apprentice: reveal R+ on ing3. ing3's true alchemical pNn is R+; the publication claims Nnp which is R−. Contradiction → ing3's publication removed.\n\nBonus — Q2 (conflict only, fixed ingredient = ing1):\nMix ing1 + ing3 → true result B−. Both ing1's publication (claims Ppn) and ing3's publication (claims Nnp) are in conflict. Since both are wrong, neither can be unambiguously blamed → neither is removed. Pure conflict only."
+      "text": "Step 1: Master — mix ing1 + ing5 → true R−. Claimed Ppn for ing1: mix(Ppn, Nnp) = neutral ≠ R− → ing1's publication removed. (Bonus: R− result with known ing5 confirms ing5 is R−, contradicting Art-1's R+ claim → Art-1 cleared.)\nStep 2: Master — mix ing1 + ing3 → true B−. Claimed Nnp for ing3: mix(npN, Nnp) = R− ≠ B− → ing3's publication removed.\n\nQ2 (conflict only, fixed ing1): mix ing1 + ing3 → true B−. Both publications are in conflict — neither can be unambiguously blamed → neither removed. Pure conflict."
     }
   ]
 }

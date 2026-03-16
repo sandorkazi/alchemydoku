@@ -203,12 +203,29 @@ def filter_clue(worlds: frozenset, clue: dict, golem: Optional[dict] = None) -> 
                          if greacts(w[si], golem, 'chest') == clue['chest_reacted']
                          and greacts(w[si], golem, 'ears') == clue['ears_reacted'])
 
+    if k == 'sell_among':
+        slots = [i - 1 for i in clue['ingredients']]
+        col = clue['potion']['color']
+        sgn_val = sgn_int(clue['potion']['sign'])
+        want = sgn_val if clue['result'] == 'sold' else (1 - sgn_val)
+        count = clue['count']
+        return frozenset(w for w in worlds
+                         if sum(ALCH_DATA[w[s]][col][0] == want for s in slots) == count)
+
     if k == 'mixing_among':
         slots = [i - 1 for i in clue['ingredients']]
         exp = d2r(clue['result'])
         return frozenset(w for w in worlds
                          if any(MIX_TABLE[w[a]][w[b]] == exp
                                 for a, b in itertools.combinations(slots, 2)))
+
+    if k == 'mixing_count_among':
+        slots = [i - 1 for i in clue['ingredients']]
+        exp = d2r(clue['result'])
+        count = clue['count']
+        return frozenset(w for w in worlds
+                         if sum(MIX_TABLE[w[a]][w[b]] == exp
+                                for a, b in itertools.combinations(slots, 2)) == count)
 
     if k == 'sell_result_among':
         slots = [i - 1 for i in clue['ingredients']]
@@ -436,6 +453,7 @@ def all_answered(worlds: frozenset, questions: list, golem: Optional[dict] = Non
 # Base-game clue type penalties (from analyze_difficulty.py)
 CLUE_TYPE_PENALTY = {
     'mixing': 0.0, 'assignment': 0.0, 'aspect': 0.3, 'sell': 0.0, 'debunk': 0.0,
+    'mixing_count_among': 0.2,  # harder to reason about than plain mixing_among
 }
 SELL_PENALTY = {'total_match': 0.0, 'sign_ok': 0.4, 'neutral': 0.8, 'opposite': 0.6}
 

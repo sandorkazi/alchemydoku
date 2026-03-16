@@ -154,8 +154,19 @@ export type SellResultAmongClue = {
   sellResult: SellResult;
 };
 
+/**
+ * "Count among" clue: exactly `count` of the C(ingredients, 2) pairs produce `result`.
+ * Requires ≥ 3 ingredients — with only 2 it would collapse to a plain mixing clue.
+ */
+export type MixingCountAmongClue = {
+  kind: 'mixing_count_among';
+  ingredients: [IngredientId, IngredientId, IngredientId, ...IngredientId[]]; // ≥ 3
+  result: PotionResult;
+  count: number; // exactly this many of the C(n,2) pairs produce `result`
+};
+
 export type Clue = MixingClue | AspectClue | FullAssignmentClue | SellClue | DebunkClue
-                | MixingAmongClue | SellAmongClue | SellResultAmongClue;
+                | MixingAmongClue | SellAmongClue | SellResultAmongClue | MixingCountAmongClue;
 
 // ─── Puzzle ───────────────────────────────────────────────────────────────────
 

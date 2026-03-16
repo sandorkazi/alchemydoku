@@ -113,7 +113,7 @@ function isComplete(s: DraftStep): s is DebunkStep {
 }
 
 function StepEditor({
-  index, draft, outcome, onUpdate, onRemove, isConflictOnly,
+  index, draft, outcome, onUpdate, onRemove, isConflictOnly, showOutcome,
 }: {
   index: number;
   draft: DraftStep;
@@ -121,6 +121,7 @@ function StepEditor({
   onUpdate: (d: DraftStep) => void;
   onRemove: () => void;
   isConflictOnly: boolean;
+  showOutcome: boolean;
 }) {
   const getIngredient = useIngredient();
   void getIngredient;
@@ -205,7 +206,7 @@ function StepEditor({
       )}
 
       {/* Live outcome */}
-      {outcome && (
+      {showOutcome && outcome && (
         <div className="border-t border-gray-100 pt-1.5 flex items-center gap-1.5">
           <span className="text-[10px] text-gray-400">→</span>
           {outcomeLabel}
@@ -314,6 +315,8 @@ export function DebunkAnswerPanel({ onNext, isTutorial = false }: {
     : { kind: 'apprentice', ingredient: null, color: null };
 
   const [drafts, setDrafts] = useState<DraftStep[]>([initialDraft()]);
+  const [showStepFeedback, setShowStepFeedback] = useState(isTutorial);
+  const [showFeedbackConfirm, setShowFeedbackConfirm] = useState(false);
 
   const completedSteps = drafts.filter(isComplete) as DebunkStep[];
   const { outcomes, remainingPubs } = simulatePlan(
@@ -365,19 +368,75 @@ export function DebunkAnswerPanel({ onNext, isTutorial = false }: {
         <PublicationsBoard publications={publications} removedSet={removedSet} />
       </div>
 
+      {/* Step-feedback confirmation modal (non-tutorial only) */}
+      {showFeedbackConfirm && (
+        <div className="fixed inset-0 z-50 bg-black/40 flex items-center justify-center p-4"
+             onClick={() => setShowFeedbackConfirm(false)}>
+          <div className="bg-white rounded-2xl shadow-xl max-w-sm w-full p-6 space-y-4"
+               onClick={e => e.stopPropagation()}>
+            <h3 className="font-bold text-gray-900">Enable Step Feedback?</h3>
+            <p className="text-sm text-gray-600">
+              Step feedback shows the effect of each step as you build your plan — how many publications each action removes or conflicts.
+            </p>
+            <div className="bg-amber-50 border border-amber-200 rounded-xl p-3 text-xs text-amber-800">
+              Recommended only if you're stuck. Seeing live feedback reduces the challenge.
+            </div>
+            <div className="flex gap-3">
+              <button
+                onClick={() => setShowFeedbackConfirm(false)}
+                className="flex-1 py-2 rounded-lg border border-gray-200 text-sm font-semibold
+                           text-gray-700 hover:bg-gray-50 transition-colors"
+              >
+                Cancel
+              </button>
+              <button
+                onClick={() => { setShowFeedbackConfirm(false); setShowStepFeedback(true); }}
+                className="flex-1 py-2 rounded-lg bg-indigo-600 text-white text-sm font-semibold
+                           hover:bg-indigo-700 transition-colors"
+              >
+                Enable
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
       {/* Plan builder */}
       {!completed && !showSolution && (
         <div className="space-y-2">
           <div className="flex items-center justify-between">
             <span className="text-xs font-bold text-gray-500 uppercase tracking-widest">Your plan</span>
-            {isConflictOnly
-              ? outcomes.length > 0 && outcomes[0].conflicts.length > 0 && (
-                <span className="text-[10px] text-green-600 font-semibold">✓ Conflict produced</span>
-              )
-              : remainingPubs.length === 0 && drafts.length > 0 && (
-                <span className="text-[10px] text-green-600 font-semibold">✓ All publications covered</span>
-              )
-            }
+            <div className="flex items-center gap-3">
+              {isConflictOnly
+                ? outcomes.length > 0 && outcomes[0].conflicts.length > 0 && (
+                  <span className="text-[10px] text-green-600 font-semibold">✓ Conflict produced</span>
+                )
+                : remainingPubs.length === 0 && drafts.length > 0 && (
+                  <span className="text-[10px] text-green-600 font-semibold">✓ All publications covered</span>
+                )
+              }
+              {!isTutorial && (
+                <label className="flex items-center gap-1.5 text-xs cursor-pointer select-none">
+                  <span className={showStepFeedback ? 'text-indigo-600 font-semibold' : 'text-gray-400'}>
+                    Step hints
+                  </span>
+                  <button
+                    role="switch"
+                    aria-checked={showStepFeedback}
+                    onClick={() => {
+                      if (!showStepFeedback) setShowFeedbackConfirm(true);
+                      else setShowStepFeedback(false);
+                    }}
+                    className={`relative inline-flex h-5 w-9 items-center rounded-full transition-colors
+                      focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-indigo-400
+                      ${showStepFeedback ? 'bg-indigo-600' : 'bg-gray-200'}`}
+                  >
+                    <span className={`inline-block h-3.5 w-3.5 transform rounded-full bg-white shadow
+                      transition-transform ${showStepFeedback ? 'translate-x-4' : 'translate-x-1'}`} />
+                  </button>
+                </label>
+              )}
+            </div>
           </div>
 
           {drafts.map((draft, i) => (
@@ -389,6 +448,7 @@ export function DebunkAnswerPanel({ onNext, isTutorial = false }: {
               onUpdate={d => updateStep(i, d)}
               onRemove={() => removeStep(i)}
               isConflictOnly={isConflictOnly && i === 0}
+              showOutcome={showStepFeedback}
             />
           ))}
 

@@ -17,6 +17,7 @@ export interface SaveData {
   savedAt: string;
   base: ModeSave;
   expanded: ModeSave;
+  seenRelease?: string;
 }
 
 export interface ModeSave {
@@ -285,6 +286,9 @@ function mergeSaveData(a: SaveData, b: SaveData): SaveData {
       lastPuzzle: a.expanded.lastPuzzle ?? b.expanded.lastPuzzle,
       freePlay:   a.expanded.freePlay || b.expanded.freePlay,
     },
+    seenRelease: a.seenRelease && b.seenRelease
+      ? (a.seenRelease >= b.seenRelease ? a.seenRelease : b.seenRelease)
+      : (a.seenRelease ?? b.seenRelease),
   };
 }
 
@@ -332,18 +336,21 @@ export async function migrateStorage(fromMode: DriveMode, toMode: DriveMode): Pr
 // ─── LocalStorage snapshot helpers ────────────────────────────────────────────
 // These mirror the localStorage keys used in App.tsx and ExpandedHome.tsx
 
+// Keys used by each game mode (ExpandedHome uses different keys than base App.tsx)
+const KEYS = {
+  base:     { completed: 'alch-completed-base',  lastPuzzle: 'alch-last-puzzle-base' },
+  expanded: { completed: 'alch-exp-completed',   lastPuzzle: 'alch-exp-last' },
+} as const;
+
 export function snapshotLocal(): SaveData {
   function getCompleted(mode: 'base' | 'expanded'): string[] {
     try {
-      const raw = localStorage.getItem(`alch-completed-${mode}`);
+      const raw = localStorage.getItem(KEYS[mode].completed);
       return raw ? (JSON.parse(raw) as string[]) : [];
     } catch { return []; }
   }
   function getLastPuzzle(mode: 'base' | 'expanded'): string | null {
-    try { return localStorage.getItem(`alch-last-puzzle-${mode}`); } catch { return null; }
-  }
-  function getFreePlay(mode: 'base' | 'expanded'): boolean {
-    try { return localStorage.getItem(`alch-freeplay-${mode}`) === '1'; } catch { return false; }
+    try { return localStorage.getItem(KEYS[mode].lastPuzzle); } catch { return null; }
   }
 
   return {
@@ -352,13 +359,14 @@ export function snapshotLocal(): SaveData {
     base: {
       completed:  getCompleted('base'),
       lastPuzzle: getLastPuzzle('base'),
-      freePlay:   getFreePlay('base'),
+      freePlay:   false,
     },
     expanded: {
       completed:  getCompleted('expanded'),
       lastPuzzle: getLastPuzzle('expanded'),
-      freePlay:   getFreePlay('expanded'),
+      freePlay:   false,
     },
+    seenRelease: localStorage.getItem('alch-seen-release') ?? undefined,
   };
 }
 
@@ -370,11 +378,12 @@ export function snapshotLocal(): SaveData {
 export function mergeIntoLocal(cloud: SaveData): void {
   function mergeCompleted(mode: 'base' | 'expanded', cloudIds: string[]) {
     try {
-      const raw = localStorage.getItem(`alch-completed-${mode}`);
+      const key = KEYS[mode].completed;
+      const raw = localStorage.getItem(key);
       const local: string[] = raw ? JSON.parse(raw) : [];
       const merged = Array.from(new Set([...local, ...cloudIds]));
       if (merged.length !== local.length) {
-        localStorage.setItem(`alch-completed-${mode}`, JSON.stringify(merged));
+        localStorage.setItem(key, JSON.stringify(merged));
       }
     } catch { /* ignore */ }
   }
@@ -383,11 +392,17 @@ export function mergeIntoLocal(cloud: SaveData): void {
   mergeCompleted('expanded', cloud.expanded.completed);
 
   // Only set lastPuzzle if local has none (first sign-in on new device)
-  if (cloud.base.lastPuzzle && !localStorage.getItem('alch-last-puzzle-base')) {
-    localStorage.setItem('alch-last-puzzle-base', cloud.base.lastPuzzle);
+  if (cloud.base.lastPuzzle && !localStorage.getItem(KEYS.base.lastPuzzle)) {
+    localStorage.setItem(KEYS.base.lastPuzzle, cloud.base.lastPuzzle);
   }
-  if (cloud.expanded.lastPuzzle && !localStorage.getItem('alch-last-puzzle-expanded')) {
-    localStorage.setItem('alch-last-puzzle-expanded', cloud.expanded.lastPuzzle);
+  if (cloud.expanded.lastPuzzle && !localStorage.getItem(KEYS.expanded.lastPuzzle)) {
+    localStorage.setItem(KEYS.expanded.lastPuzzle, cloud.expanded.lastPuzzle);
+  }
+
+  const cloudSeen = cloud.seenRelease;
+  const localSeen = localStorage.getItem('alch-seen-release');
+  if (cloudSeen && (!localSeen || cloudSeen > localSeen)) {
+    localStorage.setItem('alch-seen-release', cloudSeen);
   }
 
   window.dispatchEvent(new CustomEvent('alch-cloud-sync'));

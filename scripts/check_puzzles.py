@@ -121,6 +121,17 @@ def check_structure(path: Path, puz: dict, is_expanded: bool, r: Results):
     if is_expanded and puz.get("mode") != "expanded":
         r.error(f"[mode-field] {name}: expanded puzzle must have mode='expanded'")
 
+    # mixing_count_among clues: requires ≥ 3 ingredients, count in [1, C(n,2)]
+    for c in puz.get("clues", []):
+        if c.get("kind") == "mixing_count_among":
+            n = len(c.get("ingredients", []))
+            count = c.get("count", 0)
+            max_pairs = n * (n - 1) // 2
+            if n < 3:
+                r.error(f"[clue-shape] {name}: mixing_count_among requires ≥ 3 ingredients, got {n}")
+            if not (1 <= count <= max_pairs):
+                r.error(f"[clue-shape] {name}: mixing_count_among count={count} out of range [1, {max_pairs}]")
+
     # Solution must be a valid 1–8 bijection
     sol = puz.get("solution", {})
     if sol:
@@ -242,6 +253,41 @@ def _trivial_reason(question: dict, clues: list) -> str | None:
                 )
 
     return None
+
+
+# ── Debunk-answer step-kind check ──────────────────────────────────────────────
+
+_DEBUNK_STEP_KIND = {
+    'debunk_min_steps':       'master',
+    'debunk_apprentice_plan': 'apprentice',
+    'debunk_conflict_only':   'master',
+}
+
+def check_debunk_answers(path: Path, puz: dict, r: Results):
+    """Verify debunk_answers reference steps have the kind the question mode enforces."""
+    name = path.name
+    answers = puz.get('debunk_answers', {})
+    for q in puz.get('questions', []):
+        qk = q.get('kind')
+        if qk not in _DEBUNK_STEP_KIND:
+            continue
+        expected = _DEBUNK_STEP_KIND[qk]
+        ref = answers.get(qk)
+        if not ref:
+            r.error(f"[debunk-answers] {name}: question '{qk}' has no entry in debunk_answers")
+            continue
+        for i, step in enumerate(ref):
+            actual = step.get('kind')
+            if actual != expected:
+                r.error(
+                    f"[debunk-answers] {name}: {qk} step[{i}] "
+                    f"has kind='{actual}', expected '{expected}'"
+                )
+        if qk == 'debunk_conflict_only' and len(ref) != 1:
+            r.error(
+                f"[debunk-answers] {name}: debunk_conflict_only must have exactly 1 step "
+                f"(found {len(ref)})"
+            )
 
 
 def check_trivial_answers(path: Path, puz: dict, r: Results):
@@ -467,6 +513,12 @@ def main():
     _section("hint tokens")
     for puz, path, _ in all_puzzles:
         check_hint_tokens(path, puz, r)
+    _done()
+
+    # ── Step 10: Debunk-answer step-kind check ─────────────────────────────────
+    _section("debunk answers")
+    for puz, path, _ in all_puzzles:
+        check_debunk_answers(path, puz, r)
     _done()
 
     # ── Step 3–4: Duplicates + similar titles ─────────────────────────────────

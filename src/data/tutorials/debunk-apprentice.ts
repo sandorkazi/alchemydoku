@@ -60,7 +60,30 @@ This means a failed debunk is not wasted information. You (and your opponents) n
 The information value is identical whether the debunk succeeds or fails.`,
   },
 
-  // ── Second puzzle: apply a revealed sign ────────────────────────────────
+  // ── When mixing won't help ───────────────────────────────────────────────
+  {
+    kind: 'explain',
+    id: 'deba-neutral-mix',
+    title: 'When Mixing Won\'t Help',
+    emoji: '🌀',
+    body: `Sometimes you might think: "I'll just mix the two published ingredients to expose them." But there's a catch.
+
+If the two published ingredients' true alchemicals are direct opposites, mixing them produces a neutral potion. A neutral result doesn't contradict either publication — both theories survive untouched.
+
+In those cases, forget the mixing table. If your existing clues already tell you an ingredient's true aspect sign, you can apprentice-debunk it directly: pick that ingredient, reveal the colour where the truth contradicts the claim, and the publication is removed.
+
+No mixing required.`,
+  },
+
+  // ── Third puzzle: neutral mix, clue-guided debunk ────────────────────────
+  {
+    kind: 'puzzle',
+    id: 'deba-puzzle-neutral',
+    puzzleId: 'debunk-plan-tutorial-02',
+    banner: 'Mixing these two ingredients would give neutral — no conflict possible. Use what your notes already tell you about each ingredient\'s aspects.',
+  },
+
+  // ── Fourth puzzle: apply a revealed sign ────────────────────────────────
   {
     kind: 'puzzle',
     id: 'deba-puzzle-apply',
