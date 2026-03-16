@@ -145,6 +145,10 @@ export function DriveProvider({ children }: { children: ReactNode }) {
     setSyncStatus('syncing');
     setErrorMsg(null);
     try {
+      // Always download first so we never overwrite Drive with a subset of its data.
+      // This is safe even for rapid calls: mergeIntoLocal is idempotent (union only grows).
+      const cloud = await loadFromDrive(driveMode);
+      if (cloud) mergeIntoLocal(cloud);
       await saveToDrive(snapshotLocal(), driveMode);
       setLastSynced(new Date());
       setSyncStatus('success');
