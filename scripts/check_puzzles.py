@@ -16,14 +16,16 @@ Checks performed (always, ~0.1 s):
                       (Fern, Bird Claw, etc.) — use ing1–ing8 tokens instead
  10. base-only-lang — base puzzle titles/hints must not mention expanded-mode
                       concepts (golem, encyclopedia, solar, lunar, etc.)
- 11. permalink      — each puzzle ID appears in exactly one collection;
+ 11. all-possible   — possible-potions answer must not be all 7 potions
+                      (uses world simulation; only for puzzles with pp questions)
+ 12. permalink      — each puzzle ID appears in exactly one collection;
                       no ID is shared across base/expanded;
                       all collection refs point to registered puzzles
 
 Additional checks with --deep (~2–5 s per puzzle, runs world simulation):
- 11. logical        — clues don't eliminate the solution; all questions have
+ 13. logical        — clues don't eliminate the solution; all questions have
                       unique answers given the clue set
- 12. redundancy     — warns if any clue can be removed without losing uniqueness
+ 14. redundancy     — warns if any clue can be removed without losing uniqueness
 
 Usage:
   python scripts/check_puzzles.py           # structural checks (fast)
@@ -35,6 +37,7 @@ Exit codes: 0 = pass (warnings may appear), 1 = one or more errors.
 
 import argparse
 import importlib.util
+import itertools
 import json
 import re
 import sys
@@ -394,7 +397,56 @@ def check_base_only_language(path: Path, puz: dict, is_expanded: bool, r: Result
                 break  # one error per hint
 
 
-# ── 11. Permalink uniqueness ───────────────────────────────────────────────────
+# ── 11. All-possible check ────────────────────────────────────────────────────
+
+_PP_QUESTION_KINDS = {'possible-potions', 'group-possible-potions'}
+
+
+def check_all_possible(all_puzzles: list, r: Results):
+    """Flag possible-potions / group-possible-potions questions whose answer
+    is all 7 potions — the player just marks everything with no deduction."""
+    targets = [
+        (puz, path)
+        for puz, path, _ in all_puzzles
+        if any(q['kind'] in _PP_QUESTION_KINDS for q in puz.get('questions', []))
+    ]
+    if not targets:
+        return
+
+    alch_mod = _load_alchemydoku()
+
+    for puz, path in targets:
+        worlds = alch_mod.apply_all(alch_mod.all_worlds(), puz.get('clues', []))
+        for q in puz.get('questions', []):
+            kind = q['kind']
+            if kind not in _PP_QUESTION_KINDS:
+                continue
+
+            if kind == 'possible-potions':
+                s1, s2 = q['ingredient1'] - 1, q['ingredient2'] - 1
+                results = {alch_mod.MIX_TABLE[w[s1]][w[s2]] for w in worlds}
+                if len(results) == 7:
+                    r.error(
+                        f"[all-possible] {path.name}: possible-potions("
+                        f"ing{q['ingredient1']}, ing{q['ingredient2']}) has all 7 outcomes "
+                        f"— trivially 'mark everything', no deduction required"
+                    )
+
+            elif kind == 'group-possible-potions':
+                slots = [i - 1 for i in q['ingredients']]
+                results: set = set()
+                for a, b in itertools.combinations(slots, 2):
+                    for w in worlds:
+                        results.add(alch_mod.MIX_TABLE[w[a]][w[b]])
+                if len(results) == 7:
+                    r.error(
+                        f"[all-possible] {path.name}: group-possible-potions("
+                        f"{q['ingredients']}) has all 7 outcomes "
+                        f"— trivially 'mark everything', no deduction required"
+                    )
+
+
+# ── 12. Permalink uniqueness ───────────────────────────────────────────────────
 
 def _puzzleids_from_ts_collections(text: str) -> list[list[str]]:
     """Extract each puzzleIds array from a TypeScript collections constant.
@@ -599,7 +651,12 @@ def main():
     check_duplicates([(puz, path) for puz, path, _ in all_puzzles], r)
     _done()
 
-    # ── Step 11: Permalink uniqueness ─────────────────────────────────────────
+    # ── Step 11: All-possible check ───────────────────────────────────────────
+    _section("all-possible potions")
+    check_all_possible(all_puzzles, r)
+    _done()
+
+    # ── Step 12: Permalink uniqueness ─────────────────────────────────────────
     _section("permalink uniqueness")
     check_permalink_uniqueness(all_puzzles, r)
     _done()
