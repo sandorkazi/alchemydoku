@@ -155,10 +155,14 @@ export function deduceNeutralPartner(worlds: WorldSet, ingredient: IngredientId)
 /**
  * Returns all potions P where there is some partner Y such that
  * mixing ingredient with Y is certainly P (= deduceMixingResult returns P).
+ *
+ * Neutral is always included: by game axiom every alchemical has a direct
+ * opposite, so neutral is always producible (the partner may be unknown).
  */
 export function getIngredientPotionProfile(worlds: WorldSet, ingredient: IngredientId): PotionResult[] {
   const si = ingredient - 1;
   const seen = new Set<number>();
+  seen.add(0); // neutral — always certain by game axiom (direct opposite always exists)
   for (let s2 = 0; s2 < 8; s2++) {
     if (s2 === si) continue;
     const result = deduceMixingResult(worlds, ingredient, (s2 + 1) as IngredientId);

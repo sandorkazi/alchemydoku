@@ -35,15 +35,15 @@
   "hints": [
     {
       "level": 1,
-      "text": "Find all potions that ingredient 7 can certainly produce with at least one partner. A potion is 'certain' when the mix result is the same in every remaining possible world."
+      "text": "Find all potions that ingredient 7 can certainly produce. Neutral is always certain \u2014 every alchemical has a direct opposite, and mixing them always yields neutral. For the other potions, a result is 'certain' when it's the same across every remaining possible world."
     },
     {
       "level": 2,
-      "text": "Check each of ingredient 7's 7 possible partners. Certain results so far: ing3\u2192B-."
+      "text": "Check each of ingredient 7's 7 partners for non-neutral certain results. Non-neutral certain results: ing3\u2192B-."
     },
     {
       "level": 3,
-      "text": "Ingredient 7 = Ppn. Certain potions: ['B-']."
+      "text": "Ingredient 7 = Ppn. Certain potions (neutral always included): ['B-', 'neutral']."
     }
   ],
   "complexity": {

@@ -110,7 +110,8 @@ export function computeAnswerFromWorlds(
 
     case 'ingredient-potion-profile': {
       const r = getIngredientPotionProfile(worlds, question.ingredient);
-      if (r.length === 0) return null;
+      // neutral is always in r; return null if that's all (no useful non-neutral info)
+      if (r.length <= 1) return null;
       return { kind: 'possible-potions', potions: r.map(potionKey).sort() };
     }
 
