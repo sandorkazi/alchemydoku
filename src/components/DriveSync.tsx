@@ -99,7 +99,7 @@ function StorageModeRow({
  * Signed in: shows avatar + sync status + dropdown with sync/sign-out.
  */
 export function DriveSync() {
-  const { authStatus, syncStatus, user, lastSynced, errorMsg, driveMode, isMigrating, signIn, signOut, syncNow, setDriveMode } = useDrive();
+  const { authStatus, syncStatus, user, savedUser, lastSynced, errorMsg, driveMode, isMigrating, signIn, signOut, syncNow, setDriveMode } = useDrive();
   const [open, setOpen] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
 
@@ -124,13 +124,29 @@ export function DriveSync() {
         disabled
         className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs text-gray-400 bg-gray-50 border border-gray-200 cursor-wait"
       >
+        {savedUser && <Avatar user={savedUser} />}
         <CloudIcon status="syncing" />
-        <span>Signing in…</span>
+        <span>{savedUser ? 'Reconnecting…' : 'Signing in…'}</span>
       </button>
     );
   }
 
-  // ── Signed out / error ────────────────────────────────────────────────────
+  // ── Signed out / error — known previous user: show "Reconnect" ───────────
+  if (authStatus !== 'signed-in' && savedUser) {
+    return (
+      <button
+        onClick={() => signIn()}
+        className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs text-gray-500 bg-white border border-gray-200 hover:border-amber-300 hover:text-amber-700 hover:bg-amber-50 transition-colors shadow-sm"
+        title={`Reconnect as ${savedUser.name}`}
+      >
+        <Avatar user={savedUser} />
+        <CloudIcon status={authStatus === 'error' ? 'error' : 'idle'} />
+        <span>Reconnect</span>
+      </button>
+    );
+  }
+
+  // ── Signed out / error — first time ───────────────────────────────────────
   if (authStatus !== 'signed-in') {
     return (
       <button

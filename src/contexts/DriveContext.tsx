@@ -38,6 +38,8 @@ interface DriveContextValue {
   authStatus:  AuthStatus;
   syncStatus:  SyncStatus;
   user:        DriveUser | null;
+  /** Previously-authenticated user loaded from localStorage — shown in the reconnect UI. */
+  savedUser:   DriveUser | null;
   lastSynced:  Date | null;
   errorMsg:    string | null;
   driveMode:   DriveMode;
@@ -67,6 +69,7 @@ export function DriveProvider({ children }: { children: ReactNode }) {
   const [authStatus,  setAuthStatus]  = useState<AuthStatus>('idle');
   const [syncStatus,  setSyncStatus]  = useState<SyncStatus>('idle');
   const [user,        setUser]        = useState<DriveUser | null>(null);
+  const [savedUser,   setSavedUser]   = useState<DriveUser | null>(() => loadUserFromStorage());
   const [lastSynced,  setLastSynced]  = useState<Date | null>(null);
   const [errorMsg,    setErrorMsg]    = useState<string | null>(null);
   const [driveMode,   setDriveModeState] = useState<DriveMode>(loadDriveMode);
@@ -93,6 +96,7 @@ export function DriveProvider({ children }: { children: ReactNode }) {
         await requestToken('');
         const profile = await fetchUserInfo();
         setUser(profile);
+        setSavedUser(profile);
         saveUserToStorage(profile);
         setAuthStatus('signed-in');
         setSyncStatus('syncing');
@@ -124,6 +128,7 @@ export function DriveProvider({ children }: { children: ReactNode }) {
       // Fetch user profile
       const profile = await fetchUserInfo();
       setUser(profile);
+      setSavedUser(profile);
       saveUserToStorage(profile);
       setAuthStatus('signed-in');
 
@@ -160,6 +165,7 @@ export function DriveProvider({ children }: { children: ReactNode }) {
     setAuthStatus('signed-out');
     setSyncStatus('idle');
     setUser(null);
+    setSavedUser(null);
     setLastSynced(null);
     setErrorMsg(null);
   }, []);
@@ -210,7 +216,7 @@ export function DriveProvider({ children }: { children: ReactNode }) {
   }, [driveMode]);
 
   const value: DriveContextValue = {
-    authStatus, syncStatus, user, lastSynced, errorMsg, driveMode, isMigrating,
+    authStatus, syncStatus, user, savedUser, lastSynced, errorMsg, driveMode, isMigrating,
     signIn, signOut, syncNow, setDriveMode, onPuzzleComplete,
   };
 
