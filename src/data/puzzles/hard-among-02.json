@@ -5,22 +5,6 @@
   "difficulty": "hard",
   "clues": [
     {
-      "kind": "sell_among",
-      "ingredients": [
-        1,
-        3,
-        4,
-        5,
-        6
-      ],
-      "potion": {
-        "color": "R",
-        "sign": "+"
-      },
-      "result": "rejected",
-      "count": 3
-    },
-    {
       "kind": "mixing_among",
       "ingredients": [
         2,
@@ -33,21 +17,6 @@
         "color": "R",
         "sign": "+"
       }
-    },
-    {
-      "kind": "sell_among",
-      "ingredients": [
-        1,
-        4,
-        5,
-        8
-      ],
-      "potion": {
-        "color": "G",
-        "sign": "+"
-      },
-      "result": "sold",
-      "count": 2
     },
     {
       "kind": "mixing_among",
@@ -63,22 +32,6 @@
       }
     },
     {
-      "kind": "sell_among",
-      "ingredients": [
-        1,
-        2,
-        5,
-        7,
-        8
-      ],
-      "potion": {
-        "color": "B",
-        "sign": "+"
-      },
-      "result": "sold",
-      "count": 3
-    },
-    {
       "kind": "mixing_among",
       "ingredients": [
         4,
@@ -90,21 +43,6 @@
         "color": "B",
         "sign": "-"
       }
-    },
-    {
-      "kind": "sell_among",
-      "ingredients": [
-        2,
-        4,
-        6,
-        7
-      ],
-      "potion": {
-        "color": "G",
-        "sign": "-"
-      },
-      "result": "sold",
-      "count": 2
     },
     {
       "kind": "mixing_among",
@@ -144,7 +82,17 @@
         "color": "B",
         "sign": "+"
       }
-    }
+    },
+    { "kind": "aspect", "ingredient": 1, "color": "R", "sign": "-" },
+    { "kind": "aspect", "ingredient": 4, "color": "R", "sign": "-" },
+    { "kind": "aspect", "ingredient": 5, "color": "R", "sign": "-" },
+    { "kind": "aspect", "ingredient": 5, "color": "G", "sign": "+" },
+    { "kind": "aspect", "ingredient": 8, "color": "G", "sign": "+" },
+    { "kind": "aspect", "ingredient": 1, "color": "B", "sign": "+" },
+    { "kind": "aspect", "ingredient": 2, "color": "B", "sign": "+" },
+    { "kind": "aspect", "ingredient": 5, "color": "B", "sign": "+" },
+    { "kind": "aspect", "ingredient": 4, "color": "G", "sign": "-" },
+    { "kind": "aspect", "ingredient": 6, "color": "G", "sign": "-" }
   ],
   "questions": [
     {

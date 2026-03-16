@@ -311,16 +311,21 @@ function MixingAmongClueCard({ clue }: { clue: MixingAmongClue }) {
 function SellAmongClueCard({ clue }: { clue: SellAmongClue }) {
   const getIngredient = useIngredient();
   const n = clue.ingredients.length;
-  // 'sold'     → ingredient HAS the aspect sign  (have R+)
-  // 'rejected' → ingredient LACKS the aspect sign (lack R+)
-  const verb = clue.result === 'sold' ? 'have' : 'lack';
-  const countLabel = `${clue.count} of ${n} ${verb}`;
+  const pairCount = (n * (n - 1)) / 2;
   return (
-    <Card icon={<SellIcon width={18} />} label="Aspect Count" accent="purple">
+    <Card icon={<SellIcon width={18} />} label="Counted Sale" accent="purple">
       <div className="flex items-center gap-1.5 flex-wrap">
-        <span className="text-[10px] text-gray-500 shrink-0">{countLabel}</span>
-        <SignedElemImage color={clue.potion.color} sign={clue.potion.sign} width={22} />
+        <span className="text-[10px] text-gray-500 shrink-0">
+          {clue.count} of {pairCount} pairs sold
+        </span>
+        <SignedElemImage color={clue.claimedPotion.color} sign={clue.claimedPotion.sign} width={22} />
+        <span className="text-[10px] text-gray-500 shrink-0">→</span>
+        <SellResultIcon result={clue.result} width={26} />
+        <span className="text-[10px] font-semibold text-gray-700 shrink-0">
+          {SELL_RESULT_LABEL[clue.result]}
+        </span>
       </div>
+      <p className="text-[9px] text-gray-400 mt-0.5">{SELL_RESULT_DESC[clue.result]}</p>
       <div className="flex flex-wrap gap-1 mt-1">
         {clue.ingredients.map(id => {
           const { index } = getIngredient(id);

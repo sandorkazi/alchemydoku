@@ -205,12 +205,21 @@ def filter_clue(worlds: frozenset, clue: dict, golem: Optional[dict] = None) -> 
 
     if k == 'sell_among':
         slots = [i - 1 for i in clue['ingredients']]
-        col = clue['potion']['color']
-        sgn_val = sgn_int(clue['potion']['sign'])
-        want = sgn_val if clue['result'] == 'sold' else (1 - sgn_val)
-        count = clue['count']
+        cp_col  = clue['claimedPotion']['color']
+        cp_sgn  = sgn_int(clue['claimedPotion']['sign'])
+        tgt     = clue['result']
+        count   = clue['count']
+
+        def _sr(mix_result, _cp_col=cp_col, _cp_sgn=cp_sgn, _tgt=tgt):
+            if mix_result == 'neutral':                                      return 'neutral'
+            act_col, act_sgn = mix_result
+            if act_col == _cp_col and act_sgn == _cp_sgn:                   return 'total_match'
+            if act_sgn == _cp_sgn:                                          return 'sign_ok'
+            return 'opposite'
+
         return frozenset(w for w in worlds
-                         if sum(ALCH_DATA[w[s]][col][0] == want for s in slots) == count)
+                         if sum(_sr(MIX_TABLE[w[a]][w[b]]) == tgt
+                                for a, b in itertools.combinations(slots, 2)) == count)
 
     if k == 'mixing_among':
         slots = [i - 1 for i in clue['ingredients']]
