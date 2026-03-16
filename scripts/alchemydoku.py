@@ -396,7 +396,7 @@ def answer(worlds: frozenset, q: dict, golem: Optional[dict] = None):
         return sorted(fmt_r(p) for p in potions) if len(potions) < 7 else None
 
     # Debunk plan questions require plan-search validation — not auto-checkable here
-    if k in ('debunk_min_steps', 'debunk_conflict_only'):
+    if k in ('debunk_min_steps', 'debunk_conflict_only', 'debunk_apprentice_plan'):
         return 'not_validated'
 
     if k == 'neutral-partner':

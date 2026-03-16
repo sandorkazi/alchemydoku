@@ -75,17 +75,11 @@ function saveLastPuzzle(mode: 'base' | 'expanded', id: string) {
 // ─── Style maps ───────────────────────────────────────────────────────────────
 
 const DIFF_BADGE: Record<string, string> = {
-  tutorial: 'bg-purple-100 text-purple-700 border border-purple-200',
-  easy:     'bg-green-100  text-green-700  border border-green-200',
-  medium:   'bg-yellow-100 text-yellow-700 border border-yellow-200',
-  hard:     'bg-red-100    text-red-700    border border-red-200',
-};
-
-const DIFF_BORDER: Record<string, string> = {
-  tutorial: 'border-purple-200 hover:border-purple-400',
-  easy:     'border-green-200  hover:border-green-400',
-  medium:   'border-yellow-200 hover:border-yellow-400',
-  hard:     'border-red-200    hover:border-red-400',
+  tutorial: 'bg-purple-100 text-purple-700',
+  easy:     'bg-green-100  text-green-700',
+  medium:   'bg-yellow-100 text-yellow-700',
+  hard:     'bg-red-100    text-red-700',
+  expert:   'bg-orange-100 text-orange-700',
 };
 
 // ─── Mode switcher (top of every home-level page) ─────────────────────────────
@@ -142,7 +136,6 @@ function CollectionCard({
   col: Collection; completed: number; locked: boolean; onOpen: () => void;
 }) {
   const total = col.puzzleIds.length;
-  const pct   = total > 0 ? Math.round((completed / total) * 100) : 0;
   const done  = completed === total && total > 0;
 
   return (
@@ -150,50 +143,42 @@ function CollectionCard({
       onClick={locked ? undefined : onOpen}
       disabled={locked}
       aria-label={`${col.title} collection${locked ? ' (locked)' : ''}`}
-      className={`w-full text-left rounded-2xl border-2 p-5 transition-all space-y-3
+      className={`w-full text-left rounded-2xl border-2 bg-white shadow-sm overflow-hidden
         press-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-indigo-400
+        transition-all
         ${locked
-          ? 'border-gray-200 bg-gray-50 opacity-60 cursor-not-allowed'
-          : `${DIFF_BORDER[col.difficulty] ?? 'border-gray-200 hover:border-gray-400'}
-             bg-white hover:shadow-md cursor-pointer`
+          ? 'border-gray-200 opacity-60 cursor-not-allowed'
+          : done
+            ? 'border-green-300 hover:border-green-400 hover:shadow-md cursor-pointer'
+            : 'border-gray-200 hover:border-indigo-300 hover:shadow-md cursor-pointer'
         }`}
     >
-      <div className="flex items-start justify-between gap-3">
-        <div className="flex-1 min-w-0">
-          <div className="flex items-center gap-2 flex-wrap">
-            <h3 className="font-bold text-gray-900">{col.title}</h3>
-            <span className={`text-xs font-semibold px-2 py-0.5 rounded-full
+      <div className={`px-4 py-3 ${done ? 'bg-green-50' : 'bg-gray-50'}`}>
+        <div className="flex items-center justify-between gap-2">
+          <div className="flex items-center gap-2 min-w-0">
+            <h3 className="font-bold text-gray-900 text-sm">{col.title}</h3>
+            <span className={`text-[10px] font-semibold px-1.5 py-0.5 rounded-full shrink-0
               ${DIFF_BADGE[col.difficulty] ?? 'bg-gray-100 text-gray-600'}`}>
               {col.difficulty}
             </span>
           </div>
-          <p className="text-sm text-gray-500 mt-0.5">{col.description}</p>
+          <div className="flex items-center gap-2 shrink-0">
+            {locked
+              ? <span className="text-base">🔒</span>
+              : <span className={`text-xs font-semibold tabular-nums ${done ? 'text-green-600' : 'text-gray-400'}`}>
+                  {completed}/{total}
+                </span>
+            }
+            <span className="text-gray-300 text-xs">›</span>
+          </div>
         </div>
-        <div className="text-2xl shrink-0">{locked ? '🔒' : done ? '⭐' : '📖'}</div>
+        <p className="text-xs text-gray-500 mt-0.5">{col.description}</p>
+        {locked && col.unlockedAfter && (
+          <p className="text-xs text-gray-400 mt-1">
+            Complete "{(COLLECTIONS as Collection[]).find(c => c.id === col.unlockedAfter)?.title ?? col.unlockedAfter}" first
+          </p>
+        )}
       </div>
-
-      {!locked && (
-        <div className="space-y-1">
-          <div className="flex items-center justify-between text-xs text-gray-500">
-            <span>{completed}/{total} solved</span>
-            {done && <span className="text-green-600 font-semibold">Complete!</span>}
-          </div>
-          <div className="w-full bg-gray-100 rounded-full h-1.5" role="progressbar"
-               aria-valuenow={pct} aria-valuemin={0} aria-valuemax={100}>
-            <div
-              className={`h-1.5 rounded-full transition-all duration-500
-                ${done ? 'bg-green-500' : 'bg-indigo-500'}`}
-              style={{ width: `${pct}%` }}
-            />
-          </div>
-        </div>
-      )}
-
-      {locked && col.unlockedAfter && (
-        <p className="text-xs text-gray-400">
-          Complete "{(COLLECTIONS as Collection[]).find(c => c.id === col.unlockedAfter)?.title ?? col.unlockedAfter}" first
-        </p>
-      )}
     </button>
   );
 }
@@ -224,25 +209,28 @@ function PuzzleRow({
       <button
         onClick={onPlay}
         aria-label={`${puzzle.title}${isDone ? ' (solved)' : ''}`}
-        className="flex-1 flex items-center gap-4 p-4 rounded-xl border border-gray-200
-                   bg-white hover:border-indigo-300 hover:shadow-sm transition-all text-left
+        className="flex-1 flex items-center gap-3 px-4 py-3 rounded-xl border border-gray-200
+                   bg-white hover:bg-indigo-50 hover:border-indigo-200 transition-colors text-left
                    press-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-indigo-400"
       >
-        <span className="text-xl w-8 text-center shrink-0" aria-hidden="true">
-          {isDone ? '✅' : '○'}
+        <span
+          className={`w-5 h-5 rounded-full flex items-center justify-center text-[10px] font-bold shrink-0
+            ${isDone
+              ? 'bg-green-500 text-white'
+              : 'bg-gray-200 text-gray-400 group-hover:bg-indigo-200 group-hover:text-indigo-600'}`}
+          aria-hidden="true"
+        >
+          {isDone ? '✓' : ''}
         </span>
         <div className="flex-1 min-w-0">
           <div className="flex items-center gap-2">
-            <span className="font-semibold text-gray-800 text-sm">{puzzle.title}</span>
+            <span className="font-medium text-gray-900 text-sm truncate">{puzzle.title}</span>
             {(puzzle as any).metadata?.complexityScore != null && (
               <ComplexityPips score={(puzzle as any).metadata.complexityScore} />
             )}
           </div>
-          <div className="text-xs text-gray-500 leading-snug line-clamp-2 min-h-[2.5rem]">{puzzle.description}</div>
+          <div className="text-xs text-gray-400 truncate">{puzzle.description}</div>
         </div>
-        <span className="text-xs text-indigo-500 font-semibold shrink-0" aria-hidden="true">
-          Play →
-        </span>
       </button>
       {isDone && (
         <button
