@@ -12,12 +12,32 @@ import { groupClues, MultiAspectGroupCard, InferredAlchemicalGroupCard, Collapsi
 import { useExpandedIngredient } from '../contexts/ExpandedSolverContext';
 import type { AnyClue } from '../types';
 
+/**
+ * Replace each EncyclopediaClue with one synthetic AspectClue per entry so
+ * the shared groupClues() logic can compact same-ingredient entries into
+ * "Known Components" (2) or "Known Alchemical" (3) cards, exactly like real
+ * aspect clues.  EncyclopediaUncertainClue entries stay as a single card.
+ */
+function flattenEncyclopedia(clues: AnyClue[]): AnyClue[] {
+  const flat: AnyClue[] = [];
+  for (const clue of clues) {
+    if (clue.kind === 'encyclopedia') {
+      for (const entry of clue.entries) {
+        flat.push({ kind: 'aspect', ingredient: entry.ingredient, color: clue.aspect, sign: entry.sign } as AnyClue);
+      }
+    } else {
+      flat.push(clue);
+    }
+  }
+  return flat;
+}
+
 export function ExpandedCluePanel({ clues }: { clues: AnyClue[] }) {
   const getIngredient = useExpandedIngredient();
 
   if (clues.length === 0) return null;
 
-  const groups = groupClues(clues);
+  const groups = groupClues(flattenEncyclopedia(clues));
 
   return (
     <div className="space-y-2">
