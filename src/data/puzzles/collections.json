@@ -11,6 +11,17 @@
     ]
   },
   {
+    "id": "tutorial-aspect-balance",
+    "title": "Four of Each",
+    "description": "Discover how the 4-4 split of aspect signs lets four clues do the work of eight.",
+    "difficulty": "tutorial",
+    "puzzleIds": [
+      "tutorial-balance-01",
+      "tutorial-balance-02"
+    ],
+    "unlockedAfter": "tutorial-mixing"
+  },
+  {
     "id": "tutorial-selling",
     "title": "Learn to Sell",
     "description": "Understand what sell results reveal.",
@@ -19,7 +30,7 @@
       "tutorial-sell-01",
       "tutorial-sell-02"
     ],
-    "unlockedAfter": "tutorial-mixing"
+    "unlockedAfter": "tutorial-aspect-balance"
   },
   {
     "id": "tutorial-two-color",

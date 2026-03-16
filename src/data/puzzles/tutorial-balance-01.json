@@ -1,0 +1,39 @@
+{
+  "id": "tutorial-balance-01",
+  "title": "The Red Half",
+  "description": "Four ingredients have the R− aspect. There are only 4 R− alchemicals in total — what does that mean for the rest?",
+  "difficulty": "tutorial",
+  "clues": [
+    { "kind": "aspect", "ingredient": 1, "color": "R", "sign": "-" },
+    { "kind": "aspect", "ingredient": 2, "color": "R", "sign": "-" },
+    { "kind": "aspect", "ingredient": 3, "color": "R", "sign": "-" },
+    { "kind": "aspect", "ingredient": 4, "color": "R", "sign": "-" }
+  ],
+  "solution": {
+    "1": 1,
+    "2": 4,
+    "3": 5,
+    "4": 7,
+    "5": 2,
+    "6": 3,
+    "7": 6,
+    "8": 8
+  },
+  "questions": [
+    { "kind": "aspect", "ingredient": 5, "color": "R" }
+  ],
+  "hints": [
+    {
+      "level": 1,
+      "text": "Your clues tell you ing1, ing2, ing3, and ing4 are all R-. How many R- alchemicals exist in the game in total?"
+    },
+    {
+      "level": 2,
+      "text": "There are exactly 4 R- alchemicals: npN, nPp, Nnp, NNN. All four are already committed to ing1, ing2, ing3, and ing4. No R- alchemical is left for ing5. What sign must ing5 have?"
+    },
+    {
+      "level": 3,
+      "text": "The four R- alchemicals (npN, nPp, Nnp, NNN) are fully used by ing1, ing2, ing3, and ing4. The remaining four alchemicals — pnP, pNn, Ppn, PPP — are all R+. So ing5 must be R+."
+    }
+  ]
+}
