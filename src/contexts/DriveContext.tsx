@@ -91,9 +91,10 @@ export function DriveProvider({ children }: { children: ReactNode }) {
 
     initAuth().then(async () => {
       if (!savedUser) { setAuthStatus('signed-out'); return; }
-      // Attempt silent token restore — prompt:'' never shows a popup
+      // Attempt token restore — first from sessionStorage (same-tab reload),
+      // then via silent GIS request (works when Google session is still warm).
       try {
-        await requestToken('');
+        if (!isSignedIn()) await requestToken('');
         const profile = await fetchUserInfo();
         setUser(profile);
         setSavedUser(profile);

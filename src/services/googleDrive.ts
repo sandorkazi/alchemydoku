@@ -91,6 +91,20 @@ let pendingResolve:   ((t: string) => void) | null = null;
 let pendingReject:    ((e: Error)   => void) | null = null;
 let visibleFolderId:  string | null = null;
 
+// ─── Session-storage token cache ─────────────────────────────────────────────
+// Persists the access token for the lifetime of the browser tab so the user
+// doesn't have to reconnect on every page reload (token expires in ~1 hour).
+
+const SS_TOKEN_KEY  = 'alch-drive-token';
+const SS_EXPIRY_KEY = 'alch-drive-expiry';
+
+// Restore on module load (runs before any React component mounts)
+try {
+  const t = sessionStorage.getItem(SS_TOKEN_KEY);
+  const e = Number(sessionStorage.getItem(SS_EXPIRY_KEY) ?? '0');
+  if (t && Date.now() < e) { accessToken = t; tokenExpiresAt = e; }
+} catch { /* sessionStorage unavailable */ }
+
 // ─── Script loading ───────────────────────────────────────────────────────────
 
 let gisLoaded = false;
@@ -129,6 +143,10 @@ export async function initAuth(): Promise<void> {
       }
       accessToken    = resp.access_token;
       tokenExpiresAt = Date.now() + (resp.expires_in - 60) * 1000;
+      try {
+        sessionStorage.setItem(SS_TOKEN_KEY,  accessToken);
+        sessionStorage.setItem(SS_EXPIRY_KEY, String(tokenExpiresAt));
+      } catch { /* ignore */ }
       pendingResolve?.(accessToken);
       pendingResolve = null;
       pendingReject  = null;
@@ -165,6 +183,7 @@ export function signOut(): void {
   tokenExpiresAt   = 0;
   visibleFolderId  = null;
   try { localStorage.removeItem(SAVED_USER_KEY); } catch { /* ignore */ }
+  try { sessionStorage.removeItem(SS_TOKEN_KEY); sessionStorage.removeItem(SS_EXPIRY_KEY); } catch { /* ignore */ }
 }
 
 export function saveUserToStorage(user: DriveUser): void {
