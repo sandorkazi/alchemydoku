@@ -14,7 +14,9 @@ Checks performed (always, ~0.1 s):
                       (suppress per-puzzle with "trivial_answer_ok": true)
   9. hint-tokens    — hint text must not contain raw ingredient names
                       (Fern, Bird Claw, etc.) — use ing1–ing8 tokens instead
- 10. permalink      — each puzzle ID appears in exactly one collection;
+ 10. base-only-lang — base puzzle titles/hints must not mention expanded-mode
+                      concepts (golem, encyclopedia, solar, lunar, etc.)
+ 11. permalink      — each puzzle ID appears in exactly one collection;
                       no ID is shared across base/expanded;
                       all collection refs point to registered puzzles
 
@@ -338,7 +340,42 @@ def check_hint_tokens(path: Path, puz: dict, r: Results):
                 break  # one error per hint is enough
 
 
-# ── 10. Permalink uniqueness ───────────────────────────────────────────────────
+# ── 10. Base-only language check ──────────────────────────────────────────────
+
+# Terms that belong exclusively to the expanded ruleset and must not appear in
+# base puzzle titles or hint text.
+_EXPANDED_TERMS = [
+    "golem", "encyclopedia", "encyclopaedia", "solar", "lunar",
+    "royal society", "royal", "article",
+]
+
+def check_base_only_language(path: Path, puz: dict, is_expanded: bool, r: Results):
+    """Base puzzles must not mention expanded-mode concepts in title or hints."""
+    if is_expanded:
+        return
+    name = path.name
+    title_lower = puz.get("title", "").lower()
+    for term in _EXPANDED_TERMS:
+        if re.search(r'\b' + re.escape(term) + r'\b', title_lower):
+            r.error(
+                f"[base-only-lang] {name}: title contains expanded-mode term '{term}' — "
+                f"expanded concepts (golem, encyclopedia, solar, lunar, …) must not appear "
+                f"in base puzzle titles or hints"
+            )
+            break
+
+    for hint in puz.get("hints", []):
+        text_lower = hint.get("text", "").lower()
+        for term in _EXPANDED_TERMS:
+            if re.search(r'\b' + re.escape(term) + r'\b', text_lower):
+                r.error(
+                    f"[base-only-lang] {name} (hint level {hint.get('level', '?')}): "
+                    f"hint contains expanded-mode term '{term}'"
+                )
+                break  # one error per hint
+
+
+# ── 11. Permalink uniqueness ───────────────────────────────────────────────────
 
 def _puzzleids_from_ts_collections(text: str) -> list[list[str]]:
     """Extract each puzzleIds array from a TypeScript collections constant.
@@ -526,6 +563,12 @@ def main():
         check_hint_tokens(path, puz, r)
     _done()
 
+    # ── Step 10: Base-only language check ─────────────────────────────────────
+    _section("base-only language")
+    for puz, path, is_exp in all_puzzles:
+        check_base_only_language(path, puz, is_exp, r)
+    _done()
+
     # ── Step 10: Debunk-answer step-kind check ─────────────────────────────────
     _section("debunk answers")
     for puz, path, _ in all_puzzles:
@@ -537,7 +580,7 @@ def main():
     check_duplicates([(puz, path) for puz, path, _ in all_puzzles], r)
     _done()
 
-    # ── Step 10: Permalink uniqueness ─────────────────────────────────────────
+    # ── Step 11: Permalink uniqueness ─────────────────────────────────────────
     _section("permalink uniqueness")
     check_permalink_uniqueness(all_puzzles, r)
     _done()
