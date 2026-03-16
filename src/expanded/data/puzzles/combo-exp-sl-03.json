@@ -1,13 +1,49 @@
 {
   "id": "combo-exp-sl-03",
   "mode": "expanded",
-  "title": "Golem Research Notes",
+  "title": "Cross-Reference",
   "description": "Use the clues to determine whether the target ingredient is Solar or Lunar.",
   "difficulty": "medium",
   "clues": [
     {
+      "kind": "encyclopedia",
+      "aspect": "G",
+      "entries": [
+        {
+          "ingredient": 2,
+          "sign": "-"
+        },
+        {
+          "ingredient": 3,
+          "sign": "-"
+        },
+        {
+          "ingredient": 8,
+          "sign": "-"
+        }
+      ]
+    },
+    {
+      "kind": "encyclopedia",
+      "aspect": "B",
+      "entries": [
+        {
+          "ingredient": 2,
+          "sign": "+"
+        },
+        {
+          "ingredient": 4,
+          "sign": "+"
+        },
+        {
+          "ingredient": 8,
+          "sign": "+"
+        }
+      ]
+    },
+    {
       "kind": "book",
-      "ingredient": 2,
+      "ingredient": 8,
       "result": "lunar"
     }
   ],
@@ -18,14 +54,14 @@
     }
   ],
   "solution": {
-    "1": 1,
-    "2": 6,
-    "3": 8,
-    "4": 3,
-    "5": 2,
-    "6": 7,
-    "7": 5,
-    "8": 4
+    "1": 4,
+    "2": 5,
+    "3": 7,
+    "4": 8,
+    "5": 3,
+    "6": 6,
+    "7": 1,
+    "8": 2
   },
   "hints": [
     {
@@ -34,21 +70,21 @@
     },
     {
       "level": 2,
-      "text": "Remaining alch for slot 2: [2, 4, 6, 7]. Solar: []. Lunar: [2, 4, 6, 7]."
+      "text": "Remaining alch for slot 2: [5]. Solar: [5]. Lunar: []."
     },
     {
       "level": 3,
-      "text": "Ingredient 2 = Ppn, which is LUNAR."
+      "text": "Ingredient 2 = Nnp, which is SOLAR."
     }
   ],
   "complexity": {
-    "raw": 3.167,
-    "avg_clue_strength": 1.0,
+    "raw": 2.175,
+    "avg_clue_strength": 2.905,
     "ambig_penalty": 0.0,
     "chain_depth": 0,
     "stuck": false,
     "requires_complement_set": false,
     "question_requires_enumeration": false,
-    "residual_worlds": 20160
+    "residual_worlds": 96
   }
 }

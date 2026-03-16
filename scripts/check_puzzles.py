@@ -294,6 +294,15 @@ def _trivial_reason(question: dict, clues: list) -> str | None:
                         f"already confirms the exact result — possible-potions is trivially {{claimedPotion}}"
                     )
 
+    elif kind == "solar_lunar":
+        ing = question["ingredient"]
+        for c in clues:
+            if c["kind"] == "book" and c["ingredient"] == ing:
+                return (
+                    f"book clue directly reveals the solar/lunar status "
+                    f"of ingredient {ing}"
+                )
+
     return None
 
 

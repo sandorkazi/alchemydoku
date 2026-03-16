@@ -769,7 +769,7 @@ def _sell_sr(actual, cp_col: str, cp_sgn: int) -> str:
 
 
 def candidate_pool(mechanics: list, sol: dict, golem: Optional[dict],
-                   blocked_enc: set) -> list:
+                   blocked_enc: set, blocked_book: frozenset = frozenset()) -> list:
     """Returns list of (kind, priority, clue_dict)."""
     pool = []
     if 'base' in mechanics:
@@ -784,6 +784,8 @@ def candidate_pool(mechanics: list, sol: dict, golem: Optional[dict],
                                             'color': col, 'sign': sgn_str(sgn)}))
     if 'solar_lunar' in mechanics:
         for s in SLOTS:
+            if s in blocked_book:
+                continue
             pool.append(('book', 8, {'kind': 'book', 'ingredient': s,
                                       'result': 'solar' if is_solar(sol[s]) else 'lunar'}))
     if 'encyclopedia' in mechanics:
@@ -1028,6 +1030,7 @@ def construct(profile: Profile, rng: random.Random, verbose: bool = False):
     golem = sample_valid_golem(sol, rng) if profile.has_golem else None
 
     q, anchor, blocked_enc = build_question_anchor(profile, sol, golem, rng)
+    blocked_book = frozenset({q['ingredient']}) if q and q.get('kind') == 'solar_lunar' else frozenset()
     if q is None:
         return None
 
@@ -1063,7 +1066,7 @@ def construct(profile: Profile, rng: random.Random, verbose: bool = False):
                     print(f"  mandatory test ing{s} ({g}) → {len(worlds)} worlds")
                 break
 
-    pool = candidate_pool(profile.mechanics, sol, golem, blocked_enc)
+    pool = candidate_pool(profile.mechanics, sol, golem, blocked_enc, blocked_book)
     greedy = [(kd, pri, c2) for kd, pri, c2 in pool
               if kd not in ('golem_hint_color', 'golem_hint_size')]
 

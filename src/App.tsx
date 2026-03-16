@@ -232,21 +232,22 @@ function PuzzleRow({
           <div className="text-xs text-gray-400 truncate">{puzzle.description}</div>
         </div>
       </button>
-      {isDone && (
-        <button
-          onClick={handleReset}
-          title={confirmReset ? 'Click again to confirm reset' : 'Reset puzzle annotations'}
-          className={`shrink-0 text-xs px-2 py-1.5 rounded-lg border transition-all opacity-0
-                      group-hover:opacity-100 focus-visible:opacity-100
-                      focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-red-400
-                      ${confirmReset
-                        ? 'bg-red-100 border-red-300 text-red-700 font-semibold'
-                        : 'bg-gray-50 border-gray-200 text-gray-400 hover:text-red-500 hover:border-red-200'
-                      }`}
-        >
-          {confirmReset ? 'Sure?' : '↺'}
-        </button>
-      )}
+      <button
+        onClick={isDone ? handleReset : undefined}
+        title={confirmReset ? 'Click again to confirm reset' : 'Reset puzzle annotations'}
+        aria-hidden={!isDone}
+        tabIndex={isDone ? undefined : -1}
+        className={`shrink-0 text-xs px-2 py-1.5 rounded-lg border transition-all
+                    focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-red-400
+                    ${!isDone
+                      ? 'invisible'
+                      : confirmReset
+                        ? 'opacity-100 bg-red-100 border-red-300 text-red-700 font-semibold'
+                        : 'opacity-0 group-hover:opacity-100 focus-visible:opacity-100 bg-gray-50 border-gray-200 text-gray-400 hover:text-red-500 hover:border-red-200'
+                    }`}
+      >
+        {confirmReset ? 'Sure?' : '↺'}
+      </button>
     </div>
   );
 }
