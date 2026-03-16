@@ -31,7 +31,7 @@ export function ExpandedCluePanel({ clues }: { clues: AnyClue[] }) {
               ? <InferredAlchemicalGroupCard clues={g.clues} ingWidth={28} getIngredient={getIngredient} />
               : g.type === 'multi'
                 ? <MultiAspectGroupCard clues={g.clues} ingWidth={28} getIngredient={getIngredient} />
-                : <ExpandedClueCard clue={g.clue as AnyClue} />
+                : <ExpandedClueCard clue={g.clue as AnyClue} clueIndex={clues.indexOf(g.clue as AnyClue)} />
             }
           </CollapsibleClueWrapper>
         ))}

@@ -6,7 +6,7 @@
  * Debunk cards distinguish apprentice (shows truth) from master (shows claim).
  */
 
-import { useExpandedIngredient } from '../contexts/ExpandedSolverContext';
+import { useExpandedIngredient, useExpandedSolver } from '../contexts/ExpandedSolverContext';
 import { INGREDIENTS } from '../../data/ingredients';
 import { IngredientIcon, ElemImage, SignedElemImage, PotionImage, SellResultIcon, AlchemicalImage } from '../../components/GameSprites';
 import type {
@@ -15,7 +15,7 @@ import type {
   BookClue, EncyclopediaEntry,
   GolemTestClue, GolemHintColorClue, GolemHintSizeClue, GolemReactionAmongClue, GolemReactionGroup,
 } from '../types';
-import type { Color } from '../../types';
+import type { Color, MixingAmongClue, SellAmongClue, MixingCountAmongClue, SellResultAmongClue, SellResult } from '../../types';
 
 const ING_W = 28;
 
@@ -94,6 +94,60 @@ function IngBadge({ slotId, color, sign }: { slotId: number; color: Color; sign:
   );
 }
 
+
+// ─── IngMarkableExpanded — ingredient icon with click-to-cycle ✗/✓ annotation ─
+
+const MARK_BADGE = 16;
+
+const SELL_RESULT_LABEL: Record<SellResult, string> = {
+  total_match: 'Total match',
+  sign_ok:     'Sign match',
+  neutral:     'Neutral (soup)',
+  opposite:    'Opposite sign',
+};
+
+const SELL_RESULT_DESC: Record<SellResult, string> = {
+  total_match: 'Actual result exactly matched the claim.',
+  sign_ok:     'Different colour, same sign as claimed.',
+  neutral:     'Actual result was neutral (soup).',
+  opposite:    'Actual result had the opposite sign.',
+};
+
+function IngMarkableExpanded({ slotId, clueIndex }: { slotId: number; clueIndex: number }) {
+  const getIngredient = useExpandedIngredient();
+  const { state, dispatch } = useExpandedSolver();
+  const { displayId, index } = getIngredient(slotId);
+  const name = INGREDIENTS[displayId as 1]?.name ?? `#${slotId}`;
+  const noteKey = `ck-${clueIndex}-${slotId}`;
+  const mark = (state.notes[noteKey] ?? '') as '' | 'x' | 'c';
+  const cycle = () => {
+    const next = mark === '' ? 'x' : mark === 'x' ? 'c' : '';
+    dispatch({ type: 'SET_NOTE', key: noteKey, value: next });
+  };
+  const markLabel = mark === 'x' ? 'Ruled out' : mark === 'c' ? 'Confirmed' : 'Unmark';
+  return (
+    <button
+      onClick={cycle}
+      className="relative inline-flex shrink-0 select-none cursor-pointer p-0 bg-transparent border-0"
+      style={{ paddingRight: MARK_BADGE / 2, paddingBottom: MARK_BADGE / 2 }}
+      title={`${name}: ${markLabel} (click to cycle)`}
+      aria-label={`${name}: ${markLabel}`}
+    >
+      <IngredientIcon index={index} width={ING_W} />
+      {mark !== '' && (
+        <span
+          className={`absolute bottom-0 right-0 z-10 flex items-center justify-center
+            rounded-full text-white font-bold leading-none shadow
+            ${mark === 'x' ? 'bg-red-500' : 'bg-green-500'}`}
+          style={{ width: MARK_BADGE, height: MARK_BADGE, fontSize: 10 }}
+          aria-hidden
+        >
+          {mark === 'x' ? '✗' : '✓'}
+        </span>
+      )}
+    </button>
+  );
+}
 
 // ─── Encyclopedia entry grid ──────────────────────────────────────────────────
 
@@ -197,7 +251,7 @@ function DebunkMasterCard({ clue }: { clue: DebunkMasterClue }) {
 
 // ─── Base clue fallback (no base SolverContext available) ─────────────────────
 
-function ExpandedBaseClueCard({ clue }: { clue: AnyClue }) {
+function ExpandedBaseClueCard({ clue, clueIndex = 0 }: { clue: AnyClue; clueIndex?: number }) {
   const getIngredient = useExpandedIngredient();
   const ingIcon = (slotId: number) => {
     const { index } = getIngredient(slotId);
@@ -239,6 +293,87 @@ function ExpandedBaseClueCard({ clue }: { clue: AnyClue }) {
           {ingIcon(clue.ingredient)}
           <span className="text-gray-400">=</span>
           <AlchemicalImage id={clue.alchemical} width={32} />
+        </div>
+      </Card>
+    );
+  }
+  if (clue.kind === 'mixing_among') {
+    const c = clue as MixingAmongClue;
+    const count = c.ingredients.length;
+    return (
+      <Card icon="👀" label="Observed Mix" accent="blue">
+        <div className="flex items-center gap-1.5 flex-wrap">
+          <span className="text-[10px] text-gray-500 shrink-0">
+            {count === 2 ? 'These 2' : `2 of these ${count}`} mixed
+          </span>
+          <PotionImage result={c.result} width={24} />
+        </div>
+        <div className="flex flex-wrap gap-1 mt-1">
+          {c.ingredients.map(id => <IngMarkableExpanded key={id} slotId={id} clueIndex={clueIndex} />)}
+        </div>
+      </Card>
+    );
+  }
+  if (clue.kind === 'sell_among') {
+    const c = clue as SellAmongClue;
+    const n = c.ingredients.length;
+    const pairCount = (n * (n - 1)) / 2;
+    return (
+      <Card icon="💰" label="Counted Sale" accent="purple">
+        <div className="flex items-center gap-1.5 flex-wrap">
+          <span className="text-[10px] text-gray-500 shrink-0">
+            {c.count} of {pairCount} pairs sold
+          </span>
+          <SignedElemImage color={c.claimedPotion.color} sign={c.claimedPotion.sign} width={22} />
+          <span className="text-[10px] text-gray-500 shrink-0">→</span>
+          <SellResultIcon result={c.result} width={26} />
+          <span className="text-[10px] font-semibold text-gray-700 shrink-0">
+            {SELL_RESULT_LABEL[c.result]}
+          </span>
+        </div>
+        <p className="text-[9px] text-gray-400 mt-0.5">{SELL_RESULT_DESC[c.result]}</p>
+        <div className="flex flex-wrap gap-1 mt-1">
+          {c.ingredients.map(id => <IngMarkableExpanded key={id} slotId={id} clueIndex={clueIndex} />)}
+        </div>
+      </Card>
+    );
+  }
+  if (clue.kind === 'mixing_count_among') {
+    const c = clue as MixingCountAmongClue;
+    const n = c.ingredients.length;
+    const pairCount = (n * (n - 1)) / 2;
+    return (
+      <Card icon="🔢" label="Counted Mix" accent="blue">
+        <div className="flex items-center gap-1.5 flex-wrap">
+          <span className="text-[10px] text-gray-500 shrink-0">
+            {c.count} of {pairCount} pairs mixed
+          </span>
+          <PotionImage result={c.result} width={24} />
+        </div>
+        <div className="flex flex-wrap gap-1 mt-1">
+          {c.ingredients.map(id => <IngMarkableExpanded key={id} slotId={id} clueIndex={clueIndex} />)}
+        </div>
+      </Card>
+    );
+  }
+  if (clue.kind === 'sell_result_among') {
+    const c = clue as SellResultAmongClue;
+    const count = c.ingredients.length;
+    const ambigLabel = count === 2 ? 'One of these 2 pairs' : `A pair from these ${count}`;
+    return (
+      <Card icon="💰" label="Ambiguous Sale" accent="purple">
+        <div className="flex items-center gap-1.5 flex-wrap">
+          <span className="text-[10px] text-gray-500 shrink-0">{ambigLabel} sold</span>
+          <SignedElemImage color={c.claimedPotion.color} sign={c.claimedPotion.sign} width={22} />
+          <span className="text-[10px] text-gray-500 shrink-0">→</span>
+          <SellResultIcon result={c.sellResult} width={26} />
+          <span className="text-[10px] font-semibold text-gray-700 shrink-0">
+            {SELL_RESULT_LABEL[c.sellResult]}
+          </span>
+        </div>
+        <p className="text-[9px] text-gray-400 mt-0.5">{SELL_RESULT_DESC[c.sellResult]}</p>
+        <div className="flex flex-wrap gap-1 mt-1">
+          {c.ingredients.map(id => <IngMarkableExpanded key={id} slotId={id} clueIndex={clueIndex} />)}
         </div>
       </Card>
     );
@@ -331,7 +466,7 @@ function GolemReactionAmongCard({ clue }: { clue: GolemReactionAmongClue }) {
 
 // ─── Dispatcher ───────────────────────────────────────────────────────────────
 
-export function ExpandedClueCard({ clue }: { clue: AnyClue }) {
+export function ExpandedClueCard({ clue, clueIndex }: { clue: AnyClue; clueIndex?: number }) {
   switch (clue.kind) {
     case 'book':                   return <BookClueCard clue={clue} />;
     case 'encyclopedia':           return <EncyclopediaClueCard clue={clue} />;
@@ -342,6 +477,6 @@ export function ExpandedClueCard({ clue }: { clue: AnyClue }) {
     case 'golem_hint_color':       return <GolemHintColorCard clue={clue} />;
     case 'golem_hint_size':           return <GolemHintSizeCard          clue={clue} />;
     case 'golem_reaction_among':      return <GolemReactionAmongCard       clue={clue} />;
-    default:                       return <ExpandedBaseClueCard clue={clue} />;
+    default:                       return <ExpandedBaseClueCard clue={clue} clueIndex={clueIndex} />;
   }
 }
