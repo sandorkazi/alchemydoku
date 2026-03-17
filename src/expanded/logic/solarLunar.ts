@@ -12,7 +12,8 @@
  * and 8 (PPP, 0 negatives) are the exceptions.
  */
 
-import type { AlchemicalId } from '../../types';
+import { WORLD_DATA } from '../../logic/worldPack';
+import type { AlchemicalId, IngredientId, WorldSet } from '../../types';
 import type { SolarLunar } from '../types';
 
 export const SOLAR_ALCH_IDS: AlchemicalId[] = [1, 3, 5, 8];
@@ -26,4 +27,28 @@ export function isSolar(alchId: AlchemicalId): boolean {
 
 export function solarLunarOf(alchId: AlchemicalId): SolarLunar {
   return isSolar(alchId) ? 'solar' : 'lunar';
+}
+
+/**
+ * Returns the IngredientId (1-based slot) whose solar/lunar classification
+ * provides the maximum Shannon entropy across the remaining worlds.
+ * Returns null if no worlds, if best entropy is 0, or if there is a tie.
+ */
+export function getMostInformativeBook(worlds: WorldSet): IngredientId | null {
+  if (worlds.length === 0) return null;
+  const n = worlds.length;
+  const entropies: { entropy: number; s: number }[] = [];
+  for (let s = 0; s < 8; s++) {
+    let solarCount = 0;
+    for (let i = 0; i < n; i++) {
+      if (isSolar((WORLD_DATA[worlds[i] * 8 + s] + 1) as AlchemicalId)) solarCount++;
+    }
+    const p = solarCount / n;
+    const entropy = (p > 0 && p < 1) ? -p * Math.log2(p) - (1 - p) * Math.log2(1 - p) : 0;
+    entropies.push({ entropy, s });
+  }
+  entropies.sort((a, b) => b.entropy - a.entropy);
+  if (entropies[0].entropy <= 0) return null;
+  if (entropies.length > 1 && Math.abs(entropies[1].entropy - entropies[0].entropy) < 1e-9) return null;
+  return (entropies[0].s + 1) as IngredientId;
 }

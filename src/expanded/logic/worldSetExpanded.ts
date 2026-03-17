@@ -11,9 +11,10 @@ import { deduceMixingResult } from '../../logic/deducer';
 import { isSolar } from './solarLunar';
 import { filterByGolemTest, getReactionGroup0 } from './golem';
 import type { WorldSet } from '../../types';
+import type { AlchemicalId } from '../../types';
 import type {
   AnyClue, ExpandedClue,
-  BookClue, EncyclopediaClue, EncyclopediaUncertainClue,
+  BookClue, BookAmongClue, EncyclopediaClue, EncyclopediaUncertainClue,
   DebunkApprenticeClue, DebunkMasterClue,
   GolemTestClue, GolemParams, GolemReactionAmongClue,
 } from '../types';
@@ -83,6 +84,18 @@ function filterByDebunkMaster(worlds: WorldSet, clue: DebunkMasterClue): WorldSe
   });
 }
 
+function filterByBookAmong(worlds: WorldSet, clue: BookAmongClue): WorldSet {
+  const wantSolar = clue.result === 'solar';
+  const slots = clue.ingredients.map(id => id - 1);
+  return filterWorlds(worlds, w => {
+    let matches = 0;
+    for (const s of slots) {
+      if (isSolar((WORLD_DATA[w * 8 + s] + 1) as AlchemicalId) === wantSolar) matches++;
+    }
+    return matches === clue.count;
+  });
+}
+
 // ─── Dispatch ─────────────────────────────────────────────────────────────────
 
 
@@ -109,6 +122,7 @@ export function filterByGolemReactionAmong(
 
 function isExpandedClue(clue: AnyClue): clue is ExpandedClue {
   return clue.kind === 'book'
+    || clue.kind === 'book_among'
     || clue.kind === 'encyclopedia'
     || clue.kind === 'encyclopedia_uncertain'
     || clue.kind === 'debunk_apprentice'
@@ -127,6 +141,7 @@ export function filterByAnyClue(worlds: WorldSet, clue: AnyClue, ctx: ClueContex
   }
   switch (clue.kind) {
     case 'book':                   return filterByBook(worlds, clue);
+    case 'book_among':             return filterByBookAmong(worlds, clue as BookAmongClue);
     case 'encyclopedia':           return filterByEncyclopedia(worlds, clue);
     case 'encyclopedia_uncertain': return filterByEncyclopediaUncertain(worlds, clue);
     case 'debunk_apprentice':      return filterByDebunkApprentice(worlds, clue);

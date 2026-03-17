@@ -111,6 +111,13 @@ function QuestionHeader({ q }: { q: AnyQuestion }) {
       <PotionImage result={q.potion} width={28} /><span className="text-indigo-400">?</span>
     </span>
   );
+  if (q.kind === 'most_informative_book') return (
+    <span className="inline-flex items-center gap-1.5 flex-wrap">
+      <span className="text-xs font-semibold text-indigo-500">which ingredient to consult</span>
+      <span className="text-base">☽☀</span>
+      <span className="text-xs font-semibold text-indigo-500">the book about?</span>
+    </span>
+  );
 
   // Expanded types
   if (q.kind === 'encyclopedia_fourth') {
@@ -200,7 +207,7 @@ function QuestionHeader({ q }: { q: AnyQuestion }) {
 function RevealedAnswer({ q, answer }: { q: AnyQuestion; answer: AnyAnswer }) {
 
   // New base question types — ingredient answers
-  if (q.kind === 'neutral-partner' || q.kind === 'most-informative-mix') {
+  if (q.kind === 'neutral-partner' || q.kind === 'most-informative-mix' || q.kind === 'most_informative_book') {
     return <Ing slotId={answer as number} size={36} />;
   }
   // New base question types — potion-set answers
@@ -437,6 +444,27 @@ function QuestionRow({ q, index, total, value, onChange, correctAnswer, showSolu
                         ${active?'border-indigo-500 bg-indigo-50 shadow-md scale-105':'border-transparent bg-gray-100 hover:bg-gray-200 hover:border-gray-300'}`}>
                       <Ing slotId={slotId} size={36} />
                       <span className={`text-[9px] font-bold h-2.5 ${active?'text-indigo-600':'text-transparent'}`}>✓</span>
+                    </button>
+                  );
+                })}
+              </div>
+            );
+          })()}
+          {q.kind==='most_informative_book' && (() => {
+            const cur = typeof value === 'number' ? value as IngredientId : null;
+            return (
+              <div className="flex flex-wrap gap-1.5" role="radiogroup">
+                {([1,2,3,4,5,6,7,8] as IngredientId[]).map(slotId => {
+                  const active = cur === slotId;
+                  return (
+                    <button key={slotId} role="radio" aria-checked={active}
+                      onClick={() => onChange(slotId as unknown as AnyAnswer)}
+                      className={`flex flex-col items-center gap-0.5 px-2 pt-1.5 pb-1 rounded-xl border-2 transition-all
+                        press-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-indigo-400
+                        ${active ? 'border-indigo-500 bg-indigo-50 shadow-md scale-105'
+                                 : 'border-transparent bg-gray-100 hover:bg-gray-200 hover:border-gray-300'}`}>
+                      <Ing slotId={slotId} size={36} />
+                      <span className={`text-[9px] font-bold h-2.5 ${active ? 'text-indigo-600' : 'text-transparent'}`}>✓</span>
                     </button>
                   );
                 })}

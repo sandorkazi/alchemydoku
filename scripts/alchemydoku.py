@@ -183,6 +183,15 @@ def filter_clue(worlds: frozenset, clue: dict, golem: Optional[dict] = None) -> 
         si = clue['ingredient'] - 1
         return frozenset(w for w in worlds if is_solar(w[si]) == (clue['result'] == 'solar'))
 
+    if k == 'book_among':
+        slots = [i - 1 for i in clue['ingredients']]
+        want_solar = clue['result'] == 'solar'
+        count = clue['count']
+        return frozenset(
+            w for w in worlds
+            if sum(is_solar(w[s]) == want_solar for s in slots) == count
+        )
+
     if k == 'encyclopedia':
         col = clue['aspect']
         entries = clue['entries']
@@ -441,6 +450,21 @@ def answer(worlds: frozenset, q: dict, golem: Optional[dict] = None):
             return None
         return entropies[0][1]  # already 1-based
 
+    if k == 'most_informative_book':
+        n = len(worlds)
+        if n == 0:
+            return None
+        best_s, best_h, tie = None, -1.0, False
+        for s in range(8):
+            n_solar = sum(1 for w in worlds if is_solar(w[s]))
+            p = n_solar / n
+            h = (-p * math.log2(p) - (1 - p) * math.log2(1 - p)) if 0 < p < 1 else 0.0
+            if h > best_h + 1e-9:
+                best_h, best_s, tie = h, s + 1, False  # 1-based slot
+            elif abs(h - best_h) < 1e-9 and (s + 1) != best_s:
+                tie = True
+        return best_s if (not tie and best_s is not None and best_h > 1e-9) else None
+
     if k == 'guaranteed-non-producer':
         target_r = d2r(q['potion'])
         non_producers = []
@@ -474,6 +498,8 @@ CLUE_TYPE_PENALTY = {
     'mixing_count_among':  0.4,   # exact count: harder to exploit
     'sell_result_among':   0.5,   # existential sell: mix + sell-rule indirection
     'sell_among':          0.5,   # exact count sell: most complex
+    'book_among':          0.4,   # solar/lunar among-group: must consider all group members
+    'golem_reaction_among': 0.3,  # reaction among-group: which one reacted?
 }
 SELL_PENALTY = {'total_match': 0.0, 'sign_ok': 0.4, 'neutral': 0.8, 'opposite': 0.6}
 
@@ -487,6 +513,7 @@ Q_SURCHARGE = {
     'neutral-partner': 0.5, 'ingredient-potion-profile': 0.8,
     'group-possible-potions': 0.8, 'most-informative-mix': 0.6,
     'guaranteed-non-producer': 0.5,
+    'most_informative_book': 0.6,
 }
 
 
@@ -585,7 +612,7 @@ def compute_difficulty(puzzle: dict) -> dict:
     q_sur  = max(Q_SURCHARGE.get(q['kind'], 0.0) for q in questions) if questions else 0.0
     has_enc    = any(c['kind'] in ('encyclopedia', 'encyclopedia_uncertain') for c in clues)
     has_golem  = any(c['kind'] == 'golem_test' for c in clues)
-    has_sl     = any(c['kind'] == 'book' for c in clues)
+    has_sl     = any(c['kind'] in ('book', 'book_among') for c in clues)
     m_sur = 0.0
     if has_golem and has_enc: m_sur += 1.8
     elif has_golem:           m_sur += 0.8
@@ -734,6 +761,7 @@ class Profile:
     max_clues:       int
     has_golem:       bool
     question_params: dict = field(default_factory=dict)
+    mandatory_clues: list = field(default_factory=list)
 
 PROFILES = {
     'tutorial_golem':    Profile('exp-tutorial-golem',    ['base', 'golem'],                      'golem_group',             'tutorial', 6,  True,  {'group': 'animators'}),
@@ -758,6 +786,15 @@ PROFILES = {
     'combo_b_med_np':    Profile('combo-b-med-np',        ['base', 'sell', 'debunk'],             'neutral-partner',          'medium',   12, False),
     'combo_b_hard_pp':   Profile('combo-b-hard-pp',       ['base', 'sell', 'debunk', 'among'],    'possible-potions',         'hard',     14, False),
     'combo_b_hard_ip':   Profile('combo-b-hard-ip',       ['base', 'sell', 'debunk', 'among'],    'ingredient-potion-profile','hard',     14, False),
+    # Mixed-clues profiles
+    'mixed_base': Profile('mixed-base', ['base', 'sell', 'among'],                       'mixing-result',        'medium', 10, False,
+        mandatory_clues=[{'kind': 'sell_result_among', 'sellResult': 'opposite'},
+                         {'kind': 'sell_result_among', 'sellResult': 'sign_ok'},
+                         {'kind': 'mixing_among'}]),
+    'mixed_exp':  Profile('mixed-exp',  ['base', 'sell', 'among', 'solar_lunar', 'golem'], 'most_informative_book', 'hard', 14, True,
+        mandatory_clues=[{'kind': 'sell_result_among', 'sellResult': 'opposite'},
+                         {'kind': 'golem_reaction_among', 'count': 1},
+                         {'kind': 'book_among', 'count': 1}]),
     # Expanded combination profiles (Grand Synthesis)
     'combo_exp_easy':     Profile('combo-exp-easy',       ['base', 'encyclopedia', 'solar_lunar'],             'encyclopedia_fourth',      'easy',   12, False),
     'combo_exp_med_sl':   Profile('combo-exp-med-sl',     ['base', 'encyclopedia', 'solar_lunar'],             'solar_lunar',              'medium', 13, False),
@@ -797,6 +834,19 @@ def candidate_pool(mechanics: list, sol: dict, golem: Optional[dict],
                 continue
             pool.append(('book', 8, {'kind': 'book', 'ingredient': s,
                                       'result': 'solar' if is_solar(sol[s]) else 'lunar'}))
+        # book_among: exactly 1 of N ingredients is solar/lunar (ambiguous observation)
+        non_blocked = [s for s in SLOTS if s not in blocked_book]
+        for n_grp in [3, 4]:
+            for group in itertools.combinations(non_blocked, n_grp):
+                for result in ['solar', 'lunar']:
+                    count = sum(1 for s in group if is_solar(sol[s]) == (result == 'solar'))
+                    if count == 1:
+                        pool.append(('book_among', 6, {
+                            'kind': 'book_among',
+                            'ingredients': sorted(list(group)),
+                            'result': result,
+                            'count': 1,
+                        }))
     if 'encyclopedia' in mechanics:
         for col in COLORS:
             if col in blocked_enc:
@@ -937,6 +987,18 @@ def candidate_pool(mechanics: list, sol: dict, golem: Optional[dict],
                           'part': part, 'color': golem[part]['color']}))
             pool.append(('golem_hint_size',  -999, {'kind': 'golem_hint_size',
                           'part': part, 'size': golem[part]['size']}))
+        # golem_reaction_among: ambiguous test — exactly 1 of N showed this reaction
+        groups_map = compute_groups(sol, golem)
+        for n_grp in [3, 4]:
+            for group in itertools.combinations(SLOTS, n_grp):
+                for reaction in ['animators', 'chest_only', 'ears_only', 'non_reactive']:
+                    if sum(1 for s in group if groups_map[s] == reaction) == 1:
+                        pool.append(('golem_reaction_among', 12, {
+                            'kind': 'golem_reaction_among',
+                            'ingredients': sorted(list(group)),
+                            'reaction': reaction,
+                            'count': 1,
+                        }))
     return pool
 
 # ── Question + anchor builder ─────────────────────────────────────────────────
@@ -1029,6 +1091,9 @@ def build_question_anchor(profile: Profile, sol: dict, golem: Optional[dict],
         ]
         return {'kind': 'guaranteed-non-producer', 'potion': rng.choice(potions)}, None, set()
 
+    if k == 'most_informative_book':
+        return {'kind': 'most_informative_book'}, None, set()
+
     return None, None, set()
 
 # ── Construction ──────────────────────────────────────────────────────────────
@@ -1081,6 +1146,31 @@ def construct(profile: Profile, rng: random.Random, verbose: bool = False):
                 break
 
     pool = candidate_pool(profile.mechanics, sol, golem, blocked_enc, blocked_book)
+
+    # Mandatory non-golem clues (from profile.mandatory_clues)
+    for spec in profile.mandatory_clues:
+        candidates = [
+            c2 for _kd, _pri, c2 in pool
+            if c2['kind'] == spec['kind']
+            and all(c2.get(k) == v for k, v in spec.items() if k != 'kind')
+            and not _in(c2, clues)
+        ]
+        if not candidates:
+            return None
+        rng.shuffle(candidates)
+        placed = False
+        for c2 in candidates:
+            nw = filter_clue(worlds, c2, golem)
+            if len(nw) < len(worlds):
+                clues.append(c2)
+                worlds = nw
+                placed = True
+                if verbose:
+                    print(f"  mandatory {c2['kind']} → {len(worlds)} worlds")
+                break
+        if not placed:
+            return None
+
     greedy = [(kd, pri, c2) for kd, pri, c2 in pool
               if kd not in ('golem_hint_color', 'golem_hint_size')]
 
@@ -1595,6 +1685,34 @@ def gen_hints(raw: dict) -> list:
         )})
         hints.append({'level': 3, 'text': f"Guaranteed non-producers of {target_str}: {non_producers}."})
 
+    elif k == 'most_informative_book':
+        n = len(worlds)
+        best_s = answer(worlds, q, golem)
+        # Build per-ingredient entropy table
+        rows = []
+        for s in SLOTS:
+            n_solar = sum(1 for w in worlds if is_solar(w[s - 1]))
+            p = n_solar / n if n > 0 else 0
+            h = (-p * math.log2(p) - (1 - p) * math.log2(1 - p)) if 0 < p < 1 else 0.0
+            solar_pct = round(100 * n_solar / n) if n > 0 else 0
+            rows.append((h, s, n_solar, solar_pct))
+        rows.sort(reverse=True)
+        hints.append({'level': 1, 'text': (
+            f"Consulting the Royal Society book about an ingredient tells you whether "
+            f"its alchemical is Solar or Lunar. "
+            f"The most informative ingredient is the one whose answer has maximum "
+            f"Shannon entropy — closest to a 50/50 split across the {n} remaining worlds."
+        )})
+        dist_lines = '\n'.join(
+            f"  ing{s}: solar={n_solar}/{n} ({pct}%)  H={h:.3f}"
+            for h, s, n_solar, pct in rows[:5]
+        )
+        hints.append({'level': 2, 'text': f"Top 5 ingredients by entropy:\n{dist_lines}"})
+        hints.append({'level': 3, 'text': (
+            f"Most informative ingredient to consult: ing{best_s} "
+            f"(entropy {rows[0][0]:.3f})."
+        )})
+
     elif k == 'mixing-result':
         hints = gen_mixing_result_hints(worlds, clues, q, sol, golem)
 
@@ -1669,6 +1787,7 @@ DESCS = {
     'group-possible-potions':    "Identify all potions that can be certainly produced by some pair within the listed ingredient group.",
     'most-informative-mix':      "Decide which partner provides the most information (maximum entropy) when mixed with the target ingredient.",
     'guaranteed-non-producer':   "Find all ingredients that can never produce the target potion with any partner in any remaining world.",
+    'most_informative_book':     "Use the clues to decide which ingredient reveals the most information when consulted in the Royal Society book.",
 }
 
 EXP_PUZZLE_DIR = Path(__file__).parent.parent / 'src' / 'expanded' / 'data' / 'puzzles'

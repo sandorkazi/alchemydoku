@@ -12,7 +12,7 @@ import {
   computeGolemGroup, computeGolemAnimatePotion,
   computeGolemMixPotion, computeGolemPossiblePotions,
 } from '../logic/golem';
-import { isSolar } from '../logic/solarLunar';
+import { isSolar, getMostInformativeBook } from '../logic/solarLunar';
 import { WORLD_DATA, SIGN_TABLE, COLOR_INDEX } from '../../logic/worldPack';
 import type { WorldSet, IngredientId, AlchemicalId, Color } from '../../types';
 import type { PuzzleAnswer } from '../../puzzles/schema';
@@ -82,6 +82,11 @@ function computeEncyclopediaWhichAspect(
   return null;
 }
 
+function computeMostInformativeBook(worlds: WorldSet): AnyAnswer | null {
+  const result = getMostInformativeBook(worlds);
+  return result as unknown as PuzzleAnswer | null;
+}
+
 function computeSolarLunar(worlds: WorldSet, q: SolarLunarQuestion): AnyAnswer | null {
   if (worlds.length === 0) return null;
   const si    = q.ingredient - 1;
@@ -103,6 +108,7 @@ export function computeExpandedAnswer(worlds: WorldSet, question: AnyQuestion, p
     case 'encyclopedia_fourth':       return computeEncyclopediaFourth(worlds, question);
     case 'encyclopedia_which_aspect': return computeEncyclopediaWhichAspect(worlds, question);
     case 'solar_lunar':               return computeSolarLunar(worlds, question);
+    case 'most_informative_book':     return computeMostInformativeBook(worlds);
     // Golem questions — require golem params
     case 'golem_group':
     case 'golem_animate_potion':
@@ -185,6 +191,8 @@ export function expandedQuestionText(
     }
     case 'solar_lunar':
       return `Is ${ingredientName(question.ingredient)} Solar ☀ or Lunar ☽?`;
+    case 'most_informative_book':
+      return 'Consult the Royal Society book once. Which ingredient reveals the most information?';
     case 'golem_group': {
       const labels: Record<string, string> = {
         animators: 'animate the golem', chest_only: 'trigger only the chest',

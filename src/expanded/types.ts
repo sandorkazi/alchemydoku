@@ -40,6 +40,18 @@ export type BookClue = {
 };
 
 /**
+ * "Among" book clue: exactly `count` of the listed 2–4 ingredients are solar/lunar.
+ * You observed the book result but not which ingredient caused it.
+ * Typical usage: count=1, result='solar' or 'lunar'.
+ */
+export type BookAmongClue = {
+  kind: 'book_among';
+  ingredients: [IngredientId, IngredientId, ...IngredientId[]]; // 2–4
+  result: SolarLunar;
+  count: number;
+};
+
+/**
  * Trusted Royal Encyclopedia article.
  * All 4 (ingredient, sign) entries are guaranteed correct on the given aspect.
  */
@@ -159,6 +171,7 @@ export type GolemReactionAmongClue = {
 
 export type ExpandedClue =
   | BookClue
+  | BookAmongClue
   | EncyclopediaClue
   | EncyclopediaUncertainClue
   | DebunkApprenticeClue
@@ -201,6 +214,11 @@ export type SolarLunarQuestion = {
   ingredient: IngredientId;
 };
 
+/** Which ingredient gives most information if you consult the book about it? Answer: IngredientId */
+export type MostInformativeBookQuestion = {
+  kind: 'most_informative_book';
+};
+
 // ─── Golem question types ────────────────────────────────────────────────────
 
 /** Which ingredients are in the given reaction group? Answer: IngredientSetAnswer */
@@ -239,6 +257,7 @@ export type ExpandedQuestion =
   | EncyclopediaFourthQuestion
   | EncyclopediaWhichAspectQuestion
   | SolarLunarQuestion
+  | MostInformativeBookQuestion
   | GolemGroupQuestion
   | GolemAnimatePotionQuestion
   | GolemMixPotionQuestion
