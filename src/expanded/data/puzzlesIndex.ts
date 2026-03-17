@@ -104,6 +104,58 @@ import comboExpXsl03        from './puzzles/combo-exp-xsl-03.json';
 import comboExpXsl04        from './puzzles/combo-exp-xsl-04.json';
 import comboExpXsl05        from './puzzles/combo-exp-xsl-05.json';
 
+// ── Mixed Clues (Expanded) ─────────────────────────────────────────────────
+import mixedExp02            from './puzzles/mixed-exp-02.json';
+import mixedExp03            from './puzzles/mixed-exp-03.json';
+import mixedExp04            from './puzzles/mixed-exp-04.json';
+import mixedExp05            from './puzzles/mixed-exp-05.json';
+import mixedExp06            from './puzzles/mixed-exp-06.json';
+import mixedExp07            from './puzzles/mixed-exp-07.json';
+import mixedExp08            from './puzzles/mixed-exp-08.json';
+import mixedExp09            from './puzzles/mixed-exp-09.json';
+import mixedExp10            from './puzzles/mixed-exp-10.json';
+import mixedExp11            from './puzzles/mixed-exp-11.json';
+import mixedExp12            from './puzzles/mixed-exp-12.json';
+import mixedExp13            from './puzzles/mixed-exp-13.json';
+import mixedExp14            from './puzzles/mixed-exp-14.json';
+import mixedExp15            from './puzzles/mixed-exp-15.json';
+import mixedExp16            from './puzzles/mixed-exp-16.json';
+import mixedExp17            from './puzzles/mixed-exp-17.json';
+import mixedExp18            from './puzzles/mixed-exp-18.json';
+import mixedExp19            from './puzzles/mixed-exp-19.json';
+import mixedExp20            from './puzzles/mixed-exp-20.json';
+import mixedExp21            from './puzzles/mixed-exp-21.json';
+import mixedExp22            from './puzzles/mixed-exp-22.json';
+import mixedExp23            from './puzzles/mixed-exp-23.json';
+import mixedExp24            from './puzzles/mixed-exp-24.json';
+import mixedExp25            from './puzzles/mixed-exp-25.json';
+import mixedExp26            from './puzzles/mixed-exp-26.json';
+import mixedExp27            from './puzzles/mixed-exp-27.json';
+import mixedExp28            from './puzzles/mixed-exp-28.json';
+import mixedExp29            from './puzzles/mixed-exp-29.json';
+import mixedExp30            from './puzzles/mixed-exp-30.json';
+import mixedExp31            from './puzzles/mixed-exp-31.json';
+import mixedExp32            from './puzzles/mixed-exp-32.json';
+import mixedExp33            from './puzzles/mixed-exp-33.json';
+import mixedExp34            from './puzzles/mixed-exp-34.json';
+import mixedExp35            from './puzzles/mixed-exp-35.json';
+import mixedExp36            from './puzzles/mixed-exp-36.json';
+import mixedExp37            from './puzzles/mixed-exp-37.json';
+import mixedExp38            from './puzzles/mixed-exp-38.json';
+import mixedExp39            from './puzzles/mixed-exp-39.json';
+import mixedExp40            from './puzzles/mixed-exp-40.json';
+import mixedExp41            from './puzzles/mixed-exp-41.json';
+import mixedExp42            from './puzzles/mixed-exp-42.json';
+import mixedExp43            from './puzzles/mixed-exp-43.json';
+import mixedExp44            from './puzzles/mixed-exp-44.json';
+import mixedExp45            from './puzzles/mixed-exp-45.json';
+import mixedExp46            from './puzzles/mixed-exp-46.json';
+import mixedExp47            from './puzzles/mixed-exp-47.json';
+import mixedExp48            from './puzzles/mixed-exp-48.json';
+import mixedExp49            from './puzzles/mixed-exp-49.json';
+import mixedExp50            from './puzzles/mixed-exp-50.json';
+import mixedExp51            from './puzzles/mixed-exp-51.json';
+
 import type { ExpandedPuzzle } from '../types';
 
 export const ALL_EXPANDED_PUZZLES: ExpandedPuzzle[] = [
@@ -124,6 +176,16 @@ export const ALL_EXPANDED_PUZZLES: ExpandedPuzzle[] = [
   comboExpAll02, comboExpAll03, comboExpAll04, comboExpAll05,
   comboExpWha02, comboExpWha03, comboExpWha04, comboExpWha05,
   comboExpXsl02, comboExpXsl03, comboExpXsl04, comboExpXsl05,
+  mixedExp02, mixedExp03, mixedExp04, mixedExp05, mixedExp06,
+  mixedExp07, mixedExp08, mixedExp09, mixedExp10, mixedExp11,
+  mixedExp12, mixedExp13, mixedExp14, mixedExp15, mixedExp16,
+  mixedExp17, mixedExp18, mixedExp19, mixedExp20, mixedExp21,
+  mixedExp22, mixedExp23, mixedExp24, mixedExp25, mixedExp26,
+  mixedExp27, mixedExp28, mixedExp29, mixedExp30, mixedExp31,
+  mixedExp32, mixedExp33, mixedExp34, mixedExp35, mixedExp36,
+  mixedExp37, mixedExp38, mixedExp39, mixedExp40, mixedExp41,
+  mixedExp42, mixedExp43, mixedExp44, mixedExp45, mixedExp46,
+  mixedExp47, mixedExp48, mixedExp49, mixedExp50, mixedExp51,
 ] as unknown as ExpandedPuzzle[];
 
 export const EXPANDED_PUZZLE_MAP: Record<string, ExpandedPuzzle> =
@@ -264,5 +326,24 @@ export const EXPANDED_COLLECTIONS: ExpandedCollection[] = [
       'combo-exp-xsl-02', 'combo-exp-xsl-03', 'combo-exp-xsl-04', 'combo-exp-xsl-05',
     ],
     unlockedAfter: 'exp-hard-all',
+  },
+  {
+    id: 'mixed-clues-exp',
+    title: 'Mixed Clues',
+    description: 'Ambiguous sell results, overheard golem reactions, and uncertain solar/lunar observations — all pointing to 3 or 4 possible ingredients. Find the most informative question to ask.',
+    difficulty: 'hard',
+    puzzleIds: [
+      'mixed-exp-02', 'mixed-exp-03', 'mixed-exp-04', 'mixed-exp-05', 'mixed-exp-06',
+      'mixed-exp-07', 'mixed-exp-08', 'mixed-exp-09', 'mixed-exp-10', 'mixed-exp-11',
+      'mixed-exp-12', 'mixed-exp-13', 'mixed-exp-14', 'mixed-exp-15', 'mixed-exp-16',
+      'mixed-exp-17', 'mixed-exp-18', 'mixed-exp-19', 'mixed-exp-20', 'mixed-exp-21',
+      'mixed-exp-22', 'mixed-exp-23', 'mixed-exp-24', 'mixed-exp-25', 'mixed-exp-26',
+      'mixed-exp-27', 'mixed-exp-28', 'mixed-exp-29', 'mixed-exp-30', 'mixed-exp-31',
+      'mixed-exp-32', 'mixed-exp-33', 'mixed-exp-34', 'mixed-exp-35', 'mixed-exp-36',
+      'mixed-exp-37', 'mixed-exp-38', 'mixed-exp-39', 'mixed-exp-40', 'mixed-exp-41',
+      'mixed-exp-42', 'mixed-exp-43', 'mixed-exp-44', 'mixed-exp-45', 'mixed-exp-46',
+      'mixed-exp-47', 'mixed-exp-48', 'mixed-exp-49', 'mixed-exp-50', 'mixed-exp-51',
+    ],
+    unlockedAfter: 'combo-exp',
   },
 ];

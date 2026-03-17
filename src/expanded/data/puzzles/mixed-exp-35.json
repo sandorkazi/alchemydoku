@@ -1,0 +1,80 @@
+{
+  "id": "mixed-exp-35",
+  "mode": "expanded",
+  "title": "Lunar Whispers",
+  "description": "Use the clues to decide which ingredient reveals the most information when consulted in the Royal Society book.",
+  "difficulty": "hard",
+  "golem": {
+    "chest": {
+      "color": "B",
+      "size": "L"
+    },
+    "ears": {
+      "color": "G",
+      "size": "S"
+    }
+  },
+  "clues": [
+    {
+      "kind": "golem_test",
+      "ingredient": 8,
+      "chest_reacted": true,
+      "ears_reacted": true
+    },
+    {
+      "kind": "golem_test",
+      "ingredient": 6,
+      "chest_reacted": true,
+      "ears_reacted": false
+    },
+    {
+      "kind": "book_among",
+      "ingredients": [
+        1,
+        2,
+        6
+      ],
+      "result": "lunar",
+      "count": 1
+    }
+  ],
+  "questions": [
+    {
+      "kind": "most_informative_book"
+    }
+  ],
+  "solution": {
+    "1": 1,
+    "2": 6,
+    "3": 7,
+    "4": 3,
+    "5": 5,
+    "6": 8,
+    "7": 4,
+    "8": 2
+  },
+  "hints": [
+    {
+      "level": 1,
+      "text": "Consulting the Royal Society book about an ingredient tells you whether its alchemical is Solar or Lunar. The most informative ingredient is the one whose answer has maximum Shannon entropy \u2014 closest to a 50/50 split across the 1248 remaining worlds."
+    },
+    {
+      "level": 2,
+      "text": "Top 5 ingredients by entropy:\n  ing8: solar=528/1248 (42%)  H=0.983\n  ing7: solar=492/1248 (39%)  H=0.967\n  ing5: solar=492/1248 (39%)  H=0.967\n  ing4: solar=492/1248 (39%)  H=0.967\n  ing3: solar=492/1248 (39%)  H=0.967"
+    },
+    {
+      "level": 3,
+      "text": "Most informative ingredient to consult: ing8 (entropy 0.983)."
+    }
+  ],
+  "complexity": {
+    "raw": 3.809,
+    "avg_clue_strength": 1.671,
+    "ambig_penalty": 0.133,
+    "chain_depth": 0,
+    "stuck": false,
+    "requires_complement_set": false,
+    "question_requires_enumeration": false,
+    "residual_worlds": 1248
+  }
+}

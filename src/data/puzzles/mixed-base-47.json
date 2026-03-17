@@ -1,0 +1,75 @@
+{
+  "id": "mixed-base-47",
+  "title": "The Crowded Vial",
+  "description": "Mixing, selling, and debunking records all point toward a single pair. Deduce what potion they produce.",
+  "difficulty": "medium",
+  "clues": [
+    {
+      "kind": "mixing_among",
+      "ingredients": [
+        1,
+        2,
+        8
+      ],
+      "result": {
+        "color": "B",
+        "sign": "-"
+      }
+    },
+    {
+      "kind": "sell_among",
+      "ingredients": [
+        1,
+        4,
+        6
+      ],
+      "claimedPotion": {
+        "color": "G",
+        "sign": "-"
+      },
+      "result": "sign_ok",
+      "count": 3
+    }
+  ],
+  "questions": [
+    {
+      "kind": "mixing-result",
+      "ingredient1": 4,
+      "ingredient2": 6
+    }
+  ],
+  "solution": {
+    "1": 1,
+    "2": 2,
+    "3": 4,
+    "4": 6,
+    "5": 5,
+    "6": 7,
+    "7": 8,
+    "8": 3
+  },
+  "hints": [
+    {
+      "level": 1,
+      "text": "To find the result of mixing ing4 and ing6, apply the mixing rule: scan colours R\u2192G\u2192B in order. The first colour where both ingredients share the same sign determines the result potion. If all three colours have opposing signs, the result is neutral."
+    },
+    {
+      "level": 2,
+      "text": "Step through each colour:\n  R: ing4=R+ (ing4 R?: (sign undetermined)), ing6=R- (ing6 R?: (sign undetermined))\n      \u2192 opposite signs \u2192 skip.\n  G: ing4=G+ (ing4 G?: (sign undetermined)), ing6=G- (ing6 G?: (sign undetermined))\n      \u2192 opposite signs \u2192 skip.\n  B: ing4=B- (ing4 has B-), ing6=B- (ing6 has B-)\n      \u2192 SAME sign - \u2192 B- resolves."
+    },
+    {
+      "level": 3,
+      "text": "ing4=Ppn, ing6=NNN. Mix result: B-."
+    }
+  ],
+  "complexity": {
+    "raw": 2.237,
+    "avg_clue_strength": 3.357,
+    "ambig_penalty": 0.6,
+    "chain_depth": 0,
+    "stuck": false,
+    "requires_complement_set": false,
+    "question_requires_enumeration": false,
+    "residual_worlds": 384
+  }
+}

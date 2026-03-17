@@ -900,81 +900,83 @@ def candidate_pool(mechanics: list, sol: dict, golem: Optional[dict],
                 'claimedPotion': r2d(actual), 'outcome': 'success',
             }))
     if 'among' in mechanics:
-        for group in itertools.combinations(SLOTS, 3):
-            # mixing_among (existential) + mixing_count_among (exact count)
-            seen_results: set = set()
-            result_counts: dict = {}
-            for a, b in itertools.combinations(group, 2):
-                r = MIX_TABLE[sol[a]][sol[b]]
-                key = json.dumps(r2d(r), sort_keys=True)
-                result_counts[key] = result_counts.get(key, 0) + 1
-                if key not in seen_results:
-                    seen_results.add(key)
+        for n_grp in [3, 4]:
+            for group in itertools.combinations(SLOTS, n_grp):
+                # mixing_among (existential) + mixing_count_among (exact count)
+                seen_results: set = set()
+                result_counts: dict = {}
+                for a, b in itertools.combinations(group, 2):
+                    r = MIX_TABLE[sol[a]][sol[b]]
+                    key = json.dumps(r2d(r), sort_keys=True)
+                    result_counts[key] = result_counts.get(key, 0) + 1
+                    if key not in seen_results:
+                        seen_results.add(key)
+                        pool.append(('among', 1, {
+                            'kind': 'mixing_among',
+                            'ingredients': sorted(list(group)),
+                            'result': r2d(r),
+                        }))
+                for key, count in result_counts.items():
                     pool.append(('among', 1, {
-                        'kind': 'mixing_among',
+                        'kind': 'mixing_count_among',
                         'ingredients': sorted(list(group)),
-                        'result': r2d(r),
+                        'result': json.loads(key),
+                        'count': count,
                     }))
-            for key, count in result_counts.items():
-                pool.append(('among', 1, {
-                    'kind': 'mixing_count_among',
-                    'ingredients': sorted(list(group)),
-                    'result': json.loads(key),
-                    'count': count,
-                }))
         # sell variants (only when 'sell' also in mechanics)
         if 'sell' in mechanics:
-            for group in itertools.combinations(SLOTS, 3):
-                # sell_result_among (existential)
-                seen_sra: set = set()
-                for a, b in itertools.combinations(group, 2):
-                    actual = MIX_TABLE[sol[a]][sol[b]]
-                    if actual == 'neutral':
-                        key = 'neutral'
-                        if key not in seen_sra:
-                            seen_sra.add(key)
-                            pool.append(('among', 1, {
-                                'kind': 'sell_result_among',
-                                'ingredients': sorted(list(group)),
-                                'claimedPotion': {'color': 'R', 'sign': '+'},
-                                'sellResult': 'neutral',
-                            }))
-                    else:
-                        for cp_col in COLORS:
-                            for cp_sgn in [1, -1]:
+            for n_grp in [3, 4]:
+                for group in itertools.combinations(SLOTS, n_grp):
+                    # sell_result_among (existential)
+                    seen_sra: set = set()
+                    for a, b in itertools.combinations(group, 2):
+                        actual = MIX_TABLE[sol[a]][sol[b]]
+                        if actual == 'neutral':
+                            key = 'neutral'
+                            if key not in seen_sra:
+                                seen_sra.add(key)
+                                pool.append(('among', 1, {
+                                    'kind': 'sell_result_among',
+                                    'ingredients': sorted(list(group)),
+                                    'claimedPotion': {'color': 'R', 'sign': '+'},
+                                    'sellResult': 'neutral',
+                                }))
+                        else:
+                            for cp_col in COLORS:
+                                for cp_sgn in [1, -1]:
+                                    sr = _sell_sr(actual, cp_col, cp_sgn)
+                                    key = (cp_col, cp_sgn, sr)
+                                    if key not in seen_sra:
+                                        seen_sra.add(key)
+                                        pool.append(('among', 1, {
+                                            'kind': 'sell_result_among',
+                                            'ingredients': sorted(list(group)),
+                                            'claimedPotion': {'color': cp_col, 'sign': sgn_str(cp_sgn)},
+                                            'sellResult': sr,
+                                        }))
+                    # sell_among (exact count)
+                    seen_sa: set = set()
+                    for cp_col in COLORS:
+                        for cp_sgn in [1, -1]:
+                            sr_counts: dict = {}
+                            for a, b in itertools.combinations(group, 2):
+                                actual = MIX_TABLE[sol[a]][sol[b]]
                                 sr = _sell_sr(actual, cp_col, cp_sgn)
-                                key = (cp_col, cp_sgn, sr)
-                                if key not in seen_sra:
-                                    seen_sra.add(key)
-                                    pool.append(('among', 1, {
-                                        'kind': 'sell_result_among',
+                                sr_counts[sr] = sr_counts.get(sr, 0) + 1
+                            for sr, count in sr_counts.items():
+                                if sr == 'neutral':
+                                    key = ('neutral', count)
+                                else:
+                                    key = (cp_col, cp_sgn, sr, count)
+                                if key not in seen_sa:
+                                    seen_sa.add(key)
+                                    pool.append(('among', 2, {
+                                        'kind': 'sell_among',
                                         'ingredients': sorted(list(group)),
                                         'claimedPotion': {'color': cp_col, 'sign': sgn_str(cp_sgn)},
-                                        'sellResult': sr,
+                                        'result': sr,
+                                        'count': count,
                                     }))
-                # sell_among (exact count)
-                seen_sa: set = set()
-                for cp_col in COLORS:
-                    for cp_sgn in [1, -1]:
-                        sr_counts: dict = {}
-                        for a, b in itertools.combinations(group, 2):
-                            actual = MIX_TABLE[sol[a]][sol[b]]
-                            sr = _sell_sr(actual, cp_col, cp_sgn)
-                            sr_counts[sr] = sr_counts.get(sr, 0) + 1
-                        for sr, count in sr_counts.items():
-                            if sr == 'neutral':
-                                key = ('neutral', count)
-                            else:
-                                key = (cp_col, cp_sgn, sr, count)
-                            if key not in seen_sa:
-                                seen_sa.add(key)
-                                pool.append(('among', 2, {
-                                    'kind': 'sell_among',
-                                    'ingredients': sorted(list(group)),
-                                    'claimedPotion': {'color': cp_col, 'sign': sgn_str(cp_sgn)},
-                                    'result': sr,
-                                    'count': count,
-                                }))
     if 'golem' in mechanics and golem:
         for s in SLOTS:
             pool.append(('golem_test', 15, {
@@ -1148,6 +1150,7 @@ def construct(profile: Profile, rng: random.Random, verbose: bool = False):
     pool = candidate_pool(profile.mechanics, sol, golem, blocked_enc, blocked_book)
 
     # Mandatory non-golem clues (from profile.mandatory_clues)
+    mandatory_placed: list = []
     for spec in profile.mandatory_clues:
         candidates = [
             c2 for _kd, _pri, c2 in pool
@@ -1164,6 +1167,7 @@ def construct(profile: Profile, rng: random.Random, verbose: bool = False):
             if len(nw) < len(worlds):
                 clues.append(c2)
                 worlds = nw
+                mandatory_placed.append(c2)
                 placed = True
                 if verbose:
                     print(f"  mandatory {c2['kind']} → {len(worlds)} worlds")
@@ -1212,21 +1216,25 @@ def construct(profile: Profile, rng: random.Random, verbose: bool = False):
 
     return {'sol': sol, '_sol_str': {str(k): v for k, v in sol.items()},
             'golem': golem, 'clues': clues, '_anchor': anchor,
+            '_mandatory': list(mandatory_placed),
             'q': q, 'worlds': worlds}
 
 # ── Minimization ──────────────────────────────────────────────────────────────
 
 def minimize(raw: dict, verbose: bool = False) -> dict:
-    clues  = list(raw['clues'])
-    golem  = raw['golem']
-    q      = raw['q']
-    anchor = raw.get('_anchor')
+    clues     = list(raw['clues'])
+    golem     = raw['golem']
+    q         = raw['q']
+    anchor    = raw.get('_anchor')
+    mandatory = raw.get('_mandatory', [])
 
     changed = True
     while changed:
         changed = False
         for i in range(len(clues) - 1, -1, -1):
             if anchor and _ceq(clues[i], anchor):
+                continue
+            if any(_ceq(clues[i], m) for m in mandatory):
                 continue
             reduced = clues[:i] + clues[i + 1:]
             w = apply_all(all_worlds(), reduced, golem)

@@ -1,0 +1,109 @@
+{
+  "id": "mixed-base-36",
+  "title": "Three Witnesses",
+  "description": "Mixing, selling, and debunking records all point toward a single pair. Deduce what potion they produce.",
+  "difficulty": "medium",
+  "clues": [
+    {
+      "kind": "sell_among",
+      "ingredients": [
+        4,
+        5,
+        6,
+        7
+      ],
+      "claimedPotion": {
+        "color": "B",
+        "sign": "-"
+      },
+      "result": "opposite",
+      "count": 6
+    },
+    {
+      "kind": "sell_among",
+      "ingredients": [
+        1,
+        3,
+        4,
+        7
+      ],
+      "claimedPotion": {
+        "color": "B",
+        "sign": "+"
+      },
+      "result": "opposite",
+      "count": 1
+    },
+    {
+      "kind": "sell_among",
+      "ingredients": [
+        3,
+        5,
+        7,
+        8
+      ],
+      "claimedPotion": {
+        "color": "B",
+        "sign": "-"
+      },
+      "result": "opposite",
+      "count": 1
+    },
+    {
+      "kind": "sell_among",
+      "ingredients": [
+        2,
+        5,
+        6,
+        8
+      ],
+      "claimedPotion": {
+        "color": "G",
+        "sign": "-"
+      },
+      "result": "total_match",
+      "count": 1
+    }
+  ],
+  "questions": [
+    {
+      "kind": "mixing-result",
+      "ingredient1": 1,
+      "ingredient2": 7
+    }
+  ],
+  "solution": {
+    "1": 3,
+    "2": 1,
+    "3": 5,
+    "4": 8,
+    "5": 4,
+    "6": 2,
+    "7": 6,
+    "8": 7
+  },
+  "hints": [
+    {
+      "level": 1,
+      "text": "To find the result of mixing ing1 and ing7, apply the mixing rule: scan colours R\u2192G\u2192B in order. The first colour where both ingredients share the same sign determines the result potion. If all three colours have opposing signs, the result is neutral."
+    },
+    {
+      "level": 2,
+      "text": "Step through each colour:\n  R: ing1=R+ (ing1 has R+), ing7=R+ (ing7 has R+)\n      \u2192 SAME sign + \u2192 R+ resolves."
+    },
+    {
+      "level": 3,
+      "text": "ing1=pNn, ing7=Ppn. Mix result: R+."
+    }
+  ],
+  "complexity": {
+    "raw": 2.825,
+    "avg_clue_strength": 3.825,
+    "ambig_penalty": 0.95,
+    "chain_depth": 0,
+    "stuck": false,
+    "requires_complement_set": false,
+    "question_requires_enumeration": false,
+    "residual_worlds": 1
+  }
+}

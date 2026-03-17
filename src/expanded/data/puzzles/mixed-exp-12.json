@@ -1,0 +1,82 @@
+{
+  "id": "mixed-exp-12",
+  "mode": "expanded",
+  "title": "The Heavenly Witness",
+  "description": "Use the clues to decide which ingredient reveals the most information when consulted in the Royal Society book.",
+  "difficulty": "hard",
+  "golem": {
+    "chest": {
+      "color": "R",
+      "size": "S"
+    },
+    "ears": {
+      "color": "B",
+      "size": "S"
+    }
+  },
+  "clues": [
+    {
+      "kind": "sell_result_among",
+      "ingredients": [
+        2,
+        3,
+        6
+      ],
+      "claimedPotion": {
+        "color": "R",
+        "sign": "-"
+      },
+      "sellResult": "opposite"
+    },
+    {
+      "kind": "book_among",
+      "ingredients": [
+        1,
+        4,
+        5,
+        7
+      ],
+      "result": "lunar",
+      "count": 1
+    }
+  ],
+  "questions": [
+    {
+      "kind": "most_informative_book"
+    }
+  ],
+  "solution": {
+    "1": 1,
+    "2": 7,
+    "3": 5,
+    "4": 3,
+    "5": 4,
+    "6": 2,
+    "7": 8,
+    "8": 6
+  },
+  "hints": [
+    {
+      "level": 1,
+      "text": "Consulting the Royal Society book about an ingredient tells you whether its alchemical is Solar or Lunar. The most informative ingredient is the one whose answer has maximum Shannon entropy \u2014 closest to a 50/50 split across the 7488 remaining worlds."
+    },
+    {
+      "level": 2,
+      "text": "Top 5 ingredients by entropy:\n  ing8: solar=2304/7488 (31%)  H=0.890\n  ing7: solar=5616/7488 (75%)  H=0.811\n  ing5: solar=5616/7488 (75%)  H=0.811\n  ing4: solar=5616/7488 (75%)  H=0.811\n  ing1: solar=5616/7488 (75%)  H=0.811"
+    },
+    {
+      "level": 3,
+      "text": "Most informative ingredient to consult: ing8 (entropy 0.890)."
+    }
+  ],
+  "complexity": {
+    "raw": 4.733,
+    "avg_clue_strength": 1.214,
+    "ambig_penalty": 0.75,
+    "chain_depth": 0,
+    "stuck": false,
+    "requires_complement_set": false,
+    "question_requires_enumeration": false,
+    "residual_worlds": 7488
+  }
+}

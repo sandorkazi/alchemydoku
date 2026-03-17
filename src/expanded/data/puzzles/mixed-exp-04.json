@@ -1,0 +1,89 @@
+{
+  "id": "mixed-exp-04",
+  "mode": "expanded",
+  "title": "Reactions from Afar",
+  "description": "Use the clues to decide which ingredient reveals the most information when consulted in the Royal Society book.",
+  "difficulty": "hard",
+  "golem": {
+    "chest": {
+      "color": "R",
+      "size": "L"
+    },
+    "ears": {
+      "color": "B",
+      "size": "L"
+    }
+  },
+  "clues": [
+    {
+      "kind": "golem_test",
+      "ingredient": 8,
+      "chest_reacted": true,
+      "ears_reacted": true
+    },
+    {
+      "kind": "sell_result_among",
+      "ingredients": [
+        2,
+        4,
+        6,
+        8
+      ],
+      "claimedPotion": {
+        "color": "B",
+        "sign": "-"
+      },
+      "sellResult": "opposite"
+    },
+    {
+      "kind": "golem_reaction_among",
+      "ingredients": [
+        1,
+        5,
+        7,
+        8
+      ],
+      "reaction": "non_reactive",
+      "count": 1
+    }
+  ],
+  "questions": [
+    {
+      "kind": "most_informative_book"
+    }
+  ],
+  "solution": {
+    "1": 2,
+    "2": 6,
+    "3": 7,
+    "4": 5,
+    "5": 1,
+    "6": 4,
+    "7": 3,
+    "8": 8
+  },
+  "hints": [
+    {
+      "level": 1,
+      "text": "Consulting the Royal Society book about an ingredient tells you whether its alchemical is Solar or Lunar. The most informative ingredient is the one whose answer has maximum Shannon entropy \u2014 closest to a 50/50 split across the 5472 remaining worlds."
+    },
+    {
+      "level": 2,
+      "text": "Top 5 ingredients by entropy:\n  ing3: solar=2736/5472 (50%)  H=1.000\n  ing7: solar=2772/5472 (51%)  H=1.000\n  ing5: solar=2772/5472 (51%)  H=1.000\n  ing1: solar=2772/5472 (51%)  H=1.000\n  ing6: solar=2652/5472 (48%)  H=0.999"
+    },
+    {
+      "level": 3,
+      "text": "Most informative ingredient to consult: ing3 (entropy 1.000)."
+    }
+  ],
+  "complexity": {
+    "raw": 5.072,
+    "avg_clue_strength": 0.96,
+    "ambig_penalty": 0.467,
+    "chain_depth": 0,
+    "stuck": false,
+    "requires_complement_set": false,
+    "question_requires_enumeration": false,
+    "residual_worlds": 5472
+  }
+}

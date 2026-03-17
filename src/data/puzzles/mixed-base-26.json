@@ -1,0 +1,105 @@
+{
+  "id": "mixed-base-26",
+  "title": "The Night Market",
+  "description": "Mixing, selling, and debunking records all point toward a single pair. Deduce what potion they produce.",
+  "difficulty": "medium",
+  "clues": [
+    {
+      "kind": "sell_result_among",
+      "ingredients": [
+        2,
+        6,
+        7
+      ],
+      "claimedPotion": {
+        "color": "B",
+        "sign": "-"
+      },
+      "sellResult": "sign_ok"
+    },
+    {
+      "kind": "mixing_count_among",
+      "ingredients": [
+        1,
+        2,
+        7
+      ],
+      "result": {
+        "color": "R",
+        "sign": "+"
+      },
+      "count": 2
+    },
+    {
+      "kind": "sell_among",
+      "ingredients": [
+        2,
+        4,
+        6,
+        8
+      ],
+      "claimedPotion": {
+        "color": "G",
+        "sign": "+"
+      },
+      "result": "sign_ok",
+      "count": 5
+    },
+    {
+      "kind": "sell_among",
+      "ingredients": [
+        2,
+        3,
+        4,
+        8
+      ],
+      "claimedPotion": {
+        "color": "R",
+        "sign": "+"
+      },
+      "result": "opposite",
+      "count": 3
+    }
+  ],
+  "questions": [
+    {
+      "kind": "mixing-result",
+      "ingredient1": 1,
+      "ingredient2": 6
+    }
+  ],
+  "solution": {
+    "1": 6,
+    "2": 8,
+    "3": 7,
+    "4": 4,
+    "5": 1,
+    "6": 2,
+    "7": 3,
+    "8": 5
+  },
+  "hints": [
+    {
+      "level": 1,
+      "text": "To find the result of mixing ing1 and ing6, apply the mixing rule: scan colours R\u2192G\u2192B in order. The first colour where both ingredients share the same sign determines the result potion. If all three colours have opposing signs, the result is neutral."
+    },
+    {
+      "level": 2,
+      "text": "Step through each colour:\n  R: ing1=R+ (ing1 has R+), ing6=R+ (ing6 has R+)\n      \u2192 SAME sign + \u2192 R+ resolves."
+    },
+    {
+      "level": 3,
+      "text": "ing1=Ppn, ing6=pnP. Mix result: R+."
+    }
+  ],
+  "complexity": {
+    "raw": 2.632,
+    "avg_clue_strength": 3.575,
+    "ambig_penalty": 0.825,
+    "chain_depth": 0,
+    "stuck": false,
+    "requires_complement_set": false,
+    "question_requires_enumeration": false,
+    "residual_worlds": 2
+  }
+}

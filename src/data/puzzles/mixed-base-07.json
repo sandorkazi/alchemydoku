@@ -1,0 +1,105 @@
+{
+  "id": "mixed-base-07",
+  "title": "Conflicting Signs",
+  "description": "Mixing, selling, and debunking records all point toward a single pair. Deduce what potion they produce.",
+  "difficulty": "medium",
+  "clues": [
+    {
+      "kind": "mixing_among",
+      "ingredients": [
+        3,
+        5,
+        6,
+        7
+      ],
+      "result": {
+        "color": "B",
+        "sign": "-"
+      }
+    },
+    {
+      "kind": "sell_among",
+      "ingredients": [
+        4,
+        5,
+        8
+      ],
+      "claimedPotion": {
+        "color": "G",
+        "sign": "-"
+      },
+      "result": "sign_ok",
+      "count": 3
+    },
+    {
+      "kind": "mixing_count_among",
+      "ingredients": [
+        3,
+        4,
+        5,
+        7
+      ],
+      "result": {
+        "color": "R",
+        "sign": "-"
+      },
+      "count": 4
+    },
+    {
+      "kind": "sell_among",
+      "ingredients": [
+        1,
+        3,
+        5,
+        7
+      ],
+      "claimedPotion": {
+        "color": "B",
+        "sign": "-"
+      },
+      "result": "sign_ok",
+      "count": 3
+    }
+  ],
+  "questions": [
+    {
+      "kind": "mixing-result",
+      "ingredient1": 2,
+      "ingredient2": 4
+    }
+  ],
+  "solution": {
+    "1": 8,
+    "2": 2,
+    "3": 4,
+    "4": 1,
+    "5": 7,
+    "6": 3,
+    "7": 5,
+    "8": 6
+  },
+  "hints": [
+    {
+      "level": 1,
+      "text": "To find the result of mixing ing2 and ing4, apply the mixing rule: scan colours R\u2192G\u2192B in order. The first colour where both ingredients share the same sign determines the result potion. If all three colours have opposing signs, the result is neutral."
+    },
+    {
+      "level": 2,
+      "text": "Step through each colour:\n  R: ing2=R+ (ing2 has R+), ing4=R- (ing4 has R-)\n      \u2192 opposite signs \u2192 skip.\n  G: ing2=G- (ing2 has G-), ing4=G+ (ing4 has G+)\n      \u2192 opposite signs \u2192 skip.\n  B: ing2=B+ (ing2 has B+), ing4=B- (ing4 has B-)\n      \u2192 opposite signs \u2192 skip.\n  All colours opposite \u2192 neutral."
+    },
+    {
+      "level": 3,
+      "text": "ing2=pnP, ing4=npN. Mix result: neutral."
+    }
+  ],
+  "complexity": {
+    "raw": 2.296,
+    "avg_clue_strength": 3.325,
+    "ambig_penalty": 0.625,
+    "chain_depth": 0,
+    "stuck": false,
+    "requires_complement_set": false,
+    "question_requires_enumeration": false,
+    "residual_worlds": 4
+  }
+}
