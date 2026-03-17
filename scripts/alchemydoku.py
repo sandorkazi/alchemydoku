@@ -674,13 +674,22 @@ def validate_puzzle(puz: dict) -> list:
                         and c.get('entries') == q.get('known')):
                     anchor_idx.add(i)
 
+    redundant_idxs = []
     for i, c in enumerate(clues):
         if i in anchor_idx:
             continue
         reduced = clues[:i] + clues[i + 1:]
         w2 = apply_all(all_worlds(), reduced, golem)
         if all(answer(w2, q, golem) is not None for q in questions):
-            errs.append(f"WARNING: clue {i} ({c['kind']}) is redundant")
+            redundant_idxs.append(i)
+    is_tutorial = puz.get('id', '').startswith('tutorial')
+    for i in redundant_idxs:
+        c = clues[i]
+        msg = f"clue {i} ({c['kind']}) is redundant"
+        if not is_tutorial and len(redundant_idxs) >= 2:
+            errs.append(f"ERROR: {msg}")
+        else:
+            errs.append(f"WARNING: {msg}")
 
     if golem:
         tests = [c for c in clues if c['kind'] == 'golem_test']
@@ -753,7 +762,7 @@ PROFILES = {
     'combo_exp_easy':     Profile('combo-exp-easy',       ['base', 'encyclopedia', 'solar_lunar'],             'encyclopedia_fourth',      'easy',   12, False),
     'combo_exp_med_sl':   Profile('combo-exp-med-sl',     ['base', 'encyclopedia', 'solar_lunar'],             'solar_lunar',              'medium', 13, False),
     'combo_exp_med_all':  Profile('combo-exp-med-all',    ['base', 'encyclopedia', 'solar_lunar', 'golem'],    'encyclopedia_fourth',      'medium', 14, True),
-    'combo_exp_hard_wha': Profile('combo-exp-hard-wha',   ['base', 'encyclopedia', 'solar_lunar', 'golem'],    'encyclopedia_which_aspect','hard',   16, True),
+    'combo_exp_hard_wha': Profile('combo-exp-wha',         ['base', 'encyclopedia', 'solar_lunar', 'golem'],    'encyclopedia_which_aspect','hard',   16, True),
     'combo_exp_hard_sl':  Profile('combo-exp-hard-sl',    ['base', 'encyclopedia', 'solar_lunar', 'golem'],    'solar_lunar',              'hard',   15, True),
 }
 
@@ -956,11 +965,16 @@ def build_question_anchor(profile: Profile, sol: dict, golem: Optional[dict],
         return None, None, set()
 
     if k == 'encyclopedia_which_aspect':
-        col    = rng.choice(COLORS)
-        chosen = sorted(rng.sample(SLOTS, 4))
-        entries = [{'ingredient': s, 'sign': sgn_str(ALCH_DATA[sol[s]][col][0])} for s in chosen]
-        q = {'kind': 'encyclopedia_which_aspect', 'entries': entries}
-        return q, None, {col}
+        for _ in range(200):
+            col    = rng.choice(COLORS)
+            chosen = sorted(rng.sample(SLOTS, 4))
+            plus   = sum(1 for s in chosen if ALCH_DATA[sol[s]][col][0] == 1)
+            if plus not in (0, 2, 4):   # reject 3-1 distributions
+                continue
+            entries = [{'ingredient': s, 'sign': sgn_str(ALCH_DATA[sol[s]][col][0])} for s in chosen]
+            q = {'kind': 'encyclopedia_which_aspect', 'entries': entries}
+            return q, None, {col}
+        return None, None, set()
 
     if k == 'mixing-result':
         i1, i2 = sorted(rng.sample(SLOTS, 2))
