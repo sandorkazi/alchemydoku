@@ -269,10 +269,12 @@ function AutoDeduceModal({ onConfirm, onCancel }: { onConfirm: () => void; onCan
 
 // ─── Main grid ────────────────────────────────────────────────────────────────
 
-export function ExpandedIngredientGrid({ onRandomize, activeTool, setActiveTool }: {
+export function ExpandedIngredientGrid({ onRandomize, activeTool, setActiveTool, scrollContainerRef, onScrollSync }: {
   onRandomize?: () => void;
   activeTool: GridTool;
   setActiveTool: (t: GridTool) => void;
+  scrollContainerRef?: React.MutableRefObject<HTMLDivElement | null>;
+  onScrollSync?: (scrollLeft: number) => void;
 }) {
   const { state, dispatch } = useExpandedSolver();
   const { gridState, notes, autoDeduction, solarLunarMarks } = state;
@@ -281,7 +283,7 @@ export function ExpandedIngredientGrid({ onRandomize, activeTool, setActiveTool 
   const [editingCell, setEditingCell] = useState<{ ing: IngredientId; alch: AlchemicalId } | null>(null);
   const [showConfirm, setShowConfirm] = useState(false);
 
-  const gridRef = useRef<HTMLDivElement>(null);
+  const gridRef = useRef<HTMLDivElement | null>(null);
   const svgRef = useRef<SVGSVGElement>(null);
   const livePathRef = useRef<SVGPathElement>(null);
   const isDrawingRef = useRef(false);
@@ -501,7 +503,9 @@ export function ExpandedIngredientGrid({ onRandomize, activeTool, setActiveTool 
           </span>
         </div>
 
-        <div ref={gridRef} className="overflow-x-auto -mx-1 pl-1 pr-4 pb-1 relative"
+        <div ref={(el) => { gridRef.current = el; if (scrollContainerRef) scrollContainerRef.current = el; }}
+          className="overflow-x-auto -mx-1 pl-1 pr-4 pb-1 relative"
+          onScroll={e => onScrollSync?.(e.currentTarget.scrollLeft)}
           style={{ cursor: TOOL_CURSOR[activeTool] }}>
 
           {/* Active tool badge */}
