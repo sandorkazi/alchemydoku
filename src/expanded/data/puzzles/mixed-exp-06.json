@@ -1,0 +1,98 @@
+{
+  "id": "mixed-exp-06",
+  "mode": "expanded",
+  "title": "Solar Doubt",
+  "description": "Use the clues to decide which ingredient reveals the most information when consulted in the Royal Society book.",
+  "difficulty": "hard",
+  "golem": {
+    "chest": {
+      "color": "R",
+      "size": "L"
+    },
+    "ears": {
+      "color": "G",
+      "size": "S"
+    }
+  },
+  "clues": [
+    {
+      "kind": "golem_test",
+      "ingredient": 3,
+      "chest_reacted": false,
+      "ears_reacted": true
+    },
+    {
+      "kind": "sell_result_among",
+      "ingredients": [
+        3,
+        6,
+        7
+      ],
+      "claimedPotion": {
+        "color": "B",
+        "sign": "+"
+      },
+      "sellResult": "opposite"
+    },
+    {
+      "kind": "golem_reaction_among",
+      "ingredients": [
+        2,
+        3,
+        6,
+        7
+      ],
+      "reaction": "ears_only",
+      "count": 1
+    },
+    {
+      "kind": "book_among",
+      "ingredients": [
+        3,
+        5,
+        8
+      ],
+      "result": "lunar",
+      "count": 1
+    }
+  ],
+  "questions": [
+    {
+      "kind": "most_informative_book"
+    }
+  ],
+  "solution": {
+    "1": 5,
+    "2": 7,
+    "3": 1,
+    "4": 2,
+    "5": 6,
+    "6": 4,
+    "7": 3,
+    "8": 8
+  },
+  "hints": [
+    {
+      "level": 1,
+      "text": "Consulting the Royal Society book about an ingredient tells you whether its alchemical is Solar or Lunar. The most informative ingredient is the one whose answer has maximum Shannon entropy \u2014 closest to a 50/50 split across the 2144 remaining worlds."
+    },
+    {
+      "level": 2,
+      "text": "Top 5 ingredients by entropy:\n  ing2: solar=912/2144 (43%)  H=0.984\n  ing7: solar=904/2144 (42%)  H=0.982\n  ing6: solar=904/2144 (42%)  H=0.982\n  ing4: solar=784/2144 (37%)  H=0.947\n  ing1: solar=784/2144 (37%)  H=0.947"
+    },
+    {
+      "level": 3,
+      "text": "Most informative ingredient to consult: ing2 (entropy 0.984)."
+    }
+  ],
+  "complexity": {
+    "raw": 5.167,
+    "avg_clue_strength": 1.058,
+    "ambig_penalty": 0.45,
+    "chain_depth": 0,
+    "stuck": false,
+    "requires_complement_set": false,
+    "question_requires_enumeration": false,
+    "residual_worlds": 2144
+  }
+}

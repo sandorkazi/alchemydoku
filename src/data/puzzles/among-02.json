@@ -1,1 +1,222 @@
-{"id":"among-02","title":"Market Day Rumours","description":"Vendors at the market gossiped freely — you know how many from each group reacted to each potion, but never who. The truth is hidden in the counting.","difficulty":"hard","clues":[{"kind":"mixing_among","ingredients":[2,3,6,7],"result":{"type":"potion","color":"R","sign":"+"}},{"kind":"mixing_among","ingredients":[1,4,5],"result":{"type":"potion","color":"G","sign":"-"}},{"kind":"mixing_among","ingredients":[4,6,8],"result":{"type":"potion","color":"B","sign":"-"}},{"kind":"mixing_among","ingredients":[3,7,8],"result":{"type":"potion","color":"B","sign":"-"}},{"kind":"mixing_among","ingredients":[3,5,7],"result":{"type":"potion","color":"G","sign":"+"}},{"kind":"mixing_among","ingredients":[3,4,5],"result":{"type":"potion","color":"B","sign":"+"}},{"kind":"aspect","ingredient":1,"color":"R","sign":"-"},{"kind":"aspect","ingredient":4,"color":"R","sign":"-"},{"kind":"aspect","ingredient":5,"color":"R","sign":"-"},{"kind":"aspect","ingredient":5,"color":"G","sign":"+"},{"kind":"aspect","ingredient":8,"color":"G","sign":"+"},{"kind":"aspect","ingredient":1,"color":"B","sign":"+"},{"kind":"aspect","ingredient":2,"color":"B","sign":"+"},{"kind":"aspect","ingredient":5,"color":"B","sign":"+"},{"kind":"aspect","ingredient":4,"color":"G","sign":"-"},{"kind":"aspect","ingredient":6,"color":"G","sign":"-"}],"questions":[{"kind":"mixing-result","ingredient1":1,"ingredient2":4},{"kind":"mixing-result","ingredient1":2,"ingredient2":3},{"kind":"mixing-result","ingredient1":7,"ingredient2":8}],"solution":{"1":5,"2":8,"3":2,"4":7,"5":4,"6":3,"7":6,"8":1},"complexity":{"score":5,"raw":6.0,"avg_clue_strength":0.8,"chain_depth":3,"stuck":false,"requires_complement_set":true,"question_requires_enumeration":true,"residual_worlds":4},"hints":[{"level":1,"text":"To find the result of mixing ing1 and ing4, apply the mixing rule: scan colours R→G→B in order. The first colour where both ingredients share the same sign determines the result potion. If all three colours have opposing signs, the result is neutral."},{"level":2,"text":"Step through each colour:\n  R: ing1=R- (ing1 R?: (sign undetermined)), ing4=R- (ing4 R?: (sign undetermined))\n      → SAME sign - → R- resolves."},{"level":3,"text":"ing1=Nnp, ing4=NNN. Mix result: G-."},{"level":4,"text":"To find the result of mixing ing2 and ing3, apply the mixing rule: scan colours R→G→B in order. The first colour where both ingredients share the same sign determines the result potion. If all three colours have opposing signs, the result is neutral."},{"level":5,"text":"Step through each colour:\n  R: ing2=R+ (ing2 R?: (sign undetermined)), ing3=R+ (ing3 R?: (sign undetermined))\n      → SAME sign + → R+ resolves."},{"level":6,"text":"ing2=PPP, ing3=pnP. Mix result: R+."},{"level":7,"text":"To find the result of mixing ing7 and ing8, apply the mixing rule: scan colours R→G→B in order. The first colour where both ingredients share the same sign determines the result potion. If all three colours have opposing signs, the result is neutral."},{"level":8,"text":"Step through each colour:\n  R: ing7=R+ (ing7 R?: (sign undetermined)), ing8=R- (ing8 R?: (sign undetermined))\n      → opposite signs → skip.\n  G: ing7=G+ (ing7 G?: (sign undetermined)), ing8=G+ (ing8 G?: (sign undetermined))\n      → SAME sign + → G+ resolves."},{"level":9,"text":"ing7=Ppn, ing8=npN. Mix result: B-."}]}
+{
+  "id": "among-02",
+  "title": "Market Day Rumours",
+  "description": "Vendors at the market gossiped freely \u2014 you know how many from each group reacted to each potion, but never who. The truth is hidden in the counting.",
+  "difficulty": "hard",
+  "clues": [
+    {
+      "kind": "mixing_among",
+      "ingredients": [
+        2,
+        3,
+        6,
+        7
+      ],
+      "result": {
+        "type": "potion",
+        "color": "R",
+        "sign": "+"
+      }
+    },
+    {
+      "kind": "mixing_among",
+      "ingredients": [
+        1,
+        4,
+        5
+      ],
+      "result": {
+        "type": "potion",
+        "color": "G",
+        "sign": "-"
+      }
+    },
+    {
+      "kind": "mixing_among",
+      "ingredients": [
+        4,
+        6,
+        8
+      ],
+      "result": {
+        "type": "potion",
+        "color": "B",
+        "sign": "-"
+      }
+    },
+    {
+      "kind": "mixing_among",
+      "ingredients": [
+        3,
+        7,
+        8
+      ],
+      "result": {
+        "type": "potion",
+        "color": "B",
+        "sign": "-"
+      }
+    },
+    {
+      "kind": "mixing_among",
+      "ingredients": [
+        3,
+        5,
+        7
+      ],
+      "result": {
+        "type": "potion",
+        "color": "G",
+        "sign": "+"
+      }
+    },
+    {
+      "kind": "mixing_among",
+      "ingredients": [
+        3,
+        4,
+        5
+      ],
+      "result": {
+        "type": "potion",
+        "color": "B",
+        "sign": "+"
+      }
+    },
+    {
+      "kind": "aspect",
+      "ingredient": 1,
+      "color": "R",
+      "sign": "-"
+    },
+    {
+      "kind": "aspect",
+      "ingredient": 4,
+      "color": "R",
+      "sign": "-"
+    },
+    {
+      "kind": "aspect",
+      "ingredient": 5,
+      "color": "R",
+      "sign": "-"
+    },
+    {
+      "kind": "aspect",
+      "ingredient": 5,
+      "color": "G",
+      "sign": "+"
+    },
+    {
+      "kind": "aspect",
+      "ingredient": 8,
+      "color": "G",
+      "sign": "+"
+    },
+    {
+      "kind": "aspect",
+      "ingredient": 1,
+      "color": "B",
+      "sign": "+"
+    },
+    {
+      "kind": "aspect",
+      "ingredient": 2,
+      "color": "B",
+      "sign": "+"
+    },
+    {
+      "kind": "aspect",
+      "ingredient": 5,
+      "color": "B",
+      "sign": "+"
+    },
+    {
+      "kind": "aspect",
+      "ingredient": 4,
+      "color": "G",
+      "sign": "-"
+    },
+    {
+      "kind": "aspect",
+      "ingredient": 6,
+      "color": "G",
+      "sign": "-"
+    }
+  ],
+  "questions": [
+    {
+      "kind": "mixing-result",
+      "ingredient1": 1,
+      "ingredient2": 4
+    },
+    {
+      "kind": "mixing-result",
+      "ingredient1": 2,
+      "ingredient2": 3
+    },
+    {
+      "kind": "mixing-result",
+      "ingredient1": 7,
+      "ingredient2": 8
+    }
+  ],
+  "solution": {
+    "1": 5,
+    "2": 8,
+    "3": 2,
+    "4": 7,
+    "5": 4,
+    "6": 3,
+    "7": 6,
+    "8": 1
+  },
+  "complexity": {
+    "score": 5,
+    "raw": 3.605,
+    "avg_clue_strength": 0.831,
+    "chain_depth": 0,
+    "stuck": false,
+    "requires_complement_set": false,
+    "question_requires_enumeration": false,
+    "residual_worlds": 4
+  },
+  "hints": [
+    {
+      "level": 1,
+      "text": "To find the result of mixing ing1 and ing4, apply the mixing rule: scan colours R\u2192G\u2192B in order. The first colour where both ingredients share the same sign determines the result potion. If all three colours have opposing signs, the result is neutral."
+    },
+    {
+      "level": 2,
+      "text": "Step through each colour:\n  R: ing1=R- (ing1 R?: (sign undetermined)), ing4=R- (ing4 R?: (sign undetermined))\n      \u2192 SAME sign - \u2192 R- resolves."
+    },
+    {
+      "level": 3,
+      "text": "ing1=Nnp, ing4=NNN. Mix result: G-."
+    },
+    {
+      "level": 4,
+      "text": "To find the result of mixing ing2 and ing3, apply the mixing rule: scan colours R\u2192G\u2192B in order. The first colour where both ingredients share the same sign determines the result potion. If all three colours have opposing signs, the result is neutral."
+    },
+    {
+      "level": 5,
+      "text": "Step through each colour:\n  R: ing2=R+ (ing2 R?: (sign undetermined)), ing3=R+ (ing3 R?: (sign undetermined))\n      \u2192 SAME sign + \u2192 R+ resolves."
+    },
+    {
+      "level": 6,
+      "text": "ing2=PPP, ing3=pnP. Mix result: R+."
+    },
+    {
+      "level": 7,
+      "text": "To find the result of mixing ing7 and ing8, apply the mixing rule: scan colours R\u2192G\u2192B in order. The first colour where both ingredients share the same sign determines the result potion. If all three colours have opposing signs, the result is neutral."
+    },
+    {
+      "level": 8,
+      "text": "Step through each colour:\n  R: ing7=R+ (ing7 R?: (sign undetermined)), ing8=R- (ing8 R?: (sign undetermined))\n      \u2192 opposite signs \u2192 skip.\n  G: ing7=G+ (ing7 G?: (sign undetermined)), ing8=G+ (ing8 G?: (sign undetermined))\n      \u2192 SAME sign + \u2192 G+ resolves."
+    },
+    {
+      "level": 9,
+      "text": "ing7=Ppn, ing8=npN. Mix result: B-."
+    }
+  ]
+}

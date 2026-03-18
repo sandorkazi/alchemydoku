@@ -8,7 +8,9 @@
 
 import { useExpandedIngredient, useExpandedSolver } from '../contexts/ExpandedSolverContext';
 import { INGREDIENTS } from '../../data/ingredients';
+import { ALCHEMICALS } from '../../data/alchemicals';
 import { IngredientIcon, ElemImage, SignedElemImage, PotionImage, SellResultIcon, AlchemicalImage } from '../../components/GameSprites';
+import type { AlchemicalId } from '../../types';
 import type {
   AnyClue, EncyclopediaClue, EncyclopediaUncertainClue,
   DebunkApprenticeClue, DebunkMasterClue,
@@ -197,8 +199,12 @@ function EncyclopediaClueCard({ clue }: { clue: EncyclopediaClue }) {
 function EncyclopediaUncertainClueCard({ clue }: { clue: EncyclopediaUncertainClue }) {
   return (
     <Card icon="📄" label={<><ElemImage color={clue.aspect} size="S" width={12} /> Uncertain Article</>} accent="amber">
-      <p className="text-[10px] opacity-70 mb-0.5">≥ 3 of 4 entries are correct</p>
-      <EntryGrid aspect={clue.aspect} entries={[...clue.entries]} />
+      <p className="text-[10px] opacity-70 mb-1">≥ 3 of {clue.entries.length} entries correct</p>
+      <div className="flex flex-wrap gap-2">
+        {clue.entries.map((e, i) => (
+          <IngBadge key={i} slotId={e.ingredient} color={clue.aspect} sign={e.sign} />
+        ))}
+      </div>
     </Card>
   );
 }
@@ -287,24 +293,26 @@ function ExpandedBaseClueCard({ clue, clueIndex = 0 }: { clue: AnyClue; clueInde
     );
   }
   if (clue.kind === 'assignment') {
+    const alchId = clue.alchemical as AlchemicalId;
     return (
-      <Card icon="📌" label="Assignment" accent="purple">
-        <div className="flex items-center gap-1 text-xs">
+      <Card icon="📌" label="Known Alchemical" accent="green">
+        <div className="flex items-center gap-2 flex-wrap">
           {ingIcon(clue.ingredient)}
-          <span className="text-gray-400">=</span>
-          <AlchemicalImage id={clue.alchemical} width={32} />
+          <span className="text-gray-400 text-xs">→</span>
+          <AlchemicalImage id={alchId} width={32} title={ALCHEMICALS[alchId]?.code} />
         </div>
       </Card>
     );
   }
   if (clue.kind === 'mixing_among') {
     const c = clue as MixingAmongClue;
-    const count = c.ingredients.length;
+    const n = c.ingredients.length;
+    const pairCount = (n * (n - 1)) / 2;
     return (
-      <Card icon="👀" label="Observed Mix" accent="blue">
+      <Card icon="🔎" label="Ambiguous Coverage" accent="blue">
         <div className="flex items-center gap-1.5 flex-wrap">
           <span className="text-[10px] text-gray-500 shrink-0">
-            {count === 2 ? 'These 2' : `2 of these ${count}`} mixed
+            at least 1 of {pairCount} possible combinations results in
           </span>
           <PotionImage result={c.result} width={24} />
         </div>
@@ -343,10 +351,10 @@ function ExpandedBaseClueCard({ clue, clueIndex = 0 }: { clue: AnyClue; clueInde
     const n = c.ingredients.length;
     const pairCount = (n * (n - 1)) / 2;
     return (
-      <Card icon="🔢" label="Counted Mix" accent="blue">
+      <Card icon="🔢" label="Ambiguous Coverage" accent="blue">
         <div className="flex items-center gap-1.5 flex-wrap">
           <span className="text-[10px] text-gray-500 shrink-0">
-            {c.count} of {pairCount} pairs mixed
+            {c.count} of {pairCount} possible combinations result in
           </span>
           <PotionImage result={c.result} width={24} />
         </div>

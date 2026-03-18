@@ -23,16 +23,16 @@ function ExpandedRulesCards() {
           <>
             <AlchemicalImage id={1 as AlchemicalId} width={26} />
             <span className="text-base text-orange-400">☀</span>
-            <AlchemicalImage id={3 as AlchemicalId} width={26} />
+            <AlchemicalImage id={8 as AlchemicalId} width={26} />
             <span className="text-base text-orange-400">☀</span>
             <span className="text-sky-200 mx-1">·</span>
             <AlchemicalImage id={2 as AlchemicalId} width={26} />
             <span className="text-base text-slate-400">☽</span>
-            <AlchemicalImage id={8 as AlchemicalId} width={26} />
+            <AlchemicalImage id={7 as AlchemicalId} width={26} />
             <span className="text-base text-slate-400">☽</span>
           </>
         }
-        text="A Book Token reveals whether an ingredient is Solar (☀) or Lunar (☽). Alchemicals whose every Large-sized aspect has a negative sign are Solar; those with only positive Large aspects are Lunar."
+        text="A Book Token reveals whether an ingredient is Solar (☀) or Lunar (☽). Count the alchemical's negative aspects: 0 or 2 negatives → Solar {npN, pNn, Nnp, PPP}; 1 or 3 negatives → Lunar {pnP, nPp, Ppn, NNN}."
       />
 
       <RuleCard

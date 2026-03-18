@@ -1,0 +1,118 @@
+{
+  "id": "mixed-base-34",
+  "title": "Echoes of the Sell",
+  "description": "Mixing, selling, and debunking records all point toward a single pair. Deduce what potion they produce.",
+  "difficulty": "medium",
+  "clues": [
+    {
+      "kind": "mixing_among",
+      "ingredients": [
+        2,
+        3,
+        6,
+        7
+      ],
+      "result": {
+        "color": "G",
+        "sign": "-"
+      }
+    },
+    {
+      "kind": "mixing_count_among",
+      "ingredients": [
+        2,
+        5,
+        8
+      ],
+      "result": {
+        "color": "B",
+        "sign": "-"
+      },
+      "count": 2
+    },
+    {
+      "kind": "sell_among",
+      "ingredients": [
+        4,
+        6,
+        8
+      ],
+      "claimedPotion": {
+        "color": "R",
+        "sign": "-"
+      },
+      "result": "sign_ok",
+      "count": 3
+    },
+    {
+      "kind": "sell_among",
+      "ingredients": [
+        1,
+        2,
+        3
+      ],
+      "claimedPotion": {
+        "color": "R",
+        "sign": "+"
+      },
+      "result": "opposite",
+      "count": 1
+    },
+    {
+      "kind": "sell_among",
+      "ingredients": [
+        2,
+        3,
+        4,
+        8
+      ],
+      "claimedPotion": {
+        "color": "R",
+        "sign": "+"
+      },
+      "result": "total_match",
+      "count": 2
+    }
+  ],
+  "questions": [
+    {
+      "kind": "mixing-result",
+      "ingredient1": 5,
+      "ingredient2": 6
+    }
+  ],
+  "solution": {
+    "1": 4,
+    "2": 6,
+    "3": 5,
+    "4": 2,
+    "5": 1,
+    "6": 7,
+    "7": 8,
+    "8": 3
+  },
+  "hints": [
+    {
+      "level": 1,
+      "text": "To find the result of mixing ing5 and ing6, apply the mixing rule: scan colours R\u2192G\u2192B in order. The first colour where both ingredients share the same sign determines the result potion. If all three colours have opposing signs, the result is neutral."
+    },
+    {
+      "level": 2,
+      "text": "Step through each colour:\n  R: ing5=R- (ing5 has R-), ing6=R- (ing6 has R-)\n      \u2192 SAME sign - \u2192 R- resolves."
+    },
+    {
+      "level": 3,
+      "text": "ing5=npN, ing6=NNN. Mix result: R-."
+    }
+  ],
+  "complexity": {
+    "raw": 2.404,
+    "avg_clue_strength": 3.06,
+    "ambig_penalty": 0.64,
+    "chain_depth": 0,
+    "stuck": false,
+    "requires_complement_set": false,
+    "question_requires_enumeration": false,
+    "residual_worlds": 1
+  }
+}

@@ -326,12 +326,13 @@ function DebunkClueCard({ clue }: { clue: DebunkClue }) {
 // ─── MixingAmong clue card ────────────────────────────────────────────────────
 
 function MixingAmongClueCard({ clue, clueIndex }: { clue: MixingAmongClue; clueIndex: number }) {
-  const count = clue.ingredients.length;
+  const n = clue.ingredients.length;
+  const pairCount = (n * (n - 1)) / 2;
   return (
-    <Card icon="👀" label="Observed Mix" accent="blue">
+    <Card icon="🔎" label="Ambiguous Coverage" accent="blue">
       <div className="flex items-center gap-1.5 flex-wrap">
         <span className="text-[10px] text-gray-500 shrink-0">
-          {count === 2 ? 'These 2' : `2 of these ${count}`} mixed
+          at least 1 of {pairCount} possible combinations results in
         </span>
         <PotionImage result={clue.result} width={POT_W} />
       </div>
@@ -374,10 +375,10 @@ function MixingCountAmongClueCard({ clue, clueIndex }: { clue: MixingCountAmongC
   const n = clue.ingredients.length;
   const pairCount = (n * (n - 1)) / 2;
   return (
-    <Card icon="🔢" label="Counted Mix" accent="blue">
+    <Card icon="🔢" label="Ambiguous Coverage" accent="blue">
       <div className="flex items-center gap-1.5 flex-wrap">
         <span className="text-[10px] text-gray-500 shrink-0">
-          {clue.count} of {pairCount} pairs mixed
+          {clue.count} of {pairCount} possible combinations result in
         </span>
         <PotionImage result={clue.result} width={POT_W} />
       </div>

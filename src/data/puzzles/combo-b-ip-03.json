@@ -1,1 +1,59 @@
-{"id":"combo-b-ip-03","title":"The Living Stone","description":"Determine all potions that the target ingredient can certainly produce when mixed with at least one partner.","difficulty":"hard","clues":[{"kind":"debunk","variant":"master","ingredient1":1,"ingredient2":3,"claimedPotion":{"color":"B","sign":"+"},"outcome":"success"}],"questions":[{"kind":"ingredient-potion-profile","ingredient":3}],"solution":{"1":4,"2":7,"3":2,"4":5,"5":8,"6":1,"7":6,"8":3},"hints":[{"level":1,"text":"Find all potions that ingredient 3 can certainly produce. Neutral is always certain — every alchemical has a direct opposite, and mixing them always yields neutral. For the other potions, a result is 'certain' when it's the same across every remaining possible world."},{"level":2,"text":"Check each of ingredient 3's 7 partners for non-neutral certain results. Non-neutral certain results: ing1→B+."},{"level":3,"text":"Ingredient 3 = pnP. Certain potions (neutral always included): ['B+', 'neutral']."}],"complexity":{"raw":3.009,"avg_clue_strength":2.807,"ambig_penalty":0.0,"chain_depth":0,"stuck":false,"requires_complement_set":false,"question_requires_enumeration":true,"residual_worlds":5760}}
+{
+  "id": "combo-b-ip-03",
+  "title": "The Living Stone",
+  "description": "Determine all potions that the target ingredient can certainly produce when mixed with at least one partner.",
+  "difficulty": "hard",
+  "clues": [
+    {
+      "kind": "debunk",
+      "variant": "master",
+      "ingredient1": 1,
+      "ingredient2": 3,
+      "claimedPotion": {
+        "color": "B",
+        "sign": "+"
+      },
+      "outcome": "success"
+    }
+  ],
+  "questions": [
+    {
+      "kind": "ingredient-potion-profile",
+      "ingredient": 3
+    }
+  ],
+  "solution": {
+    "1": 4,
+    "2": 7,
+    "3": 2,
+    "4": 5,
+    "5": 8,
+    "6": 1,
+    "7": 6,
+    "8": 3
+  },
+  "hints": [
+    {
+      "level": 1,
+      "text": "Find all potions that ingredient 3 can certainly produce. Neutral is always certain \u2014 every alchemical has a direct opposite, and mixing them always yields neutral. For the other potions, a result is 'certain' when it's the same across every remaining possible world."
+    },
+    {
+      "level": 2,
+      "text": "Check each of ingredient 3's 7 partners for non-neutral certain results. Non-neutral certain results: ing1\u2192B+."
+    },
+    {
+      "level": 3,
+      "text": "Ingredient 3 = pnP. Certain potions (neutral always included): ['B+', 'neutral']."
+    }
+  ],
+  "complexity": {
+    "score": 4,
+    "raw": 3.009,
+    "avg_clue_strength": 2.807,
+    "chain_depth": 0,
+    "stuck": false,
+    "requires_complement_set": false,
+    "question_requires_enumeration": true,
+    "residual_worlds": 5760
+  }
+}

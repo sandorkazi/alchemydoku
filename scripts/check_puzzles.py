@@ -18,7 +18,9 @@ Checks performed (always, ~0.1 s):
                       concepts (golem, encyclopedia, solar, lunar, etc.)
  11. all-possible   — possible-potions answer must not be all 7 potions
                       (uses world simulation; only for puzzles with pp questions)
- 12. permalink      — each puzzle ID appears in exactly one collection;
+ 12. enc-wha-dist   — encyclopedia_which_aspect entries must be 4-0 (all+/all-)
+                      or 2-2 sign distribution; 3-1 is invalid
+ 13. permalink      — each puzzle ID appears in exactly one collection;
                       no ID is shared across base/expanded;
                       all collection refs point to registered puzzles
 
@@ -147,6 +149,25 @@ def check_structure(path: Path, puz: dict, is_expanded: bool, r: Results):
                 r.error(f"[clue-shape] {name}: sell_among requires ≥ 3 ingredients, got {n}")
             if not (1 <= count <= max_pairs):
                 r.error(f"[clue-shape] {name}: sell_among count={count} out of range [1, {max_pairs}]")
+
+    # sell_result_among clues: requires ≥ 2 ingredients
+    for c in puz.get("clues", []):
+        if c.get("kind") == "sell_result_among":
+            n = len(c.get("ingredients", []))
+            if n < 2:
+                r.error(f"[clue-shape] {name}: sell_result_among requires ≥ 2 ingredients, got {n}")
+
+    # encyclopedia_which_aspect: sign distribution must be 4-0 or 2-2 (not 3-1)
+    for qi, q in enumerate(puz.get("questions", [])):
+        if q.get("kind") == "encyclopedia_which_aspect":
+            entries = q.get("entries", [])
+            plus = sum(1 for e in entries if e.get("sign") == "+")
+            minus = len(entries) - plus
+            if len(entries) == 4 and plus not in (0, 2, 4):
+                r.error(
+                    f"[enc-wha-dist] {name}: question[{qi}] encyclopedia_which_aspect "
+                    f"has {plus}+/{minus}- distribution — must be 4-0 or 2-2"
+                )
 
     # Solution must be a valid 1–8 bijection
     sol = puz.get("solution", {})
@@ -286,6 +307,15 @@ def _trivial_reason(question: dict, clues: list) -> str | None:
                         f"({question['ingredient1']},{question['ingredient2']}) "
                         f"already confirms the exact result — possible-potions is trivially {{claimedPotion}}"
                     )
+
+    elif kind == "solar_lunar":
+        ing = question["ingredient"]
+        for c in clues:
+            if c["kind"] == "book" and c["ingredient"] == ing:
+                return (
+                    f"book clue directly reveals the solar/lunar status "
+                    f"of ingredient {ing}"
+                )
 
     return None
 

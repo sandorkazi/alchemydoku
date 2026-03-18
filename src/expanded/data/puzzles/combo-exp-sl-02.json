@@ -1,1 +1,108 @@
-{"id":"combo-exp-sl-02","mode":"expanded","title":"The Missing Entry","description":"Use the clues to determine whether the target ingredient is Solar or Lunar.","difficulty":"medium","clues":[{"kind":"encyclopedia","aspect":"R","entries":[{"ingredient":1,"sign":"+"},{"ingredient":5,"sign":"+"},{"ingredient":6,"sign":"+"}]},{"kind":"encyclopedia","aspect":"B","entries":[{"ingredient":1,"sign":"+"},{"ingredient":4,"sign":"+"},{"ingredient":6,"sign":"+"}]}],"questions":[{"kind":"solar_lunar","ingredient":1}],"solution":{"1":8,"2":5,"3":7,"4":4,"5":3,"6":2,"7":6,"8":1},"hints":[{"level":1,"text":"Is ingredient 1 Solar or Lunar? Solar = odd alch IDs {1,3,5,7}, Lunar = even {2,4,6,8}."},{"level":2,"text":"Remaining alch for slot 1: [2, 8]. Solar: []. Lunar: [2, 8]."},{"level":3,"text":"Ingredient 1 = PPP, which is LUNAR."}],"complexity":{"raw":1.618,"avg_clue_strength":3.857,"ambig_penalty":0.0,"chain_depth":0,"stuck":false,"requires_complement_set":false,"question_requires_enumeration":false,"residual_worlds":192}}
+{
+  "id": "combo-exp-sl-02",
+  "mode": "expanded",
+  "title": "Golem Research Notes",
+  "description": "Use the clues to determine whether the target ingredient is Solar or Lunar.",
+  "difficulty": "medium",
+  "clues": [
+    {
+      "kind": "encyclopedia",
+      "aspect": "R",
+      "entries": [
+        {
+          "ingredient": 1,
+          "sign": "+"
+        },
+        {
+          "ingredient": 4,
+          "sign": "+"
+        },
+        {
+          "ingredient": 5,
+          "sign": "+"
+        }
+      ]
+    },
+    {
+      "kind": "encyclopedia",
+      "aspect": "G",
+      "entries": [
+        {
+          "ingredient": 2,
+          "sign": "+"
+        },
+        {
+          "ingredient": 7,
+          "sign": "+"
+        },
+        {
+          "ingredient": 8,
+          "sign": "+"
+        }
+      ]
+    },
+    {
+      "kind": "encyclopedia",
+      "aspect": "B",
+      "entries": [
+        {
+          "ingredient": 2,
+          "sign": "+"
+        },
+        {
+          "ingredient": 4,
+          "sign": "+"
+        },
+        {
+          "ingredient": 7,
+          "sign": "+"
+        }
+      ]
+    },
+    {
+      "kind": "book",
+      "ingredient": 1,
+      "result": "lunar"
+    }
+  ],
+  "questions": [
+    {
+      "kind": "solar_lunar",
+      "ingredient": 5
+    }
+  ],
+  "solution": {
+    "1": 6,
+    "2": 4,
+    "3": 5,
+    "4": 2,
+    "5": 3,
+    "6": 7,
+    "7": 8,
+    "8": 1
+  },
+  "hints": [
+    {
+      "level": 1,
+      "text": "Is ingredient 5 Solar or Lunar? Solar = 0 or 2 negative aspects {1,3,5,8}, Lunar = 1 or 3 negatives {2,4,6,7}."
+    },
+    {
+      "level": 2,
+      "text": "Remaining alch for slot 5: [3]. Solar: [3]. Lunar: []."
+    },
+    {
+      "level": 3,
+      "text": "Ingredient 5 = pNn, which is SOLAR."
+    }
+  ],
+  "complexity": {
+    "raw": 2.046,
+    "avg_clue_strength": 3.325,
+    "ambig_penalty": 0.0,
+    "chain_depth": 0,
+    "stuck": false,
+    "requires_complement_set": false,
+    "question_requires_enumeration": false,
+    "residual_worlds": 4
+  }
+}

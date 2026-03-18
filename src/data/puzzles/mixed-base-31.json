@@ -1,0 +1,92 @@
+{
+  "id": "mixed-base-31",
+  "title": "The Rival's Error",
+  "description": "Mixing, selling, and debunking records all point toward a single pair. Deduce what potion they produce.",
+  "difficulty": "medium",
+  "clues": [
+    {
+      "kind": "sell_among",
+      "ingredients": [
+        3,
+        6,
+        7
+      ],
+      "claimedPotion": {
+        "color": "R",
+        "sign": "+"
+      },
+      "result": "total_match",
+      "count": 2
+    },
+    {
+      "kind": "sell_among",
+      "ingredients": [
+        2,
+        3,
+        4
+      ],
+      "claimedPotion": {
+        "color": "G",
+        "sign": "+"
+      },
+      "result": "sign_ok",
+      "count": 3
+    },
+    {
+      "kind": "sell_among",
+      "ingredients": [
+        2,
+        3,
+        6,
+        8
+      ],
+      "claimedPotion": {
+        "color": "G",
+        "sign": "+"
+      },
+      "result": "sign_ok",
+      "count": 3
+    }
+  ],
+  "questions": [
+    {
+      "kind": "mixing-result",
+      "ingredient1": 2,
+      "ingredient2": 3
+    }
+  ],
+  "solution": {
+    "1": 7,
+    "2": 4,
+    "3": 2,
+    "4": 8,
+    "5": 1,
+    "6": 6,
+    "7": 3,
+    "8": 5
+  },
+  "hints": [
+    {
+      "level": 1,
+      "text": "To find the result of mixing ing2 and ing3, apply the mixing rule: scan colours R\u2192G\u2192B in order. The first colour where both ingredients share the same sign determines the result potion. If all three colours have opposing signs, the result is neutral."
+    },
+    {
+      "level": 2,
+      "text": "Step through each colour:\n  R: ing2=R- (ing2 has R-), ing3=R+ (ing3 has R+)\n      \u2192 opposite signs \u2192 skip.\n  G: ing2=G+ (ing2 G?: (sign undetermined)), ing3=G- (ing3 G?: (sign undetermined))\n      \u2192 opposite signs \u2192 skip.\n  B: ing2=B+ (ing2 has B+), ing3=B+ (ing3 has B+)\n      \u2192 SAME sign + \u2192 B+ resolves."
+    },
+    {
+      "level": 3,
+      "text": "ing2=nPp, ing3=pnP. Mix result: B+."
+    }
+  ],
+  "complexity": {
+    "raw": 2.403,
+    "avg_clue_strength": 4.1,
+    "ambig_penalty": 0.767,
+    "chain_depth": 0,
+    "stuck": false,
+    "requires_complement_set": false,
+    "question_requires_enumeration": false,
+    "residual_worlds": 8
+  }
+}

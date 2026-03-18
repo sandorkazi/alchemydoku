@@ -1,0 +1,115 @@
+{
+  "id": "mixed-base-48",
+  "title": "A Whispered Clue",
+  "description": "Mixing, selling, and debunking records all point toward a single pair. Deduce what potion they produce.",
+  "difficulty": "medium",
+  "clues": [
+    {
+      "kind": "sell_result_among",
+      "ingredients": [
+        6,
+        7,
+        8
+      ],
+      "claimedPotion": {
+        "color": "G",
+        "sign": "-"
+      },
+      "sellResult": "sign_ok"
+    },
+    {
+      "kind": "mixing_among",
+      "ingredients": [
+        2,
+        3,
+        4,
+        8
+      ],
+      "result": {
+        "type": "neutral"
+      }
+    },
+    {
+      "kind": "mixing_count_among",
+      "ingredients": [
+        2,
+        4,
+        5
+      ],
+      "result": {
+        "color": "R",
+        "sign": "-"
+      },
+      "count": 2
+    },
+    {
+      "kind": "mixing_count_among",
+      "ingredients": [
+        2,
+        3,
+        4
+      ],
+      "result": {
+        "color": "G",
+        "sign": "-"
+      },
+      "count": 2
+    },
+    {
+      "kind": "sell_among",
+      "ingredients": [
+        3,
+        4,
+        6,
+        7
+      ],
+      "claimedPotion": {
+        "color": "R",
+        "sign": "-"
+      },
+      "result": "opposite",
+      "count": 4
+    }
+  ],
+  "questions": [
+    {
+      "kind": "mixing-result",
+      "ingredient1": 5,
+      "ingredient2": 8
+    }
+  ],
+  "solution": {
+    "1": 6,
+    "2": 7,
+    "3": 2,
+    "4": 5,
+    "5": 4,
+    "6": 3,
+    "7": 8,
+    "8": 1
+  },
+  "hints": [
+    {
+      "level": 1,
+      "text": "To find the result of mixing ing5 and ing8, apply the mixing rule: scan colours R\u2192G\u2192B in order. The first colour where both ingredients share the same sign determines the result potion. If all three colours have opposing signs, the result is neutral."
+    },
+    {
+      "level": 2,
+      "text": "Step through each colour:\n  R: ing5=R- (ing5 has R-), ing8=R- (ing8 R?: (sign undetermined))\n      \u2192 SAME sign - \u2192 R- resolves."
+    },
+    {
+      "level": 3,
+      "text": "ing5=nPp, ing8=npN. Mix result: G+."
+    }
+  ],
+  "complexity": {
+    "raw": 2.506,
+    "avg_clue_strength": 2.66,
+    "ambig_penalty": 0.62,
+    "chain_depth": 0,
+    "stuck": false,
+    "requires_complement_set": false,
+    "question_requires_enumeration": false,
+    "residual_worlds": 4
+  }
+}

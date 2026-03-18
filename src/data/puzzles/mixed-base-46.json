@@ -1,0 +1,105 @@
+{
+  "id": "mixed-base-46",
+  "title": "The Unsettled Account",
+  "description": "Mixing, selling, and debunking records all point toward a single pair. Deduce what potion they produce.",
+  "difficulty": "medium",
+  "clues": [
+    {
+      "kind": "mixing_among",
+      "ingredients": [
+        1,
+        2,
+        3,
+        8
+      ],
+      "result": {
+        "color": "R",
+        "sign": "-"
+      }
+    },
+    {
+      "kind": "sell_among",
+      "ingredients": [
+        3,
+        5,
+        8
+      ],
+      "claimedPotion": {
+        "color": "R",
+        "sign": "+"
+      },
+      "result": "total_match",
+      "count": 2
+    },
+    {
+      "kind": "sell_among",
+      "ingredients": [
+        1,
+        5,
+        8
+      ],
+      "claimedPotion": {
+        "color": "R",
+        "sign": "+"
+      },
+      "result": "opposite",
+      "count": 3
+    },
+    {
+      "kind": "sell_among",
+      "ingredients": [
+        1,
+        5,
+        6,
+        7
+      ],
+      "claimedPotion": {
+        "color": "G",
+        "sign": "+"
+      },
+      "result": "total_match",
+      "count": 1
+    }
+  ],
+  "questions": [
+    {
+      "kind": "mixing-result",
+      "ingredient1": 2,
+      "ingredient2": 3
+    }
+  ],
+  "solution": {
+    "1": 7,
+    "2": 1,
+    "3": 8,
+    "4": 5,
+    "5": 2,
+    "6": 4,
+    "7": 6,
+    "8": 3
+  },
+  "hints": [
+    {
+      "level": 1,
+      "text": "To find the result of mixing ing2 and ing3, apply the mixing rule: scan colours R\u2192G\u2192B in order. The first colour where both ingredients share the same sign determines the result potion. If all three colours have opposing signs, the result is neutral."
+    },
+    {
+      "level": 2,
+      "text": "Step through each colour:\n  R: ing2=R- (ing2 has R-), ing3=R+ (ing3 has R+)\n      \u2192 opposite signs \u2192 skip.\n  G: ing2=G+ (ing2 has G+), ing3=G+ (ing3 has G+)\n      \u2192 SAME sign + \u2192 G+ resolves."
+    },
+    {
+      "level": 3,
+      "text": "ing2=npN, ing3=PPP. Mix result: G+."
+    }
+  ],
+  "complexity": {
+    "raw": 2.319,
+    "avg_clue_strength": 3.075,
+    "ambig_penalty": 0.6,
+    "chain_depth": 0,
+    "stuck": false,
+    "requires_complement_set": false,
+    "question_requires_enumeration": false,
+    "residual_worlds": 8
+  }
+}

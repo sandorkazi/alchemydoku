@@ -45,5 +45,15 @@
       "level": 3,
       "text": "The result is R+. Red signs matched and Red sizes differed, so Red was the resolver. The two-colour rule correctly predicted Red or Green \u2014 and Red won."
     }
-  ]
+  ],
+  "complexity": {
+    "score": 1,
+    "raw": 1.175,
+    "avg_clue_strength": 2.904,
+    "chain_depth": 0,
+    "stuck": false,
+    "requires_complement_set": false,
+    "question_requires_enumeration": false,
+    "residual_worlds": 720
+  }
 }

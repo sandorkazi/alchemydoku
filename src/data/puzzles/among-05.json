@@ -1,0 +1,91 @@
+{
+  "id": "among-05",
+  "title": "The Living Stone",
+  "description": "Mixing, selling, and debunking records all point toward a single pair. Deduce what potion they produce.",
+  "difficulty": "medium",
+  "clues": [
+    {
+      "kind": "sell_among",
+      "ingredients": [
+        4,
+        5,
+        7
+      ],
+      "claimedPotion": {
+        "color": "R",
+        "sign": "+"
+      },
+      "result": "sign_ok",
+      "count": 3
+    },
+    {
+      "kind": "sell_among",
+      "ingredients": [
+        1,
+        6,
+        7
+      ],
+      "claimedPotion": {
+        "color": "R",
+        "sign": "-"
+      },
+      "result": "total_match",
+      "count": 2
+    },
+    {
+      "kind": "sell_among",
+      "ingredients": [
+        2,
+        4,
+        7
+      ],
+      "claimedPotion": {
+        "color": "R",
+        "sign": "+"
+      },
+      "result": "opposite",
+      "count": 2
+    }
+  ],
+  "questions": [
+    {
+      "kind": "mixing-result",
+      "ingredient1": 5,
+      "ingredient2": 8
+    }
+  ],
+  "solution": {
+    "1": 5,
+    "2": 7,
+    "3": 3,
+    "4": 6,
+    "5": 8,
+    "6": 1,
+    "7": 4,
+    "8": 2
+  },
+  "hints": [
+    {
+      "level": 1,
+      "text": "To find the result of mixing ing5 and ing8, apply the mixing rule: scan colours R\u2192G\u2192B in order. The first colour where both ingredients share the same sign determines the result potion. If all three colours have opposing signs, the result is neutral."
+    },
+    {
+      "level": 2,
+      "text": "Step through each colour:\n  R: ing5=R+ (ing5 has R+), ing8=R+ (ing8 has R+)\n      \u2192 SAME sign + \u2192 R+ resolves."
+    },
+    {
+      "level": 3,
+      "text": "ing5=PPP, ing8=pnP. Mix result: R+."
+    }
+  ],
+  "complexity": {
+    "score": 3,
+    "raw": 2.478,
+    "avg_clue_strength": 4.433,
+    "chain_depth": 0,
+    "stuck": false,
+    "requires_complement_set": false,
+    "question_requires_enumeration": false,
+    "residual_worlds": 4
+  }
+}

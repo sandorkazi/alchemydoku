@@ -1,0 +1,92 @@
+{
+  "id": "mixed-exp-03",
+  "mode": "expanded",
+  "title": "The Lunar Observer",
+  "description": "Use the clues to decide which ingredient reveals the most information when consulted in the Royal Society book.",
+  "difficulty": "hard",
+  "golem": {
+    "chest": {
+      "color": "R",
+      "size": "S"
+    },
+    "ears": {
+      "color": "G",
+      "size": "S"
+    }
+  },
+  "clues": [
+    {
+      "kind": "sell_result_among",
+      "ingredients": [
+        1,
+        2,
+        4
+      ],
+      "claimedPotion": {
+        "color": "B",
+        "sign": "+"
+      },
+      "sellResult": "opposite"
+    },
+    {
+      "kind": "golem_reaction_among",
+      "ingredients": [
+        2,
+        5,
+        6,
+        8
+      ],
+      "reaction": "ears_only",
+      "count": 1
+    },
+    {
+      "kind": "book_among",
+      "ingredients": [
+        4,
+        5,
+        7
+      ],
+      "result": "lunar",
+      "count": 1
+    }
+  ],
+  "questions": [
+    {
+      "kind": "most_informative_book"
+    }
+  ],
+  "solution": {
+    "1": 5,
+    "2": 3,
+    "3": 4,
+    "4": 8,
+    "5": 7,
+    "6": 2,
+    "7": 1,
+    "8": 6
+  },
+  "hints": [
+    {
+      "level": 1,
+      "text": "Consulting the Royal Society book about an ingredient tells you whether its alchemical is Solar or Lunar. The most informative ingredient is the one whose answer has maximum Shannon entropy \u2014 closest to a 50/50 split across the 7596 remaining worlds."
+    },
+    {
+      "level": 2,
+      "text": "Top 5 ingredients by entropy:\n  ing1: solar=3240/7596 (43%)  H=0.984\n  ing3: solar=3096/7596 (41%)  H=0.975\n  ing2: solar=3040/7596 (40%)  H=0.971\n  ing8: solar=2908/7596 (38%)  H=0.960\n  ing6: solar=2908/7596 (38%)  H=0.960"
+    },
+    {
+      "level": 3,
+      "text": "Most informative ingredient to consult: ing1 (entropy 0.984)."
+    }
+  ],
+  "complexity": {
+    "raw": 5.17,
+    "avg_clue_strength": 0.803,
+    "ambig_penalty": 0.6,
+    "chain_depth": 0,
+    "stuck": false,
+    "requires_complement_set": false,
+    "question_requires_enumeration": false,
+    "residual_worlds": 7596
+  }
+}

@@ -1,0 +1,105 @@
+{
+  "id": "mixed-base-18",
+  "title": "An Unlikely Pair",
+  "description": "Mixing, selling, and debunking records all point toward a single pair. Deduce what potion they produce.",
+  "difficulty": "medium",
+  "clues": [
+    {
+      "kind": "sell_result_among",
+      "ingredients": [
+        3,
+        4,
+        5
+      ],
+      "claimedPotion": {
+        "color": "G",
+        "sign": "-"
+      },
+      "sellResult": "sign_ok"
+    },
+    {
+      "kind": "sell_among",
+      "ingredients": [
+        1,
+        3,
+        4,
+        7
+      ],
+      "claimedPotion": {
+        "color": "R",
+        "sign": "-"
+      },
+      "result": "total_match",
+      "count": 4
+    },
+    {
+      "kind": "mixing_count_among",
+      "ingredients": [
+        1,
+        2,
+        5,
+        7
+      ],
+      "result": {
+        "color": "G",
+        "sign": "+"
+      },
+      "count": 4
+    },
+    {
+      "kind": "sell_among",
+      "ingredients": [
+        2,
+        3,
+        5
+      ],
+      "claimedPotion": {
+        "color": "G",
+        "sign": "-"
+      },
+      "result": "opposite",
+      "count": 1
+    }
+  ],
+  "questions": [
+    {
+      "kind": "mixing-result",
+      "ingredient1": 3,
+      "ingredient2": 5
+    }
+  ],
+  "solution": {
+    "1": 4,
+    "2": 8,
+    "3": 7,
+    "4": 5,
+    "5": 6,
+    "6": 3,
+    "7": 1,
+    "8": 2
+  },
+  "hints": [
+    {
+      "level": 1,
+      "text": "To find the result of mixing ing3 and ing5, apply the mixing rule: scan colours R\u2192G\u2192B in order. The first colour where both ingredients share the same sign determines the result potion. If all three colours have opposing signs, the result is neutral."
+    },
+    {
+      "level": 2,
+      "text": "Step through each colour:\n  R: ing3=R- (ing3 has R-), ing5=R+ (ing5 has R+)\n      \u2192 opposite signs \u2192 skip.\n  G: ing3=G- (ing3 has G-), ing5=G+ (ing5 has G+)\n      \u2192 opposite signs \u2192 skip.\n  B: ing3=B- (ing3 has B-), ing5=B- (ing5 has B-)\n      \u2192 SAME sign - \u2192 B- resolves."
+    },
+    {
+      "level": 3,
+      "text": "ing3=NNN, ing5=Ppn. Mix result: B-."
+    }
+  ],
+  "complexity": {
+    "raw": 2.496,
+    "avg_clue_strength": 3.325,
+    "ambig_penalty": 0.725,
+    "chain_depth": 0,
+    "stuck": false,
+    "requires_complement_set": false,
+    "question_requires_enumeration": false,
+    "residual_worlds": 4
+  }
+}

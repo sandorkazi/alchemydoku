@@ -1,1 +1,93 @@
-{"id":"combo-b-06","title":"The Third Ingredient","description":"Mixing, selling, and debunking records all point toward a single pair. Deduce what potion they produce.","difficulty":"easy","clues":[{"kind":"sell","ingredient1":4,"ingredient2":7,"claimedResult":{"type":"potion","color":"R","sign":"+"},"sellResult":"neutral"},{"kind":"sell","ingredient1":3,"ingredient2":6,"claimedResult":{"type":"potion","color":"G","sign":"+"},"sellResult":"total_match"},{"kind":"sell","ingredient1":6,"ingredient2":8,"claimedResult":{"type":"potion","color":"G","sign":"+"},"sellResult":"total_match"},{"kind":"sell","ingredient1":1,"ingredient2":3,"claimedResult":{"type":"potion","color":"B","sign":"-"},"sellResult":"total_match"}],"questions":[{"kind":"mixing-result","ingredient1":2,"ingredient2":5}],"solution":{"1":7,"2":5,"3":6,"4":3,"5":2,"6":8,"7":4,"8":1},"hints":[{"level":1,"text":"To find the result of mixing ing2 and ing5, apply the mixing rule: scan colours R→G→B in order. The first colour where both ingredients share the same sign determines the result potion. If all three colours have opposing signs, the result is neutral."},{"level":2,"text":"Step through each colour:\n  R: ing2=R- (ing2 R?: (sign undetermined)), ing5=R+ (ing5 R?: (sign undetermined))\n      → opposite signs → skip.\n  G: ing2=G- (ing2 has G-), ing5=G- (ing5 has G-)\n      → SAME sign - → G- resolves."},{"level":3,"text":"ing2=Nnp, ing5=pnP. Mix result: B+."}],"complexity":{"raw":1.519,"avg_clue_strength":3.075,"ambig_penalty":0.2,"chain_depth":0,"stuck":false,"requires_complement_set":false,"question_requires_enumeration":false,"residual_worlds":8}}
+{
+  "id": "combo-b-06",
+  "title": "The Third Ingredient",
+  "description": "Mixing, selling, and debunking records all point toward a single pair. Deduce what potion they produce.",
+  "difficulty": "easy",
+  "clues": [
+    {
+      "kind": "sell",
+      "ingredient1": 4,
+      "ingredient2": 7,
+      "claimedResult": {
+        "type": "potion",
+        "color": "R",
+        "sign": "+"
+      },
+      "sellResult": "neutral"
+    },
+    {
+      "kind": "sell",
+      "ingredient1": 3,
+      "ingredient2": 6,
+      "claimedResult": {
+        "type": "potion",
+        "color": "G",
+        "sign": "+"
+      },
+      "sellResult": "total_match"
+    },
+    {
+      "kind": "sell",
+      "ingredient1": 6,
+      "ingredient2": 8,
+      "claimedResult": {
+        "type": "potion",
+        "color": "G",
+        "sign": "+"
+      },
+      "sellResult": "total_match"
+    },
+    {
+      "kind": "sell",
+      "ingredient1": 1,
+      "ingredient2": 3,
+      "claimedResult": {
+        "type": "potion",
+        "color": "B",
+        "sign": "-"
+      },
+      "sellResult": "total_match"
+    }
+  ],
+  "questions": [
+    {
+      "kind": "mixing-result",
+      "ingredient1": 2,
+      "ingredient2": 5
+    }
+  ],
+  "solution": {
+    "1": 7,
+    "2": 5,
+    "3": 6,
+    "4": 3,
+    "5": 2,
+    "6": 8,
+    "7": 4,
+    "8": 1
+  },
+  "hints": [
+    {
+      "level": 1,
+      "text": "To find the result of mixing ing2 and ing5, apply the mixing rule: scan colours R\u2192G\u2192B in order. The first colour where both ingredients share the same sign determines the result potion. If all three colours have opposing signs, the result is neutral."
+    },
+    {
+      "level": 2,
+      "text": "Step through each colour:\n  R: ing2=R- (ing2 R?: (sign undetermined)), ing5=R+ (ing5 R?: (sign undetermined))\n      \u2192 opposite signs \u2192 skip.\n  G: ing2=G- (ing2 has G-), ing5=G- (ing5 has G-)\n      \u2192 SAME sign - \u2192 G- resolves."
+    },
+    {
+      "level": 3,
+      "text": "ing2=Nnp, ing5=pnP. Mix result: B+."
+    }
+  ],
+  "complexity": {
+    "score": 2,
+    "raw": 1.519,
+    "avg_clue_strength": 3.075,
+    "chain_depth": 0,
+    "stuck": false,
+    "requires_complement_set": false,
+    "question_requires_enumeration": false,
+    "residual_worlds": 8
+  }
+}

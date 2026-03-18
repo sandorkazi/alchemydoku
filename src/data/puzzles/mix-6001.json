@@ -1,1 +1,104 @@
-{"id":"mix-6001","title":"The Crimson Cauldron","description":"Multi-step deduction required.","difficulty":"medium","clues":[{"kind":"sell","ingredient1":3,"ingredient2":6,"claimedResult":{"type":"potion","color":"G","sign":"+"},"sellResult":"sign_ok"},{"kind":"mixing","ingredient1":2,"ingredient2":6,"result":{"type":"potion","color":"R","sign":"+"}},{"kind":"mixing","ingredient1":6,"ingredient2":7,"result":{"type":"potion","color":"B","sign":"-"}},{"kind":"mixing","ingredient1":1,"ingredient2":3,"result":{"type":"potion","color":"B","sign":"-"}}],"solution":{"1":1,"2":2,"3":3,"4":4,"5":5,"6":6,"7":7,"8":8},"metadata":{"generatedAt":"2024-01-01T00:00:00Z","worldsAfterClues":8,"minimumClues":true,"seed":6001,"complexityScore":51,"complexityMetrics":{"minClueSubset":5,"clueSynergies":0,"deductionSteps":5,"redundantClues":0,"avgClueDifficulty":0.98}},"questions":[{"kind":"mixing-result","ingredient1":1,"ingredient2":6}],"complexity":{"score":3,"raw":1.458,"avg_clue_strength":2.679,"chain_depth":0,"stuck":false,"requires_complement_set":false,"question_requires_enumeration":false,"residual_worlds":24},"hints":[{"level":1,"text":"To find the result of mixing ing1 and ing6, apply the mixing rule: scan colours R→G→B in order. The first colour where both ingredients share the same sign determines the result potion. If all three colours have opposing signs, the result is neutral."},{"level":2,"text":"Step through each colour:\n  R: ing1=R- (ing1 has R-), ing6=R+ (ing2+ing6=R+: both share R+)\n      → opposite signs → skip.\n  G: ing1=G+ (ing1 G?: (sign undetermined)), ing6=G+ (ing6 G?: (sign undetermined))\n      → SAME sign + → G+ resolves."},{"level":3,"text":"ing1=npN, ing6=Ppn. Mix result: B-."}]}
+{
+  "id": "mix-6001",
+  "title": "The Crimson Cauldron",
+  "description": "Multi-step deduction required.",
+  "difficulty": "medium",
+  "clues": [
+    {
+      "kind": "sell",
+      "ingredient1": 3,
+      "ingredient2": 6,
+      "claimedResult": {
+        "type": "potion",
+        "color": "G",
+        "sign": "+"
+      },
+      "sellResult": "sign_ok"
+    },
+    {
+      "kind": "mixing",
+      "ingredient1": 2,
+      "ingredient2": 6,
+      "result": {
+        "type": "potion",
+        "color": "R",
+        "sign": "+"
+      }
+    },
+    {
+      "kind": "mixing",
+      "ingredient1": 6,
+      "ingredient2": 7,
+      "result": {
+        "type": "potion",
+        "color": "B",
+        "sign": "-"
+      }
+    },
+    {
+      "kind": "mixing",
+      "ingredient1": 1,
+      "ingredient2": 3,
+      "result": {
+        "type": "potion",
+        "color": "B",
+        "sign": "-"
+      }
+    }
+  ],
+  "solution": {
+    "1": 1,
+    "2": 2,
+    "3": 3,
+    "4": 4,
+    "5": 5,
+    "6": 6,
+    "7": 7,
+    "8": 8
+  },
+  "metadata": {
+    "generatedAt": "2024-01-01T00:00:00Z",
+    "worldsAfterClues": 8,
+    "minimumClues": true,
+    "seed": 6001,
+    "complexityScore": 51,
+    "complexityMetrics": {
+      "minClueSubset": 5,
+      "clueSynergies": 0,
+      "deductionSteps": 5,
+      "redundantClues": 0,
+      "avgClueDifficulty": 0.98
+    }
+  },
+  "questions": [
+    {
+      "kind": "mixing-result",
+      "ingredient1": 1,
+      "ingredient2": 6
+    }
+  ],
+  "complexity": {
+    "score": 2,
+    "raw": 1.458,
+    "avg_clue_strength": 2.679,
+    "chain_depth": 0,
+    "stuck": false,
+    "requires_complement_set": false,
+    "question_requires_enumeration": false,
+    "residual_worlds": 24
+  },
+  "hints": [
+    {
+      "level": 1,
+      "text": "To find the result of mixing ing1 and ing6, apply the mixing rule: scan colours R\u2192G\u2192B in order. The first colour where both ingredients share the same sign determines the result potion. If all three colours have opposing signs, the result is neutral."
+    },
+    {
+      "level": 2,
+      "text": "Step through each colour:\n  R: ing1=R- (ing1 has R-), ing6=R+ (ing2+ing6=R+: both share R+)\n      \u2192 opposite signs \u2192 skip.\n  G: ing1=G+ (ing1 G?: (sign undetermined)), ing6=G+ (ing6 G?: (sign undetermined))\n      \u2192 SAME sign + \u2192 G+ resolves."
+    },
+    {
+      "level": 3,
+      "text": "ing1=npN, ing6=Ppn. Mix result: B-."
+    }
+  ]
+}

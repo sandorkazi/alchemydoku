@@ -1,1 +1,72 @@
-{"id":"sl-05","mode":"expanded","title":"The Lunar Chain","description":"Use the clues to deduce which alchemical belongs to the target ingredient.","difficulty":"easy","clues":[{"kind":"mixing","ingredient1":1,"ingredient2":2,"result":{"color":"G","sign":"+"}},{"kind":"book","ingredient":2,"result":"solar"}],"questions":[{"kind":"alchemical","ingredient":2}],"solution":{"1":4,"2":1,"3":6,"4":2,"5":5,"6":8,"7":3,"8":7},"hints":[{"level":1,"text":"Identify the alchemical for ingredient 2. Direct clues: ing1+ing2=G+, ing2 is solar."},{"level":2,"text":"Eliminated for slot 2: [2, 3, 4, 5, 6, 7, 8]. Remaining: [1]."},{"level":3,"text":"Ingredient 2 = npN (R- G+ B-)."}],"complexity":{"raw":1.678,"avg_clue_strength":2.404,"ambig_penalty":0.0,"chain_depth":0,"stuck":false,"requires_complement_set":false,"question_requires_enumeration":false,"residual_worlds":1440}}
+{
+  "id": "sl-05",
+  "mode": "expanded",
+  "title": "Trial by Fire",
+  "description": "Use the clues to deduce which alchemical belongs to the target ingredient.",
+  "difficulty": "easy",
+  "clues": [
+    {
+      "kind": "mixing",
+      "ingredient1": 1,
+      "ingredient2": 2,
+      "result": {
+        "color": "R",
+        "sign": "-"
+      }
+    },
+    {
+      "kind": "mixing",
+      "ingredient1": 1,
+      "ingredient2": 3,
+      "result": {
+        "color": "G",
+        "sign": "-"
+      }
+    },
+    {
+      "kind": "book",
+      "ingredient": 1,
+      "result": "lunar"
+    }
+  ],
+  "questions": [
+    {
+      "kind": "alchemical",
+      "ingredient": 1
+    }
+  ],
+  "solution": {
+    "1": 7,
+    "2": 4,
+    "3": 2,
+    "4": 1,
+    "5": 8,
+    "6": 3,
+    "7": 6,
+    "8": 5
+  },
+  "hints": [
+    {
+      "level": 1,
+      "text": "Identify the alchemical for ingredient 1. Direct clues: ing1+ing2=R-, ing1+ing3=G-, ing1 is lunar."
+    },
+    {
+      "level": 2,
+      "text": "Eliminated for slot 1: [1, 2, 3, 4, 5, 6, 8]. Remaining: [7]."
+    },
+    {
+      "level": 3,
+      "text": "Ingredient 1 = NNN (R- G- B-)."
+    }
+  ],
+  "complexity": {
+    "raw": 1.82,
+    "avg_clue_strength": 2.131,
+    "ambig_penalty": 0.0,
+    "chain_depth": 0,
+    "stuck": false,
+    "requires_complement_set": false,
+    "question_requires_enumeration": false,
+    "residual_worlds": 480
+  }
+}

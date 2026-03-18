@@ -1,0 +1,117 @@
+{
+  "id": "mixed-base-35",
+  "title": "The Fading Lead",
+  "description": "Mixing, selling, and debunking records all point toward a single pair. Deduce what potion they produce.",
+  "difficulty": "medium",
+  "clues": [
+    {
+      "kind": "sell_result_among",
+      "ingredients": [
+        1,
+        2,
+        6
+      ],
+      "claimedPotion": {
+        "color": "R",
+        "sign": "+"
+      },
+      "sellResult": "opposite"
+    },
+    {
+      "kind": "mixing_among",
+      "ingredients": [
+        1,
+        5,
+        6,
+        7
+      ],
+      "result": {
+        "color": "B",
+        "sign": "-"
+      }
+    },
+    {
+      "kind": "sell_among",
+      "ingredients": [
+        1,
+        4,
+        7
+      ],
+      "claimedPotion": {
+        "color": "G",
+        "sign": "-"
+      },
+      "result": "sign_ok",
+      "count": 3
+    },
+    {
+      "kind": "sell_among",
+      "ingredients": [
+        3,
+        5,
+        8
+      ],
+      "claimedPotion": {
+        "color": "B",
+        "sign": "-"
+      },
+      "result": "opposite",
+      "count": 1
+    },
+    {
+      "kind": "sell_among",
+      "ingredients": [
+        3,
+        6,
+        7
+      ],
+      "claimedPotion": {
+        "color": "R",
+        "sign": "-"
+      },
+      "result": "total_match",
+      "count": 2
+    }
+  ],
+  "questions": [
+    {
+      "kind": "mixing-result",
+      "ingredient1": 5,
+      "ingredient2": 7
+    }
+  ],
+  "solution": {
+    "1": 1,
+    "2": 8,
+    "3": 4,
+    "4": 6,
+    "5": 3,
+    "6": 5,
+    "7": 7,
+    "8": 2
+  },
+  "hints": [
+    {
+      "level": 1,
+      "text": "To find the result of mixing ing5 and ing7, apply the mixing rule: scan colours R\u2192G\u2192B in order. The first colour where both ingredients share the same sign determines the result potion. If all three colours have opposing signs, the result is neutral."
+    },
+    {
+      "level": 2,
+      "text": "Step through each colour:\n  R: ing5=R+ (ing5 has R+), ing7=R- (ing7 has R-)\n      \u2192 opposite signs \u2192 skip.\n  G: ing5=G- (ing5 has G-), ing7=G- (ing7 G?: (sign undetermined))\n      \u2192 SAME sign - \u2192 G- resolves."
+    },
+    {
+      "level": 3,
+      "text": "ing5=pNn, ing7=NNN. Mix result: B-."
+    }
+  ],
+  "complexity": {
+    "raw": 2.793,
+    "avg_clue_strength": 2.743,
+    "ambig_penalty": 0.78,
+    "chain_depth": 0,
+    "stuck": false,
+    "requires_complement_set": false,
+    "question_requires_enumeration": false,
+    "residual_worlds": 3
+  }
+}

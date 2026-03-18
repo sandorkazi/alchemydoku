@@ -1,29 +1,67 @@
 {
   "id": "debunk-plan-tutorial-02",
   "title": "The Neutral Trap",
-  "description": "Two false publications — but mixing the two published ingredients would only give neutral. Their aspects are fully known from your notes. Use what you know.",
+  "description": "Two false publications \u2014 but mixing the two published ingredients would only give neutral. Their aspects are fully known from your notes. Use what you know.",
   "difficulty": "tutorial",
   "trivial_answer_ok": true,
   "clues": [
-    { "kind": "aspect", "ingredient": 3, "color": "R", "sign": "-" },
-    { "kind": "aspect", "ingredient": 3, "color": "G", "sign": "+" },
-    { "kind": "aspect", "ingredient": 3, "color": "B", "sign": "-" },
-    { "kind": "aspect", "ingredient": 7, "color": "R", "sign": "+" },
-    { "kind": "aspect", "ingredient": 7, "color": "G", "sign": "-" },
-    { "kind": "aspect", "ingredient": 7, "color": "B", "sign": "+" }
+    {
+      "kind": "aspect",
+      "ingredient": 3,
+      "color": "R",
+      "sign": "-"
+    },
+    {
+      "kind": "aspect",
+      "ingredient": 3,
+      "color": "G",
+      "sign": "+"
+    },
+    {
+      "kind": "aspect",
+      "ingredient": 3,
+      "color": "B",
+      "sign": "-"
+    },
+    {
+      "kind": "aspect",
+      "ingredient": 7,
+      "color": "R",
+      "sign": "+"
+    },
+    {
+      "kind": "aspect",
+      "ingredient": 7,
+      "color": "G",
+      "sign": "-"
+    },
+    {
+      "kind": "aspect",
+      "ingredient": 7,
+      "color": "B",
+      "sign": "+"
+    }
   ],
   "publications": [
     null,
     null,
-    { "ingredient": 3, "claimedAlchemical": 4 },
+    {
+      "ingredient": 3,
+      "claimedAlchemical": 4
+    },
     null,
     null,
     null,
-    { "ingredient": 7, "claimedAlchemical": 5 },
+    {
+      "ingredient": 7,
+      "claimedAlchemical": 5
+    },
     null
   ],
   "questions": [
-    { "kind": "debunk_apprentice_plan" }
+    {
+      "kind": "debunk_apprentice_plan"
+    }
   ],
   "solution": {
     "1": 3,
@@ -37,22 +75,40 @@
   },
   "debunk_answers": {
     "debunk_apprentice_plan": [
-      { "kind": "apprentice", "ingredient": 3, "color": "B" },
-      { "kind": "apprentice", "ingredient": 7, "color": "R" }
+      {
+        "kind": "apprentice",
+        "ingredient": 3,
+        "color": "B"
+      },
+      {
+        "kind": "apprentice",
+        "ingredient": 7,
+        "color": "R"
+      }
     ]
   },
   "hints": [
     {
       "level": 1,
-      "text": "Your clues tell you every aspect of ing3 and ing7. For each publication, compare the true aspect signs against those of the claimed alchemical — the colour where signs differ is your apprentice debunk target."
+      "text": "Your clues tell you every aspect of ing3 and ing7. For each publication, compare the true aspect signs against those of the claimed alchemical \u2014 the colour where signs differ is your apprentice debunk target."
     },
     {
       "level": 2,
-      "text": "ing3 is truly npN (R-, G+, B-). The publication claims nPp (R-, G+, B+). R and G match — only B contradicts (true B- vs claimed B+). ing7 is truly pnP (R+, G-, B+). The publication claims Nnp (R-, G-, B+). G and B match — only R contradicts (true R+ vs claimed R-)."
+      "text": "ing3 is truly npN (R-, G+, B-). The publication claims nPp (R-, G+, B+). R and G match \u2014 only B contradicts (true B- vs claimed B+). ing7 is truly pnP (R+, G-, B+). The publication claims Nnp (R-, G-, B+). G and B match \u2014 only R contradicts (true R+ vs claimed R-)."
     },
     {
       "level": 3,
-      "text": "Two-step plan: apprentice-debunk ing3 on B- (true B- contradicts the claimed B+). Then apprentice-debunk ing7 on R+ (true R+ contradicts the claimed R-). Note: ing3 (npN) and ing7 (pnP) are direct opposites — they always mix to neutral. A master debunk on this pair would reveal neutral, which doesn't challenge either publication. Clue knowledge is your only path here."
+      "text": "Two-step plan: apprentice-debunk ing3 on B- (true B- contradicts the claimed B+). Then apprentice-debunk ing7 on R+ (true R+ contradicts the claimed R-). Note: ing3 (npN) and ing7 (pnP) are direct opposites \u2014 they always mix to neutral. A master debunk on this pair would reveal neutral, which doesn't challenge either publication. Clue knowledge is your only path here."
     }
-  ]
+  ],
+  "complexity": {
+    "score": 5,
+    "raw": 6.325,
+    "avg_clue_strength": 0.968,
+    "chain_depth": 2,
+    "stuck": true,
+    "requires_complement_set": false,
+    "question_requires_enumeration": false,
+    "residual_worlds": 720
+  }
 }
