@@ -104,7 +104,7 @@ import comboExpXsl03        from './puzzles/combo-exp-xsl-03.json';
 import comboExpXsl04        from './puzzles/combo-exp-xsl-04.json';
 import comboExpXsl05        from './puzzles/combo-exp-xsl-05.json';
 
-// ── Mixed Clues (Expanded) ─────────────────────────────────────────────────
+// ── Mixed Clues — Book/Solar-Lunar (10) ───────────────────────────────────
 import mixedExp02            from './puzzles/mixed-exp-02.json';
 import mixedExp03            from './puzzles/mixed-exp-03.json';
 import mixedExp04            from './puzzles/mixed-exp-04.json';
@@ -115,46 +115,48 @@ import mixedExp08            from './puzzles/mixed-exp-08.json';
 import mixedExp09            from './puzzles/mixed-exp-09.json';
 import mixedExp10            from './puzzles/mixed-exp-10.json';
 import mixedExp11            from './puzzles/mixed-exp-11.json';
-import mixedExp12            from './puzzles/mixed-exp-12.json';
-import mixedExp13            from './puzzles/mixed-exp-13.json';
-import mixedExp14            from './puzzles/mixed-exp-14.json';
-import mixedExp15            from './puzzles/mixed-exp-15.json';
-import mixedExp16            from './puzzles/mixed-exp-16.json';
-import mixedExp17            from './puzzles/mixed-exp-17.json';
-import mixedExp18            from './puzzles/mixed-exp-18.json';
-import mixedExp19            from './puzzles/mixed-exp-19.json';
-import mixedExp20            from './puzzles/mixed-exp-20.json';
-import mixedExp21            from './puzzles/mixed-exp-21.json';
-import mixedExp22            from './puzzles/mixed-exp-22.json';
-import mixedExp23            from './puzzles/mixed-exp-23.json';
-import mixedExp24            from './puzzles/mixed-exp-24.json';
-import mixedExp25            from './puzzles/mixed-exp-25.json';
-import mixedExp26            from './puzzles/mixed-exp-26.json';
-import mixedExp27            from './puzzles/mixed-exp-27.json';
-import mixedExp28            from './puzzles/mixed-exp-28.json';
-import mixedExp29            from './puzzles/mixed-exp-29.json';
-import mixedExp30            from './puzzles/mixed-exp-30.json';
-import mixedExp31            from './puzzles/mixed-exp-31.json';
-import mixedExp32            from './puzzles/mixed-exp-32.json';
-import mixedExp33            from './puzzles/mixed-exp-33.json';
-import mixedExp34            from './puzzles/mixed-exp-34.json';
-import mixedExp35            from './puzzles/mixed-exp-35.json';
-import mixedExp36            from './puzzles/mixed-exp-36.json';
-import mixedExp37            from './puzzles/mixed-exp-37.json';
-import mixedExp38            from './puzzles/mixed-exp-38.json';
-import mixedExp39            from './puzzles/mixed-exp-39.json';
-import mixedExp40            from './puzzles/mixed-exp-40.json';
-import mixedExp41            from './puzzles/mixed-exp-41.json';
-import mixedExp42            from './puzzles/mixed-exp-42.json';
-import mixedExp43            from './puzzles/mixed-exp-43.json';
-import mixedExp44            from './puzzles/mixed-exp-44.json';
-import mixedExp45            from './puzzles/mixed-exp-45.json';
-import mixedExp46            from './puzzles/mixed-exp-46.json';
-import mixedExp47            from './puzzles/mixed-exp-47.json';
-import mixedExp48            from './puzzles/mixed-exp-48.json';
-import mixedExp49            from './puzzles/mixed-exp-49.json';
-import mixedExp50            from './puzzles/mixed-exp-50.json';
-import mixedExp51            from './puzzles/mixed-exp-51.json';
+// ── Mixed Clues — Potion Mixing (20) ──────────────────────────────────────
+import mixedExpMix02         from './puzzles/mixed-exp-mix-02.json';
+import mixedExpMix03         from './puzzles/mixed-exp-mix-03.json';
+import mixedExpMix04         from './puzzles/mixed-exp-mix-04.json';
+import mixedExpMix05         from './puzzles/mixed-exp-mix-05.json';
+import mixedExpMix06         from './puzzles/mixed-exp-mix-06.json';
+import mixedExpMix07         from './puzzles/mixed-exp-mix-07.json';
+import mixedExpMix08         from './puzzles/mixed-exp-mix-08.json';
+import mixedExpMix09         from './puzzles/mixed-exp-mix-09.json';
+import mixedExpMix10         from './puzzles/mixed-exp-mix-10.json';
+import mixedExpMix11         from './puzzles/mixed-exp-mix-11.json';
+import mixedExpMix12         from './puzzles/mixed-exp-mix-12.json';
+import mixedExpMix13         from './puzzles/mixed-exp-mix-13.json';
+import mixedExpMix14         from './puzzles/mixed-exp-mix-14.json';
+import mixedExpMix15         from './puzzles/mixed-exp-mix-15.json';
+import mixedExpMix16         from './puzzles/mixed-exp-mix-16.json';
+import mixedExpMix17         from './puzzles/mixed-exp-mix-17.json';
+import mixedExpMix18         from './puzzles/mixed-exp-mix-18.json';
+import mixedExpMix19         from './puzzles/mixed-exp-mix-19.json';
+import mixedExpMix20         from './puzzles/mixed-exp-mix-20.json';
+import mixedExpMix21         from './puzzles/mixed-exp-mix-21.json';
+// ── Mixed Clues — Golem Reaction Groups (20) ──────────────────────────────
+import mixedExpGolem02       from './puzzles/mixed-exp-golem-02.json';
+import mixedExpGolem03       from './puzzles/mixed-exp-golem-03.json';
+import mixedExpGolem04       from './puzzles/mixed-exp-golem-04.json';
+import mixedExpGolem05       from './puzzles/mixed-exp-golem-05.json';
+import mixedExpGolem06       from './puzzles/mixed-exp-golem-06.json';
+import mixedExpGolem07       from './puzzles/mixed-exp-golem-07.json';
+import mixedExpGolem08       from './puzzles/mixed-exp-golem-08.json';
+import mixedExpGolem09       from './puzzles/mixed-exp-golem-09.json';
+import mixedExpGolem10       from './puzzles/mixed-exp-golem-10.json';
+import mixedExpGolem11       from './puzzles/mixed-exp-golem-11.json';
+import mixedExpGolem12       from './puzzles/mixed-exp-golem-12.json';
+import mixedExpGolem13       from './puzzles/mixed-exp-golem-13.json';
+import mixedExpGolem14       from './puzzles/mixed-exp-golem-14.json';
+import mixedExpGolem15       from './puzzles/mixed-exp-golem-15.json';
+import mixedExpGolem16       from './puzzles/mixed-exp-golem-16.json';
+import mixedExpGolem17       from './puzzles/mixed-exp-golem-17.json';
+import mixedExpGolem18       from './puzzles/mixed-exp-golem-18.json';
+import mixedExpGolem19       from './puzzles/mixed-exp-golem-19.json';
+import mixedExpGolem20       from './puzzles/mixed-exp-golem-20.json';
+import mixedExpGolem21       from './puzzles/mixed-exp-golem-21.json';
 
 import type { ExpandedPuzzle } from '../types';
 
@@ -178,14 +180,14 @@ export const ALL_EXPANDED_PUZZLES: ExpandedPuzzle[] = [
   comboExpXsl02, comboExpXsl03, comboExpXsl04, comboExpXsl05,
   mixedExp02, mixedExp03, mixedExp04, mixedExp05, mixedExp06,
   mixedExp07, mixedExp08, mixedExp09, mixedExp10, mixedExp11,
-  mixedExp12, mixedExp13, mixedExp14, mixedExp15, mixedExp16,
-  mixedExp17, mixedExp18, mixedExp19, mixedExp20, mixedExp21,
-  mixedExp22, mixedExp23, mixedExp24, mixedExp25, mixedExp26,
-  mixedExp27, mixedExp28, mixedExp29, mixedExp30, mixedExp31,
-  mixedExp32, mixedExp33, mixedExp34, mixedExp35, mixedExp36,
-  mixedExp37, mixedExp38, mixedExp39, mixedExp40, mixedExp41,
-  mixedExp42, mixedExp43, mixedExp44, mixedExp45, mixedExp46,
-  mixedExp47, mixedExp48, mixedExp49, mixedExp50, mixedExp51,
+  mixedExpMix02, mixedExpMix03, mixedExpMix04, mixedExpMix05, mixedExpMix06,
+  mixedExpMix07, mixedExpMix08, mixedExpMix09, mixedExpMix10, mixedExpMix11,
+  mixedExpMix12, mixedExpMix13, mixedExpMix14, mixedExpMix15, mixedExpMix16,
+  mixedExpMix17, mixedExpMix18, mixedExpMix19, mixedExpMix20, mixedExpMix21,
+  mixedExpGolem02, mixedExpGolem03, mixedExpGolem04, mixedExpGolem05, mixedExpGolem06,
+  mixedExpGolem07, mixedExpGolem08, mixedExpGolem09, mixedExpGolem10, mixedExpGolem11,
+  mixedExpGolem12, mixedExpGolem13, mixedExpGolem14, mixedExpGolem15, mixedExpGolem16,
+  mixedExpGolem17, mixedExpGolem18, mixedExpGolem19, mixedExpGolem20, mixedExpGolem21,
 ] as unknown as ExpandedPuzzle[];
 
 export const EXPANDED_PUZZLE_MAP: Record<string, ExpandedPuzzle> =
@@ -330,19 +332,19 @@ export const EXPANDED_COLLECTIONS: ExpandedCollection[] = [
   {
     id: 'mixed-clues-exp',
     title: 'Mixed Clues',
-    description: 'Ambiguous sell results, overheard golem reactions, and uncertain solar/lunar observations — all pointing to 3 or 4 possible ingredients. Find the most informative question to ask.',
+    description: 'Ambiguous sell results, overheard golem reactions, and uncertain solar/lunar observations — all pointing to 3 or 4 possible ingredients. Questions range from potion mixing to golem groups to solar/lunar strategy.',
     difficulty: 'hard',
     puzzleIds: [
       'mixed-exp-02', 'mixed-exp-03', 'mixed-exp-04', 'mixed-exp-05', 'mixed-exp-06',
       'mixed-exp-07', 'mixed-exp-08', 'mixed-exp-09', 'mixed-exp-10', 'mixed-exp-11',
-      'mixed-exp-12', 'mixed-exp-13', 'mixed-exp-14', 'mixed-exp-15', 'mixed-exp-16',
-      'mixed-exp-17', 'mixed-exp-18', 'mixed-exp-19', 'mixed-exp-20', 'mixed-exp-21',
-      'mixed-exp-22', 'mixed-exp-23', 'mixed-exp-24', 'mixed-exp-25', 'mixed-exp-26',
-      'mixed-exp-27', 'mixed-exp-28', 'mixed-exp-29', 'mixed-exp-30', 'mixed-exp-31',
-      'mixed-exp-32', 'mixed-exp-33', 'mixed-exp-34', 'mixed-exp-35', 'mixed-exp-36',
-      'mixed-exp-37', 'mixed-exp-38', 'mixed-exp-39', 'mixed-exp-40', 'mixed-exp-41',
-      'mixed-exp-42', 'mixed-exp-43', 'mixed-exp-44', 'mixed-exp-45', 'mixed-exp-46',
-      'mixed-exp-47', 'mixed-exp-48', 'mixed-exp-49', 'mixed-exp-50', 'mixed-exp-51',
+      'mixed-exp-mix-02', 'mixed-exp-mix-03', 'mixed-exp-mix-04', 'mixed-exp-mix-05', 'mixed-exp-mix-06',
+      'mixed-exp-mix-07', 'mixed-exp-mix-08', 'mixed-exp-mix-09', 'mixed-exp-mix-10', 'mixed-exp-mix-11',
+      'mixed-exp-mix-12', 'mixed-exp-mix-13', 'mixed-exp-mix-14', 'mixed-exp-mix-15', 'mixed-exp-mix-16',
+      'mixed-exp-mix-17', 'mixed-exp-mix-18', 'mixed-exp-mix-19', 'mixed-exp-mix-20', 'mixed-exp-mix-21',
+      'mixed-exp-golem-02', 'mixed-exp-golem-03', 'mixed-exp-golem-04', 'mixed-exp-golem-05', 'mixed-exp-golem-06',
+      'mixed-exp-golem-07', 'mixed-exp-golem-08', 'mixed-exp-golem-09', 'mixed-exp-golem-10', 'mixed-exp-golem-11',
+      'mixed-exp-golem-12', 'mixed-exp-golem-13', 'mixed-exp-golem-14', 'mixed-exp-golem-15', 'mixed-exp-golem-16',
+      'mixed-exp-golem-17', 'mixed-exp-golem-18', 'mixed-exp-golem-19', 'mixed-exp-golem-20', 'mixed-exp-golem-21',
     ],
     unlockedAfter: 'combo-exp',
   },

@@ -6,33 +6,20 @@
   "difficulty": "hard",
   "golem": {
     "chest": {
-      "color": "R",
+      "color": "G",
       "size": "S"
     },
     "ears": {
-      "color": "G",
+      "color": "B",
       "size": "L"
     }
   },
   "clues": [
     {
-      "kind": "golem_test",
-      "ingredient": 5,
-      "chest_reacted": true,
-      "ears_reacted": true
-    },
-    {
-      "kind": "golem_test",
-      "ingredient": 8,
-      "chest_reacted": false,
-      "ears_reacted": false
-    },
-    {
       "kind": "sell_result_among",
       "ingredients": [
-        1,
-        3,
-        4,
+        2,
+        6,
         8
       ],
       "claimedPotion": {
@@ -46,10 +33,20 @@
       "ingredients": [
         1,
         3,
-        6,
-        7
+        5,
+        6
       ],
-      "reaction": "non_reactive",
+      "reaction": "animators",
+      "count": 1
+    },
+    {
+      "kind": "book_among",
+      "ingredients": [
+        2,
+        4,
+        8
+      ],
+      "result": "lunar",
       "count": 1
     }
   ],
@@ -59,37 +56,37 @@
     }
   ],
   "solution": {
-    "1": 4,
+    "1": 7,
     "2": 8,
-    "3": 1,
-    "4": 2,
-    "5": 3,
-    "6": 6,
-    "7": 7,
-    "8": 5
+    "3": 6,
+    "4": 4,
+    "5": 2,
+    "6": 5,
+    "7": 3,
+    "8": 1
   },
   "hints": [
     {
       "level": 1,
-      "text": "Consulting the Royal Society book about an ingredient tells you whether its alchemical is Solar or Lunar. The most informative ingredient is the one whose answer has maximum Shannon entropy \u2014 closest to a 50/50 split across the 1800 remaining worlds."
+      "text": "Consulting the Royal Society book about an ingredient tells you whether its alchemical is Solar or Lunar. The most informative ingredient is the one whose answer has maximum Shannon entropy \u2014 closest to a 50/50 split across the 7044 remaining worlds."
     },
     {
       "level": 2,
-      "text": "Top 5 ingredients by entropy:\n  ing2: solar=900/1800 (50%)  H=1.000\n  ing4: solar=896/1800 (50%)  H=1.000\n  ing3: solar=896/1800 (50%)  H=1.000\n  ing1: solar=896/1800 (50%)  H=1.000\n  ing7: solar=906/1800 (50%)  H=1.000"
+      "text": "Top 5 ingredients by entropy:\n  ing7: solar=3180/7044 (45%)  H=0.993\n  ing6: solar=2748/7044 (39%)  H=0.965\n  ing5: solar=2720/7044 (39%)  H=0.962\n  ing3: solar=2720/7044 (39%)  H=0.962\n  ing1: solar=2720/7044 (39%)  H=0.962"
     },
     {
       "level": 3,
-      "text": "Most informative ingredient to consult: ing2 (entropy 1.000)."
+      "text": "Most informative ingredient to consult: ing7 (entropy 0.993)."
     }
   ],
   "complexity": {
-    "raw": 4.567,
-    "avg_clue_strength": 1.121,
-    "ambig_penalty": 0.35,
+    "raw": 5.087,
+    "avg_clue_strength": 0.839,
+    "ambig_penalty": 0.6,
     "chain_depth": 0,
     "stuck": false,
     "requires_complement_set": false,
     "question_requires_enumeration": false,
-    "residual_worlds": 1800
+    "residual_worlds": 7044
   }
 }

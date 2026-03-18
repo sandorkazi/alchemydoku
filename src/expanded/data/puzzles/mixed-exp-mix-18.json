@@ -1,0 +1,130 @@
+{
+  "id": "mixed-exp-mix-18",
+  "mode": "expanded",
+  "title": "Solar-Lunar Ambiguity",
+  "description": "Mixing, selling, and debunking records all point toward a single pair. Deduce what potion they produce.",
+  "difficulty": "hard",
+  "golem": {
+    "chest": {
+      "color": "B",
+      "size": "S"
+    },
+    "ears": {
+      "color": "G",
+      "size": "L"
+    }
+  },
+  "clues": [
+    {
+      "kind": "golem_test",
+      "ingredient": 6,
+      "chest_reacted": true,
+      "ears_reacted": true
+    },
+    {
+      "kind": "golem_test",
+      "ingredient": 7,
+      "chest_reacted": true,
+      "ears_reacted": false
+    },
+    {
+      "kind": "sell_result_among",
+      "ingredients": [
+        2,
+        3,
+        7,
+        8
+      ],
+      "claimedPotion": {
+        "color": "B",
+        "sign": "+"
+      },
+      "sellResult": "opposite"
+    },
+    {
+      "kind": "golem_reaction_among",
+      "ingredients": [
+        3,
+        6,
+        8
+      ],
+      "reaction": "non_reactive",
+      "count": 1
+    },
+    {
+      "kind": "book_among",
+      "ingredients": [
+        4,
+        6,
+        8
+      ],
+      "result": "lunar",
+      "count": 1
+    },
+    {
+      "kind": "mixing_count_among",
+      "ingredients": [
+        1,
+        2,
+        3,
+        4
+      ],
+      "result": {
+        "color": "R",
+        "sign": "+"
+      },
+      "count": 4
+    },
+    {
+      "kind": "golem_reaction_among",
+      "ingredients": [
+        1,
+        3,
+        4
+      ],
+      "reaction": "non_reactive",
+      "count": 1
+    }
+  ],
+  "questions": [
+    {
+      "kind": "mixing-result",
+      "ingredient1": 1,
+      "ingredient2": 5
+    }
+  ],
+  "solution": {
+    "1": 2,
+    "2": 6,
+    "3": 3,
+    "4": 8,
+    "5": 7,
+    "6": 4,
+    "7": 5,
+    "8": 1
+  },
+  "hints": [
+    {
+      "level": 1,
+      "text": "To find the result of mixing ing1 and ing5, apply the mixing rule: scan colours R\u2192G\u2192B in order. The first colour where both ingredients share the same sign determines the result potion. If all three colours have opposing signs, the result is neutral."
+    },
+    {
+      "level": 2,
+      "text": "Step through each colour:\n  R: ing1=R+ (ing1 has R+), ing5=R- (ing5 has R-)\n      \u2192 opposite signs \u2192 skip.\n  G: ing1=G- (ing1 has G-), ing5=G- (ing5 has G-)\n      \u2192 SAME sign - \u2192 G- resolves."
+    },
+    {
+      "level": 3,
+      "text": "ing1=pnP, ing5=NNN. Mix result: G-."
+    }
+  ],
+  "complexity": {
+    "raw": 3.481,
+    "avg_clue_strength": 1.9,
+    "ambig_penalty": 0.357,
+    "chain_depth": 0,
+    "stuck": false,
+    "requires_complement_set": false,
+    "question_requires_enumeration": false,
+    "residual_worlds": 4
+  }
+}

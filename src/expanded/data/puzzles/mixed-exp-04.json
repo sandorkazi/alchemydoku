@@ -7,30 +7,23 @@
   "golem": {
     "chest": {
       "color": "R",
-      "size": "L"
+      "size": "S"
     },
     "ears": {
       "color": "B",
-      "size": "L"
+      "size": "S"
     }
   },
   "clues": [
     {
-      "kind": "golem_test",
-      "ingredient": 8,
-      "chest_reacted": true,
-      "ears_reacted": true
-    },
-    {
       "kind": "sell_result_among",
       "ingredients": [
         2,
-        4,
-        6,
+        3,
         8
       ],
       "claimedPotion": {
-        "color": "B",
+        "color": "R",
         "sign": "-"
       },
       "sellResult": "opposite"
@@ -38,13 +31,37 @@
     {
       "kind": "golem_reaction_among",
       "ingredients": [
-        1,
-        5,
-        7,
+        3,
+        6,
         8
       ],
-      "reaction": "non_reactive",
+      "reaction": "chest_only",
       "count": 1
+    },
+    {
+      "kind": "book_among",
+      "ingredients": [
+        3,
+        5,
+        7
+      ],
+      "result": "lunar",
+      "count": 1
+    },
+    {
+      "kind": "sell_among",
+      "ingredients": [
+        1,
+        2,
+        6,
+        7
+      ],
+      "claimedPotion": {
+        "color": "B",
+        "sign": "+"
+      },
+      "result": "sign_ok",
+      "count": 3
     }
   ],
   "questions": [
@@ -53,37 +70,37 @@
     }
   ],
   "solution": {
-    "1": 2,
-    "2": 6,
-    "3": 7,
+    "1": 6,
+    "2": 4,
+    "3": 8,
     "4": 5,
-    "5": 1,
-    "6": 4,
-    "7": 3,
-    "8": 8
+    "5": 7,
+    "6": 3,
+    "7": 1,
+    "8": 2
   },
   "hints": [
     {
       "level": 1,
-      "text": "Consulting the Royal Society book about an ingredient tells you whether its alchemical is Solar or Lunar. The most informative ingredient is the one whose answer has maximum Shannon entropy \u2014 closest to a 50/50 split across the 5472 remaining worlds."
+      "text": "Consulting the Royal Society book about an ingredient tells you whether its alchemical is Solar or Lunar. The most informative ingredient is the one whose answer has maximum Shannon entropy \u2014 closest to a 50/50 split across the 933 remaining worlds."
     },
     {
       "level": 2,
-      "text": "Top 5 ingredients by entropy:\n  ing3: solar=2736/5472 (50%)  H=1.000\n  ing7: solar=2772/5472 (51%)  H=1.000\n  ing5: solar=2772/5472 (51%)  H=1.000\n  ing1: solar=2772/5472 (51%)  H=1.000\n  ing6: solar=2652/5472 (48%)  H=0.999"
+      "text": "Top 5 ingredients by entropy:\n  ing6: solar=419/933 (45%)  H=0.993\n  ing1: solar=413/933 (44%)  H=0.990\n  ing2: solar=404/933 (43%)  H=0.987\n  ing3: solar=566/933 (61%)  H=0.967\n  ing4: solar=323/933 (35%)  H=0.931"
     },
     {
       "level": 3,
-      "text": "Most informative ingredient to consult: ing3 (entropy 1.000)."
+      "text": "Most informative ingredient to consult: ing6 (entropy 0.993)."
     }
   ],
   "complexity": {
-    "raw": 5.072,
-    "avg_clue_strength": 0.96,
-    "ambig_penalty": 0.467,
+    "raw": 4.402,
+    "avg_clue_strength": 1.358,
+    "ambig_penalty": 0.675,
     "chain_depth": 0,
     "stuck": false,
     "requires_complement_set": false,
     "question_requires_enumeration": false,
-    "residual_worlds": 5472
+    "residual_worlds": 933
   }
 }

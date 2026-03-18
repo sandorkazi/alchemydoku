@@ -6,27 +6,34 @@
   "difficulty": "hard",
   "golem": {
     "chest": {
-      "color": "B",
+      "color": "G",
       "size": "S"
     },
     "ears": {
-      "color": "R",
-      "size": "S"
+      "color": "B",
+      "size": "L"
     }
   },
   "clues": [
     {
       "kind": "golem_test",
-      "ingredient": 2,
+      "ingredient": 1,
       "chest_reacted": true,
+      "ears_reacted": true
+    },
+    {
+      "kind": "golem_test",
+      "ingredient": 6,
+      "chest_reacted": false,
       "ears_reacted": true
     },
     {
       "kind": "sell_result_among",
       "ingredients": [
+        1,
+        2,
         4,
-        6,
-        7
+        6
       ],
       "claimedPotion": {
         "color": "B",
@@ -35,14 +42,50 @@
       "sellResult": "opposite"
     },
     {
+      "kind": "golem_reaction_among",
+      "ingredients": [
+        1,
+        6,
+        7,
+        8
+      ],
+      "reaction": "chest_only",
+      "count": 1
+    },
+    {
       "kind": "book_among",
       "ingredients": [
         1,
-        4,
-        8
+        3,
+        6
       ],
-      "result": "solar",
+      "result": "lunar",
       "count": 1
+    },
+    {
+      "kind": "sell_among",
+      "ingredients": [
+        3,
+        6,
+        7
+      ],
+      "claimedPotion": {
+        "color": "G",
+        "sign": "+"
+      },
+      "result": "sign_ok",
+      "count": 3
+    },
+    {
+      "kind": "sell",
+      "ingredient1": 1,
+      "ingredient2": 5,
+      "claimedResult": {
+        "type": "potion",
+        "color": "B",
+        "sign": "+"
+      },
+      "sellResult": "sign_ok"
     }
   ],
   "questions": [
@@ -51,37 +94,37 @@
     }
   ],
   "solution": {
-    "1": 4,
-    "2": 3,
-    "3": 5,
-    "4": 1,
-    "5": 8,
-    "6": 2,
-    "7": 6,
-    "8": 7
+    "1": 1,
+    "2": 6,
+    "3": 2,
+    "4": 7,
+    "5": 4,
+    "6": 8,
+    "7": 5,
+    "8": 3
   },
   "hints": [
     {
       "level": 1,
-      "text": "Consulting the Royal Society book about an ingredient tells you whether its alchemical is Solar or Lunar. The most informative ingredient is the one whose answer has maximum Shannon entropy \u2014 closest to a 50/50 split across the 3312 remaining worlds."
+      "text": "Consulting the Royal Society book about an ingredient tells you whether its alchemical is Solar or Lunar. The most informative ingredient is the one whose answer has maximum Shannon entropy \u2014 closest to a 50/50 split across the 4 remaining worlds."
     },
     {
       "level": 2,
-      "text": "Top 5 ingredients by entropy:\n  ing2: solar=1872/3312 (57%)  H=0.988\n  ing5: solar=2000/3312 (60%)  H=0.969\n  ing3: solar=2000/3312 (60%)  H=0.969\n  ing7: solar=2032/3312 (61%)  H=0.962\n  ing6: solar=2032/3312 (61%)  H=0.962"
+      "text": "Top 5 ingredients by entropy:\n  ing8: solar=2/4 (50%)  H=1.000\n  ing4: solar=1/4 (25%)  H=0.811\n  ing2: solar=1/4 (25%)  H=0.811\n  ing7: solar=4/4 (100%)  H=0.000\n  ing6: solar=4/4 (100%)  H=0.000"
     },
     {
       "level": 3,
-      "text": "Most informative ingredient to consult: ing2 (entropy 0.988)."
+      "text": "Most informative ingredient to consult: ing8 (entropy 1.000)."
     }
   ],
   "complexity": {
-    "raw": 5.05,
-    "avg_clue_strength": 1.202,
-    "ambig_penalty": 0.5,
+    "raw": 4.252,
+    "avg_clue_strength": 1.9,
+    "ambig_penalty": 0.443,
     "chain_depth": 0,
     "stuck": false,
     "requires_complement_set": false,
     "question_requires_enumeration": false,
-    "residual_worlds": 3312
+    "residual_worlds": 4
   }
 }
