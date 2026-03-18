@@ -68,7 +68,6 @@ export type SolverState = {
   /** Per-cell text annotations: key is `${ingredient}-${alchemical}` */
   notes: Record<string, string>;
   autoDeduction: boolean;
-  defconMode: boolean;
   hintLevel: number;
   wrongAttempts: number;
   /** One entry per puzzle.questions — null means not yet answered */
@@ -88,7 +87,6 @@ export type Action =
   | { type: 'SUBMIT_ANSWER'; answers: (PuzzleAnswer | null)[] }
   | { type: 'REQUEST_HINT' }
   | { type: 'TOGGLE_AUTO_DEDUCTION' }
-  | { type: 'TOGGLE_DEFCON_MODE' }
   | { type: 'REVEAL_SOLUTION' }
   | { type: 'RESET' }
   | { type: 'RESHUFFLE' }
@@ -158,9 +156,6 @@ function reducer(state: SolverState, action: Action): SolverState {
 
     case 'TOGGLE_AUTO_DEDUCTION':
       return { ...state, autoDeduction: !state.autoDeduction };
-
-    case 'TOGGLE_DEFCON_MODE':
-      return { ...state, defconMode: !state.defconMode };
 
     case 'REVEAL_SOLUTION':
       return { ...state, showSolution: true };
@@ -296,7 +291,6 @@ export function SolverProvider({ puzzle, children }: { puzzle: Puzzle; children:
     gridState: savedState?.gridState ?? emptyGrid(),
     notes:     savedState?.notes     ?? {},
     autoDeduction: false,
-    defconMode: false,
     hintLevel: savedState?.hintLevel ?? 0,
     wrongAttempts: 0,
     answers: puzzle.questions.map(() => null),
