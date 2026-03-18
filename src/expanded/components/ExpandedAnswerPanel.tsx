@@ -115,7 +115,7 @@ function QuestionHeader({ q }: { q: AnyQuestion }) {
     <span className="inline-flex items-center gap-1.5 flex-wrap">
       <span className="text-xs font-semibold text-indigo-500">which ingredient to consult</span>
       <span className="text-base">☽☀</span>
-      <span className="text-xs font-semibold text-indigo-500">the book about?</span>
+      <span className="text-xs font-semibold text-indigo-500">the book about for most information?</span>
     </span>
   );
 

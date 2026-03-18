@@ -187,8 +187,8 @@ export function clueGroupLabel(g: ClueGroup): string {
     case 'assignment':             return '📌 Known Alchemical';
     case 'sell':                   return '💰 Sell Result';
     case 'debunk':                 return '🔬 Debunking';
-    case 'mixing_among':           return '👀 Observed Mix';
-    case 'mixing_count_among':     return '🔢 Counted Mix';
+    case 'mixing_among':           return '🔎 Ambiguous Coverage';
+    case 'mixing_count_among':     return '🔢 Ambiguous Coverage';
     case 'sell_result_among':      return '💰 Ambiguous Sale';
     case 'sell_among':             return '💰 Counted Sale';
     case 'book':                   return '📖 Book Token';

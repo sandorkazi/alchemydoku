@@ -306,12 +306,13 @@ function ExpandedBaseClueCard({ clue, clueIndex = 0 }: { clue: AnyClue; clueInde
   }
   if (clue.kind === 'mixing_among') {
     const c = clue as MixingAmongClue;
-    const count = c.ingredients.length;
+    const n = c.ingredients.length;
+    const pairCount = (n * (n - 1)) / 2;
     return (
-      <Card icon="👀" label="Observed Mix" accent="blue">
+      <Card icon="🔎" label="Ambiguous Coverage" accent="blue">
         <div className="flex items-center gap-1.5 flex-wrap">
           <span className="text-[10px] text-gray-500 shrink-0">
-            {count === 2 ? 'These 2' : `2 of these ${count}`} mixed
+            at least 1 of {pairCount} possible combinations results in
           </span>
           <PotionImage result={c.result} width={24} />
         </div>
@@ -350,10 +351,10 @@ function ExpandedBaseClueCard({ clue, clueIndex = 0 }: { clue: AnyClue; clueInde
     const n = c.ingredients.length;
     const pairCount = (n * (n - 1)) / 2;
     return (
-      <Card icon="🔢" label="Counted Mix" accent="blue">
+      <Card icon="🔢" label="Ambiguous Coverage" accent="blue">
         <div className="flex items-center gap-1.5 flex-wrap">
           <span className="text-[10px] text-gray-500 shrink-0">
-            {c.count} of {pairCount} pairs mixed
+            {c.count} of {pairCount} possible combinations result in
           </span>
           <PotionImage result={c.result} width={24} />
         </div>
