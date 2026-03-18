@@ -349,12 +349,12 @@ function SellAmongClueCard({ clue, clueIndex }: { clue: SellAmongClue; clueIndex
   const n = clue.ingredients.length;
   const pairCount = (n * (n - 1)) / 2;
   return (
-    <Card icon={<SellIcon width={18} />} label="Counted Sale" accent="purple">
+    <Card icon={<SellIcon width={18} />} label="Ambiguous Sale" accent="purple">
       <div className="flex items-center gap-1.5 flex-wrap">
         <span className="text-[10px] text-gray-500 shrink-0">
           {clue.count} of {pairCount} pairs sold
         </span>
-        <SignedElemImage color={clue.claimedPotion.color} sign={clue.claimedPotion.sign} width={22} />
+        <PotionImage result={{ type: 'potion', color: clue.claimedPotion.color, sign: clue.claimedPotion.sign }} width={POT_W} />
         <span className="text-[10px] text-gray-500 shrink-0">→</span>
         <SellResultIcon result={clue.result} width={26} />
         <span className="text-[10px] font-semibold text-gray-700 shrink-0">
@@ -398,7 +398,7 @@ function SellResultAmongClueCard({ clue, clueIndex }: { clue: SellResultAmongClu
     <Card icon={<SellIcon width={18} />} label="Ambiguous Sale" accent="purple">
       <div className="flex items-center gap-1.5 flex-wrap">
         <span className="text-[10px] text-gray-500 shrink-0">{ambigLabel} sold</span>
-        <SignedElemImage color={clue.claimedPotion.color} sign={clue.claimedPotion.sign} width={22} />
+        <PotionImage result={{ type: 'potion', color: clue.claimedPotion.color, sign: clue.claimedPotion.sign }} width={POT_W} />
         <span className="text-[10px] text-gray-500 shrink-0">→</span>
         <SellResultIcon result={clue.sellResult} width={26} />
         <span className="text-[10px] font-semibold text-gray-700 shrink-0">

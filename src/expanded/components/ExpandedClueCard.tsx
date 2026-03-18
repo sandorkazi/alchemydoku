@@ -327,12 +327,12 @@ function ExpandedBaseClueCard({ clue, clueIndex = 0 }: { clue: AnyClue; clueInde
     const n = c.ingredients.length;
     const pairCount = (n * (n - 1)) / 2;
     return (
-      <Card icon="💰" label="Counted Sale" accent="purple">
+      <Card icon="💰" label="Ambiguous Sale" accent="purple">
         <div className="flex items-center gap-1.5 flex-wrap">
           <span className="text-[10px] text-gray-500 shrink-0">
             {c.count} of {pairCount} pairs sold
           </span>
-          <SignedElemImage color={c.claimedPotion.color} sign={c.claimedPotion.sign} width={22} />
+          <PotionImage result={{ type: 'potion', color: c.claimedPotion.color, sign: c.claimedPotion.sign }} width={24} />
           <span className="text-[10px] text-gray-500 shrink-0">→</span>
           <SellResultIcon result={c.result} width={26} />
           <span className="text-[10px] font-semibold text-gray-700 shrink-0">
@@ -372,7 +372,7 @@ function ExpandedBaseClueCard({ clue, clueIndex = 0 }: { clue: AnyClue; clueInde
       <Card icon="💰" label="Ambiguous Sale" accent="purple">
         <div className="flex items-center gap-1.5 flex-wrap">
           <span className="text-[10px] text-gray-500 shrink-0">{ambigLabel} sold</span>
-          <SignedElemImage color={c.claimedPotion.color} sign={c.claimedPotion.sign} width={22} />
+          <PotionImage result={{ type: 'potion', color: c.claimedPotion.color, sign: c.claimedPotion.sign }} width={24} />
           <span className="text-[10px] text-gray-500 shrink-0">→</span>
           <SellResultIcon result={c.sellResult} width={26} />
           <span className="text-[10px] font-semibold text-gray-700 shrink-0">
