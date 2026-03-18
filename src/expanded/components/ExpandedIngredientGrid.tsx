@@ -520,7 +520,7 @@ export function ExpandedIngredientGrid({ onRandomize, activeTool, setActiveTool 
           </div>
 
           {/* ── Neutral-pair decorators + table wrapper ──────────────────── */}
-          <div className="flex justify-center min-w-full">
+          <div className="flex justify-center min-w-full w-max">
           <div className="relative inline-block">
             {/* 4 neutral potions at the row-pair boundaries, behind the table */}
             {([1, 3, 5, 7] as const).map(boundaryRow => (

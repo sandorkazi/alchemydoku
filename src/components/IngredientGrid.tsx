@@ -454,7 +454,7 @@ export function IngredientGrid({ onRandomize }: { onRandomize?: () => void }) {
             <kbd className="ml-0.5 opacity-60 font-mono text-[9px] border border-current/40 rounded px-0.5">Space</kbd>
           </div>
           {/* ── Neutral-pair decorators + table wrapper ──────────────────── */}
-          <div className="flex justify-center min-w-full">
+          <div className="flex justify-center min-w-full w-max">
           <div className="relative inline-block">
             {/* 4 neutral potions at the row-pair boundaries, behind the table */}
             {([1, 3, 5, 7] as const).map(boundaryRow => (
