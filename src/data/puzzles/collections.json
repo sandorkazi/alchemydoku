@@ -323,5 +323,19 @@
       "mixed-base-51"
     ],
     "unlockedAfter": "combo-base"
+  },
+  {
+    "id": "mixed-debunk",
+    "title": "Mixed Evidence, Master Debunk",
+    "description": "These puzzles combine ambiguous sell clues, among-group observations, and master debunking. Use mixed evidence to identify which ingredients are wrong \u2014 then expose them.",
+    "difficulty": "hard",
+    "puzzleIds": [
+      "mixed-base-debunk-02",
+      "mixed-base-debunk-03",
+      "mixed-base-debunk-04",
+      "mixed-base-debunk-05",
+      "mixed-base-debunk-06"
+    ],
+    "unlockedAfter": "mixed-clues"
   }
 ]

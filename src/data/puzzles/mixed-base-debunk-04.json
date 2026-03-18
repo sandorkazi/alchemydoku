@@ -1,0 +1,197 @@
+{
+  "id": "mixed-base-debunk-04",
+  "title": "Patterns in the Ash",
+  "description": "Mixed evidence surrounds several suspicious publications. Use master debunking to expose the lies.",
+  "difficulty": "hard",
+  "clues": [
+    {
+      "kind": "sell_result_among",
+      "ingredients": [
+        1,
+        4,
+        5
+      ],
+      "claimedPotion": {
+        "color": "B",
+        "sign": "+"
+      },
+      "sellResult": "opposite"
+    },
+    {
+      "kind": "mixing_count_among",
+      "ingredients": [
+        1,
+        2,
+        3,
+        5
+      ],
+      "result": {
+        "color": "R",
+        "sign": "-"
+      },
+      "count": 1
+    },
+    {
+      "kind": "mixing_among",
+      "ingredients": [
+        4,
+        5,
+        8
+      ],
+      "result": {
+        "color": "B",
+        "sign": "-"
+      }
+    },
+    {
+      "kind": "sell_among",
+      "ingredients": [
+        4,
+        6,
+        7
+      ],
+      "claimedPotion": {
+        "color": "G",
+        "sign": "+"
+      },
+      "result": "opposite",
+      "count": 3
+    },
+    {
+      "kind": "sell_among",
+      "ingredients": [
+        3,
+        4,
+        7
+      ],
+      "claimedPotion": {
+        "color": "G",
+        "sign": "-"
+      },
+      "result": "total_match",
+      "count": 2
+    },
+    {
+      "kind": "sell_among",
+      "ingredients": [
+        2,
+        4,
+        6,
+        8
+      ],
+      "claimedPotion": {
+        "color": "R",
+        "sign": "+"
+      },
+      "result": "opposite",
+      "count": 4
+    },
+    {
+      "kind": "sell",
+      "ingredient1": 3,
+      "ingredient2": 5,
+      "claimedResult": {
+        "type": "potion",
+        "color": "G",
+        "sign": "-"
+      },
+      "sellResult": "sign_ok"
+    }
+  ],
+  "questions": [
+    {
+      "kind": "debunk_min_steps"
+    },
+    {
+      "kind": "debunk_conflict_only",
+      "fixedIngredient": 2
+    }
+  ],
+  "solution": {
+    "1": 8,
+    "2": 2,
+    "3": 5,
+    "4": 7,
+    "5": 4,
+    "6": 1,
+    "7": 3,
+    "8": 6
+  },
+  "hints": [
+    {
+      "level": 1,
+      "text": "Use all clues to eliminate impossible worlds."
+    },
+    {
+      "level": 2,
+      "text": "Apply each clue systematically."
+    },
+    {
+      "level": 3,
+      "text": "Answer: not_validated"
+    }
+  ],
+  "complexity": {
+    "raw": 5.889,
+    "avg_clue_strength": 2.186,
+    "ambig_penalty": 0.7,
+    "chain_depth": 2,
+    "stuck": true,
+    "requires_complement_set": false,
+    "question_requires_enumeration": false,
+    "residual_worlds": 1
+  },
+  "publications": [
+    null,
+    {
+      "ingredient": 2,
+      "claimedAlchemical": 1
+    },
+    null,
+    null,
+    {
+      "ingredient": 5,
+      "claimedAlchemical": 6
+    },
+    null,
+    {
+      "ingredient": 7,
+      "claimedAlchemical": 6
+    },
+    {
+      "ingredient": 8,
+      "claimedAlchemical": 1
+    }
+  ],
+  "debunk_answers": {
+    "debunk_min_steps": [
+      {
+        "kind": "master",
+        "ingredient1": 2,
+        "ingredient2": 1
+      },
+      {
+        "kind": "master",
+        "ingredient1": 5,
+        "ingredient2": 1
+      },
+      {
+        "kind": "master",
+        "ingredient1": 7,
+        "ingredient2": 1
+      },
+      {
+        "kind": "master",
+        "ingredient1": 8,
+        "ingredient2": 2
+      }
+    ],
+    "debunk_conflict_only": [
+      {
+        "kind": "master",
+        "ingredient1": 2,
+        "ingredient2": 5
+      }
+    ]
+  }
+}

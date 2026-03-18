@@ -158,6 +158,13 @@ import mixedExpGolem19       from './puzzles/mixed-exp-golem-19.json';
 import mixedExpGolem20       from './puzzles/mixed-exp-golem-20.json';
 import mixedExpGolem21       from './puzzles/mixed-exp-golem-21.json';
 
+// ── Mixed-Clue Debunk ──────────────────────────────────────────────────────
+import mixedExpDebunk02      from './puzzles/mixed-exp-debunk-02.json';
+import mixedExpDebunk03      from './puzzles/mixed-exp-debunk-03.json';
+import mixedExpDebunk04      from './puzzles/mixed-exp-debunk-04.json';
+import mixedExpDebunk05      from './puzzles/mixed-exp-debunk-05.json';
+import mixedExpDebunk06      from './puzzles/mixed-exp-debunk-06.json';
+
 import type { ExpandedPuzzle } from '../types';
 
 export const ALL_EXPANDED_PUZZLES: ExpandedPuzzle[] = [
@@ -188,6 +195,7 @@ export const ALL_EXPANDED_PUZZLES: ExpandedPuzzle[] = [
   mixedExpGolem07, mixedExpGolem08, mixedExpGolem09, mixedExpGolem10, mixedExpGolem11,
   mixedExpGolem12, mixedExpGolem13, mixedExpGolem14, mixedExpGolem15, mixedExpGolem16,
   mixedExpGolem17, mixedExpGolem18, mixedExpGolem19, mixedExpGolem20, mixedExpGolem21,
+  mixedExpDebunk02, mixedExpDebunk03, mixedExpDebunk04, mixedExpDebunk05, mixedExpDebunk06,
 ] as unknown as ExpandedPuzzle[];
 
 export const EXPANDED_PUZZLE_MAP: Record<string, ExpandedPuzzle> =
@@ -328,6 +336,17 @@ export const EXPANDED_COLLECTIONS: ExpandedCollection[] = [
       'combo-exp-xsl-02', 'combo-exp-xsl-03', 'combo-exp-xsl-04', 'combo-exp-xsl-05',
     ],
     unlockedAfter: 'exp-hard-all',
+  },
+  {
+    id: 'mixed-exp-debunk',
+    title: 'Mixed Evidence, Master Debunk',
+    description: 'Ambiguous clues from multiple mechanics surround wrong publications. Use master debunking to clear the board — and find the one mix that creates an irresolvable conflict.',
+    difficulty: 'hard',
+    puzzleIds: [
+      'mixed-exp-debunk-02', 'mixed-exp-debunk-03', 'mixed-exp-debunk-04',
+      'mixed-exp-debunk-05', 'mixed-exp-debunk-06',
+    ],
+    unlockedAfter: 'exp-debunk',
   },
   {
     id: 'mixed-clues-exp',
