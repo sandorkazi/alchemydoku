@@ -749,9 +749,9 @@ Q_SURCHARGE = {
     'golem_group': 0.5, 'golem_animate_potion': 0.8,
     'golem_mix_potion': 1.0, 'golem_possible_potions': 1.2,
     'neutral-partner': 0.5, 'ingredient-potion-profile': 0.8,
-    'group-possible-potions': 0.8, 'most-informative-mix': 0.6,
+    'group-possible-potions': 0.8, 'most-informative-mix': 1.0,
     'guaranteed-non-producer': 0.5,
-    'most_informative_book': 0.6,
+    'most_informative_book': 1.0,
 }
 
 
@@ -831,7 +831,12 @@ def compute_difficulty(puzzle: dict) -> dict:
     strengths, final_worlds = clue_strengths(clues, golem)
     avg_strength = sum(strengths) / len(strengths) if strengths else 0.0
 
-    # Base-game ambiguity penalty
+    # Ambiguity penalty (per-clue average) — captures how hard each clue is to read
+    _AMBIG_KINDS = frozenset({
+        'mixing_among', 'mixing_count_among',
+        'sell_result_among', 'sell_among',
+        'book_among', 'golem_reaction_among',
+    })
     total_penalty = 0.0
     for c in clues:
         p = CLUE_TYPE_PENALTY.get(c['kind'], 0.0)
@@ -843,6 +848,24 @@ def compute_difficulty(puzzle: dict) -> dict:
             p += SELL_PENALTY.get(c.get('result', ''), 0.0)  # sell_among uses 'result' field
         total_penalty += p
     ambig_penalty = total_penalty / len(clues) if clues else 0.0
+
+    # Stranded-ambiguity burden — how many bits of info come *only* from among-group clues?
+    # If direct clues barely narrow things down, the ambiguous clues must do hard work.
+    ambig_clues  = [c for c in clues if c['kind'] in _AMBIG_KINDS]
+    direct_clues = [c for c in clues if c['kind'] not in _AMBIG_KINDS]
+    if ambig_clues:
+        w = all_worlds()
+        for c in direct_clues:
+            w = filter_clue(w, c, golem)
+        W_direct = len(w)
+        W_final  = len(final_worlds)
+        # bits of information uniquely contributed by the ambiguous clues
+        ambig_burden = math.log2(W_direct + 1) - math.log2(W_final + 1)
+        # scale by clue count so more ambiguous clues compound the difficulty
+        stranded = ambig_burden / 10.0 * len(ambig_clues) * 0.4
+    else:
+        ambig_burden = 0.0
+        stranded     = 0.0
 
     depth, complement, stuck = simulate_chain(final_worlds, questions, golem)
 
@@ -863,7 +886,8 @@ def compute_difficulty(puzzle: dict) -> dict:
 
     raw = (
         (1.0 / (avg_strength + 0.5)) * 4.0
-        + ambig_penalty * 2.0
+        + ambig_penalty * 1.5   # reduced slightly; stranded term covers the rest
+        + stranded               # extra: how much work the ambiguous clues must do
         + depth * 1.5
         + (2.0 if complement else 0.0)
         + (1.0 if enum else 0.0)
@@ -875,6 +899,7 @@ def compute_difficulty(puzzle: dict) -> dict:
         'raw':                           round(raw, 3),
         'avg_clue_strength':             round(avg_strength, 3),
         'ambig_penalty':                 round(ambig_penalty, 3),
+        'stranded_ambiguity':            round(stranded, 3),
         'chain_depth':                   depth,
         'stuck':                         stuck,
         'requires_complement_set':       complement,
@@ -1047,7 +1072,7 @@ PROFILES = {
         'mixed-base-debunk',
         ['base', 'sell', 'among'],
         'debunk_min_steps',
-        'hard', 14, False,
+        'expert', 14, False,
         mandatory_clues=[
             {'kind': 'sell_result_among', 'sellResult': 'opposite'},
             {'kind': 'mixing_count_among'},
@@ -1058,7 +1083,7 @@ PROFILES = {
         'mixed-exp-debunk',
         ['base', 'sell', 'among', 'solar_lunar', 'golem'],
         'debunk_min_steps',
-        'hard', 16, True,
+        'expert', 16, True,
         mandatory_clues=[
             {'kind': 'sell_result_among', 'sellResult': 'opposite'},
             {'kind': 'golem_reaction_among', 'count': 1},
@@ -1659,25 +1684,63 @@ def gen_mixing_result_hints(worlds, clues, q, sol, golem=None) -> list:
 
 def gen_possible_potions_hints(worlds, clues, q, sol, golem=None) -> list:
     i1, i2 = q['ingredient1'], q['ingredient2']
-    counts = Counter(MIX_TABLE[w[i1 - 1]][w[i2 - 1]] for w in worlds)
-    total = len(worlds)
-    dist_lines = sorted(
-        f"  {fmt_r(r)}: {c} world{'s' if c != 1 else ''} ({100 * c // total}%)"
-        for r, c in counts.items()
-    )
-    possible_set = sorted(fmt_r(r) for r in counts)
+    cands1 = sorted({w[i1 - 1] for w in worlds})
+    cands2 = sorted({w[i2 - 1] for w in worlds})
+    possible = sorted({MIX_TABLE[w[i1 - 1]][w[i2 - 1]] for w in worlds}, key=str)
+
+    def sign_desc(cands, color):
+        signs = {ALCH_DATA[a][color][0] for a in cands}
+        if len(signs) == 1:
+            return f"{color}{sgn_str(next(iter(signs)))} (confirmed)"
+        return f"{color}+ or {color}-"
+
+    walk_lines = []
+    for color in COLORS:
+        signs1 = {ALCH_DATA[a][color][0] for a in cands1}
+        signs2 = {ALCH_DATA[a][color][0] for a in cands2}
+        s1_desc = sign_desc(cands1, color)
+        s2_desc = sign_desc(cands2, color)
+        shared = signs1 & signs2
+        if not shared:
+            walk_lines.append(
+                f"  {color}: ing{i1}={s1_desc}, ing{i2}={s2_desc} — always opposite → no {color} potion"
+            )
+        else:
+            potions_here = []
+            size_skip_possible = False
+            for s in sorted(shared):
+                z1 = {ALCH_DATA[a][color][1] for a in cands1 if ALCH_DATA[a][color][0] == s}
+                z2 = {ALCH_DATA[a][color][1] for a in cands2 if ALCH_DATA[a][color][0] == s}
+                if (0 in z1 and 1 in z2) or (1 in z1 and 0 in z2):
+                    potions_here.append(f"{color}{sgn_str(s)}")
+                if z1 & z2:
+                    size_skip_possible = True
+            opposite_possible = len(signs1) > 1 or len(signs2) > 1 or signs1 != signs2
+            if potions_here:
+                pot_str = ' or '.join(potions_here)
+                line = f"  {color}: ing{i1}={s1_desc}, ing{i2}={s2_desc} — {pot_str} possible"
+                if size_skip_possible or opposite_possible:
+                    line += " (or skip)"
+            else:
+                line = f"  {color}: ing{i1}={s1_desc}, ing{i2}={s2_desc} — same sign but same size → skip"
+            walk_lines.append(line)
+
+    if any(r == 'neutral' for r in possible):
+        walk_lines.append("  → Neutral: possible when no color finds a mixed-size pair")
+
     hints = []
     hints.append({'level': 1, 'text': (
-        f"\"Possible potions\" means every outcome that occurs in at least one of the "
-        f"remaining {total} possible worlds. "
-        f"The clues haven't pinned down the exact alchemicals for ing{i1} and ing{i2}, "
-        f"so multiple outcomes are possible — collect all of them."
+        f"Find every potion ing{i1}+ing{i2} can possibly produce, given the "
+        f"{len(cands1)} remaining candidate alchemical(s) for ing{i1} and "
+        f"{len(cands2)} for ing{i2}. "
+        f"Apply the mixing rule (R→G→B): the first color where both share the same sign "
+        f"AND have different sizes gives the potion; if all colors are skipped, the result is neutral."
     )})
     hints.append({'level': 2, 'text': (
-        f"Distribution across {total} worlds (ing{i1}+ing{i2}):\n" + "\n".join(dist_lines)
+        "Color-by-color analysis:\n" + "\n".join(walk_lines)
     )})
     hints.append({'level': 3, 'text': (
-        f"Possible potions for ing{i1}+ing{i2}: {possible_set}."
+        f"Possible potions for ing{i1}+ing{i2}: {sorted(fmt_r(r) for r in possible)}."
     )})
     return hints
 
@@ -1979,20 +2042,29 @@ def gen_hints(raw: dict) -> list:
     elif k == 'most-informative-mix':
         slot = q['ingredient']
         alch = sol[slot]
-        n = len(worlds)
-        partner_entropies = _entropy_table(worlds, slot - 1)
-        best = partner_entropies[0]
+        best_s2 = answer(worlds, q, golem)
+        partner_rows = []
+        for s2 in SLOTS:
+            if s2 == slot:
+                continue
+            outcomes = sorted({MIX_TABLE[w[slot - 1]][w[s2 - 1]] for w in worlds}, key=str)
+            partner_rows.append((len(outcomes), s2, outcomes))
+        partner_rows.sort(key=lambda x: (-x[0], x[1]))
+        lines = []
+        for n_out, s2, outcomes in partner_rows[:6]:
+            outcome_str = ', '.join(fmt_r(r) for r in outcomes)
+            marker = " ← most informative" if s2 == best_s2 else ""
+            lines.append(f"  ing{s2}: {n_out} distinct result{'s' if n_out != 1 else ''} ({outcome_str}){marker}")
         hints.append({'level': 1, 'text': (
-            f"Find the partner that gives the most information when mixed with ingredient {slot}. "
-            f"Information = Shannon entropy of the mix result distribution across all {n} remaining worlds."
+            f"The most informative mix partner for ing{slot} is the one whose result "
+            f"is most unpredictable — more distinct possible outcomes means more information "
+            f"gained from the experiment, since each result rules out different alchemicals."
         )})
         hints.append({'level': 2, 'text': (
-            f"Top partners by entropy: "
-            + ', '.join(f"ing{s2}(H={e:.2f}, dist=[{d}])" for e, s2, d in partner_entropies[:3])
+            f"Partners ranked by number of possible outcomes:\n" + "\n".join(lines)
         )})
         hints.append({'level': 3, 'text': (
-            f"Most informative mix for ingredient {slot} ({ALCH_CODES[alch]}): "
-            f"ingredient {best[1]} with entropy {best[0]:.3f}."
+            f"Most informative partner for ing{slot}: ing{best_s2}."
         )})
 
     elif k == 'guaranteed-non-producer':
@@ -2011,30 +2083,39 @@ def gen_hints(raw: dict) -> list:
     elif k == 'most_informative_book':
         n = len(worlds)
         best_s = answer(worlds, q, golem)
-        # Build per-ingredient entropy table
-        rows = []
+        confirmed_solar = []
+        confirmed_lunar = []
+        uncertain = []  # (slot, n_solar, n_lunar)
         for s in SLOTS:
             n_solar = sum(1 for w in worlds if is_solar(w[s - 1]))
-            p = n_solar / n if n > 0 else 0
-            h = (-p * math.log2(p) - (1 - p) * math.log2(1 - p)) if 0 < p < 1 else 0.0
-            solar_pct = round(100 * n_solar / n) if n > 0 else 0
-            rows.append((h, s, n_solar, solar_pct))
-        rows.sort(reverse=True)
+            n_lunar = n - n_solar
+            if n_solar == n:
+                confirmed_solar.append(s)
+            elif n_lunar == n:
+                confirmed_lunar.append(s)
+            else:
+                uncertain.append((s, n_solar, n_lunar))
+        uncertain.sort(key=lambda x: (abs(x[1] - x[2]), x[0]))
+        status_lines = []
+        if confirmed_solar:
+            status_lines.append(f"Confirmed Solar: {', '.join(f'ing{s}' for s in confirmed_solar)}")
+        if confirmed_lunar:
+            status_lines.append(f"Confirmed Lunar: {', '.join(f'ing{s}' for s in confirmed_lunar)}")
+        if uncertain:
+            status_lines.append("Still uncertain (Solar / Lunar candidates both possible):")
+            for s, n_sol, n_lun in uncertain:
+                marker = " ← most balanced" if s == best_s else ""
+                status_lines.append(
+                    f"  ing{s}: {n_sol} Solar / {n_lun} Lunar alchemicals still consistent{marker}"
+                )
         hints.append({'level': 1, 'text': (
-            f"Consulting the Royal Society book about an ingredient tells you whether "
-            f"its alchemical is Solar or Lunar. "
-            f"The most informative ingredient is the one whose answer has maximum "
-            f"Shannon entropy — closest to a 50/50 split across the {n} remaining worlds."
+            f"The Royal Society book reveals whether an ingredient's alchemical is Solar or Lunar. "
+            f"Consulting a confirmed ingredient gives no new information. "
+            f"The most useful choice is the ingredient whose Solar/Lunar nature is most uncertain — "
+            f"the one most evenly split between the two possibilities."
         )})
-        dist_lines = '\n'.join(
-            f"  ing{s}: solar={n_solar}/{n} ({pct}%)  H={h:.3f}"
-            for h, s, n_solar, pct in rows[:5]
-        )
-        hints.append({'level': 2, 'text': f"Top 5 ingredients by entropy:\n{dist_lines}"})
-        hints.append({'level': 3, 'text': (
-            f"Most informative ingredient to consult: ing{best_s} "
-            f"(entropy {rows[0][0]:.3f})."
-        )})
+        hints.append({'level': 2, 'text': '\n'.join(status_lines)})
+        hints.append({'level': 3, 'text': f"Most informative ingredient to consult: ing{best_s}."})
 
     elif k == 'mixing-result':
         hints = gen_mixing_result_hints(worlds, clues, q, sol, golem)
@@ -2280,6 +2361,8 @@ def cmd_analyze(_args):
             'score':                         pips_for(pid),
             'raw':                           d['raw'],
             'avg_clue_strength':             d['avg_clue_strength'],
+            'ambig_penalty':                 d['ambig_penalty'],
+            'stranded_ambiguity':            d['stranded_ambiguity'],
             'chain_depth':                   d['chain_depth'],
             'stuck':                         d['stuck'],
             'requires_complement_set':       d['requires_complement_set'],

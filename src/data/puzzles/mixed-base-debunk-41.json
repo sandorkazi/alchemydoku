@@ -2,7 +2,7 @@
   "id": "mixed-base-debunk-41",
   "title": "The Alchemist's Deduction",
   "description": "Mixed evidence surrounds several suspicious publications. Use master debunking to expose the lies.",
-  "difficulty": "hard",
+  "difficulty": "expert",
   "clues": [
     {
       "kind": "sell_result_among",
@@ -137,9 +137,11 @@
     }
   ],
   "complexity": {
-    "raw": 5.945,
+    "score": 5,
+    "raw": 9.442,
     "avg_clue_strength": 2.043,
     "ambig_penalty": 0.686,
+    "stranded_ambiguity": 3.84,
     "chain_depth": 2,
     "stuck": true,
     "requires_complement_set": false,

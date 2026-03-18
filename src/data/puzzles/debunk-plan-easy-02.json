@@ -83,11 +83,13 @@
     }
   ],
   "complexity": {
-    "score": 5,
-    "raw": 3.267,
+    "score": 4,
+    "raw": 6.117,
     "avg_clue_strength": 1.0,
-    "chain_depth": 0,
-    "stuck": false,
+    "ambig_penalty": 0.3,
+    "stranded_ambiguity": 0.0,
+    "chain_depth": 2,
+    "stuck": true,
     "requires_complement_set": false,
     "question_requires_enumeration": false,
     "residual_worlds": 5040
