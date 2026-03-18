@@ -219,7 +219,7 @@
   {
     "id": "new-mechanics",
     "title": "New Deduction Tools",
-    "description": "Five new question types: find neutral partners, map potion profiles, identify the most informative experiment, find non-producers, and spot achievable potions within a group.",
+    "description": "Four new question types: find neutral partners, map potion profiles, find non-producers, and spot achievable potions within a group.",
     "difficulty": "medium",
     "puzzleIds": [
       "neutral-partner-02",
@@ -228,12 +228,23 @@
       "ing-profile-04",
       "group-potions-02",
       "group-potions-03",
-      "best-mix-02",
-      "best-mix-03",
+      "group-potions-04",
+      "group-potions-05",
       "non-producer-02",
       "non-producer-03"
     ],
     "unlockedAfter": "medium-mixing"
+  },
+  {
+    "id": "entropy-mix",
+    "title": "Best Experiment",
+    "description": "Find the single ingredient whose mixing result carries the most information — the Shannon-optimal experiment. Short puzzles, high precision required.",
+    "difficulty": "medium",
+    "puzzleIds": [
+      "best-mix-02",
+      "best-mix-03"
+    ],
+    "unlockedAfter": "new-mechanics"
   },
   {
     "id": "combo-base",
@@ -323,5 +334,31 @@
       "mixed-base-51"
     ],
     "unlockedAfter": "combo-base"
+  },
+  {
+    "id": "mixed-debunk",
+    "title": "Mixed Evidence, Master Debunk",
+    "description": "These puzzles combine ambiguous sell clues, among-group observations, and master debunking. Use mixed evidence to identify which ingredients are wrong \u2014 then expose them.",
+    "difficulty": "hard",
+    "puzzleIds": [
+      "mixed-base-debunk-02", "mixed-base-debunk-03", "mixed-base-debunk-04",
+      "mixed-base-debunk-05", "mixed-base-debunk-06", "mixed-base-debunk-07",
+      "mixed-base-debunk-08", "mixed-base-debunk-09", "mixed-base-debunk-10",
+      "mixed-base-debunk-11", "mixed-base-debunk-12", "mixed-base-debunk-13",
+      "mixed-base-debunk-14", "mixed-base-debunk-15", "mixed-base-debunk-16",
+      "mixed-base-debunk-17", "mixed-base-debunk-18", "mixed-base-debunk-19",
+      "mixed-base-debunk-20", "mixed-base-debunk-21", "mixed-base-debunk-22",
+      "mixed-base-debunk-23", "mixed-base-debunk-24", "mixed-base-debunk-25",
+      "mixed-base-debunk-26", "mixed-base-debunk-27", "mixed-base-debunk-28",
+      "mixed-base-debunk-29", "mixed-base-debunk-30", "mixed-base-debunk-31",
+      "mixed-base-debunk-32", "mixed-base-debunk-33", "mixed-base-debunk-34",
+      "mixed-base-debunk-35", "mixed-base-debunk-36", "mixed-base-debunk-37",
+      "mixed-base-debunk-38", "mixed-base-debunk-39", "mixed-base-debunk-40",
+      "mixed-base-debunk-41", "mixed-base-debunk-42", "mixed-base-debunk-43",
+      "mixed-base-debunk-44", "mixed-base-debunk-45", "mixed-base-debunk-46",
+      "mixed-base-debunk-47", "mixed-base-debunk-48", "mixed-base-debunk-49",
+      "mixed-base-debunk-50", "mixed-base-debunk-51"
+    ],
+    "unlockedAfter": "mixed-clues"
   }
 ]

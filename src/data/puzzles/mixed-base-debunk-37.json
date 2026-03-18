@@ -1,0 +1,187 @@
+{
+  "id": "mixed-base-debunk-37",
+  "title": "Secrets of the Guild",
+  "description": "Mixed evidence surrounds several suspicious publications. Use master debunking to expose the lies.",
+  "difficulty": "hard",
+  "clues": [
+    {
+      "kind": "sell_result_among",
+      "ingredients": [
+        4,
+        6,
+        7
+      ],
+      "claimedPotion": {
+        "color": "R",
+        "sign": "-"
+      },
+      "sellResult": "opposite"
+    },
+    {
+      "kind": "mixing_count_among",
+      "ingredients": [
+        1,
+        4,
+        6,
+        8
+      ],
+      "result": {
+        "color": "B",
+        "sign": "-"
+      },
+      "count": 1
+    },
+    {
+      "kind": "mixing_among",
+      "ingredients": [
+        1,
+        2,
+        4,
+        7
+      ],
+      "result": {
+        "type": "neutral"
+      }
+    },
+    {
+      "kind": "sell_among",
+      "ingredients": [
+        1,
+        3,
+        4,
+        8
+      ],
+      "claimedPotion": {
+        "color": "B",
+        "sign": "+"
+      },
+      "result": "opposite",
+      "count": 6
+    },
+    {
+      "kind": "sell_among",
+      "ingredients": [
+        3,
+        4,
+        5,
+        6
+      ],
+      "claimedPotion": {
+        "color": "B",
+        "sign": "-"
+      },
+      "result": "sign_ok",
+      "count": 4
+    },
+    {
+      "kind": "sell_among",
+      "ingredients": [
+        1,
+        2,
+        5
+      ],
+      "claimedPotion": {
+        "color": "R",
+        "sign": "-"
+      },
+      "result": "opposite",
+      "count": 3
+    }
+  ],
+  "questions": [
+    {
+      "kind": "debunk_min_steps"
+    },
+    {
+      "kind": "debunk_conflict_only",
+      "fixedIngredient": 2
+    }
+  ],
+  "solution": {
+    "1": 1,
+    "2": 8,
+    "3": 7,
+    "4": 5,
+    "5": 4,
+    "6": 2,
+    "7": 6,
+    "8": 3
+  },
+  "hints": [
+    {
+      "level": 1,
+      "text": "Use all clues to eliminate impossible worlds."
+    },
+    {
+      "level": 2,
+      "text": "Apply each clue systematically."
+    },
+    {
+      "level": 3,
+      "text": "Answer: not_validated"
+    }
+  ],
+  "complexity": {
+    "raw": 5.945,
+    "avg_clue_strength": 2.55,
+    "ambig_penalty": 0.817,
+    "chain_depth": 2,
+    "stuck": true,
+    "requires_complement_set": false,
+    "question_requires_enumeration": false,
+    "residual_worlds": 1
+  },
+  "publications": [
+    null,
+    {
+      "ingredient": 2,
+      "claimedAlchemical": 3
+    },
+    {
+      "ingredient": 3,
+      "claimedAlchemical": 2
+    },
+    {
+      "ingredient": 4,
+      "claimedAlchemical": 3
+    },
+    null,
+    {
+      "ingredient": 6,
+      "claimedAlchemical": 7
+    },
+    null,
+    null
+  ],
+  "debunk_answers": {
+    "debunk_min_steps": [
+      {
+        "kind": "master",
+        "ingredient1": 2,
+        "ingredient2": 1
+      },
+      {
+        "kind": "master",
+        "ingredient1": 3,
+        "ingredient2": 1
+      },
+      {
+        "kind": "master",
+        "ingredient1": 4,
+        "ingredient2": 1
+      },
+      {
+        "kind": "master",
+        "ingredient1": 6,
+        "ingredient2": 1
+      }
+    ],
+    "debunk_conflict_only": [
+      {
+        "kind": "master",
+        "ingredient1": 2,
+        "ingredient2": 3
+      }
+    ]
+  }
+}

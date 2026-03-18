@@ -20,7 +20,10 @@ Checks performed (always, ~0.1 s):
                       (uses world simulation; only for puzzles with pp questions)
  12. enc-wha-dist   — encyclopedia_which_aspect entries must be 4-0 (all+/all-)
                       or 2-2 sign distribution; 3-1 is invalid
- 13. permalink      — each puzzle ID appears in exactly one collection;
+ 13. debunk-art-ing-count — debunk articles must have exactly 4 entries
+                      with a 2+/2- sign distribution; each ingredient may
+                      appear in at most 2 articles per puzzle
+ 14. permalink      — each puzzle ID appears in exactly one collection;
                       no ID is shared across base/expanded;
                       all collection refs point to registered puzzles
 
@@ -570,6 +573,41 @@ def _load_alchemydoku():
     return mod
 
 
+def check_debunk_article_integrity(path: Path, puz: dict, r: Results):
+    """Check #13: debunk articles must have 4 entries with 2-2 sign distribution,
+    and each ingredient must appear in at most 2 articles total. [debunk-art-ing-count]"""
+    articles = puz.get('articles')
+    if not articles:
+        return
+    name = path.name
+    ing_counts: dict = {}
+    for art_idx, art in enumerate(articles):
+        entries = art.get('entries', [])
+        if len(entries) != 4:
+            r.error(
+                f"[debunk-art-ing-count] {name}: article[{art_idx}] (id={art.get('id','?')}) "
+                f"has {len(entries)} entries — must have exactly 4"
+            )
+        else:
+            plus = sum(1 for e in entries if e.get('sign') == '+')
+            minus = len(entries) - plus
+            if plus != 2 or minus != 2:
+                r.error(
+                    f"[debunk-art-ing-count] {name}: article[{art_idx}] (id={art.get('id','?')}) "
+                    f"has {plus}+/{minus}- distribution — must be 2+/2-"
+                )
+        for entry in entries:
+            ing = entry.get('ingredient')
+            if ing is not None:
+                ing_counts[ing] = ing_counts.get(ing, 0) + 1
+    for ing, count in ing_counts.items():
+        if count > 2:
+            r.error(
+                f"[debunk-art-ing-count] {name}: ingredient {ing} appears in "
+                f"{count} articles — max allowed is 2"
+            )
+
+
 def check_logical(path: Path, puz: dict, alch_mod, r: Results):
     try:
         issues = alch_mod.validate_puzzle(puz)
@@ -670,7 +708,7 @@ def main():
         check_base_only_language(path, puz, is_exp, r)
     _done()
 
-    # ── Step 10: Debunk-answer step-kind check ─────────────────────────────────
+    # ── Debunk-answer step-kind check ──────────────────────────────────────────
     _section("debunk answers")
     for puz, path, _ in all_puzzles:
         check_debunk_answers(path, puz, r)
@@ -686,12 +724,18 @@ def main():
     check_all_possible(all_puzzles, r)
     _done()
 
-    # ── Step 12: Permalink uniqueness ─────────────────────────────────────────
+    # ── Step 13: Debunk article integrity ─────────────────────────────────────
+    _section("debunk article integrity")
+    for puz, path, _ in all_puzzles:
+        check_debunk_article_integrity(path, puz, r)
+    _done()
+
+    # ── Step 14: Permalink uniqueness ─────────────────────────────────────────
     _section("permalink uniqueness")
     check_permalink_uniqueness(all_puzzles, r)
     _done()
 
-    # ── Steps 11–12: Deep logical validation (optional) ───────────────────────
+    # ── Deep logical validation (optional) ────────────────────────────────────
     if args.deep:
         _section("loading alchemydoku logic")
         alch_mod = None

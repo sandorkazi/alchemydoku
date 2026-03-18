@@ -24,7 +24,8 @@ Available generate profiles:
   medium_enc_sl, medium_golem_enc, medium_golem_sl,
   hard_all, hard_golem_mix,
   combo_b_easy, combo_b_med_asp, combo_b_med_np, combo_b_hard_pp, combo_b_hard_ip,
-  combo_exp_easy, combo_exp_med_sl, combo_exp_med_all, combo_exp_hard_wha, combo_exp_hard_sl
+  combo_exp_easy, combo_exp_med_sl, combo_exp_med_all, combo_exp_hard_wha, combo_exp_hard_sl,
+  mixed_base_debunk, mixed_exp_debunk
 """
 
 import json, math, random, itertools, argparse, sys
@@ -481,7 +482,244 @@ def answer(worlds: frozenset, q: dict, golem: Optional[dict] = None):
     return None
 
 def all_answered(worlds: frozenset, questions: list, golem: Optional[dict] = None) -> bool:
-    return all(answer(worlds, q, golem) is not None for q in questions)
+    return all(
+        (ans := answer(worlds, q, golem)) is not None and ans != 'not_validated'
+        for q in questions
+    )
+
+# ══════════════════════════════════════════════════════════════════════════════
+# DEBUNK PLANNING HELPERS
+# ══════════════════════════════════════════════════════════════════════════════
+
+def _definitively_known(worlds: frozenset, sol: dict) -> set:
+    """Return set of ingredient slots (1-based) whose alchemical is uniquely determined."""
+    return {s for s in SLOTS if all(w[s - 1] == sol[s] for w in worlds)}
+
+
+def _find_removal_plan(sol: dict, pub_map: dict, known: set) -> list:
+    """BFS to find minimum master steps (ingredient1=target, ingredient2=witness)
+    to remove all publications. Returns list of step dicts or None."""
+    from collections import deque
+    initial = frozenset(pub_map.keys())
+    if not initial:
+        return []
+    queue = deque([(initial, [])])
+    visited = {initial}
+    while queue:
+        state, steps = queue.popleft()
+        witnesses = known - state
+        for target in sorted(state):
+            for witness in sorted(witnesses):
+                true_r = MIX_TABLE[sol[target]][sol[witness]]
+                claimed_r = MIX_TABLE[pub_map[target]][sol[witness]]
+                if claimed_r == true_r:
+                    continue
+                new_state = state - {target}
+                new_step = {'kind': 'master', 'ingredient1': target, 'ingredient2': witness}
+                new_steps = steps + [new_step]
+                if not new_state:
+                    return new_steps
+                if new_state not in visited:
+                    visited.add(new_state)
+                    queue.append((new_state, new_steps))
+    return None
+
+
+def _find_conflict_step(sol: dict, pub_map: dict, known: set):
+    """Find a pair (ing_c, ing_d) both published and both definitively known where
+    mixing creates ambiguous conflict (both pubs implicated). Returns (ing_c, ing_d) or None."""
+    pub_keys = sorted(pub_map.keys())
+    for i, ing_c in enumerate(pub_keys):
+        for ing_d in pub_keys[i + 1:]:
+            if ing_c not in known or ing_d not in known:
+                continue
+            true_r = MIX_TABLE[sol[ing_c]][sol[ing_d]]
+            conflict1 = MIX_TABLE[pub_map[ing_c]][sol[ing_d]] != true_r
+            conflict2 = MIX_TABLE[sol[ing_c]][pub_map[ing_d]] != true_r
+            if conflict1 and conflict2:
+                return (ing_c, ing_d)
+    return None
+
+
+def _make_publications(sol: dict, known: set, n: int, rng: random.Random) -> dict:
+    """Pick n slots from known, assign each a wrong alchemical. Returns {slot: wrong_alch_id}."""
+    targets = rng.sample(sorted(known), min(n, len(known)))
+    return {s: rng.choice([a for a in ALL_ALCH if a != sol[s]]) for s in targets}
+
+
+def _make_articles(sol: dict, known: set, n_colors: int, rng: random.Random,
+                   max_per_ingredient: int = 2) -> list:
+    """Generate up to n_colors wrong articles (one per color), each with 4 entries (2+/2-).
+    At least 1 entry per article is wrong. No ingredient appears in more than
+    max_per_ingredient articles across all returned articles."""
+    articles = []
+    ing_count = Counter()
+    colors_shuffled = list(COLORS)
+    rng.shuffle(colors_shuffled)
+    art_counter = [0]
+    for col in colors_shuffled[:n_colors]:
+        art_counter[0] += 1
+        art_id = f"art-{col}-{art_counter[0]}"
+        available = [s for s in SLOTS if ing_count[s] < max_per_ingredient]
+        if len(available) < 4:
+            break
+        known_avail = [s for s in available if s in known]
+        if not known_avail:
+            break
+        unknown_avail = [s for s in available if s not in known]
+        # Need 4 total: at least 1 known
+        for _ in range(50):
+            n_known_pick = min(rng.randint(1, min(3, len(known_avail))), len(known_avail))
+            n_unknown_pick = 4 - n_known_pick
+            if n_unknown_pick > len(unknown_avail):
+                n_known_pick = 4 - min(len(unknown_avail), 3)
+                n_unknown_pick = 4 - n_known_pick
+            if n_known_pick < 1 or n_known_pick > len(known_avail):
+                continue
+            if n_unknown_pick < 0 or n_unknown_pick > len(unknown_avail):
+                continue
+            chosen = sorted(
+                rng.sample(known_avail, n_known_pick)
+                + (rng.sample(unknown_avail, n_unknown_pick) if n_unknown_pick > 0 else [])
+            )
+            if len(chosen) < 4:
+                continue
+            # Try sign assignments: must be 2+/2- and at least 1 wrong
+            slots_copy = list(chosen)
+            for _ in range(20):
+                rng.shuffle(slots_copy)
+                assigned = {s: '+' for s in slots_copy[:2]}
+                assigned.update({s: '-' for s in slots_copy[2:]})
+                has_wrong = any(
+                    (assigned[s] == '+') != (ALCH_DATA[sol[s]][col][0] == 1)
+                    for s in chosen
+                )
+                if not has_wrong:
+                    continue
+                # Also require at least 1 known ingredient with a wrong entry (for debunkability)
+                has_debunkable = any(
+                    s in known and (assigned[s] == '+') != (ALCH_DATA[sol[s]][col][0] == 1)
+                    for s in chosen
+                )
+                if not has_debunkable:
+                    continue
+                entries = [{'ingredient': s, 'sign': assigned[s]} for s in chosen]
+                for s in chosen:
+                    ing_count[s] += 1
+                articles.append({'id': art_id, 'aspect': col, 'entries': entries})
+                break
+            break
+    return articles
+
+
+def _find_removal_plan_expanded(sol: dict, pub_map: dict, articles: list, known: set) -> list:
+    """BFS to find minimum master steps to remove all publications AND articles.
+    Returns list of step dicts or None."""
+    from collections import deque
+    # Precompute: for each known ingredient, which articles have a wrong entry for it?
+    art_cleared_by_ing: dict = {}
+    for art in articles:
+        col = art['aspect']
+        for entry in art['entries']:
+            ing = entry['ingredient']
+            if ing not in known:
+                continue
+            true_sgn_str = '+' if ALCH_DATA[sol[ing]][col][0] == 1 else '-'
+            if entry['sign'] != true_sgn_str:
+                art_cleared_by_ing.setdefault(ing, set()).add(art['id'])
+
+    initial_pubs = frozenset(pub_map.keys())
+    initial_arts = frozenset(a['id'] for a in articles)
+    if not initial_pubs and not initial_arts:
+        return []
+
+    def step_effect(ing_a, ing_b, pubs, arts):
+        true_r = MIX_TABLE[sol[ing_a]][sol[ing_b]]
+        a_known = ing_a in known
+        b_known = ing_b in known
+        conflict_a = (ing_a in pubs and b_known
+                      and MIX_TABLE[pub_map[ing_a]][sol[ing_b]] != true_r)
+        conflict_b = (ing_b in pubs and a_known
+                      and MIX_TABLE[sol[ing_a]][pub_map[ing_b]] != true_r)
+        removed_pubs = set()
+        if conflict_a and not conflict_b:
+            removed_pubs.add(ing_a)
+        elif conflict_b and not conflict_a:
+            removed_pubs.add(ing_b)
+        removed_arts = set()
+        if a_known:
+            removed_arts |= art_cleared_by_ing.get(ing_a, set()) & arts
+        if b_known:
+            removed_arts |= art_cleared_by_ing.get(ing_b, set()) & arts
+        return pubs - removed_pubs, arts - removed_arts, bool(removed_pubs or removed_arts)
+
+    initial_state = (initial_pubs, initial_arts)
+    queue = deque([(initial_state, [])])
+    visited = {initial_state}
+    while queue:
+        (pubs, arts), steps = queue.popleft()
+        for ing_a, ing_b in itertools.combinations(SLOTS, 2):
+            if ing_a not in known and ing_b not in known:
+                continue
+            new_pubs, new_arts, valid = step_effect(ing_a, ing_b, pubs, arts)
+            if not valid:
+                continue
+            new_state = (new_pubs, new_arts)
+            new_step = {'kind': 'master', 'ingredient1': ing_a, 'ingredient2': ing_b}
+            new_steps = steps + [new_step]
+            if not new_pubs and not new_arts:
+                return new_steps
+            if new_state not in visited:
+                visited.add(new_state)
+                queue.append((new_state, new_steps))
+    return None
+
+
+DEBUNK_QUESTION_KINDS = {'debunk_min_steps', 'debunk_conflict_only', 'debunk_apprentice_plan'}
+
+
+def _plan_debunk(profile, sol: dict, worlds: frozenset, rng: random.Random):
+    """Plan publications, articles and debunk answers for a debunk profile.
+    Returns a dict with publications/articles/questions/debunk_answers, or None on failure."""
+    known = _definitively_known(worlds, sol)
+    is_expanded = not is_base_profile(profile)
+    if len(known) < 4:
+        return None
+    for n_pubs in [4, 3]:
+        if n_pubs > len(known):
+            continue
+        for _ in range(30):
+            pub_map = _make_publications(sol, known, n_pubs, rng)
+            if is_expanded:
+                articles = _make_articles(sol, known, 3, rng)
+                plan = _find_removal_plan_expanded(sol, pub_map, articles, known)
+            else:
+                articles = []
+                plan = _find_removal_plan(sol, pub_map, known)
+            if plan is None:
+                continue
+            conflict_pair = _find_conflict_step(sol, pub_map, known)
+            questions = [{'kind': 'debunk_min_steps'}]
+            if conflict_pair:
+                ing_c, _ = conflict_pair
+                questions.append({'kind': 'debunk_conflict_only', 'fixedIngredient': ing_c})
+            pubs_array = [None] * 8
+            for s, wrong_alch in pub_map.items():
+                pubs_array[s - 1] = {'ingredient': s, 'claimedAlchemical': wrong_alch}
+            debunk_answers = {'debunk_min_steps': plan}
+            if conflict_pair:
+                ing_c, ing_d = conflict_pair
+                debunk_answers['debunk_conflict_only'] = [
+                    {'kind': 'master', 'ingredient1': ing_c, 'ingredient2': ing_d}
+                ]
+            return {
+                'publications': pubs_array,
+                'articles': articles,
+                'questions': questions,
+                'debunk_answers': debunk_answers,
+            }
+    return None
+
 
 # ══════════════════════════════════════════════════════════════════════════════
 # DIFFICULTY SCORING  (used by both 'analyze' and 'generate')
@@ -707,7 +945,7 @@ def validate_puzzle(puz: dict) -> list:
             continue
         reduced = clues[:i] + clues[i + 1:]
         w2 = apply_all(all_worlds(), reduced, golem)
-        if all(answer(w2, q, golem) is not None for q in questions):
+        if all_answered(w2, questions, golem):
             redundant_idxs.append(i)
     is_tutorial = puz.get('id', '').startswith('tutorial')
     for i in redundant_idxs:
@@ -804,6 +1042,29 @@ PROFILES = {
         mandatory_clues=[{'kind': 'sell_result_among', 'sellResult': 'opposite'},
                          {'kind': 'golem_reaction_among', 'count': 1},
                          {'kind': 'book_among', 'count': 1}]),
+    # Mixed-clue debunk profiles
+    'mixed_base_debunk': Profile(
+        'mixed-base-debunk',
+        ['base', 'sell', 'among'],
+        'debunk_min_steps',
+        'hard', 14, False,
+        mandatory_clues=[
+            {'kind': 'sell_result_among', 'sellResult': 'opposite'},
+            {'kind': 'mixing_count_among'},
+            {'kind': 'mixing_among'},
+        ]
+    ),
+    'mixed_exp_debunk': Profile(
+        'mixed-exp-debunk',
+        ['base', 'sell', 'among', 'solar_lunar', 'golem'],
+        'debunk_min_steps',
+        'hard', 16, True,
+        mandatory_clues=[
+            {'kind': 'sell_result_among', 'sellResult': 'opposite'},
+            {'kind': 'golem_reaction_among', 'count': 1},
+            {'kind': 'book_among', 'count': 1},
+        ]
+    ),
     # Expanded combination profiles (Grand Synthesis)
     'combo_exp_easy':     Profile('combo-exp-easy',       ['base', 'encyclopedia', 'solar_lunar'],             'encyclopedia_fourth',      'easy',   12, False),
     'combo_exp_med_sl':   Profile('combo-exp-med-sl',     ['base', 'encyclopedia', 'solar_lunar'],             'solar_lunar',              'medium', 13, False),
@@ -1105,6 +1366,10 @@ def build_question_anchor(profile: Profile, sol: dict, golem: Optional[dict],
     if k == 'most_informative_book':
         return {'kind': 'most_informative_book'}, None, set()
 
+    if k in DEBUNK_QUESTION_KINDS:
+        # Placeholder; actual question list is built by _plan_debunk in construct()
+        return {'kind': k}, None, set()
+
     return None, None, set()
 
 # ── Construction ──────────────────────────────────────────────────────────────
@@ -1191,6 +1456,11 @@ def construct(profile: Profile, rng: random.Random, verbose: bool = False):
         if all_answered(worlds, [q], golem):
             break
 
+        # Early break for debunk profiles: stop once enough ingredients are known
+        if profile.question_kind in DEBUNK_QUESTION_KINDS:
+            if len(_definitively_known(worlds, sol)) >= 4:
+                break
+
         best_score = -float('inf')
         best_clue  = None
         sample = greedy if len(greedy) <= 100 else rng.sample(greedy, 100)
@@ -1219,6 +1489,24 @@ def construct(profile: Profile, rng: random.Random, verbose: bool = False):
             if verbose: print("  [greedy] exceeded max_clues")
             return None
 
+    # Debunk profiles: plan publications, articles and answers
+    if profile.question_kind in DEBUNK_QUESTION_KINDS:
+        debunk_data = _plan_debunk(profile, sol, worlds, rng)
+        if debunk_data is None:
+            if verbose: print("  [debunk] could not plan publications/answers")
+            return None
+        return {
+            'sol': sol, '_sol_str': {str(k): v for k, v in sol.items()},
+            'golem': golem, 'clues': clues, '_anchor': anchor,
+            '_mandatory': list(mandatory_placed),
+            'q': debunk_data['questions'][0],
+            '_debunk_questions': debunk_data['questions'],
+            '_debunk_publications': debunk_data['publications'],
+            '_debunk_articles': debunk_data['articles'],
+            '_debunk_answers': debunk_data['debunk_answers'],
+            'worlds': worlds,
+        }
+
     if not all_answered(worlds, [q], golem):
         if verbose: print("  [greedy] no unique answer achieved")
         return None
@@ -1230,12 +1518,15 @@ def construct(profile: Profile, rng: random.Random, verbose: bool = False):
 
 # ── Minimization ──────────────────────────────────────────────────────────────
 
-def minimize(raw: dict, verbose: bool = False) -> dict:
+def minimize(raw: dict, profile=None, verbose: bool = False) -> dict:
     clues     = list(raw['clues'])
     golem     = raw['golem']
     q         = raw['q']
     anchor    = raw.get('_anchor')
     mandatory = raw.get('_mandatory', [])
+    rng_fixed = random.Random(42)
+    # Track latest debunk plan so it stays consistent with the clue set
+    current_debunk = None
 
     changed = True
     while changed:
@@ -1247,7 +1538,15 @@ def minimize(raw: dict, verbose: bool = False) -> dict:
                 continue
             reduced = clues[:i] + clues[i + 1:]
             w = apply_all(all_worlds(), reduced, golem)
-            if all_answered(w, [q], golem):
+            if raw.get('_debunk_questions') and profile is not None:
+                trial_debunk = _plan_debunk(profile, raw['sol'], w, rng_fixed)
+                valid = (trial_debunk is not None
+                         and len(trial_debunk['questions']) >= len(raw['_debunk_questions']))
+                if valid:
+                    current_debunk = trial_debunk
+            else:
+                valid = all_answered(w, [q], golem)
+            if valid:
                 if verbose: print(f"  [minimize] removed {clues[i]['kind']}")
                 clues   = reduced
                 changed = True
@@ -1256,6 +1555,13 @@ def minimize(raw: dict, verbose: bool = False) -> dict:
     raw = dict(raw)
     raw['clues']  = clues
     raw['worlds'] = apply_all(all_worlds(), clues, golem)
+    # Update debunk plan if minimization changed it
+    if current_debunk is not None:
+        raw['_debunk_questions']    = current_debunk['questions']
+        raw['_debunk_publications'] = current_debunk['publications']
+        raw['_debunk_articles']     = current_debunk['articles']
+        raw['_debunk_answers']      = current_debunk['debunk_answers']
+        raw['q']                    = current_debunk['questions'][0]
     return raw
 
 # ── Hint generation ───────────────────────────────────────────────────────────
@@ -1805,6 +2111,7 @@ DESCS = {
     'most-informative-mix':      "Decide which partner provides the most information (maximum entropy) when mixed with the target ingredient.",
     'guaranteed-non-producer':   "Find all ingredients that can never produce the target potion with any partner in any remaining world.",
     'most_informative_book':     "Use the clues to decide which ingredient reveals the most information when consulted in the Royal Society book.",
+    'debunk_min_steps':          "Mixed evidence surrounds several suspicious publications. Use master debunking to expose the lies.",
 }
 
 EXP_PUZZLE_DIR = Path(__file__).parent.parent / 'src' / 'expanded' / 'data' / 'puzzles'
@@ -1841,15 +2148,27 @@ def assemble(raw: dict, profile: Profile, num: int, rng: random.Random) -> dict:
         'difficulty':  profile.difficulty,
         **golem_sec,
         'clues':     raw['clues'],
-        'questions': [raw['q']],
+        'questions': raw.get('_debunk_questions', [raw['q']]),
         'solution':  raw['_sol_str'],
         'hints':     hints,
         'complexity': sc,
     }
+    # Debunk-specific fields
+    if raw.get('_debunk_publications') is not None:
+        puz['publications'] = raw['_debunk_publications']
+    if raw.get('_debunk_answers'):
+        puz['debunk_answers'] = raw['_debunk_answers']
+    if raw.get('_debunk_articles'):
+        puz['articles'] = raw['_debunk_articles']
     if not is_base_profile(profile):
         puz['mode'] = 'expanded'
-        # Insert mode after id
-        puz = {'id': puz.pop('id'), 'mode': puz.pop('mode'), **puz}
+        if profile.question_kind in DEBUNK_QUESTION_KINDS:
+            puz['kind'] = 'debunk'
+        # Insert mode (and kind if present) after id
+        ordered = {'id': puz.pop('id'), 'mode': puz.pop('mode')}
+        if 'kind' in puz:
+            ordered['kind'] = puz.pop('kind')
+        puz = {**ordered, **puz}
     return puz
 
 # ══════════════════════════════════════════════════════════════════════════════
@@ -1890,7 +2209,7 @@ def cmd_generate(args):
         raw = construct(profile, rng, verbose=args.verbose)
         if raw is None:
             continue
-        raw = minimize(raw, verbose=args.verbose)
+        raw = minimize(raw, profile=profile, verbose=args.verbose)
 
         tmp  = assemble(raw, profile, 0, rng)
         errs = validate_puzzle(tmp)

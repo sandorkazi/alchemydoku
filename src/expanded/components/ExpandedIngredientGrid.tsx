@@ -269,10 +269,12 @@ function AutoDeduceModal({ onConfirm, onCancel }: { onConfirm: () => void; onCan
 
 // ─── Main grid ────────────────────────────────────────────────────────────────
 
-export function ExpandedIngredientGrid({ onRandomize, activeTool, setActiveTool }: {
+export function ExpandedIngredientGrid({ onRandomize, activeTool, setActiveTool, scrollContainerRef, onScrollSync }: {
   onRandomize?: () => void;
   activeTool: GridTool;
   setActiveTool: (t: GridTool) => void;
+  scrollContainerRef?: React.MutableRefObject<HTMLDivElement | null>;
+  onScrollSync?: (scrollLeft: number) => void;
 }) {
   const { state, dispatch } = useExpandedSolver();
   const { gridState, notes, autoDeduction, solarLunarMarks } = state;
@@ -281,7 +283,7 @@ export function ExpandedIngredientGrid({ onRandomize, activeTool, setActiveTool 
   const [editingCell, setEditingCell] = useState<{ ing: IngredientId; alch: AlchemicalId } | null>(null);
   const [showConfirm, setShowConfirm] = useState(false);
 
-  const gridRef = useRef<HTMLDivElement>(null);
+  const gridRef = useRef<HTMLDivElement | null>(null);
   const svgRef = useRef<SVGSVGElement>(null);
   const livePathRef = useRef<SVGPathElement>(null);
   const isDrawingRef = useRef(false);
@@ -501,7 +503,9 @@ export function ExpandedIngredientGrid({ onRandomize, activeTool, setActiveTool 
           </span>
         </div>
 
-        <div ref={gridRef} className="overflow-x-auto -mx-1 pl-1 pr-4 pb-1 flex justify-center relative"
+        <div ref={(el) => { gridRef.current = el; if (scrollContainerRef) scrollContainerRef.current = el; }}
+          className="overflow-x-auto -mx-1 pl-1 pr-4 pb-1 relative"
+          onScroll={e => onScrollSync?.(e.currentTarget.scrollLeft)}
           style={{ cursor: TOOL_CURSOR[activeTool] }}>
 
           {/* Active tool badge */}
@@ -520,6 +524,7 @@ export function ExpandedIngredientGrid({ onRandomize, activeTool, setActiveTool 
           </div>
 
           {/* ── Neutral-pair decorators + table wrapper ──────────────────── */}
+          <div className="flex justify-center min-w-full w-max">
           <div className="relative inline-block">
             {/* 4 neutral potions at the row-pair boundaries, behind the table */}
             {([1, 3, 5, 7] as const).map(boundaryRow => (
@@ -634,6 +639,7 @@ export function ExpandedIngredientGrid({ onRandomize, activeTool, setActiveTool 
             <path ref={livePathRef} d="" fill="none" stroke="rgba(239,68,68,0.75)" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" />
           </svg>
           </div>{/* /neutral-pair wrapper */}
+          </div>{/* /centering wrapper */}
         </div>
 
         <p className="text-[10px] text-gray-400">
@@ -841,7 +847,7 @@ export function GolemPanel({ activeTool }: { activeTool: GridTool }) {
   }
 
   return (
-    <div className="px-1 pt-1 space-y-4 flex flex-col items-center">
+    <div className="pt-1 space-y-4 pr-[10px]">
 
       {/* ── Top grid: per-ingredient reactions ─────────────────────────────── */}
       <div>

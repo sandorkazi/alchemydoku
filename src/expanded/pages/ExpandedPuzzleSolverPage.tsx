@@ -6,7 +6,7 @@
  * No base game context or pages are imported here.
  */
 
-import { useState } from 'react';
+import { useState, useRef } from 'react';
 import { ExpandedSolverProvider, useExpandedSolver } from '../contexts/ExpandedSolverContext';
 import { ExpandedCluePanel } from '../components/ExpandedCluePanel';
 import { ExpandedIngredientGrid, GolemPanel } from '../components/ExpandedIngredientGrid';
@@ -49,6 +49,10 @@ function IngredientGridSection() {
   const [open, setOpen] = useState(hasGolem);
   const [golemOpen, setGolemOpen] = useState(hasGolem);
   const [activeTool, setActiveTool] = useState<import('../components/ExpandedIngredientGrid').GridTool>('mark');
+
+  const ingScrollRef = useRef<HTMLDivElement | null>(null);
+  const golemScrollRef = useRef<HTMLDivElement | null>(null);
+
   return (
     <div className="border-t">
       <button onClick={() => setOpen(v => !v)}
@@ -65,6 +69,8 @@ function IngredientGridSection() {
             onRandomize={() => dispatch({ type: 'RESHUFFLE' })}
             activeTool={activeTool}
             setActiveTool={setActiveTool}
+            scrollContainerRef={ingScrollRef}
+            onScrollSync={sl => { if (golemScrollRef.current && golemScrollRef.current.scrollLeft !== sl) golemScrollRef.current.scrollLeft = sl; }}
           />
           {hasGolem && (
             <div className="mt-2 border-t border-gray-100">
@@ -77,7 +83,17 @@ function IngredientGridSection() {
                 <span>🧿 Golem</span>
                 <span className={`transition-transform duration-200 ${golemOpen ? 'rotate-180' : ''}`}>▾</span>
               </button>
-              {golemOpen && <GolemPanel activeTool={activeTool} />}
+              {golemOpen && (
+                <div
+                  ref={golemScrollRef}
+                  className="overflow-x-auto -mx-1 pl-1 pr-4 pb-1"
+                  onScroll={e => { const sl = e.currentTarget.scrollLeft; if (ingScrollRef.current && ingScrollRef.current.scrollLeft !== sl) ingScrollRef.current.scrollLeft = sl; }}
+                >
+                  <div className="flex justify-center min-w-full w-max">
+                    <GolemPanel activeTool={activeTool} />
+                  </div>
+                </div>
+              )}
             </div>
           )}
         </div>
