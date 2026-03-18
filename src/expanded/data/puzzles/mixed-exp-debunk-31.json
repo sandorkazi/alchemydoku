@@ -1,0 +1,260 @@
+{
+  "id": "mixed-exp-debunk-31",
+  "mode": "expanded",
+  "kind": "debunk",
+  "title": "The Curious Formula",
+  "description": "Mixed evidence surrounds several suspicious publications. Use master debunking to expose the lies.",
+  "difficulty": "hard",
+  "golem": {
+    "chest": {
+      "color": "G",
+      "size": "S"
+    },
+    "ears": {
+      "color": "B",
+      "size": "S"
+    }
+  },
+  "clues": [
+    {
+      "kind": "golem_test",
+      "ingredient": 8,
+      "chest_reacted": true,
+      "ears_reacted": true
+    },
+    {
+      "kind": "golem_test",
+      "ingredient": 5,
+      "chest_reacted": false,
+      "ears_reacted": true
+    },
+    {
+      "kind": "sell_result_among",
+      "ingredients": [
+        1,
+        4,
+        8
+      ],
+      "claimedPotion": {
+        "color": "G",
+        "sign": "-"
+      },
+      "sellResult": "opposite"
+    },
+    {
+      "kind": "golem_reaction_among",
+      "ingredients": [
+        3,
+        5,
+        6,
+        8
+      ],
+      "reaction": "non_reactive",
+      "count": 1
+    },
+    {
+      "kind": "book_among",
+      "ingredients": [
+        1,
+        4,
+        5
+      ],
+      "result": "lunar",
+      "count": 1
+    },
+    {
+      "kind": "sell_among",
+      "ingredients": [
+        2,
+        3,
+        5,
+        8
+      ],
+      "claimedPotion": {
+        "color": "B",
+        "sign": "+"
+      },
+      "result": "sign_ok",
+      "count": 4
+    },
+    {
+      "kind": "sell_among",
+      "ingredients": [
+        2,
+        3,
+        4,
+        7
+      ],
+      "claimedPotion": {
+        "color": "G",
+        "sign": "+"
+      },
+      "result": "sign_ok",
+      "count": 4
+    }
+  ],
+  "questions": [
+    {
+      "kind": "debunk_min_steps"
+    },
+    {
+      "kind": "debunk_conflict_only",
+      "fixedIngredient": 1
+    }
+  ],
+  "solution": {
+    "1": 1,
+    "2": 8,
+    "3": 2,
+    "4": 3,
+    "5": 4,
+    "6": 7,
+    "7": 5,
+    "8": 6
+  },
+  "hints": [
+    {
+      "level": 1,
+      "text": "Use all clues to eliminate impossible worlds."
+    },
+    {
+      "level": 2,
+      "text": "Apply each clue systematically."
+    },
+    {
+      "level": 3,
+      "text": "Answer: not_validated"
+    }
+  ],
+  "complexity": {
+    "raw": 6.618,
+    "avg_clue_strength": 2.186,
+    "ambig_penalty": 0.514,
+    "chain_depth": 2,
+    "stuck": true,
+    "requires_complement_set": false,
+    "question_requires_enumeration": false,
+    "residual_worlds": 1
+  },
+  "publications": [
+    {
+      "ingredient": 1,
+      "claimedAlchemical": 5
+    },
+    {
+      "ingredient": 2,
+      "claimedAlchemical": 2
+    },
+    {
+      "ingredient": 3,
+      "claimedAlchemical": 1
+    },
+    null,
+    null,
+    null,
+    null,
+    {
+      "ingredient": 8,
+      "claimedAlchemical": 8
+    }
+  ],
+  "debunk_answers": {
+    "debunk_min_steps": [
+      {
+        "kind": "master",
+        "ingredient1": 1,
+        "ingredient2": 3
+      },
+      {
+        "kind": "master",
+        "ingredient1": 1,
+        "ingredient2": 2
+      },
+      {
+        "kind": "master",
+        "ingredient1": 1,
+        "ingredient2": 8
+      },
+      {
+        "kind": "master",
+        "ingredient1": 3,
+        "ingredient2": 4
+      }
+    ],
+    "debunk_conflict_only": [
+      {
+        "kind": "master",
+        "ingredient1": 1,
+        "ingredient2": 2
+      }
+    ]
+  },
+  "articles": [
+    {
+      "id": "art-R-1",
+      "aspect": "R",
+      "entries": [
+        {
+          "ingredient": 4,
+          "sign": "-"
+        },
+        {
+          "ingredient": 5,
+          "sign": "+"
+        },
+        {
+          "ingredient": 6,
+          "sign": "-"
+        },
+        {
+          "ingredient": 8,
+          "sign": "+"
+        }
+      ]
+    },
+    {
+      "id": "art-B-2",
+      "aspect": "B",
+      "entries": [
+        {
+          "ingredient": 3,
+          "sign": "-"
+        },
+        {
+          "ingredient": 4,
+          "sign": "+"
+        },
+        {
+          "ingredient": 5,
+          "sign": "-"
+        },
+        {
+          "ingredient": 7,
+          "sign": "+"
+        }
+      ]
+    },
+    {
+      "id": "art-G-3",
+      "aspect": "G",
+      "entries": [
+        {
+          "ingredient": 1,
+          "sign": "+"
+        },
+        {
+          "ingredient": 3,
+          "sign": "+"
+        },
+        {
+          "ingredient": 6,
+          "sign": "-"
+        },
+        {
+          "ingredient": 8,
+          "sign": "-"
+        }
+      ]
+    }
+  ]
+}
