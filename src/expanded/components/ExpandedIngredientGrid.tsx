@@ -847,7 +847,7 @@ export function GolemPanel({ activeTool }: { activeTool: GridTool }) {
   }
 
   return (
-    <div className="px-1 pt-1 space-y-4 flex flex-col items-center">
+    <div className="pt-1 space-y-4 pr-[10px]">
 
       {/* ── Top grid: per-ingredient reactions ─────────────────────────────── */}
       <div>

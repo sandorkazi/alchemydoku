@@ -86,10 +86,12 @@ function IngredientGridSection() {
               {golemOpen && (
                 <div
                   ref={golemScrollRef}
-                  className="overflow-x-auto -mx-1 px-1"
+                  className="overflow-x-auto -mx-1 pl-1 pr-4 pb-1"
                   onScroll={e => { const sl = e.currentTarget.scrollLeft; if (ingScrollRef.current && ingScrollRef.current.scrollLeft !== sl) ingScrollRef.current.scrollLeft = sl; }}
                 >
-                  <GolemPanel activeTool={activeTool} />
+                  <div className="flex justify-center min-w-full w-max">
+                    <GolemPanel activeTool={activeTool} />
+                  </div>
                 </div>
               )}
             </div>
