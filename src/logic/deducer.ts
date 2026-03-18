@@ -105,6 +105,35 @@ export function buildDeductionReport(worlds: WorldSet): DeductionReport {
   return report;
 }
 
+// ─── Color aspect buckets ─────────────────────────────────────────────────────
+
+export type ColorAspectBuckets = {
+  'L+': IngredientId[];
+  'L-': IngredientId[];
+  'S+': IngredientId[];
+  'S-': IngredientId[];
+  signPlusOnly:  IngredientId[];   // sign='+', size unknown
+  signMinusOnly: IngredientId[];   // sign='-', size unknown
+  unknown:       IngredientId[];   // sign unknown
+};
+
+export function computeColorAspects(worlds: WorldSet, color: Color): ColorAspectBuckets {
+  const r: ColorAspectBuckets = {
+    'L+': [], 'L-': [], 'S+': [], 'S-': [],
+    signPlusOnly: [], signMinusOnly: [], unknown: [],
+  };
+  for (const ing of INGREDIENT_IDS) {
+    const d = deduceAspect(worlds, ing, color);
+    if (!d) { r.unknown.push(ing); continue; }
+    if (d.size) {
+      (r[`${d.size}${d.sign}` as 'L+' | 'L-' | 'S+' | 'S-']).push(ing);
+    } else {
+      (d.sign === '+' ? r.signPlusOnly : r.signMinusOnly).push(ing);
+    }
+  }
+  return r;
+}
+
 // ─── Eliminated cells ─────────────────────────────────────────────────────────
 
 export function getEliminatedCells(worlds: WorldSet): Set<string> {

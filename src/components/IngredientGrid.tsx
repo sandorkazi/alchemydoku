@@ -426,6 +426,24 @@ export function IngredientGrid({ onRandomize }: { onRandomize?: () => void }) {
                   transition-transform ${autoDeduction ? 'translate-x-4' : 'translate-x-1'}`} />
               </button>
             </label>
+
+            {/* Defcon Mode toggle */}
+            <label className="flex items-center gap-1.5 text-xs cursor-pointer select-none">
+              <span className={state.defconMode ? 'text-amber-600 font-semibold' : 'text-gray-500'}>
+                Defcon
+              </span>
+              <button
+                role="switch"
+                aria-checked={state.defconMode}
+                onClick={() => dispatch({ type: 'TOGGLE_DEFCON_MODE' })}
+                className={`relative inline-flex h-5 w-9 items-center rounded-full transition-colors
+                  focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-amber-400
+                  ${state.defconMode ? 'bg-amber-600' : 'bg-gray-200'}`}
+              >
+                <span className={`inline-block h-3.5 w-3.5 transform rounded-full bg-white shadow
+                  transition-transform ${state.defconMode ? 'translate-x-4' : 'translate-x-1'}`} />
+              </button>
+            </label>
           </div>
         </div>
 

@@ -6,6 +6,7 @@ import { MixSimulator } from '../components/MixSimulator';
 import { HintDrawer } from '../components/HintDrawer';
 import { AnswerPanel } from '../components/AnswerPanel';
 import { PuzzleToolbar } from '../components/PuzzleToolbar';
+import { AspectBoard } from '../components/AspectBoard';
 import { downloadBothFiles, uploadBaseProgress } from '../utils/saveProgress';
 import { applyPermalink } from '../utils/permalink';
 import type { Puzzle } from '../types';
@@ -100,6 +101,33 @@ function IngredientGridSection() {
   );
 }
 
+// ─── Aspect Board section ─────────────────────────────────────────────────────
+
+function AspectBoardSection() {
+  const { state } = useSolver();
+  const [open, setOpen] = useState(true);
+  if (!state.defconMode) return null;
+  return (
+    <div className="border-t">
+      <button
+        onClick={() => setOpen(v => !v)}
+        className="w-full flex items-center justify-between py-2.5 text-xs font-semibold
+                   uppercase tracking-widest text-amber-500 hover:text-amber-700
+                   transition-colors focus-visible:outline-none"
+        aria-expanded={open}
+      >
+        <span>⚠ Aspect Board</span>
+        <span className={`transition-transform duration-200 ${open ? 'rotate-180' : ''}`}>▾</span>
+      </button>
+      {open && (
+        <div className="pb-2 animate-fadein">
+          <AspectBoard />
+        </div>
+      )}
+    </div>
+  );
+}
+
 // ─── Inner page (requires SolverProvider above it) ────────────────────────────
 
 function SolverInner({
@@ -184,6 +212,7 @@ function SolverInner({
             <div className="bg-white rounded-xl border shadow-sm p-3 sm:p-5 space-y-5">
               <IngredientGridSection />
               <MixSimulatorSection />
+              <AspectBoardSection />
             </div>
 
           </div>
