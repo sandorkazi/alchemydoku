@@ -2,7 +2,7 @@
   "id": "mixed-base-debunk-24",
   "title": "The Researcher's Burden",
   "description": "Mixed evidence surrounds several suspicious publications. Use master debunking to expose the lies.",
-  "difficulty": "hard",
+  "difficulty": "expert",
   "clues": [
     {
       "kind": "sell_result_among",
@@ -108,9 +108,11 @@
     }
   ],
   "complexity": {
-    "raw": 5.812,
+    "score": 4,
+    "raw": 7.975,
     "avg_clue_strength": 2.595,
     "ambig_penalty": 0.76,
+    "stranded_ambiguity": 2.543,
     "chain_depth": 2,
     "stuck": true,
     "requires_complement_set": false,

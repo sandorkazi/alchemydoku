@@ -80,8 +80,10 @@
   ],
   "complexity": {
     "score": 3,
-    "raw": 2.478,
+    "raw": 3.618,
     "avg_clue_strength": 4.433,
+    "ambig_penalty": 0.833,
+    "stranded_ambiguity": 1.557,
     "chain_depth": 0,
     "stuck": false,
     "requires_complement_set": false,

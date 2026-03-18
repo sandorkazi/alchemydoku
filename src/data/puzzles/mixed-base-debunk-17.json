@@ -2,7 +2,7 @@
   "id": "mixed-base-debunk-17",
   "title": "Second Opinion",
   "description": "Mixed evidence surrounds several suspicious publications. Use master debunking to expose the lies.",
-  "difficulty": "hard",
+  "difficulty": "expert",
   "clues": [
     {
       "kind": "sell_result_among",
@@ -119,9 +119,11 @@
     }
   ],
   "complexity": {
-    "raw": 5.645,
+    "score": 4,
+    "raw": 7.61,
     "avg_clue_strength": 2.55,
     "ambig_penalty": 0.667,
+    "stranded_ambiguity": 2.298,
     "chain_depth": 2,
     "stuck": true,
     "requires_complement_set": false,

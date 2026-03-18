@@ -749,9 +749,9 @@ Q_SURCHARGE = {
     'golem_group': 0.5, 'golem_animate_potion': 0.8,
     'golem_mix_potion': 1.0, 'golem_possible_potions': 1.2,
     'neutral-partner': 0.5, 'ingredient-potion-profile': 0.8,
-    'group-possible-potions': 0.8, 'most-informative-mix': 0.6,
+    'group-possible-potions': 0.8, 'most-informative-mix': 1.0,
     'guaranteed-non-producer': 0.5,
-    'most_informative_book': 0.6,
+    'most_informative_book': 1.0,
 }
 
 
@@ -831,7 +831,12 @@ def compute_difficulty(puzzle: dict) -> dict:
     strengths, final_worlds = clue_strengths(clues, golem)
     avg_strength = sum(strengths) / len(strengths) if strengths else 0.0
 
-    # Base-game ambiguity penalty
+    # Ambiguity penalty (per-clue average) — captures how hard each clue is to read
+    _AMBIG_KINDS = frozenset({
+        'mixing_among', 'mixing_count_among',
+        'sell_result_among', 'sell_among',
+        'book_among', 'golem_reaction_among',
+    })
     total_penalty = 0.0
     for c in clues:
         p = CLUE_TYPE_PENALTY.get(c['kind'], 0.0)
@@ -843,6 +848,24 @@ def compute_difficulty(puzzle: dict) -> dict:
             p += SELL_PENALTY.get(c.get('result', ''), 0.0)  # sell_among uses 'result' field
         total_penalty += p
     ambig_penalty = total_penalty / len(clues) if clues else 0.0
+
+    # Stranded-ambiguity burden — how many bits of info come *only* from among-group clues?
+    # If direct clues barely narrow things down, the ambiguous clues must do hard work.
+    ambig_clues  = [c for c in clues if c['kind'] in _AMBIG_KINDS]
+    direct_clues = [c for c in clues if c['kind'] not in _AMBIG_KINDS]
+    if ambig_clues:
+        w = all_worlds()
+        for c in direct_clues:
+            w = filter_clue(w, c, golem)
+        W_direct = len(w)
+        W_final  = len(final_worlds)
+        # bits of information uniquely contributed by the ambiguous clues
+        ambig_burden = math.log2(W_direct + 1) - math.log2(W_final + 1)
+        # scale by clue count so more ambiguous clues compound the difficulty
+        stranded = ambig_burden / 10.0 * len(ambig_clues) * 0.4
+    else:
+        ambig_burden = 0.0
+        stranded     = 0.0
 
     depth, complement, stuck = simulate_chain(final_worlds, questions, golem)
 
@@ -863,7 +886,8 @@ def compute_difficulty(puzzle: dict) -> dict:
 
     raw = (
         (1.0 / (avg_strength + 0.5)) * 4.0
-        + ambig_penalty * 2.0
+        + ambig_penalty * 1.5   # reduced slightly; stranded term covers the rest
+        + stranded               # extra: how much work the ambiguous clues must do
         + depth * 1.5
         + (2.0 if complement else 0.0)
         + (1.0 if enum else 0.0)
@@ -875,6 +899,7 @@ def compute_difficulty(puzzle: dict) -> dict:
         'raw':                           round(raw, 3),
         'avg_clue_strength':             round(avg_strength, 3),
         'ambig_penalty':                 round(ambig_penalty, 3),
+        'stranded_ambiguity':            round(stranded, 3),
         'chain_depth':                   depth,
         'stuck':                         stuck,
         'requires_complement_set':       complement,
@@ -1047,7 +1072,7 @@ PROFILES = {
         'mixed-base-debunk',
         ['base', 'sell', 'among'],
         'debunk_min_steps',
-        'hard', 14, False,
+        'expert', 14, False,
         mandatory_clues=[
             {'kind': 'sell_result_among', 'sellResult': 'opposite'},
             {'kind': 'mixing_count_among'},
@@ -1058,7 +1083,7 @@ PROFILES = {
         'mixed-exp-debunk',
         ['base', 'sell', 'among', 'solar_lunar', 'golem'],
         'debunk_min_steps',
-        'hard', 16, True,
+        'expert', 16, True,
         mandatory_clues=[
             {'kind': 'sell_result_among', 'sellResult': 'opposite'},
             {'kind': 'golem_reaction_among', 'count': 1},
@@ -2280,6 +2305,8 @@ def cmd_analyze(_args):
             'score':                         pips_for(pid),
             'raw':                           d['raw'],
             'avg_clue_strength':             d['avg_clue_strength'],
+            'ambig_penalty':                 d['ambig_penalty'],
+            'stranded_ambiguity':            d['stranded_ambiguity'],
             'chain_depth':                   d['chain_depth'],
             'stuck':                         d['stuck'],
             'requires_complement_set':       d['requires_complement_set'],

@@ -2,7 +2,7 @@
   "id": "mixed-base-debunk-04",
   "title": "Patterns in the Ash",
   "description": "Mixed evidence surrounds several suspicious publications. Use master debunking to expose the lies.",
-  "difficulty": "hard",
+  "difficulty": "expert",
   "clues": [
     {
       "kind": "sell_result_among",
@@ -132,9 +132,11 @@
     }
   ],
   "complexity": {
-    "raw": 5.889,
+    "score": 5,
+    "raw": 8.537,
     "avg_clue_strength": 2.186,
     "ambig_penalty": 0.7,
+    "stranded_ambiguity": 2.998,
     "chain_depth": 2,
     "stuck": true,
     "requires_complement_set": false,

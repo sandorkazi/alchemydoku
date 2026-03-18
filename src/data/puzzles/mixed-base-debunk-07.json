@@ -2,7 +2,7 @@
   "id": "mixed-base-debunk-07",
   "title": "The Curious Formula",
   "description": "Mixed evidence surrounds several suspicious publications. Use master debunking to expose the lies.",
-  "difficulty": "hard",
+  "difficulty": "expert",
   "clues": [
     {
       "kind": "sell_result_among",
@@ -103,9 +103,11 @@
     }
   ],
   "complexity": {
-    "raw": 5.431,
+    "score": 4,
+    "raw": 7.863,
     "avg_clue_strength": 2.86,
     "ambig_penalty": 0.62,
+    "stranded_ambiguity": 2.743,
     "chain_depth": 2,
     "stuck": true,
     "requires_complement_set": false,

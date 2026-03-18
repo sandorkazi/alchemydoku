@@ -96,9 +96,11 @@
     }
   ],
   "complexity": {
-    "raw": 2.982,
+    "score": 4,
+    "raw": 4.676,
     "avg_clue_strength": 3.575,
     "ambig_penalty": 1.0,
+    "stranded_ambiguity": 2.194,
     "chain_depth": 0,
     "stuck": false,
     "requires_complement_set": false,
