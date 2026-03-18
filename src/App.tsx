@@ -172,7 +172,7 @@ function CollectionCard({
             <span className="text-gray-300 text-xs">›</span>
           </div>
         </div>
-        <p className="text-xs text-gray-500 mt-0.5">{col.description}</p>
+        <p className="text-xs text-gray-500 mt-0.5 line-clamp-2">{col.description}</p>
         {locked && col.unlockedAfter && (
           <p className="text-xs text-gray-400 mt-1">
             Complete "{(COLLECTIONS as Collection[]).find(c => c.id === col.unlockedAfter)?.title ?? col.unlockedAfter}" first

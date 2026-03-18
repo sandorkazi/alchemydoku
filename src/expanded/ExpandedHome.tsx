@@ -96,7 +96,7 @@ function CollectionSummaryCard({ collection, completed, onOpen }: {
             <span className="text-gray-300 text-xs">›</span>
           </div>
         </div>
-        <p className="text-xs text-gray-500 mt-0.5">{collection.description}</p>
+        <p className="text-xs text-gray-500 mt-0.5 line-clamp-2">{collection.description}</p>
       </div>
     </button>
   );
@@ -133,7 +133,7 @@ function CollectionView({ collection, completed, onSelectPuzzle, onBack }: {
                 {doneCount}/{puzzles.length}
               </span>
             </div>
-            <p className="text-xs text-gray-500 mt-0.5">{collection.description}</p>
+            <p className="text-xs text-gray-500 mt-0.5 line-clamp-2">{collection.description}</p>
           </div>
           <div className="divide-y divide-gray-100">
             {puzzles.map(puzzle => {
