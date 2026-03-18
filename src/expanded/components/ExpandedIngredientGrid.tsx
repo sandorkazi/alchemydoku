@@ -501,7 +501,7 @@ export function ExpandedIngredientGrid({ onRandomize, activeTool, setActiveTool 
           </span>
         </div>
 
-        <div ref={gridRef} className="overflow-x-auto -mx-1 pl-1 pr-4 pb-1 flex justify-center relative"
+        <div ref={gridRef} className="overflow-x-auto -mx-1 pl-1 pr-4 pb-1 flex justify-start relative"
           style={{ cursor: TOOL_CURSOR[activeTool] }}>
 
           {/* Active tool badge */}
