@@ -1,0 +1,142 @@
+{
+  "id": "mixed-exp-mix-25",
+  "mode": "expanded",
+  "title": "The Final Entry",
+  "description": "Mixing, selling, and debunking records all point toward a single pair. Deduce what potion they produce.",
+  "difficulty": "hard",
+  "golem": {
+    "chest": {
+      "color": "B",
+      "size": "L"
+    },
+    "ears": {
+      "color": "G",
+      "size": "S"
+    }
+  },
+  "clues": [
+    {
+      "kind": "golem_test",
+      "ingredient": 6,
+      "chest_reacted": true,
+      "ears_reacted": true
+    },
+    {
+      "kind": "golem_test",
+      "ingredient": 2,
+      "chest_reacted": false,
+      "ears_reacted": false
+    },
+    {
+      "kind": "sell_result_among",
+      "ingredients": [
+        1,
+        6,
+        7,
+        8
+      ],
+      "claimedPotion": {
+        "color": "G",
+        "sign": "-"
+      },
+      "sellResult": "opposite"
+    },
+    {
+      "kind": "golem_reaction_among",
+      "ingredients": [
+        3,
+        5,
+        6,
+        7
+      ],
+      "reaction": "non_reactive",
+      "count": 1
+    },
+    {
+      "kind": "book_among",
+      "ingredients": [
+        2,
+        3,
+        5,
+        7
+      ],
+      "result": "lunar",
+      "count": 1
+    },
+    {
+      "kind": "sell_among",
+      "ingredients": [
+        2,
+        3,
+        7
+      ],
+      "claimedPotion": {
+        "color": "R",
+        "sign": "-"
+      },
+      "result": "sign_ok",
+      "count": 2
+    },
+    {
+      "kind": "golem_reaction_among",
+      "ingredients": [
+        1,
+        4,
+        7
+      ],
+      "reaction": "ears_only",
+      "count": 1
+    },
+    {
+      "kind": "golem_reaction_among",
+      "ingredients": [
+        3,
+        5,
+        8
+      ],
+      "reaction": "animators",
+      "count": 1
+    }
+  ],
+  "questions": [
+    {
+      "kind": "mixing-result",
+      "ingredient1": 7,
+      "ingredient2": 8
+    }
+  ],
+  "solution": {
+    "1": 8,
+    "2": 3,
+    "3": 1,
+    "4": 7,
+    "5": 4,
+    "6": 2,
+    "7": 5,
+    "8": 6
+  },
+  "hints": [
+    {
+      "level": 1,
+      "text": "To find the result of mixing ing7 and ing8, apply the mixing rule: scan colours R\u2192G\u2192B in order. The first colour where both ingredients share the same sign determines the result potion. If all three colours have opposing signs, the result is neutral."
+    },
+    {
+      "level": 2,
+      "text": "Step through each colour:\n  R: ing7=R- (ing7 has R-), ing8=R+ (ing8 has R+)\n      \u2192 opposite signs \u2192 skip.\n  G: ing7=G- (ing7 has G-), ing8=G+ (ing8 has G+)\n      \u2192 opposite signs \u2192 skip.\n  B: ing7=B+ (ing7 has B+), ing8=B- (ing8 has B-)\n      \u2192 opposite signs \u2192 skip.\n  All colours opposite \u2192 neutral."
+    },
+    {
+      "level": 3,
+      "text": "ing7=Nnp, ing8=Ppn. Mix result: neutral."
+    }
+  ],
+  "complexity": {
+    "raw": 3.674,
+    "avg_clue_strength": 1.787,
+    "ambig_penalty": 0.412,
+    "chain_depth": 0,
+    "stuck": false,
+    "requires_complement_set": false,
+    "question_requires_enumeration": false,
+    "residual_worlds": 2
+  }
+}

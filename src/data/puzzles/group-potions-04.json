@@ -1,0 +1,61 @@
+{
+  "id": "group-potions-04",
+  "title": "Secrets of the Guild",
+  "description": "Identify all potions that can be certainly produced by some pair within the listed ingredient group.",
+  "difficulty": "medium",
+  "clues": [
+    {
+      "kind": "mixing",
+      "ingredient1": 1,
+      "ingredient2": 8,
+      "result": {
+        "color": "G",
+        "sign": "-"
+      }
+    }
+  ],
+  "questions": [
+    {
+      "kind": "group-possible-potions",
+      "ingredients": [
+        1,
+        4,
+        8
+      ]
+    }
+  ],
+  "solution": {
+    "1": 7,
+    "2": 4,
+    "3": 6,
+    "4": 3,
+    "5": 5,
+    "6": 1,
+    "7": 8,
+    "8": 2
+  },
+  "hints": [
+    {
+      "level": 1,
+      "text": "Find all potions certainly achievable by some pair within ingredients [1, 4, 8]. Check all 3 pair combinations."
+    },
+    {
+      "level": 2,
+      "text": "Certain pairs so far: ing1+ing8\u2192G-."
+    },
+    {
+      "level": 3,
+      "text": "Certain potions for group [1, 4, 8]: ['G-']."
+    }
+  ],
+  "complexity": {
+    "raw": 3.009,
+    "avg_clue_strength": 2.807,
+    "ambig_penalty": 0.0,
+    "chain_depth": 0,
+    "stuck": false,
+    "requires_complement_set": false,
+    "question_requires_enumeration": true,
+    "residual_worlds": 5760
+  }
+}

@@ -219,7 +219,7 @@
   {
     "id": "new-mechanics",
     "title": "New Deduction Tools",
-    "description": "Five new question types: find neutral partners, map potion profiles, identify the most informative experiment, find non-producers, and spot achievable potions within a group.",
+    "description": "Four new question types: find neutral partners, map potion profiles, find non-producers, and spot achievable potions within a group.",
     "difficulty": "medium",
     "puzzleIds": [
       "neutral-partner-02",
@@ -228,12 +228,23 @@
       "ing-profile-04",
       "group-potions-02",
       "group-potions-03",
-      "best-mix-02",
-      "best-mix-03",
+      "group-potions-04",
+      "group-potions-05",
       "non-producer-02",
       "non-producer-03"
     ],
     "unlockedAfter": "medium-mixing"
+  },
+  {
+    "id": "entropy-mix",
+    "title": "Best Experiment",
+    "description": "Find the single ingredient whose mixing result carries the most information — the Shannon-optimal experiment. Short puzzles, high precision required.",
+    "difficulty": "medium",
+    "puzzleIds": [
+      "best-mix-02",
+      "best-mix-03"
+    ],
+    "unlockedAfter": "new-mechanics"
   },
   {
     "id": "combo-base",

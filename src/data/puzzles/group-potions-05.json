@@ -1,0 +1,86 @@
+{
+  "id": "group-potions-05",
+  "title": "Reaction Chains",
+  "description": "Identify all potions that can be certainly produced by some pair within the listed ingredient group.",
+  "difficulty": "medium",
+  "clues": [
+    {
+      "kind": "mixing",
+      "ingredient1": 1,
+      "ingredient2": 6,
+      "result": {
+        "color": "B",
+        "sign": "-"
+      }
+    },
+    {
+      "kind": "mixing",
+      "ingredient1": 2,
+      "ingredient2": 3,
+      "result": {
+        "type": "neutral"
+      }
+    },
+    {
+      "kind": "mixing",
+      "ingredient1": 1,
+      "ingredient2": 8,
+      "result": {
+        "color": "R",
+        "sign": "+"
+      }
+    },
+    {
+      "kind": "mixing",
+      "ingredient1": 1,
+      "ingredient2": 4,
+      "result": {
+        "color": "B",
+        "sign": "-"
+      }
+    }
+  ],
+  "questions": [
+    {
+      "kind": "group-possible-potions",
+      "ingredients": [
+        5,
+        7
+      ]
+    }
+  ],
+  "solution": {
+    "1": 6,
+    "2": 4,
+    "3": 3,
+    "4": 1,
+    "5": 8,
+    "6": 7,
+    "7": 5,
+    "8": 2
+  },
+  "hints": [
+    {
+      "level": 1,
+      "text": "Find all potions certainly achievable by some pair within ingredients [5, 7]. Check all 1 pair combinations."
+    },
+    {
+      "level": 2,
+      "text": "Certain pairs so far: ing5+ing7\u2192B+."
+    },
+    {
+      "level": 3,
+      "text": "Certain potions for group [5, 7]: ['B+']."
+    }
+  ],
+  "complexity": {
+    "raw": 3.003,
+    "avg_clue_strength": 2.825,
+    "ambig_penalty": 0.0,
+    "chain_depth": 0,
+    "stuck": false,
+    "requires_complement_set": false,
+    "question_requires_enumeration": true,
+    "residual_worlds": 16
+  }
+}
