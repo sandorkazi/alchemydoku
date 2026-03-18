@@ -75,7 +75,7 @@ export function BaseInterfaceCards() {
         icon="⚡" title="Visual Hints" accent="indigo"
         visual={
           <div className="flex items-center gap-2">
-            <span className="text-xs font-semibold text-indigo-600">Hints</span>
+            <span className="text-xs font-semibold text-indigo-600">Grid Hints</span>
             {/* Styled toggle — on state */}
             <span className="relative inline-flex h-5 w-9 items-center rounded-full bg-indigo-600 shrink-0">
               <span className="inline-block h-3.5 w-3.5 rounded-full bg-white shadow translate-x-4" />
@@ -140,7 +140,7 @@ export function BaseInterfaceCards() {
         visual={
           <div className="flex flex-col gap-1.5">
             <div className="flex items-center gap-1.5">
-              {(['💾', '📂', '↺', '🔗'] as const).map(icon => (
+              {(['💾', '📂', '↩', '↪', '↺', '🔗'] as const).map(icon => (
                 <span key={icon} className="w-7 h-7 flex items-center justify-center rounded-lg
                   border border-gray-200 bg-white text-sm hover:bg-gray-100 shadow-sm">{icon}</span>
               ))}
@@ -150,7 +150,7 @@ export function BaseInterfaceCards() {
             </span>
           </div>
         }
-        text="The top toolbar has four action buttons: 💾 saves your progress to a local file, 📂 loads a previously saved file, ↺ resets the puzzle to its blank state, and 🔗 copies a permalink to this puzzle to your clipboard and updates the URL. The 'Xw' counter shows how many possible alchemical assignments remain consistent with the clues."
+        text="The top toolbar has action buttons: 💾 saves your progress to a local file, 📂 loads a previously saved file, ↩/↪ undo and redo the last grid change (also Ctrl+Z / Ctrl+Shift+Z), ↺ resets the puzzle to its blank state, and 🔗 copies a permalink to this puzzle to your clipboard and updates the URL. The 'Xw' counter shows how many possible alchemical assignments remain consistent with the clues."
       />
 
       {/* Grid toolbar extras */}
@@ -168,10 +168,14 @@ export function BaseInterfaceCards() {
               <span className="text-[9px] text-gray-400">mark tool</span>
               <span className="px-1.5 py-0.5 rounded bg-gray-100 text-[9px] font-mono text-gray-600">⌃ click</span>
               <span className="text-[9px] text-gray-400">? tool</span>
+              <span className="px-1.5 py-0.5 rounded bg-gray-100 text-[9px] font-mono text-gray-600">U</span>
+              <span className="text-[9px] text-gray-400">undo</span>
+              <span className="px-1.5 py-0.5 rounded bg-gray-100 text-[9px] font-mono text-gray-600">R</span>
+              <span className="text-[9px] text-gray-400">redo</span>
             </div>
           </div>
         }
-        text="Inside the ingredient grid: ✕ Clear wipes all cell marks and notes; ✕ Drawing (appears when you have strokes) clears only the freehand sketches; 🔀 reshuffles which ingredient icon appears in each column (the underlying slot assignments stay the same). Keyboard modifiers work as overrides: Shift+click always uses the ✗✔ mark tool, Ctrl/⌘+click always uses the ? tool, regardless of which tool is selected."
+        text="Inside the ingredient grid: ✕ Clear wipes all cell marks and notes; ✕ Drawing (appears when you have strokes) clears only the freehand sketches; 🔀 reshuffles which ingredient icon appears in each column (the underlying slot assignments stay the same). Keyboard modifiers: Shift+click always uses the ✗✔ mark tool, Ctrl/⌘+click always uses the ? tool. Keyboard shortcuts (when no text field is focused): U undoes the last grid change, R redoes it."
       />
 
       {/* Collapsible clues */}

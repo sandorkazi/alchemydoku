@@ -315,9 +315,10 @@ export function IngredientGrid({ onRandomize }: { onRandomize?: () => void }) {
   const noteKey = (ing: IngredientId, alch: AlchemicalId) => `${ing}-${alch}`;
 
   // ── Resolve effective tool from modifier keys ──────────────────────────────
-  // Shift held → always use mark tool, regardless of active tool
+  // Shift held → mark tool; Ctrl/⌘ held → question tool; otherwise active tool
   const resolveEffectiveTool = (e: React.MouseEvent): GridTool => {
     if (e.shiftKey) return 'mark';
+    if (e.ctrlKey || e.metaKey) return 'question';
     return activeTool;
   };
 
