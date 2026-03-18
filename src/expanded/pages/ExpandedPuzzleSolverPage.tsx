@@ -77,7 +77,7 @@ function IngredientGridSection() {
                 <span>🧿 Golem</span>
                 <span className={`transition-transform duration-200 ${golemOpen ? 'rotate-180' : ''}`}>▾</span>
               </button>
-              {golemOpen && <GolemPanel activeTool={activeTool} />}
+              {golemOpen && <div className="overflow-x-auto -mx-1 px-1"><GolemPanel activeTool={activeTool} /></div>}
             </div>
           )}
         </div>

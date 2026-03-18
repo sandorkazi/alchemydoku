@@ -432,7 +432,7 @@ export function IngredientGrid({ onRandomize }: { onRandomize?: () => void }) {
         {/* Grid — cursor + tool indicator badge */}
         <div
           ref={gridRef}
-          className="overflow-x-auto -mx-1 pl-1 pr-4 pb-1 flex justify-center relative"
+          className="overflow-x-auto -mx-1 pl-1 pr-4 pb-1 relative"
           style={{ cursor: TOOL_CURSOR[activeTool] }}
         >
           {/* Active tool badge — floats top-right of the scroll area */}
@@ -454,7 +454,8 @@ export function IngredientGrid({ onRandomize }: { onRandomize?: () => void }) {
             <kbd className="ml-0.5 opacity-60 font-mono text-[9px] border border-current/40 rounded px-0.5">Space</kbd>
           </div>
           {/* ── Neutral-pair decorators + table wrapper ──────────────────── */}
-          <div className="relative inline-block min-w-max">
+          <div className="flex justify-center min-w-full">
+          <div className="relative inline-block">
             {/* 4 neutral potions at the row-pair boundaries, behind the table */}
             {([1, 3, 5, 7] as const).map(boundaryRow => (
               <div
@@ -550,6 +551,7 @@ export function IngredientGrid({ onRandomize }: { onRandomize?: () => void }) {
             <path ref={livePathRef} d="" fill="none" stroke="rgba(239,68,68,0.75)" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" />
           </svg>
           </div>{/* /neutral-pair wrapper */}
+          </div>{/* /centering wrapper */}
         </div>
 
         {/* Contextual legend + keyboard hints */}

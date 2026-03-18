@@ -501,7 +501,7 @@ export function ExpandedIngredientGrid({ onRandomize, activeTool, setActiveTool 
           </span>
         </div>
 
-        <div ref={gridRef} className="overflow-x-auto -mx-1 pl-1 pr-4 pb-1 flex justify-center relative"
+        <div ref={gridRef} className="overflow-x-auto -mx-1 pl-1 pr-4 pb-1 relative"
           style={{ cursor: TOOL_CURSOR[activeTool] }}>
 
           {/* Active tool badge */}
@@ -520,7 +520,8 @@ export function ExpandedIngredientGrid({ onRandomize, activeTool, setActiveTool 
           </div>
 
           {/* ── Neutral-pair decorators + table wrapper ──────────────────── */}
-          <div className="relative inline-block min-w-max">
+          <div className="flex justify-center min-w-full">
+          <div className="relative inline-block">
             {/* 4 neutral potions at the row-pair boundaries, behind the table */}
             {([1, 3, 5, 7] as const).map(boundaryRow => (
               <div
@@ -634,6 +635,7 @@ export function ExpandedIngredientGrid({ onRandomize, activeTool, setActiveTool 
             <path ref={livePathRef} d="" fill="none" stroke="rgba(239,68,68,0.75)" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" />
           </svg>
           </div>{/* /neutral-pair wrapper */}
+          </div>{/* /centering wrapper */}
         </div>
 
         <p className="text-[10px] text-gray-400">
