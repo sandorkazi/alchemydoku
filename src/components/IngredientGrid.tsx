@@ -547,9 +547,9 @@ export function IngredientGrid({ onRandomize }: { onRandomize?: () => void }) {
             onPointerLeave={finalizeDraw}
           >
             {state.drawStrokes.map((d, i) => (
-              <path key={i} d={d} fill="none" stroke="rgba(239,68,68,0.75)" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" />
+              <path key={i} d={d} fill="none" stroke="rgba(249,115,22,0.85)" strokeWidth="5" strokeLinecap="round" strokeLinejoin="round" />
             ))}
-            <path ref={livePathRef} d="" fill="none" stroke="rgba(239,68,68,0.75)" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" />
+            <path ref={livePathRef} d="" fill="none" stroke="rgba(249,115,22,0.85)" strokeWidth="5" strokeLinecap="round" strokeLinejoin="round" />
           </svg>
           </div>{/* /neutral-pair wrapper */}
           </div>{/* /centering wrapper */}
