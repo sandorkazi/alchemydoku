@@ -113,7 +113,7 @@ function isComplete(s: DraftStep): s is DebunkStep {
 }
 
 function StepEditor({
-  index, draft, outcome, onUpdate, onRemove, isConflictOnly, showOutcome,
+  index, draft, outcome, onUpdate, onRemove, isConflictOnly, showOutcome, isTutorial,
 }: {
   index: number;
   draft: DraftStep;
@@ -122,6 +122,7 @@ function StepEditor({
   onRemove: () => void;
   isConflictOnly: boolean;
   showOutcome: boolean;
+  isTutorial: boolean;
 }) {
   const getIngredient = useIngredient();
   void getIngredient;
@@ -199,7 +200,7 @@ function StepEditor({
           />
         </div>
       )}
-      {draft.kind === 'master' && (
+      {draft.kind === 'master' && isTutorial && (
         <p className="text-[10px] text-gray-400 italic">
           The true mix result is publicly declared automatically — no potion selection needed.
         </p>
@@ -405,7 +406,9 @@ export function DebunkAnswerPanel({ onNext, isTutorial = false }: {
       {!completed && !showSolution && (
         <div className="space-y-2">
           <div className="flex items-center justify-between">
-            <span className="text-xs font-bold text-gray-500 uppercase tracking-widest">Your plan</span>
+            <span className="text-xs font-bold text-gray-500 uppercase tracking-widest">
+              {isConflictOnly ? 'Demonstrate a conflict' : isApprenticeOnly ? 'Apprentice plan' : 'Debunk plan'}
+            </span>
             <div className="flex items-center gap-3">
               {isConflictOnly
                 ? outcomes.length > 0 && outcomes[0].conflicts.length > 0 && (
@@ -439,6 +442,14 @@ export function DebunkAnswerPanel({ onNext, isTutorial = false }: {
             </div>
           </div>
 
+          <p className="text-xs text-gray-500">
+            {isConflictOnly
+              ? 'Find a single master mix that simultaneously contradicts both publications without removing either.'
+              : isApprenticeOnly
+                ? 'Remove all false publications using only apprentice debunks, in as few steps as possible.'
+                : 'Remove all false publications in as few steps as possible.'}
+          </p>
+
           {drafts.map((draft, i) => (
             <StepEditor
               key={i}
@@ -449,6 +460,7 @@ export function DebunkAnswerPanel({ onNext, isTutorial = false }: {
               onRemove={() => removeStep(i)}
               isConflictOnly={isConflictOnly && i === 0}
               showOutcome={showStepFeedback}
+              isTutorial={isTutorial}
             />
           ))}
 

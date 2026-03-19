@@ -145,7 +145,7 @@ function SolutionStep({ step, index }: { step: DebunkStep; index: number }) {
 // ─── Step editor ──────────────────────────────────────────────────────────────
 
 function StepEditor({
-  index, draft, outcome, onUpdate, onRemove, isConflictOnly, isApprenticeOnly,
+  index, draft, outcome, onUpdate, onRemove, isConflictOnly, isApprenticeOnly, isTutorial,
 }: {
   index: number;
   draft: DraftStep;
@@ -154,6 +154,7 @@ function StepEditor({
   onRemove: () => void;
   isConflictOnly: boolean;
   isApprenticeOnly?: boolean;
+  isTutorial: boolean;
 }) {
   const totalRemoved = (outcome?.removedPubs.length ?? 0) + (outcome?.removedArts.length ?? 0);
 
@@ -248,7 +249,7 @@ function StepEditor({
           />
         </div>
       )}
-      {draft.kind === 'master' && (
+      {draft.kind === 'master' && isTutorial && (
         <p className="text-[10px] text-gray-400 italic">
           The true mix result is publicly declared automatically.
         </p>
@@ -468,7 +469,7 @@ export function ExpandedDebunkAnswerPanel({ onNext, isTutorial = false }: {
             <div className="flex items-center justify-between">
               <span className="text-xs font-bold text-gray-500 uppercase tracking-widest">
                 {debunkQuestions.length > 1 ? `Q${qi + 1}: ` : ''}
-                {plan.isConflictOnly ? 'Demonstrate a conflict' : 'Your debunk plan'}
+                {plan.isConflictOnly ? 'Demonstrate a conflict' : plan.isApprenticeOnly ? 'Apprentice plan' : 'Debunk plan'}
               </span>
               {!plan.isConflictOnly && allCoveredForQ && plan.drafts.length > 0 && (
                 <span className="text-[10px] text-green-600 font-semibold">✓ All targets covered</span>
@@ -477,6 +478,14 @@ export function ExpandedDebunkAnswerPanel({ onNext, isTutorial = false }: {
                 <span className="text-[10px] text-green-600 font-semibold">✓ Conflict produced</span>
               )}
             </div>
+
+            <p className="text-xs text-gray-500">
+              {plan.isConflictOnly
+                ? 'Find a single master mix that simultaneously contradicts both publications without removing either.'
+                : plan.isApprenticeOnly
+                  ? 'Remove all false publications using only apprentice debunks, in as few steps as possible.'
+                  : 'Remove all false publications in as few steps as possible.'}
+            </p>
 
             {plan.drafts.map((draft, i) => {
               const stepIdx = completedSteps.indexOf(draft as DebunkStep);
@@ -493,6 +502,7 @@ export function ExpandedDebunkAnswerPanel({ onNext, isTutorial = false }: {
                   onRemove={() => updatePlan(qi, plan.drafts.filter((_, j) => j !== i))}
                   isConflictOnly={plan.isConflictOnly}
                   isApprenticeOnly={plan.isApprenticeOnly}
+                  isTutorial={isTutorial}
                 />
               );
             })}
