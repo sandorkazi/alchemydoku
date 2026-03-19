@@ -77,8 +77,8 @@ function CollectionSummaryCard({ collection, completed, showPuzzleOnly, onOpen }
   onOpen: () => void;
 }) {
   const allPuzzles = collection.puzzleIds.map(id => EXPANDED_PUZZLE_MAP[id]).filter(Boolean);
-  const hiddenCount = showPuzzleOnly ? 0
-    : allPuzzles.filter(p => isPuzzleNonCompliant(p, 'expanded')).length;
+  const nonCompliantCount = allPuzzles.filter(p => isPuzzleNonCompliant(p, 'expanded')).length;
+  const hiddenCount = showPuzzleOnly ? 0 : nonCompliantCount;
   const visiblePuzzles = showPuzzleOnly ? allPuzzles
     : allPuzzles.filter(p => !isPuzzleNonCompliant(p, 'expanded'));
   const doneCount = visiblePuzzles.filter(p => completed.has(p.id)).length;
@@ -106,13 +106,13 @@ function CollectionSummaryCard({ collection, completed, showPuzzleOnly, onOpen }
           </div>
           <div className="flex items-center gap-2 shrink-0">
             {visiblePuzzles.length === 0
-              ? <span className="text-xs font-semibold text-gray-400">🧩{hiddenCount}</span>
+              ? <span className="text-xs font-semibold text-gray-400">🧩{nonCompliantCount}</span>
               : <>
                   <span className={`text-xs font-semibold tabular-nums ${allDone ? 'text-green-600' : 'text-gray-400'}`}>
                     {doneCount}/{visiblePuzzles.length}
                   </span>
-                  {hiddenCount > 0 && (
-                    <span className="text-xs text-gray-400">🧩{hiddenCount}</span>
+                  {nonCompliantCount > 0 && (
+                    <span className="text-xs text-gray-400">🧩{nonCompliantCount}</span>
                   )}
                 </>
             }

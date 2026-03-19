@@ -136,9 +136,9 @@ function ComplexityPips({ score }: { score: number }) {
 // ─── Collection card ──────────────────────────────────────────────────────────
 
 function CollectionCard({
-  col, completed, hiddenCount, locked, onOpen,
+  col, completed, hiddenCount, nonCompliantCount, locked, onOpen,
 }: {
-  col: Collection; completed: number; hiddenCount: number; locked: boolean; onOpen: () => void;
+  col: Collection; completed: number; hiddenCount: number; nonCompliantCount: number; locked: boolean; onOpen: () => void;
 }) {
   const total = col.puzzleIds.length;
   const visibleTotal = total - hiddenCount;
@@ -175,13 +175,13 @@ function CollectionCard({
             {locked
               ? <span className="text-base">🔒</span>
               : visibleTotal === 0
-                ? <span className="text-xs font-semibold text-gray-400">🧩{hiddenCount}</span>
+                ? <span className="text-xs font-semibold text-gray-400">🧩{nonCompliantCount}</span>
                 : <>
                     <span className={`text-xs font-semibold tabular-nums ${done ? 'text-green-600' : 'text-gray-400'}`}>
                       {completed}/{visibleTotal}
                     </span>
-                    {hiddenCount > 0 && (
-                      <span className="text-xs text-gray-400">🧩{hiddenCount}</span>
+                    {nonCompliantCount > 0 && (
+                      <span className="text-xs text-gray-400">🧩{nonCompliantCount}</span>
                     )}
                   </>
             }
@@ -583,9 +583,8 @@ function AppInner() {
         {/* Puzzle collections */}
         <section aria-label="Puzzle collections" className="space-y-3">
           {(COLLECTIONS as Collection[]).map(col => {
-            const hiddenCount = !settings.showPuzzleOnly
-              ? col.puzzleIds.filter(id => { const p = PUZZLE_MAP[id]; return !!p && isPuzzleNonCompliant(p, 'base'); }).length
-              : 0;
+            const nonCompliantCount = col.puzzleIds.filter(id => { const p = PUZZLE_MAP[id]; return !!p && isPuzzleNonCompliant(p, 'base'); }).length;
+            const hiddenCount = settings.showPuzzleOnly ? 0 : nonCompliantCount;
             const visibleCompleted = !settings.showPuzzleOnly
               ? col.puzzleIds.filter(id => completed.has(id) && !!PUZZLE_MAP[id] && !isPuzzleNonCompliant(PUZZLE_MAP[id]!, 'base')).length
               : col.puzzleIds.filter(id => completed.has(id)).length;
@@ -595,6 +594,7 @@ function AppInner() {
               col={col}
               completed={visibleCompleted}
               hiddenCount={hiddenCount}
+              nonCompliantCount={nonCompliantCount}
               locked={false}
               onOpen={() => {
                 const tutorialMap: Record<string, TutorialId> = {
