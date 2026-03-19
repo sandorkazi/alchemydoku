@@ -46,11 +46,13 @@ Importantly, what happens to the publications is a separate question — covered
     emoji: '⚖️',
     body: `A master debunk achieves something against the publications in exactly two cases:
 
-  • A publication is removed: the true result clearly contradicts one publication's prediction and not the other's — that publication is singled out and removed.
+  • A publication is removed: the true result exposes a publication as impossible. There are two ways this can happen:
+      – Direct disproval: the claimed alchemical cannot produce the observed result with ANY partner. The audience can verify this from the result alone — no knowledge of the other ingredient is needed.
+      – Blame-based disproval: the other ingredient's alchemical is definitively known. The audience tests the claim directly: if the claimed alchemical would predict a different result when mixed with that known alchemical, the claim is disproved.
 
-  • A conflict is created: both publications are contradicted simultaneously — each predicts the wrong result when tested against the true alchemical of the other ingredient. Neither can be singled out, but the conflict itself is recorded. There is even a puzzle type where creating a conflict is the goal.
+  • A conflict is created: both publications are simultaneously caught — each claim individually could produce the observed result with some partner, but together they predict the wrong result. Neither can be singled out, but the conflict itself is recorded. There is even a puzzle type where creating a conflict is the goal.
 
-If neither happens — neither publication is contradicted, or only one is but the other ingredient's alchemical is unknown — the debunk has no effect on the publications.
+If neither happens — neither publication is caught, or the other ingredient is unknown and the claim is not individually incompatible with the result — the debunk has no effect on the publications.
 
 Whether the claim was correct or wrong does not determine which of these outcomes occurs. Both claim outcomes can lead to removal, conflict, or no effect.`,
   },
@@ -84,7 +86,13 @@ Before planning any debunk, check whether a clue directly contradicts a publicat
 
 Once you have identified which publications are false, the planning question becomes: what is the minimum sequence of master debunks to publicly expose each one?
 
-Master debunk strategy: a master debunk can expose a publication for ingredient X only if the OTHER ingredient in the mix is definitively known. With that reference alchemical in hand, the audience can verify whether the publication's predicted mix result matches the true one — and if not, the publication is publicly disproved.`,
+Master debunk strategy: two paths to exposing a false publication:
+
+  • Direct path — no reference needed: if the observed result is one that the claimed alchemical can never produce with any partner, the claim is directly disproved. The audience verifies this from the result alone.
+
+  • Reference path — needs a known partner: if the other ingredient is definitively known, the audience can mix the claimed alchemical against that known reference. If the predicted result doesn't match the true result, the claim is disproved.
+
+In practice, plan your mix so that the true result makes the false claim look impossible — either directly incompatible with the result, or contradicted by a known reference.`,
   },
 
   // ── Puzzle: apply a master debunk's planning ─────────────────────────────
