@@ -147,8 +147,8 @@ function CollectionCard({
 
   return (
     <button
-      onClick={locked ? undefined : onOpen}
-      disabled={locked}
+      onClick={locked || allHidden ? undefined : onOpen}
+      disabled={locked || allHidden}
       aria-label={`${col.title} collection${locked ? ' (locked)' : ''}`}
       className={`w-full text-left rounded-2xl border-2 bg-white shadow-sm overflow-hidden
         press-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-indigo-400
@@ -156,7 +156,7 @@ function CollectionCard({
         ${locked
           ? 'border-gray-200 opacity-60 cursor-not-allowed'
           : allHidden
-            ? 'border-gray-200 opacity-60 cursor-pointer'
+            ? 'border-gray-200 opacity-60 cursor-not-allowed'
             : done
               ? 'border-green-300 hover:border-green-400 hover:shadow-md cursor-pointer'
               : 'border-gray-200 hover:border-indigo-300 hover:shadow-md cursor-pointer'

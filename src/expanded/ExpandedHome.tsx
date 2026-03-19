@@ -86,11 +86,11 @@ function CollectionSummaryCard({ collection, completed, showPuzzleOnly, onOpen }
   const allDone = doneCount === visiblePuzzles.length && visiblePuzzles.length > 0;
 
   return (
-    <button onClick={onOpen}
+    <button onClick={allHidden ? undefined : onOpen} disabled={allHidden}
       className={`w-full text-left rounded-2xl border-2 bg-white shadow-sm overflow-hidden
         transition-all
         ${allHidden
-          ? 'border-gray-200 opacity-60 cursor-pointer'
+          ? 'border-gray-200 opacity-60 cursor-not-allowed'
           : allDone
             ? 'border-green-300 hover:border-violet-300 hover:shadow-md'
             : 'border-gray-200 hover:border-violet-300 hover:shadow-md'
