@@ -230,8 +230,7 @@ function PuzzleRow({
       <button
         onClick={onPlay}
         aria-label={`${puzzle.title}${isDone ? ' (solved)' : ''}`}
-        className="flex-1 flex items-center gap-3 px-4 py-3 rounded-xl border border-gray-200
-                   bg-white hover:bg-indigo-50 hover:border-indigo-200 transition-colors text-left
+        className="flex-1 flex items-center gap-3 px-4 py-3 hover:bg-indigo-50 transition-colors text-left
                    press-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-indigo-400"
       >
         <span
@@ -246,8 +245,8 @@ function PuzzleRow({
         <div className="flex-1 min-w-0">
           <div className="flex items-center gap-2">
             <span className="font-medium text-gray-900 text-sm truncate">{puzzle.title}</span>
-            {(puzzle as any).metadata?.complexityScore != null && (
-              <ComplexityPips score={(puzzle as any).metadata.complexityScore} />
+            {(puzzle as any).complexity?.score != null && (
+              <ComplexityPips score={(puzzle as any).complexity.score} />
             )}
           </div>
           <div className="text-xs text-gray-400 truncate">{puzzle.description}</div>
@@ -467,44 +466,43 @@ function AppInner() {
     const hiddenCount = allPuzzles.length - visiblePuzzles.length;
     const doneCount = visiblePuzzles.filter(p => completed.has(p.id)).length;
 
+    const allDone = doneCount === visiblePuzzles.length && visiblePuzzles.length > 0;
     return (
       <div className="min-h-screen bg-gray-50 animate-fadein">
-        <div className="max-w-2xl mx-auto px-4 py-6 sm:py-8 space-y-5">
-          <button
-            onClick={() => setView({ kind: 'home' })}
-            className="text-sm text-gray-500 hover:text-gray-800 flex items-center gap-1
-                       transition-colors focus-visible:outline-none focus-visible:ring-2
-                       focus-visible:ring-indigo-400 rounded"
-          >
-            ← Back
-          </button>
-
-          <div>
-            <div className="flex items-center gap-3 flex-wrap">
-              <h1 className="text-2xl font-bold text-gray-900">{col.title}</h1>
-              <span className={`text-xs font-semibold px-2.5 py-1 rounded-full
-                ${DIFF_BADGE[col.difficulty] ?? ''}`}>
-                {col.difficulty}
-              </span>
-            </div>
-            <p className="text-gray-500 mt-1 text-sm">{col.description}</p>
-            <p className="text-xs text-gray-400 mt-1">{doneCount}/{visiblePuzzles.length} solved</p>
-            {hiddenCount > 0 && (
-              <p className="text-xs text-gray-400 mt-1">
-                🧩 {hiddenCount} puzzle{hiddenCount > 1 ? 's' : ''} hidden — enable "Allow unrealistic puzzles" in ⚙️ Settings
-              </p>
-            )}
+        <div className="max-w-xl mx-auto px-4 py-6 space-y-4">
+          <div className="flex items-center gap-3">
+            <button
+              onClick={() => setView({ kind: 'home' })}
+              className="text-sm text-indigo-600 hover:text-indigo-800 font-semibold transition-colors">
+              ← Back
+            </button>
           </div>
-
-          <div className="space-y-2">
-            {visiblePuzzles.map(p => (
-              <PuzzleRow
-                key={p.id}
-                puzzle={p}
-                isDone={completed.has(p.id)}
-                onPlay={() => openPuzzle(p.id, col.id)}
-              />
-            ))}
+          <div className={`rounded-2xl border-2 bg-white shadow-sm overflow-hidden
+            ${allDone ? 'border-green-300' : 'border-gray-200'}`}>
+            <div className={`px-4 py-3 ${allDone ? 'bg-green-50' : 'bg-gray-50'} border-b`}>
+              <div className="flex items-center justify-between gap-2">
+                <h2 className="font-bold text-gray-900 text-base">{col.title}</h2>
+                <span className={`text-xs font-semibold tabular-nums ${allDone ? 'text-green-600' : 'text-gray-400'}`}>
+                  {doneCount}/{visiblePuzzles.length}
+                </span>
+              </div>
+              <p className="text-xs text-gray-500 mt-0.5">{col.description}</p>
+              {hiddenCount > 0 && (
+                <p className="text-xs text-gray-400 mt-1">
+                  🧩 {hiddenCount} puzzle{hiddenCount > 1 ? 's' : ''} hidden — enable "Allow unrealistic puzzles" in ⚙️ Settings
+                </p>
+              )}
+            </div>
+            <div className="divide-y divide-gray-100">
+              {visiblePuzzles.map(p => (
+                <PuzzleRow
+                  key={p.id}
+                  puzzle={p}
+                  isDone={completed.has(p.id)}
+                  onPlay={() => openPuzzle(p.id, col.id)}
+                />
+              ))}
+            </div>
           </div>
         </div>
       </div>
