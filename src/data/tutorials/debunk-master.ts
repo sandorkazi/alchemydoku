@@ -78,15 +78,13 @@ Plan your master debunks carefully to avoid accidental conflicts.`,
     id: 'debm-planning',
     title: 'Debunk Planning Puzzles',
     emoji: '🗺️',
-    body: `In a debunk planning puzzle you are told upfront that all listed publications are false. Your job is to find the minimum number of debunk actions to remove every one of them.
+    body: `In a debunk planning puzzle, your clues carry enough information to prove which publications are false — the same evidence that would guide you at the table.
 
-Step 1 — Identify the definitively known ingredient: look at your clues. If an ingredient's aspect signs are fully determined (all three colours pinned down), its alchemical is known to everyone, including the audience.
+Before planning any debunk, check whether a clue directly contradicts a publication. If a clue reveals the true aspect sign of an ingredient, and the publication claims an alchemical whose sign for that same aspect is different, the publication is provably false. No guesswork needed.
 
-Step 2 — Choose the right pairs: a master debunk can expose a publication for ingredient X only if the OTHER ingredient in the mix is definitively known. With that reference alchemical in hand, the audience can compare the expected result (predicted by the publication) against the true result.
+Once you have identified which publications are false, the planning question becomes: what is the minimum sequence of master debunks to publicly expose each one?
 
-Step 3 — Verify analytically: if the publication's claimed alchemical predicts result P when mixed with the known ingredient, and every possible true alchemical for the publication-holder (consistent with the remaining clues) gives a different result, then the debunk is guaranteed to expose the publication.
-
-The "Step hints" toggle (on by default here) shows each step's effect as you build the plan — use it to confirm your reasoning.`,
+Master debunk strategy: a master debunk can expose a publication for ingredient X only if the OTHER ingredient in the mix is definitively known. With that reference alchemical in hand, the audience can verify whether the publication's predicted mix result matches the true one — and if not, the publication is publicly disproved.`,
   },
 
   // ── Puzzle: apply a master debunk's planning ─────────────────────────────
@@ -94,7 +92,7 @@ The "Step hints" toggle (on by default here) shows each step's effect as you bui
     kind: 'puzzle',
     id: 'debm-puzzle-negative',
     puzzleId: 'debunk-plan-easy-02',
-    banner: 'Both publications are false. One ingredient is definitively known — use it as your reference in each master debunk. Verify analytically that the plan is guaranteed to work, then submit.',
+    banner: 'First, use the clues to prove which publications are false. Then find the minimum sequence of master debunks to expose them — one ingredient is fully known and ready to serve as your reference.',
   },
 
 ];
