@@ -94,10 +94,6 @@
   "questions": [
     {
       "kind": "debunk_min_steps"
-    },
-    {
-      "kind": "debunk_conflict_only",
-      "fixedIngredient": 2
     }
   ],
   "solution": {
@@ -179,18 +175,6 @@
         "kind": "master",
         "ingredient1": 6,
         "ingredient2": 2
-      }
-    ],
-    "debunk_conflict_only": [
-      {
-        "kind": "master",
-        "ingredient1": 2,
-        "ingredient2": 3
-      },
-      {
-        "kind": "master",
-        "ingredient1": 5,
-        "ingredient2": 6
       }
     ]
   }

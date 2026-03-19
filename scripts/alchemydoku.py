@@ -525,13 +525,20 @@ def _find_removal_plan(sol: dict, pub_map: dict, known: set) -> list:
     return None
 
 
+def _can_produce_result(claimed_alch: int, true_r) -> bool:
+    """True if claimed_alch (1-indexed) can produce true_r with any partner.
+    When False, the claim is result-incompatible — directly disproved by the result alone."""
+    return any(MIX_TABLE[claimed_alch][j] == true_r for j in ALL_ALCH)
+
+
 def _find_conflict_cover(sol: dict, pub_map: dict, _known: set):
     """Find a minimal set of pairs that together cover all publications with conflicts.
 
-    Conflict semantics: both ingredients must be published, and their CLAIMED
-    alchemicals together predict a different result from the actual mix:
-        MIX_TABLE[pub_map[a]][pub_map[b]] != MIX_TABLE[sol[a]][sol[b]]
-    This matches the TypeScript simulateConflictOnlyStep definition.
+    True conflict requires (DEBUNK_PUZZLES.md §4c):
+    1. Both ingredients published.
+    2. Neither claim is result-incompatible: each can produce the actual result with
+       some partner (∃j: MIX_TABLE[c_i][j] == true_r AND ∃j: MIX_TABLE[c_j][j] == true_r).
+    3. Together they predict the wrong result: MIX_TABLE[c_i][c_j] != true_r.
 
     Returns ordered list of (ing_c, ing_d) pairs (fixedIngredient = cover[0][0]), or None."""
     pub_keys = sorted(pub_map.keys())
@@ -539,8 +546,13 @@ def _find_conflict_cover(sol: dict, pub_map: dict, _known: set):
     for i, ing_c in enumerate(pub_keys):
         for ing_d in pub_keys[i + 1:]:
             true_r = MIX_TABLE[sol[ing_c]][sol[ing_d]]
-            claimed_r = MIX_TABLE[pub_map[ing_c]][pub_map[ing_d]]
-            if claimed_r != true_r:
+            c_i = pub_map[ing_c]  # claimed alchemical (1-indexed)
+            c_j = pub_map[ing_d]
+            if (
+                _can_produce_result(c_i, true_r)       # c_i individually compatible
+                and _can_produce_result(c_j, true_r)   # c_j individually compatible
+                and MIX_TABLE[c_i][c_j] != true_r      # together they're wrong
+            ):
                 valid_pairs.append((ing_c, ing_d))
     if not valid_pairs:
         return None

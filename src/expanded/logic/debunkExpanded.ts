@@ -37,6 +37,14 @@ function claimedMixCode(claimedAlch1: AlchemicalId, trueAlch2: AlchemicalId): nu
   return MIX_TABLE[(claimedAlch1 - 1) * 8 + (trueAlch2 - 1)];
 }
 
+function canProduceResult(claimedAlch: AlchemicalId, resultCode: number): boolean {
+  const rowStart = (claimedAlch - 1) * 8;
+  for (let j = 0; j < 8; j++) {
+    if (MIX_TABLE[rowStart + j] === resultCode) return true;
+  }
+  return false;
+}
+
 // ─── Step outcome (extended) ──────────────────────────────────────────────────
 
 export type ExpandedStepOutcome = {
@@ -95,10 +103,20 @@ function simulateExpandedStep(
     const ing1Known = isDefinitivelyKnown(worlds, ingredient1);
     const ing2Known = isDefinitivelyKnown(worlds, ingredient2);
 
+    // Direct disproval (result-incompatibility): remove before blame-based checks
+    if (activePubs.has(ingredient1) && !canProduceResult(activePubs.get(ingredient1)!, trueCode)) {
+      removedPubs.push(ingredient1);
+      activePubs.delete(ingredient1);
+    }
+    if (activePubs.has(ingredient2) && !canProduceResult(activePubs.get(ingredient2)!, trueCode)) {
+      removedPubs.push(ingredient2);
+      activePubs.delete(ingredient2);
+    }
+
     let conflict1 = false;
     let conflict2 = false;
 
-    // Publications
+    // Publications: blame-based (only for result-compatible claims still active)
     if (activePubs.has(ingredient1) && ing2Known) {
       const claimedAlch1 = activePubs.get(ingredient1)!;
       if (claimedMixCode(claimedAlch1, trueAlch2) !== trueCode) conflict1 = true;
@@ -146,8 +164,10 @@ function simulateExpandedStep(
 
 /**
  * Simulate one step under conflict-only semantics (publications only).
- * A conflict occurs when both ingredients are published and
- * mix(claimed_1, claimed_2) ≠ actual. No removals; articles unaffected.
+ * A true conflict requires both claims to be result-compatible AND together wrong:
+ *   canProduceResult(c1, actual) AND canProduceResult(c2, actual)
+ *   AND mix(c1, c2) ≠ actual
+ * No removals; articles unaffected.
  */
 function simulateConflictOnlyExpandedStep(
   step: DebunkStep,
@@ -162,7 +182,11 @@ function simulateConflictOnlyExpandedStep(
       const trueCode = trueMixCode(solution, ingredient1, ingredient2);
       const claimed1 = activePubs.get(ingredient1)!;
       const claimed2 = activePubs.get(ingredient2)!;
-      if (claimedMixCode(claimed1, claimed2) !== trueCode) {
+      if (
+        canProduceResult(claimed1, trueCode) &&
+        canProduceResult(claimed2, trueCode) &&
+        claimedMixCode(claimed1, claimed2) !== trueCode
+      ) {
         conflicts.push(ingredient1, ingredient2);
       }
     }

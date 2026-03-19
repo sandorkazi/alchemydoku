@@ -32,6 +32,20 @@ function claimedMixCode(claimedAlch1: AlchemicalId, trueAlch2: AlchemicalId): nu
 }
 
 /**
+ * Returns true if `claimedAlch` can produce `resultCode` with at least one partner.
+ * When false, the claimed alchemical is result-incompatible with the actual mix result:
+ * no partner exists that would make mix(claimedAlch, partner) = resultCode.
+ * This is verified from the result alone — no knowledge of the other ingredient needed.
+ */
+function canProduceResult(claimedAlch: AlchemicalId, resultCode: number): boolean {
+  const rowStart = (claimedAlch - 1) * 8;
+  for (let j = 0; j < 8; j++) {
+    if (MIX_TABLE[rowStart + j] === resultCode) return true;
+  }
+  return false;
+}
+
+/**
  * Returns true if ingredient `slot` is definitively known from clue-derived worlds alone —
  * i.e. all worlds agree on its alchemical assignment.
  */
@@ -86,6 +100,19 @@ function simulateStep(
     const ing1Known = isDefinitivelyKnown(worlds, ingredient1);
     const ing2Known = isDefinitivelyKnown(worlds, ingredient2);
 
+    // Direct disproval (result-incompatibility): a claimed alchemical that cannot
+    // produce the actual result with any partner is removed immediately, regardless
+    // of whether the other ingredient is definitively known (§2b).
+    if (activePubs.has(ingredient1) && !canProduceResult(activePubs.get(ingredient1)!, trueCode)) {
+      removed.push(ingredient1);
+      activePubs.delete(ingredient1);
+    }
+    if (activePubs.has(ingredient2) && !canProduceResult(activePubs.get(ingredient2)!, trueCode)) {
+      removed.push(ingredient2);
+      activePubs.delete(ingredient2);
+    }
+
+    // Blame-based disproval: only for publications not already directly disproved.
     let conflict1 = false;
     let conflict2 = false;
 
@@ -101,7 +128,7 @@ function simulateStep(
       if (expectedCode !== trueCode) conflict2 = true;
     }
 
-    // Removal: only when blame is unambiguous
+    // Unambiguous blame → removal; both blame-disproved → CONFLICT (neither removed)
     if (conflict1 && !conflict2) {
       removed.push(ingredient1);
       activePubs.delete(ingredient1);
@@ -109,7 +136,6 @@ function simulateStep(
       removed.push(ingredient2);
       activePubs.delete(ingredient2);
     } else if (conflict1 && conflict2) {
-      // Both conflict → neither removed
       conflicts.push(ingredient1, ingredient2);
     }
   }
@@ -250,13 +276,15 @@ export function validateConflictOnlyAnswer(
 /**
  * Simulate one step under conflict-only semantics.
  *
- * A conflict occurs when BOTH ingredients are published AND their claimed
- * alchemicals together predict a different result from the actual mix:
- *   mix(claimed_1, claimed_2) ≠ actual
+ * A true conflict requires all of (§2b, §4c):
+ * 1. Both ingredients published.
+ * 2. Neither claim is result-incompatible: each could produce the actual result
+ *    with some partner (∃A: mix(c_1, A) = actual AND ∃B: mix(B, c_2) = actual).
+ *    If either is result-incompatible that claim is directly disproved → removal,
+ *    not a conflict.
+ * 3. Together they predict the wrong result: mix(c_1, c_2) ≠ actual.
  *
- * This definition does NOT use known true alchemicals — it is purely based on
- * what the two claims together predict vs. what was actually observed.
- * No removals ever happen in conflict-only mode.
+ * No removals happen in conflict-only mode; this function only reports conflicts.
  */
 function simulateConflictOnlyStep(
   step: DebunkStep,
@@ -271,8 +299,13 @@ function simulateConflictOnlyStep(
       const trueCode = trueMixCode(solution, ingredient1, ingredient2);
       const claimed1 = activePubs.get(ingredient1)!;
       const claimed2 = activePubs.get(ingredient2)!;
-      // Both claims together predict a wrong result → conflict on both
-      if (claimedMixCode(claimed1, claimed2) !== trueCode) {
+      // Both claims must be individually result-compatible (condition 2),
+      // and together they must predict the wrong result (condition 3).
+      if (
+        canProduceResult(claimed1, trueCode) &&
+        canProduceResult(claimed2, trueCode) &&
+        claimedMixCode(claimed1, claimed2) !== trueCode
+      ) {
         conflicts.push(ingredient1, ingredient2);
       }
     }
