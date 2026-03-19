@@ -15,7 +15,7 @@ export function PuzzleOnlyToggle({
                     px-3 py-2 rounded-xl bg-white border border-gray-200 shadow-sm">
       <span className="text-xs text-gray-600 flex items-center gap-1.5">
         <span aria-hidden="true">🧩</span>
-        <span>Puzzle-only clues</span>
+        <span>Allow unrealistic (extra) puzzles</span>
       </span>
       <button
         role="switch"
@@ -29,7 +29,7 @@ export function PuzzleOnlyToggle({
           className={`inline-block h-3.5 w-3.5 transform rounded-full bg-white shadow transition-transform
             ${value ? 'translate-x-[18px]' : 'translate-x-1'}`}
         />
-        <span className="sr-only">{value ? 'Show puzzle-only collections' : 'Hide puzzle-only collections'}</span>
+        <span className="sr-only">{value ? 'Allow unrealistic extra puzzles' : 'Hide unrealistic extra puzzles'}</span>
       </button>
     </div>
   );
