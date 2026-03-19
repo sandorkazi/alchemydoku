@@ -1,0 +1,128 @@
+{
+  "id": "debunk-plan-easy-04",
+  "title": "One True, One False",
+  "description": "Three ingredients are fully revealed by their aspect clues. Two of them have publications — check each against the evidence. Only the false one needs to be exposed, and a single master debunk is enough.",
+  "difficulty": "hard",
+  "clues": [
+    {
+      "kind": "aspect",
+      "ingredient": 1,
+      "color": "R",
+      "sign": "-"
+    },
+    {
+      "kind": "aspect",
+      "ingredient": 1,
+      "color": "G",
+      "sign": "+"
+    },
+    {
+      "kind": "aspect",
+      "ingredient": 1,
+      "color": "B",
+      "sign": "-"
+    },
+    {
+      "kind": "aspect",
+      "ingredient": 3,
+      "color": "R",
+      "sign": "+"
+    },
+    {
+      "kind": "aspect",
+      "ingredient": 3,
+      "color": "G",
+      "sign": "-"
+    },
+    {
+      "kind": "aspect",
+      "ingredient": 3,
+      "color": "B",
+      "sign": "-"
+    },
+    {
+      "kind": "aspect",
+      "ingredient": 5,
+      "color": "R",
+      "sign": "-"
+    },
+    {
+      "kind": "aspect",
+      "ingredient": 5,
+      "color": "G",
+      "sign": "-"
+    },
+    {
+      "kind": "aspect",
+      "ingredient": 5,
+      "color": "B",
+      "sign": "+"
+    }
+  ],
+  "publications": [
+    null,
+    null,
+    {
+      "ingredient": 3,
+      "claimedAlchemical": 3
+    },
+    null,
+    {
+      "ingredient": 5,
+      "claimedAlchemical": 8
+    },
+    null,
+    null,
+    null
+  ],
+  "questions": [
+    {
+      "kind": "debunk_min_steps"
+    }
+  ],
+  "solution": {
+    "1": 1,
+    "2": 2,
+    "3": 3,
+    "4": 4,
+    "5": 5,
+    "6": 6,
+    "7": 7,
+    "8": 8
+  },
+  "debunk_answers": {
+    "debunk_min_steps": [
+      {
+        "kind": "master",
+        "ingredient1": 1,
+        "ingredient2": 5
+      }
+    ]
+  },
+  "hints": [
+    {
+      "level": 1,
+      "text": "Each published ingredient has all three aspect clues. Determine the true alchemical for each from its clues, then compare it to what the publication claims. Only a claim where the alchemical differs from the clues is a debunk target. Once you know which publication is false, choose a known reference ingredient to perform the master mix."
+    },
+    {
+      "level": 2,
+      "text": "ing3 has R+, G-, B- → alchemical pNn. The publication claims pNn — all three signs match. This publication is accurate; no debunk needed. ing5 has R-, G-, B+ → alchemical Nnp. The publication claims PPP (R+, G+, B+). ing5's R- directly contradicts the claimed R+. This publication is false. ing1 (npN, no publication) and ing3 (pNn, true publication) are both definitively known and can serve as the reference for a master debunk."
+    },
+    {
+      "level": 3,
+      "text": "Step 1: Master debunk — mix ing1 + ing5. ing1 is npN; the publication for ing5 claims PPP, predicting mix(npN, PPP) = G+. The true result is mix(npN, Nnp) = R-. They differ → ing5's publication removed. (Alternatively: mix ing3 + ing5. Claimed PPP predicts mix(pNn, PPP) = R+. True result is mix(pNn, Nnp) = G-. Also removes ing5's publication.)"
+    }
+  ],
+  "complexity": {
+    "score": 4,
+    "raw": 6.117,
+    "avg_clue_strength": 1.0,
+    "ambig_penalty": 0.3,
+    "stranded_ambiguity": 0.0,
+    "chain_depth": 1,
+    "stuck": false,
+    "requires_complement_set": false,
+    "question_requires_enumeration": false,
+    "residual_worlds": 120
+  }
+}

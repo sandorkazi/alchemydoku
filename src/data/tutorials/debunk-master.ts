@@ -95,4 +95,30 @@ Master debunk strategy: a master debunk can expose a publication for ingredient 
     banner: 'First, use the clues to prove which publications are false. Then find the minimum sequence of master debunks to expose them — one ingredient is fully known and ready to serve as your reference.',
   },
 
+  // ── Not every publication is false (master context) ──────────────────────
+  {
+    kind: 'explain',
+    id: 'debm-not-all-false',
+    title: 'Some Publications Are Correct',
+    emoji: '🤝',
+    body: `In planning puzzles, the clues always provide enough evidence to evaluate every publication — but not every publication on the board is wrong.
+
+Before planning any master debunk, verify each publication:
+  1. Use the aspect clues to determine the true alchemical for each published ingredient.
+  2. Compare it to what the publication claims.
+  3. Only the publications whose claimed alchemical differs from the truth are targets.
+
+A correct publication is not a target and cannot be removed — even if you mix the published ingredient with a known reference, a true publication's prediction will match the true result and nothing happens.
+
+Check first, then plan.`,
+  },
+
+  // ── Puzzle: master debunk with one true, one false publication ───────────
+  {
+    kind: 'puzzle',
+    id: 'debm-puzzle-mixed',
+    puzzleId: 'debunk-plan-easy-04',
+    banner: 'Three ingredients are fully revealed. Two have publications — check each against the clues. Only the one contradicted by the evidence is a target. A single master debunk is enough.',
+  },
+
 ];

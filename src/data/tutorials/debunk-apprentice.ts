@@ -42,7 +42,7 @@ Either way, the revealed sign is new public information.`,
     kind: 'puzzle',
     id: 'deba-puzzle-success',
     puzzleId: 'debunk-plan-tutorial-01',
-    banner: 'A rival published a wrong theory. Use an apprentice debunk to expose it — pick the ingredient and a colour where the true sign differs from the claim.',
+    banner: 'A theory has been published about ing1. Compare its claimed signs against your aspect clues — if any colour contradicts the claim, you can expose it with an apprentice debunk.',
   },
 
   // ── Failed debunks reveal truth too ─────────────────────────────────────
@@ -58,6 +58,34 @@ But the card reader still showed everyone the true sign.
 This means a failed debunk is not wasted information. You (and your opponents) now know one more aspect of that ingredient for certain.
 
 The information value is identical whether the debunk succeeds or fails.`,
+  },
+
+  // ── Not every publication is false ───────────────────────────────────────
+  {
+    kind: 'explain',
+    id: 'deba-not-all-false',
+    title: 'Not Every Publication Is Wrong',
+    emoji: '🤔',
+    body: `An important habit: never assume a publication is false just because it is on the board.
+
+A published theory might be correct. Before committing to a debunk, check the claim against your clues:
+
+  • Determine the ingredient's true aspect sign for each colour from your notes.
+  • Compare each sign to what the publication claims.
+
+Only a colour where the true sign DIFFERS from the claimed sign is a valid debunk target.
+
+If all signs match, the publication is accurate — attempting a debunk would reveal the true sign anyway, but the publication would survive. In a planning puzzle, an accurate publication is never a target.
+
+Always check first. Debunk only the claims the evidence disproves.`,
+  },
+
+  // ── Fifth puzzle: true + false publication ───────────────────────────────
+  {
+    kind: 'puzzle',
+    id: 'deba-puzzle-mixed',
+    puzzleId: 'debunk-plan-easy-03',
+    banner: 'Two theories have been published. Check both against the aspect clues — one matches the evidence, one does not. Expose only the false one.',
   },
 
   // ── When mixing won't help ───────────────────────────────────────────────
@@ -80,7 +108,7 @@ No mixing required.`,
     kind: 'puzzle',
     id: 'deba-puzzle-neutral',
     puzzleId: 'debunk-plan-tutorial-02',
-    banner: 'Mixing these two ingredients would give neutral — no conflict possible. Use what your notes already tell you about each ingredient\'s aspects.',
+    banner: 'Two theories have been published. Check each ingredient\'s aspect clues against the claimed signs. Mixing the two won\'t help here — use what the clues already tell you.',
   },
 
   // ── Fourth puzzle: apply a revealed sign ────────────────────────────────
@@ -88,7 +116,7 @@ No mixing required.`,
     kind: 'puzzle',
     id: 'deba-puzzle-apply',
     puzzleId: 'debunk-plan-easy-01',
-    banner: 'Two publications, two targets. Apply an apprentice debunk to each — a single revealing step per publication is enough.',
+    banner: 'Two theories have been published. Your aspect clues fully reveal both ingredients — check each claim and apply one apprentice debunk per contradiction.',
   },
 
 ];

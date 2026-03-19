@@ -1,7 +1,7 @@
 {
   "id": "debunk-plan-easy-01",
   "title": "Double Trouble",
-  "description": "Two rivals have published wrong theories. You know the truth about both \u2014 clear the board.",
+  "description": "Two theories have been published. Your aspect clues fully establish the truth about both ingredients — check each claim and clear any contradiction from the board.",
   "difficulty": "hard",
   "clues": [
     {
@@ -89,7 +89,7 @@
   "hints": [
     {
       "level": 1,
-      "text": "Two publications, two targets. Your clues fully establish the true aspects of ingredient 1 and ingredient 6. Each one can be debunked independently with an apprentice reveal \u2014 you just need one valid colour per ingredient."
+      "text": "Your clues fully establish the true aspects of ing1 and ing6. Compare each publication's claimed alchemical against the clues — any colour where signs differ is a valid apprentice debunk target."
     },
     {
       "level": 2,

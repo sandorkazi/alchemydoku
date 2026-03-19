@@ -136,7 +136,8 @@
     "description": "Learn how a witnessed mix constrains alchemicals — and what failure means.",
     "difficulty": "tutorial",
     "puzzleIds": [
-      "debunk-plan-easy-02"
+      "debunk-plan-easy-02",
+      "debunk-plan-easy-04"
     ],
     "unlockedAfter": "tutorial-debunking-apprentice"
   },
@@ -188,7 +189,8 @@
     "description": "Plan the shortest sequence of apprentice debunks to expose all false publications.",
     "difficulty": "easy",
     "puzzleIds": [
-      "debunk-plan-easy-01"
+      "debunk-plan-easy-01",
+      "debunk-plan-easy-03"
     ],
     "unlockedAfter": "tutorial-debunking-apprentice"
   },
