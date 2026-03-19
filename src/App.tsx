@@ -22,6 +22,7 @@ import { shouldShowReleaseNotes, markReleaseNotesSeen, getCurrentReleaseEntry } 
 import { WhatsNewBanner } from './components/WhatsNewBanner';
 import { loadSettings, saveSettings, type Settings } from './utils/settings';
 import { clearExpandedProgress } from './utils/saveProgress';
+import { isPuzzleNonCompliant } from './compliance';
 
 type Collection = {
   id: string;
@@ -135,12 +136,14 @@ function ComplexityPips({ score }: { score: number }) {
 // ─── Collection card ──────────────────────────────────────────────────────────
 
 function CollectionCard({
-  col, completed, locked, puzzleOnlyBlocked, onOpen,
+  col, completed, hiddenCount, locked, onOpen,
 }: {
-  col: Collection; completed: number; locked: boolean; puzzleOnlyBlocked?: boolean; onOpen: () => void;
+  col: Collection; completed: number; hiddenCount: number; locked: boolean; onOpen: () => void;
 }) {
   const total = col.puzzleIds.length;
-  const done  = completed === total && total > 0;
+  const visibleTotal = total - hiddenCount;
+  const allHidden = hiddenCount === total && total > 0;
+  const done = completed === visibleTotal && visibleTotal > 0;
 
   return (
     <button
@@ -152,14 +155,14 @@ function CollectionCard({
         transition-all
         ${locked
           ? 'border-gray-200 opacity-60 cursor-not-allowed'
-          : puzzleOnlyBlocked
+          : allHidden
             ? 'border-gray-200 opacity-60 cursor-pointer'
             : done
               ? 'border-green-300 hover:border-green-400 hover:shadow-md cursor-pointer'
               : 'border-gray-200 hover:border-indigo-300 hover:shadow-md cursor-pointer'
         }`}
     >
-      <div className={`px-4 py-3 ${done && !puzzleOnlyBlocked ? 'bg-green-50' : 'bg-gray-50'}`}>
+      <div className={`px-4 py-3 ${done ? 'bg-green-50' : 'bg-gray-50'}`}>
         <div className="flex items-center justify-between gap-2">
           <div className="flex items-center gap-2 min-w-0">
             <h3 className="font-bold text-gray-900 text-sm">{col.title}</h3>
@@ -171,11 +174,16 @@ function CollectionCard({
           <div className="flex items-center gap-2 shrink-0">
             {locked
               ? <span className="text-base">🔒</span>
-              : puzzleOnlyBlocked
-                ? <span className="text-base">🧩</span>
-                : <span className={`text-xs font-semibold tabular-nums ${done ? 'text-green-600' : 'text-gray-400'}`}>
-                    {completed}/{total}
-                  </span>
+              : visibleTotal === 0
+                ? <span className="text-xs font-semibold text-gray-400">🧩{hiddenCount}</span>
+                : <>
+                    <span className={`text-xs font-semibold tabular-nums ${done ? 'text-green-600' : 'text-gray-400'}`}>
+                      {completed}/{visibleTotal}
+                    </span>
+                    {hiddenCount > 0 && (
+                      <span className="text-xs text-gray-400">🧩{hiddenCount}</span>
+                    )}
+                  </>
             }
             <span className="text-gray-300 text-xs">›</span>
           </div>
@@ -186,9 +194,9 @@ function CollectionCard({
             Complete "{(COLLECTIONS as Collection[]).find(c => c.id === col.unlockedAfter)?.title ?? col.unlockedAfter}" first
           </p>
         )}
-        {puzzleOnlyBlocked && (
+        {allHidden && (
           <p className="text-xs text-gray-400 mt-1">
-            Allow unrealistic puzzles in ⚙️ Settings to unlock
+            Allow unrealistic puzzles in ⚙️ Settings to see these puzzles
           </p>
         )}
       </div>
@@ -452,8 +460,12 @@ function AppInner() {
   if (view.kind === 'collection') {
     const col = (COLLECTIONS as Collection[]).find(c => c.id === view.colId);
     if (!col) return <div className="p-8 text-red-500">Collection not found.</div>;
-    const puzzles = col.puzzleIds.map(id => PUZZLE_MAP[id]).filter(Boolean) as Puzzle[];
-    const doneCount = puzzles.filter(p => completed.has(p.id)).length;
+    const allPuzzles = col.puzzleIds.map(id => PUZZLE_MAP[id]).filter(Boolean) as Puzzle[];
+    const visiblePuzzles = settings.showPuzzleOnly
+      ? allPuzzles
+      : allPuzzles.filter(p => !isPuzzleNonCompliant(p, 'base'));
+    const hiddenCount = allPuzzles.length - visiblePuzzles.length;
+    const doneCount = visiblePuzzles.filter(p => completed.has(p.id)).length;
 
     return (
       <div className="min-h-screen bg-gray-50 animate-fadein">
@@ -476,11 +488,16 @@ function AppInner() {
               </span>
             </div>
             <p className="text-gray-500 mt-1 text-sm">{col.description}</p>
-            <p className="text-xs text-gray-400 mt-1">{doneCount}/{puzzles.length} solved</p>
+            <p className="text-xs text-gray-400 mt-1">{doneCount}/{visiblePuzzles.length} solved</p>
+            {hiddenCount > 0 && (
+              <p className="text-xs text-gray-400 mt-1">
+                🧩 {hiddenCount} puzzle{hiddenCount > 1 ? 's' : ''} hidden — enable "Allow unrealistic puzzles" in ⚙️ Settings
+              </p>
+            )}
           </div>
 
           <div className="space-y-2">
-            {puzzles.map(p => (
+            {visiblePuzzles.map(p => (
               <PuzzleRow
                 key={p.id}
                 puzzle={p}
@@ -565,13 +582,20 @@ function AppInner() {
 
         {/* Puzzle collections */}
         <section aria-label="Puzzle collections" className="space-y-3">
-          {(COLLECTIONS as Collection[]).map(col => (
+          {(COLLECTIONS as Collection[]).map(col => {
+            const hiddenCount = !settings.showPuzzleOnly
+              ? col.puzzleIds.filter(id => { const p = PUZZLE_MAP[id]; return !!p && isPuzzleNonCompliant(p, 'base'); }).length
+              : 0;
+            const visibleCompleted = !settings.showPuzzleOnly
+              ? col.puzzleIds.filter(id => completed.has(id) && !!PUZZLE_MAP[id] && !isPuzzleNonCompliant(PUZZLE_MAP[id]!, 'base')).length
+              : col.puzzleIds.filter(id => completed.has(id)).length;
+            return (
             <CollectionCard
               key={col.id}
               col={col}
-              completed={col.puzzleIds.filter(id => completed.has(id)).length}
+              completed={visibleCompleted}
+              hiddenCount={hiddenCount}
               locked={false}
-              puzzleOnlyBlocked={!settings.showPuzzleOnly && col.boardGameCompliant === false}
               onOpen={() => {
                 const tutorialMap: Record<string, TutorialId> = {
                   'tutorial-mixing':              'mixing',
@@ -589,7 +613,8 @@ function AppInner() {
                 }
               }}
             />
-          ))}
+            );
+          })}
         </section>
 
         <div className="pt-4 border-t" aria-live="polite">

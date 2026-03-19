@@ -15,3 +15,12 @@ export const NON_COMPLIANT_BASE_CLUE_KINDS: ReadonlySet<string> = new Set([
 export const NON_COMPLIANT_EXPANDED_CLUE_KINDS: ReadonlySet<string> = new Set([
   ...NON_COMPLIANT_BASE_CLUE_KINDS, 'book_among', 'golem_reaction_among',
 ]);
+
+/** True if the puzzle contains any non-compliant clue kind. */
+export function isPuzzleNonCompliant(
+  puzzle: { clues: { kind: string }[] },
+  mode: 'base' | 'expanded',
+): boolean {
+  const set = mode === 'expanded' ? NON_COMPLIANT_EXPANDED_CLUE_KINDS : NON_COMPLIANT_BASE_CLUE_KINDS;
+  return puzzle.clues.some(c => set.has(c.kind));
+}

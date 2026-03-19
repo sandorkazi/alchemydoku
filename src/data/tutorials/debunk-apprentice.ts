@@ -68,7 +68,7 @@ The information value is identical whether the debunk succeeds or fails.`,
     emoji: '🌀',
     body: `Sometimes you might think: "I'll just mix the two published ingredients to expose them." But there's a catch.
 
-If the two published ingredients' true alchemicals are direct opposites, mixing them produces a neutral potion. A neutral result doesn't contradict either publication — both theories survive untouched.
+If the two published ingredients' true alchemicals are direct opposites, mixing them produces a neutral potion. When both publications claim wrong alchemicals, the neutral result implicates both simultaneously — a conflict — so neither publication can be removed.
 
 In those cases, forget the mixing table. If your existing clues already tell you an ingredient's true aspect sign, you can apprentice-debunk it directly: pick that ingredient, reveal the colour where the truth contradicts the claim, and the publication is removed.
 

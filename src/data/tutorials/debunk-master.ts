@@ -40,9 +40,11 @@ Important: even a failed master debunk gives you information. You now know the t
     id: 'debm-conflict',
     title: 'Caution: Master Debunks Can Conflict',
     emoji: '⚡',
-    body: `If both publications on the board are implicated by the same master mix — meaning both claim an alchemical that predicts the wrong result — neither is removed.
+    body: `A conflict happens when the true mix result implicates at least one publication, but the evidence cannot single out either one — so neither is removed.
 
-This is called a conflict. Both publications stay on the board.
+This occurs when both publications are contradicted simultaneously: each claimed alchemical, tested against the true alchemical of the other ingredient, predicts the wrong result. With both equally implicated, blame cannot be assigned to either, and both stay on the board.
+
+The clearest example: mixing two ingredients whose true alchemicals are direct opposites produces neutral. Any publication claiming a non-opposing alchemical predicts a non-neutral result — both are caught, neither can be removed.
 
 Conflicts can happen accidentally (wasting a step) or intentionally — there is a puzzle type called "debunk conflict only" where your goal is specifically to produce this situation without removing anything.
 
