@@ -308,6 +308,17 @@ async function deleteFile(fileId: string): Promise<void> {
   if (!res.ok && res.status !== 404) throw new Error(`Drive delete ${res.status}`);
 }
 
+function mergeSettings(a: Settings | undefined, b: Settings | undefined): Settings | undefined {
+  if (!a && !b) return undefined;
+  if (!a) return b;
+  if (!b) return a;
+  return {
+    showLatestUpdates: a.showLatestUpdates && b.showLatestUpdates, // false = dismissed wins
+    showQuickRef:      a.showQuickRef      || b.showQuickRef,      // true = shown wins
+    showPuzzleOnly:    a.showPuzzleOnly    || b.showPuzzleOnly,    // true = enabled wins
+  };
+}
+
 function mergeSaveData(a: SaveData, b: SaveData): SaveData {
   return {
     version: 1,
@@ -325,7 +336,7 @@ function mergeSaveData(a: SaveData, b: SaveData): SaveData {
     seenRelease: a.seenRelease && b.seenRelease
       ? (a.seenRelease >= b.seenRelease ? a.seenRelease : b.seenRelease)
       : (a.seenRelease ?? b.seenRelease),
-    settings: a.settings ?? b.settings,
+    settings: mergeSettings(a.settings, b.settings),
   };
 }
 
@@ -445,9 +456,10 @@ export function mergeIntoLocal(cloud: SaveData): void {
     localStorage.setItem('alch-seen-release', cloudSeen);
   }
 
-  // Apply cloud settings (cloud wins — respects other device's preferences)
+  // Merge cloud settings with local (per-field strategy — neither side blindly wins)
   if (cloud.settings) {
-    saveSettings(cloud.settings);
+    const merged = mergeSettings(loadSettings(), cloud.settings);
+    if (merged) saveSettings(merged);
   }
 
   window.dispatchEvent(new CustomEvent('alch-cloud-sync'));
