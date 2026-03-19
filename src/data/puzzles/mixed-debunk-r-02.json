@@ -1,0 +1,161 @@
+{
+  "id": "mixed-debunk-r-02",
+  "title": "The Revealed Formula",
+  "description": "Mixed evidence surrounds several suspicious publications. Use master debunking to expose the lies.",
+  "difficulty": "medium",
+  "clues": [
+    {
+      "kind": "debunk",
+      "variant": "master",
+      "ingredient1": 5,
+      "ingredient2": 6,
+      "claimedPotion": {
+        "color": "R",
+        "sign": "-"
+      },
+      "outcome": "success"
+    },
+    {
+      "kind": "sell",
+      "ingredient1": 1,
+      "ingredient2": 5,
+      "claimedResult": {
+        "type": "potion",
+        "color": "R",
+        "sign": "+"
+      },
+      "sellResult": "opposite"
+    },
+    {
+      "kind": "sell",
+      "ingredient1": 3,
+      "ingredient2": 8,
+      "claimedResult": {
+        "type": "potion",
+        "color": "R",
+        "sign": "-"
+      },
+      "sellResult": "total_match"
+    },
+    {
+      "kind": "sell",
+      "ingredient1": 6,
+      "ingredient2": 7,
+      "claimedResult": {
+        "type": "potion",
+        "color": "G",
+        "sign": "-"
+      },
+      "sellResult": "total_match"
+    },
+    {
+      "kind": "debunk",
+      "variant": "master",
+      "ingredient1": 2,
+      "ingredient2": 3,
+      "claimedPotion": {
+        "color": "G",
+        "sign": "+"
+      },
+      "outcome": "success"
+    }
+  ],
+  "questions": [
+    {
+      "kind": "debunk_min_steps"
+    },
+    {
+      "kind": "debunk_conflict_only",
+      "fixedIngredient": 1
+    }
+  ],
+  "solution": {
+    "1": 3,
+    "2": 6,
+    "3": 4,
+    "4": 8,
+    "5": 1,
+    "6": 7,
+    "7": 2,
+    "8": 5
+  },
+  "hints": [
+    {
+      "level": 1,
+      "text": "Use all clues to eliminate impossible worlds."
+    },
+    {
+      "level": 2,
+      "text": "Apply each clue systematically."
+    },
+    {
+      "level": 3,
+      "text": "Answer: not_validated"
+    }
+  ],
+  "complexity": {
+    "score": 3,
+    "raw": 4.304,
+    "avg_clue_strength": 3.06,
+    "ambig_penalty": 0.12,
+    "stranded_ambiguity": 0.0,
+    "chain_depth": 2,
+    "stuck": true,
+    "requires_complement_set": false,
+    "question_requires_enumeration": false,
+    "residual_worlds": 1
+  },
+  "publications": [
+    {
+      "ingredient": 1,
+      "claimedAlchemical": 4
+    },
+    {
+      "ingredient": 2,
+      "claimedAlchemical": 1
+    },
+    null,
+    null,
+    {
+      "ingredient": 5,
+      "claimedAlchemical": 3
+    },
+    null,
+    null,
+    {
+      "ingredient": 8,
+      "claimedAlchemical": 2
+    }
+  ],
+  "debunk_answers": {
+    "debunk_min_steps": [
+      {
+        "kind": "master",
+        "ingredient1": 1,
+        "ingredient2": 4
+      },
+      {
+        "kind": "master",
+        "ingredient1": 2,
+        "ingredient2": 1
+      },
+      {
+        "kind": "master",
+        "ingredient1": 5,
+        "ingredient2": 1
+      },
+      {
+        "kind": "master",
+        "ingredient1": 8,
+        "ingredient2": 2
+      }
+    ],
+    "debunk_conflict_only": [
+      {
+        "kind": "master",
+        "ingredient1": 1,
+        "ingredient2": 2
+      }
+    ]
+  }
+}

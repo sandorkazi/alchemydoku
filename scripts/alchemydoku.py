@@ -1079,7 +1079,18 @@ PROFILES = {
         mandatory_clues=[{'kind': 'sell_result_among', 'sellResult': 'opposite'},
                          {'kind': 'golem_reaction_among', 'count': 1},
                          {'kind': 'book_among', 'count': 1}]),
-    # Mixed-clue debunk profiles
+    # Mixed-clue debunk profiles — realistic (board-game compliant)
+    'mixed_debunk_r': Profile(
+        'mixed-debunk-r',
+        ['base', 'sell', 'debunk'],
+        'debunk_min_steps',
+        'expert', 14, False,
+        mandatory_clues=[
+            {'kind': 'debunk', 'variant': 'master'},    # witnessed mix outcome as evidence
+            {'kind': 'sell', 'sellResult': 'opposite'}, # a strong sell result
+        ]
+    ),
+    # Mixed-clue debunk profiles — unrealistic (among clues)
     'mixed_base_debunk': Profile(
         'mixed-base-debunk',
         ['base', 'sell', 'among'],
