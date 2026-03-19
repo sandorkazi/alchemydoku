@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, type ReactNode } from 'react';
 import { type Settings } from '../utils/settings';
 import { useDrive } from '../contexts/DriveContext';
 
@@ -16,25 +16,28 @@ interface SettingsModalProps {
 function ToggleRow({
   label,
   description,
+  preview,
   value,
   onChange,
 }: {
   label: string;
   description?: string;
+  preview?: ReactNode;
   value: boolean;
   onChange: (v: boolean) => void;
 }) {
   return (
-    <div className="flex items-center justify-between gap-4 py-3">
-      <div className="min-w-0">
+    <div className="flex items-start justify-between gap-4 py-3">
+      <div className="min-w-0 flex-1">
         <p className="text-sm font-medium text-gray-800">{label}</p>
         {description && <p className="text-xs text-gray-400 mt-0.5 leading-relaxed">{description}</p>}
+        {preview && <div className="mt-2">{preview}</div>}
       </div>
       <button
         role="switch"
         aria-checked={value}
         onClick={() => onChange(!value)}
-        className={`relative inline-flex h-5 w-9 shrink-0 items-center rounded-full transition-colors
+        className={`relative inline-flex h-5 w-9 shrink-0 items-center rounded-full transition-colors mt-0.5
           focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-indigo-400
           ${value ? 'bg-indigo-500' : 'bg-gray-300'}`}
       >
@@ -47,6 +50,36 @@ function ToggleRow({
     </div>
   );
 }
+
+// ─── Inline preview snippets ──────────────────────────────────────────────────
+
+const UpdatesPreview = (
+  <div className="rounded-lg bg-indigo-50 border border-indigo-200 px-2.5 py-2 pointer-events-none select-none opacity-80">
+    <p className="text-[9px] uppercase tracking-widest text-gray-400 font-bold mb-0.5">
+      Recent updates to Alchemy Sudoku Training
+    </p>
+    <p className="text-xs font-semibold text-gray-800">✨ Settings &amp; board-game compliance</p>
+    <p className="text-[11px] text-gray-700 mt-1">• New ⚙️ Settings menu with display toggles</p>
+    <p className="text-[11px] text-gray-700">• Unrealistic puzzles can be hidden by default</p>
+  </div>
+);
+
+const QuickRefPreview = (
+  <div className="space-y-1.5 pointer-events-none select-none opacity-80">
+    <div className="rounded-lg bg-indigo-50 border border-indigo-200 px-2.5 py-1.5">
+      <p className="text-[10px] font-bold uppercase tracking-wide text-indigo-900">⚗️ Mixing Rule</p>
+      <p className="text-[11px] leading-relaxed text-indigo-900 mt-0.5">
+        Mix two ingredients → potion color comes from the aspect where signs differ; neutral if all match or all differ.
+      </p>
+    </div>
+    <div className="rounded-lg bg-emerald-50 border border-emerald-200 px-2.5 py-1.5">
+      <p className="text-[10px] font-bold uppercase tracking-wide text-emerald-900">💰 Selling</p>
+      <p className="text-[11px] leading-relaxed text-emerald-900 mt-0.5">
+        Claim an aspect when selling a potion — result depends on whether your claim matches the truth.
+      </p>
+    </div>
+  </div>
+);
 
 export function SettingsModal({
   settings,
@@ -120,17 +153,19 @@ export function SettingsModal({
             <ToggleRow
               label="Show latest updates"
               description="Show the What's New banner when there are new releases"
+              preview={UpdatesPreview}
               value={settings.showLatestUpdates}
               onChange={v => set({ showLatestUpdates: v })}
             />
             <ToggleRow
               label="Show quick references"
               description="Show the Rules and Interface reference sections on the home page"
+              preview={QuickRefPreview}
               value={settings.showQuickRef}
               onChange={v => set({ showQuickRef: v })}
             />
             <ToggleRow
-              label="Allow unrealistic (extra) puzzles"
+              label="🧩 Allow unrealistic (extra) puzzles"
               description="Show collections that use non-board-game clue mechanics"
               value={settings.showPuzzleOnly}
               onChange={v => set({ showPuzzleOnly: v })}
