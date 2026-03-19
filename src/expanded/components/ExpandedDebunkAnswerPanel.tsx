@@ -481,7 +481,7 @@ export function ExpandedDebunkAnswerPanel({ onNext, isTutorial = false }: {
 
             <p className="text-xs text-gray-500">
               {plan.isConflictOnly
-                ? 'Find a single master mix that simultaneously contradicts both publications without removing either.'
+                ? 'Find a single master mix that simultaneously contradicts all incorrect publications without removing any.'
                 : plan.isApprenticeOnly
                   ? 'Remove all false publications using only apprentice debunks, in as few steps as possible.'
                   : 'Remove all false publications in as few steps as possible.'}
