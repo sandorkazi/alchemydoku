@@ -2,7 +2,7 @@
   "id": "mixed-base-debunk-42",
   "title": "A Scholar's Note",
   "description": "Mixed evidence surrounds several suspicious publications. Use master debunking to expose the lies.",
-  "difficulty": "expert",
+  "difficulty": "hard",
   "clues": [
     {
       "kind": "sell_result_among",

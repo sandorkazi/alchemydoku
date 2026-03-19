@@ -3,7 +3,7 @@
   "mode": "expanded",
   "title": "The Final Entry",
   "description": "Mixing, selling, and debunking records all point toward a single pair. Deduce what potion they produce.",
-  "difficulty": "hard",
+  "difficulty": "expert",
   "golem": {
     "chest": {
       "color": "B",
@@ -130,9 +130,11 @@
     }
   ],
   "complexity": {
-    "raw": 3.674,
+    "score": 5,
+    "raw": 5.845,
     "avg_clue_strength": 1.787,
     "ambig_penalty": 0.412,
+    "stranded_ambiguity": 2.378,
     "chain_depth": 0,
     "stuck": false,
     "requires_complement_set": false,

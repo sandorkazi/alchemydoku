@@ -1,1 +1,157 @@
-{"id":"among-golem-01","mode":"expanded","title":"The Crowded Laboratory","description":"You watched experiments unfold across the room — never sure who used which ingredient. Combine the golem's reactions with overheard market results to uncover the truth.","difficulty":"hard","golem":{"chest":{"color":"R","size":"L"},"ears":{"color":"B","size":"S"}},"clues":[{"kind":"golem_test","ingredient":4,"chest_reacted":false,"ears_reacted":false},{"kind":"golem_test","ingredient":3,"chest_reacted":true,"ears_reacted":false},{"kind":"golem_reaction_among","ingredients":[1,2,6],"reaction":"animators","count":1},{"kind":"golem_reaction_among","ingredients":[5,6,7,8],"reaction":"any_reactive","count":3},{"kind":"sell_result_among","ingredients":[2,6,7],"claimedPotion":{"color":"R","sign":"+"},"sellResult":"opposite"},{"kind":"sell_result_among","ingredients":[1,3,4,8],"claimedPotion":{"color":"B","sign":"+"},"sellResult":"sign_ok"},{"kind":"mixing","ingredient1":1,"ingredient2":5,"result":{"type":"potion","color":"B","sign":"-"}},{"kind":"sell_result_among","ingredients":[2,5,6,8],"claimedPotion":{"color":"G","sign":"-"},"sellResult":"opposite"},{"kind":"mixing_among","ingredients":[2,3,4],"result":{"type":"potion","color":"B","sign":"-"}}],"questions":[{"kind":"golem_animate_potion"}],"solution":{"1":6,"2":3,"3":8,"4":1,"5":7,"6":2,"7":5,"8":4},"hints":[{"level":1,"text":"Golem chest reacts to R+L; ears react to B+S.\nSlot 4 is non-reactive. Slot 3 reacts to chest only.\nExactly 1 of slots {1,2,6} is an animator."},{"level":2,"text":"The 'opposite' sell result for R+ means the true mix was R−.\nFor a pair from {2,6,7} to produce R−, deduce which pair fits given golem constraints."},{"level":3,"text":"Animators are always opposite alchemicals — they mix to Neutral.\nSlots 1 and 7 are the animators (alch 6 and 5)."}],"complexity":{"raw":5.2,"avg_clue_strength":1.8,"residual_worlds":10}}
+{
+  "id": "among-golem-01",
+  "mode": "expanded",
+  "title": "The Crowded Laboratory",
+  "description": "You watched experiments unfold across the room \u2014 never sure who used which ingredient. Combine the golem's reactions with overheard market results to uncover the truth.",
+  "difficulty": "expert",
+  "golem": {
+    "chest": {
+      "color": "R",
+      "size": "L"
+    },
+    "ears": {
+      "color": "B",
+      "size": "S"
+    }
+  },
+  "clues": [
+    {
+      "kind": "golem_test",
+      "ingredient": 4,
+      "chest_reacted": false,
+      "ears_reacted": false
+    },
+    {
+      "kind": "golem_test",
+      "ingredient": 3,
+      "chest_reacted": true,
+      "ears_reacted": false
+    },
+    {
+      "kind": "golem_reaction_among",
+      "ingredients": [
+        1,
+        2,
+        6
+      ],
+      "reaction": "animators",
+      "count": 1
+    },
+    {
+      "kind": "golem_reaction_among",
+      "ingredients": [
+        5,
+        6,
+        7,
+        8
+      ],
+      "reaction": "any_reactive",
+      "count": 3
+    },
+    {
+      "kind": "sell_result_among",
+      "ingredients": [
+        2,
+        6,
+        7
+      ],
+      "claimedPotion": {
+        "color": "R",
+        "sign": "+"
+      },
+      "sellResult": "opposite"
+    },
+    {
+      "kind": "sell_result_among",
+      "ingredients": [
+        1,
+        3,
+        4,
+        8
+      ],
+      "claimedPotion": {
+        "color": "B",
+        "sign": "+"
+      },
+      "sellResult": "sign_ok"
+    },
+    {
+      "kind": "mixing",
+      "ingredient1": 1,
+      "ingredient2": 5,
+      "result": {
+        "type": "potion",
+        "color": "B",
+        "sign": "-"
+      }
+    },
+    {
+      "kind": "sell_result_among",
+      "ingredients": [
+        2,
+        5,
+        6,
+        8
+      ],
+      "claimedPotion": {
+        "color": "G",
+        "sign": "-"
+      },
+      "sellResult": "opposite"
+    },
+    {
+      "kind": "mixing_among",
+      "ingredients": [
+        2,
+        3,
+        4
+      ],
+      "result": {
+        "type": "potion",
+        "color": "B",
+        "sign": "-"
+      }
+    }
+  ],
+  "questions": [
+    {
+      "kind": "golem_animate_potion"
+    }
+  ],
+  "solution": {
+    "1": 6,
+    "2": 3,
+    "3": 8,
+    "4": 1,
+    "5": 7,
+    "6": 2,
+    "7": 5,
+    "8": 4
+  },
+  "hints": [
+    {
+      "level": 1,
+      "text": "Golem chest reacts to R+L; ears react to B+S.\nSlot 4 is non-reactive. Slot 3 reacts to chest only.\nExactly 1 of slots {1,2,6} is an animator."
+    },
+    {
+      "level": 2,
+      "text": "The 'opposite' sell result for R+ means the true mix was R\u2212.\nFor a pair from {2,6,7} to produce R\u2212, deduce which pair fits given golem constraints."
+    },
+    {
+      "level": 3,
+      "text": "Animators are always opposite alchemicals \u2014 they mix to Neutral.\nSlots 1 and 7 are the animators (alch 6 and 5)."
+    }
+  ],
+  "complexity": {
+    "score": 5,
+    "raw": 5.683,
+    "avg_clue_strength": 1.331,
+    "ambig_penalty": 0.444,
+    "stranded_ambiguity": 1.231,
+    "chain_depth": 0,
+    "stuck": false,
+    "requires_complement_set": false,
+    "question_requires_enumeration": false,
+    "residual_worlds": 10
+  }
+}

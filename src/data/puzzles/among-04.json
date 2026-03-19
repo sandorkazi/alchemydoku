@@ -2,7 +2,7 @@
   "id": "among-04",
   "title": "The Missing Entry",
   "description": "Mixing, selling, and debunking records all point toward a single pair. Deduce what potion they produce.",
-  "difficulty": "medium",
+  "difficulty": "easy",
   "clues": [
     {
       "kind": "mixing_count_among",

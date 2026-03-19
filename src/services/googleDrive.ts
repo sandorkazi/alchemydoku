@@ -9,6 +9,7 @@
  */
 
 import { ID_RENAMES } from '../utils/saveProgress';
+import { type Settings, loadSettings, saveSettings } from '../utils/settings';
 
 // ─── Types ───────────────────────────────────────────────────────────────────
 
@@ -20,6 +21,7 @@ export interface SaveData {
   base: ModeSave;
   expanded: ModeSave;
   seenRelease?: string;
+  settings?: Settings;
 }
 
 export interface ModeSave {
@@ -323,6 +325,7 @@ function mergeSaveData(a: SaveData, b: SaveData): SaveData {
     seenRelease: a.seenRelease && b.seenRelease
       ? (a.seenRelease >= b.seenRelease ? a.seenRelease : b.seenRelease)
       : (a.seenRelease ?? b.seenRelease),
+    settings: a.settings ?? b.settings,
   };
 }
 
@@ -401,6 +404,7 @@ export function snapshotLocal(): SaveData {
       freePlay:   false,
     },
     seenRelease: localStorage.getItem('alch-seen-release') ?? undefined,
+    settings: loadSettings(),
   };
 }
 
@@ -439,6 +443,11 @@ export function mergeIntoLocal(cloud: SaveData): void {
   const localSeen = localStorage.getItem('alch-seen-release');
   if (cloudSeen && (!localSeen || cloudSeen > localSeen)) {
     localStorage.setItem('alch-seen-release', cloudSeen);
+  }
+
+  // Apply cloud settings (cloud wins — respects other device's preferences)
+  if (cloud.settings) {
+    saveSettings(cloud.settings);
   }
 
   window.dispatchEvent(new CustomEvent('alch-cloud-sync'));

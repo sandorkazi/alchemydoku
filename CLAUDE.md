@@ -179,7 +179,13 @@ TypeScript is strict (`strict`, `noUnusedLocals`, `noUnusedParameters`). Path al
 2. If NOT — add its `kind` string to the appropriate set in `src/compliance.ts`.
 3. Tag any collection containing such puzzles with `boardGameCompliant: false` in `src/data/puzzles/collections.json` (base) or `src/expanded/data/puzzlesIndex.ts` (expanded).
 
-The toggle (localStorage key: `alch-show-puzzle-only`) is rendered below the `ModeSwitcher` on both home pages. When off (default), non-compliant collections are greyed out with a 🧩 icon and a note. The "Among / Group Clues" card in `RulesQuickReference` is hidden unless the toggle is on.
+The "Allow unrealistic (extra) puzzles" toggle is part of the **Settings modal** (⚙️ button in the mode-switcher row). When off (default), non-compliant collections are greyed out with a 🧩 icon. The "Among / Group Clues" card in `RulesQuickReference` is hidden unless the toggle is on.
+
+## Settings
+
+`src/utils/settings.ts` — `Settings` type with three booleans: `showLatestUpdates`, `showQuickRef`, `showPuzzleOnly`. Persisted to `alch-settings` in localStorage and included in the Google Drive save snapshot.
+
+`src/components/SettingsModal.tsx` — modal rendered from both `AppInner` (base) and `ExpandedHome` (expanded) via a ⚙️ gear button next to the mode switcher. Contains the three display toggles plus Reset Progress buttons (base / expanded / all) with a two-step confirmation dialog. After a reset, if the user is signed into Drive, `uploadSnapshot()` is called to push the cleared state without downloading first.
 
 ## Hint text conventions
 

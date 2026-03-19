@@ -2,7 +2,7 @@
   "id": "group-potions-04",
   "title": "Secrets of the Guild",
   "description": "Identify all potions that can be certainly produced by some pair within the listed ingredient group.",
-  "difficulty": "medium",
+  "difficulty": "easy",
   "clues": [
     {
       "kind": "mixing",

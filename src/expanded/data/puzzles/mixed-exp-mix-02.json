@@ -3,7 +3,7 @@
   "mode": "expanded",
   "title": "Starlight Deduction",
   "description": "Mixing, selling, and debunking records all point toward a single pair. Deduce what potion they produce.",
-  "difficulty": "hard",
+  "difficulty": "expert",
   "golem": {
     "chest": {
       "color": "B",
@@ -138,9 +138,11 @@
     }
   ],
   "complexity": {
-    "raw": 3.54,
+    "score": 5,
+    "raw": 5.184,
     "avg_clue_strength": 1.7,
     "ambig_penalty": 0.311,
+    "stranded_ambiguity": 1.799,
     "chain_depth": 0,
     "stuck": false,
     "requires_complement_set": false,

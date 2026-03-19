@@ -3,7 +3,7 @@
   "mode": "expanded",
   "title": "The Missing Entry",
   "description": "The golem has been tested with 2 ingredients. Deduce the reaction pattern and identify the target group.",
-  "difficulty": "hard",
+  "difficulty": "expert",
   "golem": {
     "chest": {
       "color": "R",
@@ -119,9 +119,11 @@
     }
   ],
   "complexity": {
-    "raw": 4.141,
+    "score": 5,
+    "raw": 5.811,
     "avg_clue_strength": 1.959,
     "ambig_penalty": 0.457,
+    "stranded_ambiguity": 1.898,
     "chain_depth": 0,
     "stuck": false,
     "requires_complement_set": false,

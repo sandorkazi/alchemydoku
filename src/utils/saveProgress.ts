@@ -375,6 +375,35 @@ export async function uploadBaseProgress(puzzleId: string): Promise<PuzzleProgre
   }
 }
 
+// ─── Progress reset ───────────────────────────────────────────────────────────
+
+/** Clear all base-game progress from localStorage (main save + legacy per-puzzle keys). */
+export function clearBaseProgress(): void {
+  try {
+    localStorage.removeItem('alch-completed-base');
+    localStorage.removeItem('alch-last-puzzle-base');
+    localStorage.removeItem(BASE_KEY);
+    // Iterate backwards to avoid index-shifting while removing
+    for (let i = localStorage.length - 1; i >= 0; i--) {
+      const k = localStorage.key(i);
+      if (k && (k.startsWith('solver-') || k.startsWith('display-map-'))) localStorage.removeItem(k);
+    }
+  } catch { /* ignore */ }
+}
+
+/** Clear all expanded-mode progress from localStorage (main save + legacy per-puzzle keys). */
+export function clearExpandedProgress(): void {
+  try {
+    localStorage.removeItem('alch-exp-completed');
+    localStorage.removeItem('alch-exp-last');
+    localStorage.removeItem(EXPANDED_KEY);
+    for (let i = localStorage.length - 1; i >= 0; i--) {
+      const k = localStorage.key(i);
+      if (k && (k.startsWith('exp-solver-') || k.startsWith('exp-display-map-'))) localStorage.removeItem(k);
+    }
+  } catch { /* ignore */ }
+}
+
 export async function uploadExpandedProgress(puzzleId: string): Promise<ExpandedPuzzleProgress | null> {
   const text = await pickFile();
   if (!text) return null;

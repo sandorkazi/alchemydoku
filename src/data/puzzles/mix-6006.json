@@ -2,7 +2,7 @@
   "id": "mix-6006",
   "title": "The Cursed Batch",
   "description": "Deduce the mixing result from the clues.",
-  "difficulty": "medium",
+  "difficulty": "easy",
   "clues": [
     {
       "kind": "mixing",

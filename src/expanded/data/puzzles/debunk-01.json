@@ -1,1 +1,184 @@
-{"id":"debunk-01","kind":"debunk","mode":"expanded","title":"The Unwitting Witness","description":"Two wrong publications sit on the board — one about Fern, one about Scorpion. A careful mix is worth more than two apprentice reveals.","difficulty":"easy","clues":[{"kind":"aspect","ingredient":1,"color":"G","sign":"+"},{"kind":"aspect","ingredient":1,"color":"R","sign":"-"},{"kind":"aspect","ingredient":1,"color":"B","sign":"-"},{"kind":"aspect","ingredient":2,"color":"G","sign":"-"},{"kind":"aspect","ingredient":2,"color":"B","sign":"+"},{"kind":"aspect","ingredient":3,"color":"R","sign":"+"},{"kind":"aspect","ingredient":3,"color":"G","sign":"-"},{"kind":"aspect","ingredient":4,"color":"R","sign":"-"},{"kind":"aspect","ingredient":4,"color":"G","sign":"+"},{"kind":"aspect","ingredient":4,"color":"B","sign":"+"},{"kind":"aspect","ingredient":5,"color":"R","sign":"-"},{"kind":"aspect","ingredient":5,"color":"G","sign":"-"},{"kind":"aspect","ingredient":5,"color":"B","sign":"+"},{"kind":"aspect","ingredient":6,"color":"G","sign":"+"},{"kind":"aspect","ingredient":6,"color":"B","sign":"-"},{"kind":"aspect","ingredient":7,"color":"R","sign":"-"},{"kind":"aspect","ingredient":7,"color":"G","sign":"-"}],"publications":[{"ingredient":1,"claimedAlchemical":3},null,null,null,null,{"ingredient":6,"claimedAlchemical":4},null,null],"articles":[],"questions":[{"kind":"debunk_min_steps"}],"solution":{"1":1,"2":2,"3":3,"4":4,"5":5,"6":6,"7":7,"8":8},"debunk_answers":{"debunk_min_steps":[{"kind":"master","ingredient1":4,"ingredient2":1},{"kind":"master","ingredient1":4,"ingredient2":6}]},"hints":[{"level":1,"text":"Two publications need to go: ing1 claims pNn, and ing6 claims nPp. Use a definitively known ingredient as your witness to challenge each one in turn. ing4 is fully established by the clues and has no publication of its own."},{"level":2,"text":"Mix ing4 + ing1. True result: G+.\nThe publication claims ing1 is pNn. Predicted mix(nPp + pNn) = neutral ≠ G+, conflict is unambiguous → ing1's publication removed.\n\nNow mix ing4 + ing6. True result: G+.\nThe publication claims ing6 is nPp. Predicted mix(nPp + nPp) = neutral ≠ G+, conflict is unambiguous → ing6's publication removed."},{"level":3,"text":"Step 1: Master — mix ing4 + ing1 → true G+. Claimed pNn for ing1: mix(nPp, pNn) = neutral ≠ G+ → ing1's publication removed.\nStep 2: Master — mix ing4 + ing6 → true G+. Claimed nPp for ing6: mix(nPp, nPp) = neutral ≠ G+ → ing6's publication removed."}]}
+{
+  "id": "debunk-01",
+  "kind": "debunk",
+  "mode": "expanded",
+  "title": "The Unwitting Witness",
+  "description": "Two wrong publications sit on the board \u2014 one about Fern, one about Scorpion. A careful mix is worth more than two apprentice reveals.",
+  "difficulty": "expert",
+  "clues": [
+    {
+      "kind": "aspect",
+      "ingredient": 1,
+      "color": "G",
+      "sign": "+"
+    },
+    {
+      "kind": "aspect",
+      "ingredient": 1,
+      "color": "R",
+      "sign": "-"
+    },
+    {
+      "kind": "aspect",
+      "ingredient": 1,
+      "color": "B",
+      "sign": "-"
+    },
+    {
+      "kind": "aspect",
+      "ingredient": 2,
+      "color": "G",
+      "sign": "-"
+    },
+    {
+      "kind": "aspect",
+      "ingredient": 2,
+      "color": "B",
+      "sign": "+"
+    },
+    {
+      "kind": "aspect",
+      "ingredient": 3,
+      "color": "R",
+      "sign": "+"
+    },
+    {
+      "kind": "aspect",
+      "ingredient": 3,
+      "color": "G",
+      "sign": "-"
+    },
+    {
+      "kind": "aspect",
+      "ingredient": 4,
+      "color": "R",
+      "sign": "-"
+    },
+    {
+      "kind": "aspect",
+      "ingredient": 4,
+      "color": "G",
+      "sign": "+"
+    },
+    {
+      "kind": "aspect",
+      "ingredient": 4,
+      "color": "B",
+      "sign": "+"
+    },
+    {
+      "kind": "aspect",
+      "ingredient": 5,
+      "color": "R",
+      "sign": "-"
+    },
+    {
+      "kind": "aspect",
+      "ingredient": 5,
+      "color": "G",
+      "sign": "-"
+    },
+    {
+      "kind": "aspect",
+      "ingredient": 5,
+      "color": "B",
+      "sign": "+"
+    },
+    {
+      "kind": "aspect",
+      "ingredient": 6,
+      "color": "G",
+      "sign": "+"
+    },
+    {
+      "kind": "aspect",
+      "ingredient": 6,
+      "color": "B",
+      "sign": "-"
+    },
+    {
+      "kind": "aspect",
+      "ingredient": 7,
+      "color": "R",
+      "sign": "-"
+    },
+    {
+      "kind": "aspect",
+      "ingredient": 7,
+      "color": "G",
+      "sign": "-"
+    }
+  ],
+  "publications": [
+    {
+      "ingredient": 1,
+      "claimedAlchemical": 3
+    },
+    null,
+    null,
+    null,
+    null,
+    {
+      "ingredient": 6,
+      "claimedAlchemical": 4
+    },
+    null,
+    null
+  ],
+  "articles": [],
+  "questions": [
+    {
+      "kind": "debunk_min_steps"
+    }
+  ],
+  "solution": {
+    "1": 1,
+    "2": 2,
+    "3": 3,
+    "4": 4,
+    "5": 5,
+    "6": 6,
+    "7": 7,
+    "8": 8
+  },
+  "debunk_answers": {
+    "debunk_min_steps": [
+      {
+        "kind": "master",
+        "ingredient1": 4,
+        "ingredient2": 1
+      },
+      {
+        "kind": "master",
+        "ingredient1": 4,
+        "ingredient2": 6
+      }
+    ]
+  },
+  "hints": [
+    {
+      "level": 1,
+      "text": "Two publications need to go: ing1 claims pNn, and ing6 claims nPp. Use a definitively known ingredient as your witness to challenge each one in turn. ing4 is fully established by the clues and has no publication of its own."
+    },
+    {
+      "level": 2,
+      "text": "Mix ing4 + ing1. True result: G+.\nThe publication claims ing1 is pNn. Predicted mix(nPp + pNn) = neutral \u2260 G+, conflict is unambiguous \u2192 ing1's publication removed.\n\nNow mix ing4 + ing6. True result: G+.\nThe publication claims ing6 is nPp. Predicted mix(nPp + nPp) = neutral \u2260 G+, conflict is unambiguous \u2192 ing6's publication removed."
+    },
+    {
+      "level": 3,
+      "text": "Step 1: Master \u2014 mix ing4 + ing1 \u2192 true G+. Claimed pNn for ing1: mix(nPp, pNn) = neutral \u2260 G+ \u2192 ing1's publication removed.\nStep 2: Master \u2014 mix ing4 + ing6 \u2192 true G+. Claimed nPp for ing6: mix(nPp, nPp) = neutral \u2260 G+ \u2192 ing6's publication removed."
+    }
+  ],
+  "complexity": {
+    "score": 5,
+    "raw": 6.307,
+    "avg_clue_strength": 0.9,
+    "ambig_penalty": 0.3,
+    "stranded_ambiguity": 0.0,
+    "chain_depth": 2,
+    "stuck": true,
+    "requires_complement_set": false,
+    "question_requires_enumeration": false,
+    "residual_worlds": 1
+  }
+}

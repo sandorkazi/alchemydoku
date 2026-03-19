@@ -2,7 +2,7 @@
   "id": "mix-6004",
   "title": "The Crossroads Merchant",
   "description": "Deduce the mixing result from the clues.",
-  "difficulty": "medium",
+  "difficulty": "easy",
   "clues": [
     {
       "kind": "mixing",

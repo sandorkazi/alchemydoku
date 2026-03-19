@@ -1,1 +1,132 @@
-{"id":"combo-exp-wha-02","mode":"expanded","title":"Whispers of the Archive","description":"Four ingredient–sign pairs form a valid encyclopedia article. All the clue types are in play — deduce which aspect colour they share.","difficulty":"hard","golem":{"chest":{"color":"R","size":"L"},"ears":{"color":"B","size":"L"}},"clues":[{"kind":"golem_test","ingredient":4,"chest_reacted":true,"ears_reacted":true},{"kind":"golem_test","ingredient":2,"chest_reacted":true,"ears_reacted":false},{"kind":"encyclopedia","aspect":"R","entries":[{"ingredient":2,"sign":"+"},{"ingredient":5,"sign":"+"},{"ingredient":6,"sign":"+"}]},{"kind":"encyclopedia","aspect":"B","entries":[{"ingredient":1,"sign":"-"},{"ingredient":4,"sign":"-"},{"ingredient":6,"sign":"-"}]},{"kind":"golem_test","ingredient":3,"chest_reacted":false,"ears_reacted":false}],"questions":[{"kind":"encyclopedia_which_aspect","entries":[{"ingredient":2,"sign":"+"},{"ingredient":3,"sign":"+"},{"ingredient":4,"sign":"-"},{"ingredient":6,"sign":"-"}]}],"solution":{"1":1,"2":6,"3":4,"4":7,"5":2,"6":3,"7":8,"8":5},"hints":[{"level":1,"text":"For each colour R/G/B, check whether all four ingredient–sign pairs (ingredient 2 +, ingredient 3 +, ingredient 4 -, ingredient 6 -) hold across the remaining worlds."},{"level":2,"text":"Eliminate any colour where at least one remaining world disagrees. Only one colour will survive."},{"level":3,"text":"The answer is G (Green): every remaining world maps all four entries onto the Green aspect."}],"complexity":{"raw":3.566,"avg_clue_strength":2.66,"ambig_penalty":0.0,"chain_depth":0,"stuck":false,"requires_complement_set":false,"question_requires_enumeration":false,"residual_worlds":4}}
+{
+  "id": "combo-exp-wha-02",
+  "mode": "expanded",
+  "title": "Whispers of the Archive",
+  "description": "Four ingredient\u2013sign pairs form a valid encyclopedia article. All the clue types are in play \u2014 deduce which aspect colour they share.",
+  "difficulty": "expert",
+  "golem": {
+    "chest": {
+      "color": "R",
+      "size": "L"
+    },
+    "ears": {
+      "color": "B",
+      "size": "L"
+    }
+  },
+  "clues": [
+    {
+      "kind": "golem_test",
+      "ingredient": 4,
+      "chest_reacted": true,
+      "ears_reacted": true
+    },
+    {
+      "kind": "golem_test",
+      "ingredient": 2,
+      "chest_reacted": true,
+      "ears_reacted": false
+    },
+    {
+      "kind": "encyclopedia",
+      "aspect": "R",
+      "entries": [
+        {
+          "ingredient": 2,
+          "sign": "+"
+        },
+        {
+          "ingredient": 5,
+          "sign": "+"
+        },
+        {
+          "ingredient": 6,
+          "sign": "+"
+        }
+      ]
+    },
+    {
+      "kind": "encyclopedia",
+      "aspect": "B",
+      "entries": [
+        {
+          "ingredient": 1,
+          "sign": "-"
+        },
+        {
+          "ingredient": 4,
+          "sign": "-"
+        },
+        {
+          "ingredient": 6,
+          "sign": "-"
+        }
+      ]
+    },
+    {
+      "kind": "golem_test",
+      "ingredient": 3,
+      "chest_reacted": false,
+      "ears_reacted": false
+    }
+  ],
+  "questions": [
+    {
+      "kind": "encyclopedia_which_aspect",
+      "entries": [
+        {
+          "ingredient": 2,
+          "sign": "+"
+        },
+        {
+          "ingredient": 3,
+          "sign": "+"
+        },
+        {
+          "ingredient": 4,
+          "sign": "-"
+        },
+        {
+          "ingredient": 6,
+          "sign": "-"
+        }
+      ]
+    }
+  ],
+  "solution": {
+    "1": 1,
+    "2": 6,
+    "3": 4,
+    "4": 7,
+    "5": 2,
+    "6": 3,
+    "7": 8,
+    "8": 5
+  },
+  "hints": [
+    {
+      "level": 1,
+      "text": "For each colour R/G/B, check whether all four ingredient\u2013sign pairs (ingredient 2 +, ingredient 3 +, ingredient 4 -, ingredient 6 -) hold across the remaining worlds."
+    },
+    {
+      "level": 2,
+      "text": "Eliminate any colour where at least one remaining world disagrees. Only one colour will survive."
+    },
+    {
+      "level": 3,
+      "text": "The answer is G (Green): every remaining world maps all four entries onto the Green aspect."
+    }
+  ],
+  "complexity": {
+    "score": 5,
+    "raw": 3.566,
+    "avg_clue_strength": 2.66,
+    "ambig_penalty": 0.0,
+    "stranded_ambiguity": 0.0,
+    "chain_depth": 0,
+    "stuck": false,
+    "requires_complement_set": false,
+    "question_requires_enumeration": false,
+    "residual_worlds": 4
+  }
+}

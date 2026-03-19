@@ -1,1 +1,83 @@
-{"id":"sl-02","mode":"expanded","title":"The Celestial Ledger","description":"Use the clues to deduce which alchemical belongs to the target ingredient.","difficulty":"easy","clues":[{"kind":"mixing","ingredient1":1,"ingredient2":2,"result":{"color":"B","sign":"+"}},{"kind":"mixing","ingredient1":3,"ingredient2":7,"result":{"color":"B","sign":"+"}},{"kind":"mixing","ingredient1":1,"ingredient2":6,"result":{"color":"R","sign":"+"}},{"kind":"book","ingredient":6,"result":"lunar"}],"questions":[{"kind":"alchemical","ingredient":1}],"solution":{"1":2,"2":5,"3":4,"4":7,"5":1,"6":6,"7":8,"8":3},"hints":[{"level":1,"text":"Identify the alchemical for ingredient 1. Direct clues: ing1+ing2=B+, ing1+ing6=R+."},{"level":2,"text":"Eliminated for slot 1: [1, 3, 4, 5, 6, 7, 8]. Remaining: [2]."},{"level":3,"text":"Ingredient 1 = pnP (R+ G- B+)."}],"complexity":{"raw":1.558,"avg_clue_strength":2.679,"q_sur":0.0,"m_sur":0.3,"residual_worlds":24}}
+{
+  "id": "sl-02",
+  "mode": "expanded",
+  "title": "The Celestial Ledger",
+  "description": "Use the clues to deduce which alchemical belongs to the target ingredient.",
+  "difficulty": "easy",
+  "clues": [
+    {
+      "kind": "mixing",
+      "ingredient1": 1,
+      "ingredient2": 2,
+      "result": {
+        "color": "B",
+        "sign": "+"
+      }
+    },
+    {
+      "kind": "mixing",
+      "ingredient1": 3,
+      "ingredient2": 7,
+      "result": {
+        "color": "B",
+        "sign": "+"
+      }
+    },
+    {
+      "kind": "mixing",
+      "ingredient1": 1,
+      "ingredient2": 6,
+      "result": {
+        "color": "R",
+        "sign": "+"
+      }
+    },
+    {
+      "kind": "book",
+      "ingredient": 6,
+      "result": "lunar"
+    }
+  ],
+  "questions": [
+    {
+      "kind": "alchemical",
+      "ingredient": 1
+    }
+  ],
+  "solution": {
+    "1": 2,
+    "2": 5,
+    "3": 4,
+    "4": 7,
+    "5": 1,
+    "6": 6,
+    "7": 8,
+    "8": 3
+  },
+  "hints": [
+    {
+      "level": 1,
+      "text": "Identify the alchemical for ingredient 1. Direct clues: ing1+ing2=B+, ing1+ing6=R+."
+    },
+    {
+      "level": 2,
+      "text": "Eliminated for slot 1: [1, 3, 4, 5, 6, 7, 8]. Remaining: [2]."
+    },
+    {
+      "level": 3,
+      "text": "Ingredient 1 = pnP (R+ G- B+)."
+    }
+  ],
+  "complexity": {
+    "score": 1,
+    "raw": 1.558,
+    "avg_clue_strength": 2.679,
+    "ambig_penalty": 0.0,
+    "stranded_ambiguity": 0.0,
+    "chain_depth": 0,
+    "stuck": false,
+    "requires_complement_set": false,
+    "question_requires_enumeration": false,
+    "residual_worlds": 24
+  }
+}

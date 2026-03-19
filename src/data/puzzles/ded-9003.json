@@ -2,7 +2,7 @@
   "id": "ded-9003",
   "title": "The Master's Trial",
   "description": "Use all the evidence to deduce the mixing results.",
-  "difficulty": "hard",
+  "difficulty": "easy",
   "clues": [
     {
       "kind": "mixing",

@@ -2,7 +2,7 @@
   "id": "combo-b-asp-04",
   "title": "The Sealed Chamber",
   "description": "Multiple clue types constrain the world. Identify the sign of the target colour aspect.",
-  "difficulty": "medium",
+  "difficulty": "easy",
   "clues": [
     {
       "kind": "debunk",

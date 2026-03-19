@@ -11,7 +11,7 @@ import { DEBUNK_MASTER_TUTORIAL_STEPS } from './data/tutorials/debunk-master';
 import type { TutorialId } from './contexts/TutorialContext';
 import { RulesQuickReference } from './components/RulesQuickReference';
 import { InterfaceQuickReference } from './components/InterfaceQuickReference';
-import { PuzzleOnlyToggle } from './components/PuzzleOnlyToggle';
+import { SettingsModal } from './components/SettingsModal';
 import type { Puzzle } from './types';
 import { clearPuzzleState } from './contexts/SolverContext';
 import { ExpandedHome as ExpandedHomeImpl } from './expanded/ExpandedHome';
@@ -20,6 +20,8 @@ import { DriveProvider, useDrive } from './contexts/DriveContext';
 import { DriveSync } from './components/DriveSync';
 import { shouldShowReleaseNotes, markReleaseNotesSeen, getCurrentReleaseEntry } from './utils/releaseNotes';
 import { WhatsNewBanner } from './components/WhatsNewBanner';
+import { loadSettings, saveSettings, type Settings } from './utils/settings';
+import { clearExpandedProgress } from './utils/saveProgress';
 
 type Collection = {
   id: string;
@@ -72,14 +74,6 @@ function loadLastPuzzle(mode: 'base' | 'expanded'): string | null {
 }
 function saveLastPuzzle(mode: 'base' | 'expanded', id: string) {
   try { localStorage.setItem(`alch-last-puzzle-${mode}`, id); } catch { /* ignore */ }
-}
-
-const PUZZLE_ONLY_KEY = 'alch-show-puzzle-only';
-function loadShowPuzzleOnly(): boolean {
-  try { return localStorage.getItem(PUZZLE_ONLY_KEY) === 'true'; } catch { return false; }
-}
-function saveShowPuzzleOnly(v: boolean) {
-  try { localStorage.setItem(PUZZLE_ONLY_KEY, String(v)); } catch { /* ignore */ }
 }
 
 // ─── Style maps ───────────────────────────────────────────────────────────────
@@ -194,7 +188,7 @@ function CollectionCard({
         )}
         {puzzleOnlyBlocked && (
           <p className="text-xs text-gray-400 mt-1">
-            Puzzle-only mechanics — enable the toggle above to unlock
+            Allow unrealistic puzzles in ⚙️ Settings to unlock
           </p>
         )}
       </div>
@@ -284,11 +278,13 @@ const TUTORIAL_STEPS = {
 
 // ─── Expanded home wrapper ────────────────────────────────────────────────────
 
-function ExpandedHome({ onModeChange, initialPuzzleId, showReleaseNotes, onDismissReleaseNotes }: {
+function ExpandedHome({ onModeChange, initialPuzzleId, showReleaseNotes, onDismissReleaseNotes, settings, onSettingsChange }: {
   onModeChange: (m: 'base' | 'expanded') => void;
   initialPuzzleId?: string;
   showReleaseNotes: boolean;
   onDismissReleaseNotes: () => void;
+  settings: Settings;
+  onSettingsChange: (s: Settings) => void;
 }) {
   return (
     <ExpandedHomeImpl
@@ -296,6 +292,8 @@ function ExpandedHome({ onModeChange, initialPuzzleId, showReleaseNotes, onDismi
       initialPuzzleId={initialPuzzleId}
       showReleaseNotes={showReleaseNotes}
       onDismissReleaseNotes={onDismissReleaseNotes}
+      settings={settings}
+      onSettingsChange={onSettingsChange}
     />
   );
 }
@@ -311,7 +309,9 @@ function AppInner() {
   const [showReleaseNotes, setShowReleaseNotes] = useState(() => shouldShowReleaseNotes());
   const releaseEntry = getCurrentReleaseEntry();
 
-  const [showPuzzleOnly, setShowPuzzleOnly] = useState(loadShowPuzzleOnly);
+  const [settings, setSettings] = useState<Settings>(loadSettings);
+  const [settingsOpen, setSettingsOpen] = useState(false);
+
   const [mode, setMode]                 = useState<'base' | 'expanded'>(initMode);
   const [view, setView]                 = useState<View>(() => {
     if (permalink?.mode === 'base') {
@@ -330,15 +330,21 @@ function AppInner() {
 
   const { onPuzzleComplete } = useDrive();
 
-  // Re-read completed set when Drive sync merges cloud data
+  // Re-read state when Drive sync merges cloud data
   useEffect(() => {
     function handleCloudSync() {
       setCompleted(loadCompleted('base'));
       setShowReleaseNotes(shouldShowReleaseNotes());
+      setSettings(loadSettings());
     }
     window.addEventListener('alch-cloud-sync', handleCloudSync);
     return () => window.removeEventListener('alch-cloud-sync', handleCloudSync);
   }, []);
+
+  function handleSettingsChange(s: Settings) {
+    setSettings(s);
+    saveSettings(s);
+  }
 
   function handleDismissReleaseNotes() {
     markReleaseNotesSeen();
@@ -360,8 +366,10 @@ function AppInner() {
       <ExpandedHome
         onModeChange={handleModeChange}
         initialPuzzleId={permalink?.mode === 'expanded' ? permalink.puzzleId : undefined}
-        showReleaseNotes={showReleaseNotes}
+        showReleaseNotes={settings.showLatestUpdates && showReleaseNotes}
         onDismissReleaseNotes={handleDismissReleaseNotes}
+        settings={settings}
+        onSettingsChange={handleSettingsChange}
       />
     );
   }
@@ -387,6 +395,25 @@ function AppInner() {
     if (!col) return null;
     const idx = col.puzzleIds.indexOf(puzzleId);
     return col.puzzleIds[idx + 1] ?? null;
+  }
+
+  // ── Reset callbacks for SettingsModal ──────────────────────────────────────
+
+  function handleResetBase() {
+    clearAllProgress('base');
+    try { localStorage.removeItem('alch-save-base'); } catch { /* ignore */ }
+    setCompleted(new Set());
+    setLastPuzzleId(null);
+    setResetVersion(v => v + 1);
+  }
+
+  function handleResetExpanded() {
+    clearExpandedProgress();
+  }
+
+  function handleResetAll() {
+    handleResetBase();
+    clearExpandedProgress();
   }
 
   // ── Tutorial ───────────────────────────────────────────────────────────────
@@ -477,18 +504,27 @@ function AppInner() {
     <div className="min-h-screen bg-gray-50 animate-fadein">
       <div className="max-w-xl mx-auto px-4 py-10 space-y-8">
 
-        {/* Mode switcher + cloud save — very top */}
+        {/* Mode switcher + settings + cloud save — very top */}
         <div className="flex items-center justify-between gap-2">
           <ModeSwitcher mode="base" onChange={handleModeChange} />
-          <DriveSync />
+          <div className="flex items-center gap-1.5 shrink-0">
+            <button
+              onClick={() => setSettingsOpen(true)}
+              title="Settings"
+              aria-label="Open settings"
+              className="flex items-center justify-center w-8 h-8 rounded-xl text-gray-500
+                bg-white border border-gray-200 hover:border-gray-300 hover:text-gray-700
+                shadow-sm transition-colors focus-visible:outline-none
+                focus-visible:ring-2 focus-visible:ring-indigo-400"
+            >
+              ⚙️
+            </button>
+            <DriveSync />
+          </div>
         </div>
-        <PuzzleOnlyToggle
-          value={showPuzzleOnly}
-          onChange={v => { setShowPuzzleOnly(v); saveShowPuzzleOnly(v); }}
-        />
 
         {/* What's New banner */}
-        {showReleaseNotes && releaseEntry && (
+        {settings.showLatestUpdates && showReleaseNotes && releaseEntry && (
           <WhatsNewBanner entry={releaseEntry} onDismiss={handleDismissReleaseNotes} variant="base" />
         )}
 
@@ -501,9 +537,13 @@ function AppInner() {
           </p>
         </div>
 
-        {/* Rules quick reference — top, closed by default */}
-        <RulesQuickReference showPuzzleOnly={showPuzzleOnly} />
-        <InterfaceQuickReference />
+        {/* Rules quick reference — shown only when enabled in settings */}
+        {settings.showQuickRef && (
+          <>
+            <RulesQuickReference showPuzzleOnly={settings.showPuzzleOnly} />
+            <InterfaceQuickReference />
+          </>
+        )}
 
         {/* Continue banner */}
         {lastPuzzle && lastCol && !completed.has(lastPuzzle.id) && (
@@ -531,7 +571,7 @@ function AppInner() {
               col={col}
               completed={col.puzzleIds.filter(id => completed.has(id)).length}
               locked={false}
-              puzzleOnlyBlocked={!showPuzzleOnly && col.boardGameCompliant === false}
+              puzzleOnlyBlocked={!settings.showPuzzleOnly && col.boardGameCompliant === false}
               onOpen={() => {
                 const tutorialMap: Record<string, TutorialId> = {
                   'tutorial-mixing':              'mixing',
@@ -552,32 +592,25 @@ function AppInner() {
           ))}
         </section>
 
-        <div className="pt-4 border-t space-y-3" aria-live="polite">
-
-          {/* Progress + reset */}
-          <div className="flex items-center justify-between">
-            <p className="text-xs text-gray-400">
-              {completed.size} / {ALL_PUZZLES.length} puzzles solved
-            </p>
-            {completed.size > 0 && (
-              <button
-                onClick={() => {
-                  clearAllProgress('base');
-                  setCompleted(new Set());
-                  setLastPuzzleId(null);
-                  setResetVersion(v => v + 1);
-                }}
-                className="text-xs text-gray-400 hover:text-red-500 transition-colors"
-                title="Clear all base game progress and grid marks"
-              >
-                ✕ Reset base game progress
-              </button>
-            )}
-          </div>
-
+        <div className="pt-4 border-t" aria-live="polite">
+          <p className="text-xs text-gray-400 text-center">
+            {completed.size} / {ALL_PUZZLES.length} puzzles solved
+          </p>
         </div>
 
       </div>
+
+      {/* Settings modal */}
+      {settingsOpen && (
+        <SettingsModal
+          settings={settings}
+          onSettingsChange={handleSettingsChange}
+          onResetBase={handleResetBase}
+          onResetExpanded={handleResetExpanded}
+          onResetAll={handleResetAll}
+          onClose={() => setSettingsOpen(false)}
+        />
+      )}
     </div>
   );
 }

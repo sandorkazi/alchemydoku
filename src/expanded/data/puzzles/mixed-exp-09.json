@@ -3,7 +3,7 @@
   "mode": "expanded",
   "title": "The Golem's Silence",
   "description": "Use the clues to decide which ingredient reveals the most information when consulted in the Royal Society book.",
-  "difficulty": "hard",
+  "difficulty": "expert",
   "golem": {
     "chest": {
       "color": "B",
@@ -86,9 +86,11 @@
     }
   ],
   "complexity": {
-    "raw": 5.21,
+    "score": 5,
+    "raw": 5.641,
     "avg_clue_strength": 1.032,
     "ambig_penalty": 0.45,
+    "stranded_ambiguity": 0.255,
     "chain_depth": 0,
     "stuck": false,
     "requires_complement_set": false,

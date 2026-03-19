@@ -2,7 +2,7 @@
   "id": "mixed-base-44",
   "title": "A Partial Match",
   "description": "Mixing, selling, and debunking records all point toward a single pair. Deduce what potion they produce.",
-  "difficulty": "medium",
+  "difficulty": "easy",
   "clues": [
     {
       "kind": "sell_among",

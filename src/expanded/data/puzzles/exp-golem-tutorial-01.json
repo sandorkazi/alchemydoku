@@ -74,5 +74,17 @@
       "level": 3,
       "text": "Ingredient 1 maps to Nnp(5): R\u2212L G\u2212S B+S \u2014 has Large Red \u2713, Small Green \u2713. Animator.\nIngredient 3 maps to Ppn(6): R+L G+S B\u2212S \u2014 has Large Red \u2713, Small Green \u2713. Animator.\nThe animators are ingredients 1 and 3."
     }
-  ]
+  ],
+  "complexity": {
+    "score": 1,
+    "raw": 3.258,
+    "avg_clue_strength": 1.543,
+    "ambig_penalty": 0.0,
+    "stranded_ambiguity": 0.0,
+    "chain_depth": 0,
+    "stuck": false,
+    "requires_complement_set": false,
+    "question_requires_enumeration": false,
+    "residual_worlds": 192
+  }
 }

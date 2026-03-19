@@ -2,7 +2,7 @@
   "id": "mixed-base-debunk-39",
   "title": "The Dormant Giant",
   "description": "Mixed evidence surrounds several suspicious publications. Use master debunking to expose the lies.",
-  "difficulty": "expert",
+  "difficulty": "hard",
   "clues": [
     {
       "kind": "sell_result_among",

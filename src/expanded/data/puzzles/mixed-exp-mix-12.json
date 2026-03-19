@@ -3,7 +3,7 @@
   "mode": "expanded",
   "title": "The Partial Eclipse",
   "description": "Mixing, selling, and debunking records all point toward a single pair. Deduce what potion they produce.",
-  "difficulty": "hard",
+  "difficulty": "expert",
   "golem": {
     "chest": {
       "color": "R",
@@ -124,9 +124,11 @@
     }
   ],
   "complexity": {
-    "raw": 3.816,
+    "score": 5,
+    "raw": 5.512,
     "avg_clue_strength": 2.043,
     "ambig_penalty": 0.571,
+    "stranded_ambiguity": 1.981,
     "chain_depth": 0,
     "stuck": false,
     "requires_complement_set": false,

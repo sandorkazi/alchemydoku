@@ -352,7 +352,7 @@ function SellAmongClueCard({ clue, clueIndex }: { clue: SellAmongClue; clueIndex
     <Card icon={<SellIcon width={18} />} label="Ambiguous Sale" accent="purple">
       <div className="flex items-center gap-1.5 flex-wrap">
         <span className="text-[10px] text-gray-500 shrink-0">
-          {clue.count} of {pairCount} pairs sold
+          exactly {clue.count} of {pairCount} pairs sold
         </span>
         <PotionImage result={{ type: 'potion', color: clue.claimedPotion.color, sign: clue.claimedPotion.sign }} width={POT_W} />
         <span className="text-[10px] text-gray-500 shrink-0">→</span>
@@ -378,7 +378,7 @@ function MixingCountAmongClueCard({ clue, clueIndex }: { clue: MixingCountAmongC
     <Card icon="🔢" label="Ambiguous Coverage" accent="blue">
       <div className="flex items-center gap-1.5 flex-wrap">
         <span className="text-[10px] text-gray-500 shrink-0">
-          {clue.count} of {pairCount} possible combinations result in
+          exactly {clue.count} of {pairCount} possible combinations result in
         </span>
         <PotionImage result={clue.result} width={POT_W} />
       </div>

@@ -56,8 +56,10 @@ EXP_DIR  = ROOT / "src" / "expanded" / "data" / "puzzles"
 BASE_IDX = ROOT / "src" / "data" / "puzzles" / "index.ts"
 EXP_IDX  = ROOT / "src" / "expanded" / "data" / "puzzlesIndex.ts"
 
-REQUIRED_BASE = {"id", "title", "difficulty", "clues", "questions", "solution"}
+REQUIRED_BASE = {"id", "title", "difficulty", "clues", "questions", "solution", "complexity"}
 REQUIRED_EXP  = REQUIRED_BASE | {"mode"}
+
+COMPLEXITY_TIER = {1: 'easy', 2: 'easy', 3: 'medium', 4: 'hard', 5: 'expert'}
 
 TITLE_SIMILARITY_THRESHOLD = 0.8   # Jaccard word-token similarity
 
@@ -608,6 +610,28 @@ def check_debunk_article_integrity(path: Path, puz: dict, r: Results):
             )
 
 
+def check_complexity(path: Path, puz: dict, r: Results):
+    """Check #15: complexity must be present, have a valid score, and match difficulty."""
+    name = path.name
+    cx = puz.get("complexity")
+    if not isinstance(cx, dict):
+        # already caught by required-fields check; skip to avoid duplicate noise
+        return
+    score = cx.get("score")
+    if score not in (1, 2, 3, 4, 5):
+        r.error(f"[complexity] {name}: complexity.score must be 1–5, got {score!r}")
+        return
+    diff = puz.get("difficulty")
+    if diff == "tutorial":
+        return
+    expected = COMPLEXITY_TIER.get(score)
+    if diff != expected:
+        r.error(
+            f"[complexity] {name}: difficulty='{diff}' but complexity.score={score} "
+            f"→ expected '{expected}' — run 'analyze' (base) or 'analyze-expanded' (expanded)"
+        )
+
+
 def check_logical(path: Path, puz: dict, alch_mod, r: Results):
     try:
         issues = alch_mod.validate_puzzle(puz)
@@ -733,6 +757,12 @@ def main():
     # ── Step 14: Permalink uniqueness ─────────────────────────────────────────
     _section("permalink uniqueness")
     check_permalink_uniqueness(all_puzzles, r)
+    _done()
+
+    # ── Step 15: Complexity score + difficulty alignment ──────────────────────
+    _section("complexity scores")
+    for puz, path, _ in all_puzzles:
+        check_complexity(path, puz, r)
     _done()
 
     # ── Deep logical validation (optional) ────────────────────────────────────

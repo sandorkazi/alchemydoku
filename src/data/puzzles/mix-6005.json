@@ -2,7 +2,7 @@
   "id": "mix-6005",
   "title": "The Mountain Hermit",
   "description": "Deduce the mixing result from the clues.",
-  "difficulty": "medium",
+  "difficulty": "easy",
   "clues": [
     {
       "kind": "mixing",

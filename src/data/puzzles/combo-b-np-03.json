@@ -2,7 +2,7 @@
   "id": "combo-b-np-03",
   "title": "The Opposing Force",
   "description": "Use the clues to identify the one ingredient that always mixes to neutral with the target ingredient.",
-  "difficulty": "medium",
+  "difficulty": "easy",
   "clues": [
     {
       "kind": "debunk",

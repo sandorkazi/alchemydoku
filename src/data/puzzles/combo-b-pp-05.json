@@ -2,7 +2,7 @@
   "id": "combo-b-pp-05",
   "title": "Reaction Chains",
   "description": "The evidence narrows things down \u2014 but not all the way. Mark every potion this pair could still produce.",
-  "difficulty": "hard",
+  "difficulty": "easy",
   "clues": [
     {
       "kind": "debunk",

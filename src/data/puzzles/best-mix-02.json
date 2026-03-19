@@ -2,7 +2,7 @@
   "id": "best-mix-02",
   "title": "The Entropy Test",
   "description": "Decide which partner provides the most information (maximum entropy) when mixed with the target ingredient.",
-  "difficulty": "medium",
+  "difficulty": "easy",
   "clues": [
     {
       "kind": "mixing",

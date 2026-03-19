@@ -2,7 +2,7 @@
   "id": "debunk-plan-tutorial-01",
   "title": "The First Deception",
   "description": "A rival has published a theory about ingredient 1 \u2014 but you've run the tests and know better. Expose the lie.",
-  "difficulty": "tutorial",
+  "difficulty": "hard",
   "clues": [
     {
       "kind": "aspect",

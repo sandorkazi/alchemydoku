@@ -3,7 +3,7 @@
   "mode": "expanded",
   "title": "Golem Research Notes",
   "description": "Use the clues to determine whether the target ingredient is Solar or Lunar.",
-  "difficulty": "medium",
+  "difficulty": "easy",
   "clues": [
     {
       "kind": "encyclopedia",
@@ -91,9 +91,11 @@
     }
   ],
   "complexity": {
+    "score": 1,
     "raw": 1.57,
     "avg_clue_strength": 4.1,
     "ambig_penalty": 0.0,
+    "stranded_ambiguity": 0.0,
     "chain_depth": 0,
     "stuck": false,
     "requires_complement_set": false,

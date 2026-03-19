@@ -4,7 +4,7 @@
   "kind": "debunk",
   "title": "Whispers of the Archive",
   "description": "Mixed evidence surrounds several suspicious publications. Use master debunking to expose the lies.",
-  "difficulty": "hard",
+  "difficulty": "expert",
   "golem": {
     "chest": {
       "color": "R",
@@ -137,9 +137,11 @@
     }
   ],
   "complexity": {
-    "raw": 6.831,
+    "score": 5,
+    "raw": 8.878,
     "avg_clue_strength": 1.714,
     "ambig_penalty": 0.463,
+    "stranded_ambiguity": 2.278,
     "chain_depth": 2,
     "stuck": true,
     "requires_complement_set": false,

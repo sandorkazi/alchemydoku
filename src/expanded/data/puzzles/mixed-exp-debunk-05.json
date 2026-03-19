@@ -4,7 +4,7 @@
   "kind": "debunk",
   "title": "The Final Entry",
   "description": "Mixed evidence surrounds several suspicious publications. Use master debunking to expose the lies.",
-  "difficulty": "hard",
+  "difficulty": "expert",
   "golem": {
     "chest": {
       "color": "R",
@@ -133,9 +133,11 @@
     }
   ],
   "complexity": {
-    "raw": 6.781,
+    "score": 5,
+    "raw": 8.841,
     "avg_clue_strength": 1.714,
     "ambig_penalty": 0.438,
+    "stranded_ambiguity": 2.278,
     "chain_depth": 2,
     "stuck": true,
     "requires_complement_set": false,

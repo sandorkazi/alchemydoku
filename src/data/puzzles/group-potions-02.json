@@ -2,7 +2,7 @@
   "id": "group-potions-02",
   "title": "A Flash of Insight",
   "description": "Identify all potions that can be certainly produced by some pair within the listed ingredient group.",
-  "difficulty": "medium",
+  "difficulty": "easy",
   "clues": [
     {
       "kind": "mixing",

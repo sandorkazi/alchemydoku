@@ -48,6 +48,9 @@ interface DriveContextValue {
   signIn():                       Promise<void>;
   signOut():                      void;
   syncNow():                      Promise<void>;
+  /** Upload the current local snapshot to Drive without downloading/merging first.
+   *  Use this after a progress reset so the cleared state overwrites Drive. */
+  uploadSnapshot():               Promise<void>;
   setDriveMode(m: DriveMode):     Promise<void>;
   /** Call after a puzzle is completed to auto-upload. */
   onPuzzleComplete(): void;
@@ -191,6 +194,23 @@ export function DriveProvider({ children }: { children: ReactNode }) {
     }
   }, [driveMode]);
 
+  // ── Upload snapshot (no download/merge) ──────────────────────────────────
+  // Used after a progress reset to push the cleared state to Drive immediately.
+  const uploadSnapshot = useCallback(async () => {
+    if (!isSignedIn()) return;
+    setSyncStatus('syncing');
+    setErrorMsg(null);
+    try {
+      await saveToDrive(snapshotLocal(), driveMode);
+      setLastSynced(new Date());
+      setSyncStatus('success');
+    } catch (err) {
+      const msg = err instanceof Error ? err.message : 'Sync failed';
+      setErrorMsg(msg);
+      setSyncStatus('error');
+    }
+  }, [driveMode]);
+
   // ── Auto-sync on puzzle complete ──────────────────────────────────────────
   const onPuzzleComplete = useCallback(() => {
     if (!isSignedIn()) return;
@@ -218,7 +238,7 @@ export function DriveProvider({ children }: { children: ReactNode }) {
 
   const value: DriveContextValue = {
     authStatus, syncStatus, user, savedUser, lastSynced, errorMsg, driveMode, isMigrating,
-    signIn, signOut, syncNow, setDriveMode, onPuzzleComplete,
+    signIn, signOut, syncNow, uploadSnapshot, setDriveMode, onPuzzleComplete,
   };
 
   return (

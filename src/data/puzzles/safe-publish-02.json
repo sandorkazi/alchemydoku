@@ -2,7 +2,7 @@
   "id": "safe-publish-02",
   "title": "The Calculated Risk",
   "description": "Red is positive. Blue is negative. But something is still uncertain \u2014 what?",
-  "difficulty": "easy",
+  "difficulty": "medium",
   "clues": [
     {
       "kind": "aspect",

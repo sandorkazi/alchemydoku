@@ -2,7 +2,7 @@
   "id": "mixed-base-51",
   "title": "The Blur of Evidence",
   "description": "Mixing, selling, and debunking records all point toward a single pair. Deduce what potion they produce.",
-  "difficulty": "medium",
+  "difficulty": "easy",
   "clues": [
     {
       "kind": "mixing_among",

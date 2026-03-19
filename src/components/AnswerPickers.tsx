@@ -113,14 +113,15 @@ export function HedgeColorPicker({ displayColors, selected, onSelect }: {
   );
 }
 
-export function PossiblePotionsPicker({ displayChoices, selected, onToggle }: {
+export function PossiblePotionsPicker({ displayChoices, selected, onToggle, hint }: {
   displayChoices: PotionResult[];
   selected: Set<string>;
   onToggle: (key: string) => void;
+  hint?: string;
 }) {
   return (
     <div className="space-y-1">
-      <p className="text-[10px] text-gray-400 italic">Select all that apply</p>
+      <p className="text-[10px] text-gray-400 italic">{hint ?? 'Select all that apply'}</p>
       <div className="flex flex-wrap gap-1.5" role="group">
         {displayChoices.map(p => {
           const key = potionKey(p);

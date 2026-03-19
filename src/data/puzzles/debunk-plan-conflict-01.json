@@ -2,7 +2,7 @@
   "id": "debunk-plan-conflict-01",
   "title": "Mutual Suspicion",
   "description": "Two rivals have each published a wrong theory. You know the truth about both ingredients \u2014 find a mix that puts both publications under suspicion at the same time.",
-  "difficulty": "easy",
+  "difficulty": "hard",
   "clues": [
     {
       "kind": "aspect",

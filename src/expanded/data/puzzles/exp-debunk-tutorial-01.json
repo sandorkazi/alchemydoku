@@ -3,54 +3,171 @@
   "kind": "debunk",
   "mode": "expanded",
   "title": "The Scorpion Scandal",
-  "description": "A colleague has published a Scorpion article and a suspicious book entry. Your experiments prove them wrong — can you debunk both in a single action?",
+  "description": "A colleague has published a Scorpion article and a suspicious book entry. Your experiments prove them wrong \u2014 can you debunk both in a single action?",
   "difficulty": "tutorial",
   "clues": [
-    { "kind": "aspect", "ingredient": 1, "color": "G", "sign": "+" },
-    { "kind": "aspect", "ingredient": 1, "color": "R", "sign": "-" },
-    { "kind": "aspect", "ingredient": 1, "color": "B", "sign": "-" },
-    { "kind": "aspect", "ingredient": 2, "color": "G", "sign": "-" },
-    { "kind": "aspect", "ingredient": 2, "color": "B", "sign": "+" },
-    { "kind": "aspect", "ingredient": 3, "color": "R", "sign": "+" },
-    { "kind": "aspect", "ingredient": 3, "color": "G", "sign": "-" },
-    { "kind": "aspect", "ingredient": 4, "color": "R", "sign": "-" },
-    { "kind": "aspect", "ingredient": 4, "color": "G", "sign": "+" },
-    { "kind": "aspect", "ingredient": 4, "color": "B", "sign": "+" },
-    { "kind": "aspect", "ingredient": 5, "color": "R", "sign": "-" },
-    { "kind": "aspect", "ingredient": 5, "color": "G", "sign": "-" },
-    { "kind": "aspect", "ingredient": 5, "color": "B", "sign": "+" },
-    { "kind": "aspect", "ingredient": 6, "color": "G", "sign": "+" },
-    { "kind": "aspect", "ingredient": 6, "color": "B", "sign": "-" },
-    { "kind": "aspect", "ingredient": 7, "color": "R", "sign": "-" },
-    { "kind": "aspect", "ingredient": 7, "color": "G", "sign": "-" }
+    {
+      "kind": "aspect",
+      "ingredient": 1,
+      "color": "G",
+      "sign": "+"
+    },
+    {
+      "kind": "aspect",
+      "ingredient": 1,
+      "color": "R",
+      "sign": "-"
+    },
+    {
+      "kind": "aspect",
+      "ingredient": 1,
+      "color": "B",
+      "sign": "-"
+    },
+    {
+      "kind": "aspect",
+      "ingredient": 2,
+      "color": "G",
+      "sign": "-"
+    },
+    {
+      "kind": "aspect",
+      "ingredient": 2,
+      "color": "B",
+      "sign": "+"
+    },
+    {
+      "kind": "aspect",
+      "ingredient": 3,
+      "color": "R",
+      "sign": "+"
+    },
+    {
+      "kind": "aspect",
+      "ingredient": 3,
+      "color": "G",
+      "sign": "-"
+    },
+    {
+      "kind": "aspect",
+      "ingredient": 4,
+      "color": "R",
+      "sign": "-"
+    },
+    {
+      "kind": "aspect",
+      "ingredient": 4,
+      "color": "G",
+      "sign": "+"
+    },
+    {
+      "kind": "aspect",
+      "ingredient": 4,
+      "color": "B",
+      "sign": "+"
+    },
+    {
+      "kind": "aspect",
+      "ingredient": 5,
+      "color": "R",
+      "sign": "-"
+    },
+    {
+      "kind": "aspect",
+      "ingredient": 5,
+      "color": "G",
+      "sign": "-"
+    },
+    {
+      "kind": "aspect",
+      "ingredient": 5,
+      "color": "B",
+      "sign": "+"
+    },
+    {
+      "kind": "aspect",
+      "ingredient": 6,
+      "color": "G",
+      "sign": "+"
+    },
+    {
+      "kind": "aspect",
+      "ingredient": 6,
+      "color": "B",
+      "sign": "-"
+    },
+    {
+      "kind": "aspect",
+      "ingredient": 7,
+      "color": "R",
+      "sign": "-"
+    },
+    {
+      "kind": "aspect",
+      "ingredient": 7,
+      "color": "G",
+      "sign": "-"
+    }
   ],
   "publications": [
-    null, null, null, null, null,
-    { "ingredient": 6, "claimedAlchemical": 3 },
-    null, null
+    null,
+    null,
+    null,
+    null,
+    null,
+    {
+      "ingredient": 6,
+      "claimedAlchemical": 3
+    },
+    null,
+    null
   ],
   "articles": [
     {
       "id": "art-1",
       "aspect": "G",
       "entries": [
-        { "ingredient": 1, "sign": "+" },
-        { "ingredient": 2, "sign": "-" },
-        { "ingredient": 4, "sign": "+" },
-        { "ingredient": 6, "sign": "-" }
+        {
+          "ingredient": 1,
+          "sign": "+"
+        },
+        {
+          "ingredient": 2,
+          "sign": "-"
+        },
+        {
+          "ingredient": 4,
+          "sign": "+"
+        },
+        {
+          "ingredient": 6,
+          "sign": "-"
+        }
       ]
     }
   ],
   "questions": [
-    { "kind": "debunk_apprentice_plan" }
+    {
+      "kind": "debunk_apprentice_plan"
+    }
   ],
   "solution": {
-    "1": 1, "2": 2, "3": 3, "4": 4,
-    "5": 5, "6": 6, "7": 7, "8": 8
+    "1": 1,
+    "2": 2,
+    "3": 3,
+    "4": 4,
+    "5": 5,
+    "6": 6,
+    "7": 7,
+    "8": 8
   },
   "debunk_answers": {
     "debunk_apprentice_plan": [
-      { "kind": "apprentice", "ingredient": 6, "color": "G" }
+      {
+        "kind": "apprentice",
+        "ingredient": 6,
+        "color": "G"
+      }
     ]
   },
   "hints": [
@@ -60,11 +177,23 @@
     },
     {
       "level": 2,
-      "text": "The publication claims ing6 is pNn (G−). Your clues show ing6's true G aspect is G+. Revealing G+ on ing6 contradicts the publication directly.\n\nNow check the encyclopedia article — it also has a G entry for ing6, claiming G−. The same reveal (G+ on ing6) will contradict that entry too."
+      "text": "The publication claims ing6 is pNn (G\u2212). Your clues show ing6's true G aspect is G+. Revealing G+ on ing6 contradicts the publication directly.\n\nNow check the encyclopedia article \u2014 it also has a G entry for ing6, claiming G\u2212. The same reveal (G+ on ing6) will contradict that entry too."
     },
     {
       "level": 3,
-      "text": "One apprentice debunk: reveal G+ on ing6.\n— The publication claims ing6 is pNn, which has G−. True G+ contradicts it → publication removed.\n— Art-1 also claims ing6 has G−. True G+ contradicts it → article removed.\nBoth targets gone in a single action."
+      "text": "One apprentice debunk: reveal G+ on ing6.\n\u2014 The publication claims ing6 is pNn, which has G\u2212. True G+ contradicts it \u2192 publication removed.\n\u2014 Art-1 also claims ing6 has G\u2212. True G+ contradicts it \u2192 article removed.\nBoth targets gone in a single action."
     }
-  ]
+  ],
+  "complexity": {
+    "score": 1,
+    "raw": 6.307,
+    "avg_clue_strength": 0.9,
+    "ambig_penalty": 0.3,
+    "stranded_ambiguity": 0.0,
+    "chain_depth": 2,
+    "stuck": true,
+    "requires_complement_set": false,
+    "question_requires_enumeration": false,
+    "residual_worlds": 1
+  }
 }

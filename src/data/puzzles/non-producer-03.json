@@ -2,7 +2,7 @@
   "id": "non-producer-03",
   "title": "The Dead End",
   "description": "Find all ingredients that can never produce the target potion with any partner in any remaining world.",
-  "difficulty": "medium",
+  "difficulty": "easy",
   "clues": [
     {
       "kind": "mixing",

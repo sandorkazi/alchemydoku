@@ -3,7 +3,7 @@
   "mode": "expanded",
   "title": "Signs from the Cosmos",
   "description": "The golem has been tested with 2 ingredients. Deduce the reaction pattern and identify the target group.",
-  "difficulty": "hard",
+  "difficulty": "expert",
   "golem": {
     "chest": {
       "color": "G",
@@ -129,9 +129,11 @@
     }
   ],
   "complexity": {
-    "raw": 3.958,
+    "score": 5,
+    "raw": 6.301,
     "avg_clue_strength": 1.912,
     "ambig_penalty": 0.35,
+    "stranded_ambiguity": 2.518,
     "chain_depth": 0,
     "stuck": false,
     "requires_complement_set": false,

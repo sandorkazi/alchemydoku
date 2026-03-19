@@ -2,7 +2,7 @@
   "id": "cross-1007",
   "title": "The Final Examination",
   "description": "Use all the evidence to deduce the mixing results.",
-  "difficulty": "hard",
+  "difficulty": "easy",
   "clues": [
     {
       "kind": "mixing",

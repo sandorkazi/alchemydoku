@@ -1,1 +1,102 @@
-{"id":"golem-mix-06","mode":"expanded","title":"The Third Ingredient","description":"The golem has been tested with 4 ingredients. Identify the animators and determine what potion their mix would produce.","difficulty":"hard","golem":{"chest":{"color":"B","size":"L"},"ears":{"color":"R","size":"S"}},"clues":[{"kind":"golem_test","ingredient":1,"chest_reacted":true,"ears_reacted":true},{"kind":"golem_test","ingredient":8,"chest_reacted":true,"ears_reacted":false},{"kind":"mixing","ingredient1":1,"ingredient2":2,"result":{"color":"G","sign":"-"}},{"kind":"mixing","ingredient1":3,"ingredient2":5,"result":{"color":"G","sign":"-"}},{"kind":"golem_test","ingredient":4,"chest_reacted":false,"ears_reacted":true},{"kind":"golem_test","ingredient":6,"chest_reacted":false,"ears_reacted":false}],"questions":[{"kind":"golem_animate_potion"}],"solution":{"1":2,"2":3,"3":5,"4":4,"5":7,"6":6,"7":1,"8":8},"hints":[{"level":1,"text":"The golem reacts to SIZE on a specific color channel.\nKnown tests:\n  ing1: chest=✓ ears=✓  →  animators\n  ing8: chest=✓ ears=✗  →  chest_only\n  ing4: chest=✗ ears=✓  →  ears_only\n  ing6: chest=✗ ears=✗  →  non_reactive"},{"level":2,"text":"Chest reacts to B+L. Ears react to R+S. An animator needs BOTH. Cross-reference with untested ingredients."},{"level":3,"text":"Animators: ingredients [1, 7] (pnP, npN). Mix: neutral."}],"complexity":{"raw":3.072,"avg_clue_strength":2.217,"ambig_penalty":0.0,"chain_depth":0,"stuck":false,"requires_complement_set":false,"question_requires_enumeration":false,"residual_worlds":4}}
+{
+  "id": "golem-mix-06",
+  "mode": "expanded",
+  "title": "The Third Ingredient",
+  "description": "The golem has been tested with 4 ingredients. Identify the animators and determine what potion their mix would produce.",
+  "difficulty": "hard",
+  "golem": {
+    "chest": {
+      "color": "B",
+      "size": "L"
+    },
+    "ears": {
+      "color": "R",
+      "size": "S"
+    }
+  },
+  "clues": [
+    {
+      "kind": "golem_test",
+      "ingredient": 1,
+      "chest_reacted": true,
+      "ears_reacted": true
+    },
+    {
+      "kind": "golem_test",
+      "ingredient": 8,
+      "chest_reacted": true,
+      "ears_reacted": false
+    },
+    {
+      "kind": "mixing",
+      "ingredient1": 1,
+      "ingredient2": 2,
+      "result": {
+        "color": "G",
+        "sign": "-"
+      }
+    },
+    {
+      "kind": "mixing",
+      "ingredient1": 3,
+      "ingredient2": 5,
+      "result": {
+        "color": "G",
+        "sign": "-"
+      }
+    },
+    {
+      "kind": "golem_test",
+      "ingredient": 4,
+      "chest_reacted": false,
+      "ears_reacted": true
+    },
+    {
+      "kind": "golem_test",
+      "ingredient": 6,
+      "chest_reacted": false,
+      "ears_reacted": false
+    }
+  ],
+  "questions": [
+    {
+      "kind": "golem_animate_potion"
+    }
+  ],
+  "solution": {
+    "1": 2,
+    "2": 3,
+    "3": 5,
+    "4": 4,
+    "5": 7,
+    "6": 6,
+    "7": 1,
+    "8": 8
+  },
+  "hints": [
+    {
+      "level": 1,
+      "text": "The golem reacts to SIZE on a specific color channel.\nKnown tests:\n  ing1: chest=\u2713 ears=\u2713  \u2192  animators\n  ing8: chest=\u2713 ears=\u2717  \u2192  chest_only\n  ing4: chest=\u2717 ears=\u2713  \u2192  ears_only\n  ing6: chest=\u2717 ears=\u2717  \u2192  non_reactive"
+    },
+    {
+      "level": 2,
+      "text": "Chest reacts to B+L. Ears react to R+S. An animator needs BOTH. Cross-reference with untested ingredients."
+    },
+    {
+      "level": 3,
+      "text": "Animators: ingredients [1, 7] (pnP, npN). Mix: neutral."
+    }
+  ],
+  "complexity": {
+    "score": 4,
+    "raw": 3.072,
+    "avg_clue_strength": 2.217,
+    "ambig_penalty": 0.0,
+    "stranded_ambiguity": 0.0,
+    "chain_depth": 0,
+    "stuck": false,
+    "requires_complement_set": false,
+    "question_requires_enumeration": false,
+    "residual_worlds": 4
+  }
+}

@@ -2,7 +2,7 @@
   "id": "mixed-base-39",
   "title": "The Imperfect Recall",
   "description": "Mixing, selling, and debunking records all point toward a single pair. Deduce what potion they produce.",
-  "difficulty": "medium",
+  "difficulty": "easy",
   "clues": [
     {
       "kind": "sell_among",

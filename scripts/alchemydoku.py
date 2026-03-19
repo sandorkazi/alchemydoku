@@ -908,12 +908,24 @@ def compute_difficulty(puzzle: dict) -> dict:
     }
 
 
+TIER = {1: 'easy', 2: 'easy', 3: 'medium', 4: 'hard', 5: 'expert'}
+
+
 def to_pips(score: float, all_scores: list) -> int:
     rank = sum(1 for s in all_scores if s < score) / len(all_scores)
     if rank < 0.20: return 1
     if rank < 0.40: return 2
     if rank < 0.60: return 3
     if rank < 0.80: return 4
+    return 5
+
+
+def to_pips_expanded(raw: float) -> int:
+    """Absolute-threshold pip conversion for expanded puzzles (mirrors ExpandedHome.tsx)."""
+    if raw < 1.7: return 1
+    if raw < 2.1: return 2
+    if raw < 2.8: return 3
+    if raw < 3.5: return 4
     return 5
 
 # ══════════════════════════════════════════════════════════════════════════════
@@ -2216,17 +2228,23 @@ def assemble(raw: dict, profile: Profile, num: int, rng: random.Random) -> dict:
     sc    = compute_difficulty({
         'clues': raw['clues'], 'questions': [raw['q']], 'golem': raw['golem'],
     })
+    is_base = is_base_profile(profile)
+    if not is_base:
+        sc['score'] = 1 if profile.difficulty == 'tutorial' else to_pips_expanded(sc['raw'])
     golem_sec = {'golem': raw['golem']} if raw['golem'] else {}
     desc = DESCS.get(profile.question_kind, "Use the clues to answer the question.")
     if profile.question_kind in ('golem_group', 'golem_animate_potion'):
         nt   = sum(1 for c in raw['clues'] if c['kind'] == 'golem_test')
         desc = (f"The golem has been tested with {nt} ingredient{'s' if nt != 1 else ''}. "
                 + desc.split('. ', 1)[1])
+    difficulty = profile.difficulty
+    if not is_base and difficulty != 'tutorial':
+        difficulty = TIER[sc['score']]
     puz = {
         'id':          f"{profile.id_prefix}-{num:02d}",
         'title':       rng.choice(TITLES),
         'description': desc,
-        'difficulty':  profile.difficulty,
+        'difficulty':  difficulty,
         **golem_sec,
         'clues':     raw['clues'],
         'questions': raw.get('_debunk_questions', [raw['q']]),
@@ -2357,8 +2375,9 @@ def cmd_analyze(_args):
 
     print("\nWriting back …")
     for pid, (f, puz, d) in results.items():
+        pip = pips_for(pid)
         puz['complexity'] = {
-            'score':                         pips_for(pid),
+            'score':                         pip,
             'raw':                           d['raw'],
             'avg_clue_strength':             d['avg_clue_strength'],
             'ambig_penalty':                 d['ambig_penalty'],
@@ -2369,12 +2388,13 @@ def cmd_analyze(_args):
             'question_requires_enumeration': d['question_requires_enumeration'],
             'residual_worlds':               d['residual_worlds'],
         }
+        if not pid.startswith('tutorial'):
+            puz['difficulty'] = TIER[pip]
         f.write_text(json.dumps(puz, indent=2))
 
     colls_file = BASE_PUZZLE_DIR / 'collections.json'
     if colls_file.exists():
         colls = json.loads(colls_file.read_text())
-        TIER  = {1: 'easy', 2: 'easy', 3: 'medium', 4: 'hard', 5: 'expert'}
         print("\n── Collection pip distribution ───────────────────────────────────────────")
         for c in colls:
             pids     = c.get('puzzleIds', [])
@@ -2389,6 +2409,79 @@ def cmd_analyze(_args):
                   f"pips={pip_list}{flag}")
 
     print("\nDone.")
+
+# ══════════════════════════════════════════════════════════════════════════════
+# SUBCOMMAND: analyze-expanded
+# ══════════════════════════════════════════════════════════════════════════════
+
+def cmd_analyze_expanded(_args):
+    files = sorted(EXP_PUZZLE_DIR.glob('*.json'))
+    files = [f for f in files if f.name != 'collections.json']
+    pairs = [(f, json.loads(f.read_text())) for f in files]
+
+    print("Computing difficulty for expanded puzzles …")
+    results = {}
+    for f, puz in pairs:
+        pid = puz['id']
+        print(f"  {pid} …", end=' ', flush=True)
+        d = compute_difficulty(puz)
+        results[pid] = (f, puz, d)
+        print(f"raw={d['raw']:.2f}  depth={d['chain_depth']}  "
+              f"str={d['avg_clue_strength']:.2f}  "
+              f"comp={'Y' if d['requires_complement_set'] else 'n'}  "
+              f"enum={'Y' if d['question_requires_enumeration'] else 'n'}")
+
+    print("\n── Results sorted by difficulty ──────────────────────────────────────────")
+    print(f"{'ID':35s}  {'raw':>6}  {'pips':>4}  {'dep':>3}  {'str':>6}  c  e  title")
+    for pid, (f, puz, d) in sorted(results.items(), key=lambda x: x[1][2]['raw']):
+        pip = 1 if 'tutorial' in pid else to_pips_expanded(d['raw'])
+        print(f"{pid:35s}  {d['raw']:6.2f}  {pip:4d}  {d['chain_depth']:3d}  "
+              f"{d['avg_clue_strength']:6.2f}  "
+              f"{'Y' if d['requires_complement_set'] else 'n'}  "
+              f"{'Y' if d['question_requires_enumeration'] else 'n'}  "
+              f"{puz.get('title', '')}")
+
+    print("\nWriting back …")
+    for pid, (f, puz, d) in results.items():
+        is_tutorial = 'tutorial' in pid
+        pip = 1 if is_tutorial else to_pips_expanded(d['raw'])
+        puz['complexity'] = {
+            'score':                         pip,
+            'raw':                           d['raw'],
+            'avg_clue_strength':             d['avg_clue_strength'],
+            'ambig_penalty':                 d['ambig_penalty'],
+            'stranded_ambiguity':            d['stranded_ambiguity'],
+            'chain_depth':                   d['chain_depth'],
+            'stuck':                         d['stuck'],
+            'requires_complement_set':       d['requires_complement_set'],
+            'question_requires_enumeration': d['question_requires_enumeration'],
+            'residual_worlds':               d['residual_worlds'],
+        }
+        if not is_tutorial:
+            puz['difficulty'] = TIER[pip]
+        f.write_text(json.dumps(puz, indent=2))
+
+    colls_file = EXP_PUZZLE_DIR / 'collections.json'
+    if colls_file.exists():
+        colls = json.loads(colls_file.read_text())
+        print("\n── Collection pip distribution ───────────────────────────────────────────")
+        for c in colls:
+            pids     = c.get('puzzleIds', [])
+            pip_list = sorted(
+                to_pips_expanded(results[p][2]['raw'])
+                for p in pids if p in results and 'tutorial' not in p
+            )
+            if not pip_list:
+                continue
+            med_pip  = pip_list[len(pip_list) // 2]
+            tier     = TIER.get(med_pip, '?')
+            current  = c.get('difficulty', '?')
+            flag     = ' ← MISMATCH' if tier != current and current != 'tutorial' else ''
+            print(f"  {c['id']:35s}  current={current:8s}  computed={tier:8s}  "
+                  f"pips={pip_list}{flag}")
+
+    print("\nDone.")
+
 
 # ══════════════════════════════════════════════════════════════════════════════
 # SUBCOMMAND: validate  (expanded puzzles)
@@ -2587,7 +2680,10 @@ if __name__ == '__main__':
     gen_p.add_argument('--verbose',  action='store_true')
 
     # analyze
-    sub.add_parser('analyze', help='Score difficulty of base-game puzzles')
+    sub.add_parser('analyze', help='Score difficulty of base-game puzzles and align difficulty labels')
+
+    # analyze-expanded
+    sub.add_parser('analyze-expanded', help='Score difficulty of expanded puzzles and align difficulty labels')
 
     # validate
     sub.add_parser('validate', help='Validate expanded puzzles')
@@ -2610,6 +2706,8 @@ if __name__ == '__main__':
         cmd_generate(args)
     elif args.cmd == 'analyze':
         cmd_analyze(args)
+    elif args.cmd == 'analyze-expanded':
+        cmd_analyze_expanded(args)
     elif args.cmd == 'validate':
         cmd_validate(args)
     elif args.cmd == 'regen-hints':

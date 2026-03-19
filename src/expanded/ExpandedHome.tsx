@@ -16,17 +16,9 @@ import type { ExpandedPuzzle } from './types';
 import type { ExpandedCollection } from './data/puzzlesIndex';
 import { WhatsNewBanner } from '../components/WhatsNewBanner';
 import { getCurrentReleaseEntry } from '../utils/releaseNotes';
-import { PuzzleOnlyToggle } from '../components/PuzzleOnlyToggle';
-
-// ─── Puzzle-only toggle persistence ──────────────────────────────────────────
-
-const PUZZLE_ONLY_KEY = 'alch-show-puzzle-only';
-function loadShowPuzzleOnly(): boolean {
-  try { return localStorage.getItem(PUZZLE_ONLY_KEY) === 'true'; } catch { return false; }
-}
-function saveShowPuzzleOnly(v: boolean) {
-  try { localStorage.setItem(PUZZLE_ONLY_KEY, String(v)); } catch { /**/ }
-}
+import { SettingsModal } from '../components/SettingsModal';
+import { clearBaseProgress } from '../utils/saveProgress';
+import type { Settings } from '../utils/settings';
 
 // ─── Progress persistence ─────────────────────────────────────────────────────
 
@@ -119,7 +111,7 @@ function CollectionSummaryCard({ collection, completed, puzzleOnlyBlocked, onOpe
         <p className="text-xs text-gray-500 mt-0.5 line-clamp-2">{collection.description}</p>
         {puzzleOnlyBlocked && (
           <p className="text-xs text-gray-400 mt-1">
-            Puzzle-only mechanics — enable the toggle above to unlock
+            Allow unrealistic puzzles in ⚙️ Settings to unlock
           </p>
         )}
       </div>
@@ -206,15 +198,17 @@ function computeInitialExpanded(puzzleId?: string): { puzzle: ExpandedPuzzle | n
   return { puzzle, queue };
 }
 
-export function ExpandedHome({ onModeChange, initialPuzzleId, showReleaseNotes, onDismissReleaseNotes }: {
+export function ExpandedHome({ onModeChange, initialPuzzleId, showReleaseNotes, onDismissReleaseNotes, settings, onSettingsChange }: {
   onModeChange: (m: 'base' | 'expanded') => void;
   initialPuzzleId?: string;
   showReleaseNotes?: boolean;
   onDismissReleaseNotes?: () => void;
+  settings: Settings;
+  onSettingsChange: (s: Settings) => void;
 }) {
   const { puzzle: initPuzzle, queue: initQueue } = computeInitialExpanded(initialPuzzleId);
 
-  const [showPuzzleOnly, setShowPuzzleOnly] = useState(loadShowPuzzleOnly);
+  const [settingsOpen, setSettingsOpen] = useState(false);
   const [completed, setCompleted] = useState<Set<string>>(loadCompleted as () => Set<string>);
   const [activePuzzle, setActivePuzzle] = useState<ExpandedPuzzle | null>(initPuzzle);
   const [activeCollection, setActiveCollection] = useState<ExpandedCollection | null>(null);
@@ -305,24 +299,31 @@ export function ExpandedHome({ onModeChange, initialPuzzleId, showReleaseNotes, 
     <div className="min-h-screen bg-amber-50 animate-fadein">
       <div className="max-w-xl mx-auto px-4 py-10 space-y-8">
 
-        {/* Mode switcher */}
-        <div className="flex rounded-xl border border-gray-200 overflow-hidden shadow-sm bg-white">
-          {(['base', 'expanded'] as const).map(m => (
-            <button key={m} onClick={() => onModeChange(m)}
-              aria-pressed={m === 'expanded'}
-              className={`flex-1 py-2 text-sm font-semibold capitalize transition-colors
-                focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-indigo-400
-                ${m === 'expanded'
-                  ? 'bg-violet-600 text-white'
-                  : 'bg-white text-gray-500 hover:text-gray-700'}`}>
-              {m === 'expanded' ? '✨ Expanded' : 'Base Game'}
-            </button>
-          ))}
+        {/* Mode switcher + settings gear */}
+        <div className="flex items-center gap-2">
+          <div className="flex-1 flex rounded-xl border border-gray-200 overflow-hidden shadow-sm bg-white">
+            {(['base', 'expanded'] as const).map(m => (
+              <button key={m} onClick={() => onModeChange(m)}
+                aria-pressed={m === 'expanded'}
+                className={`flex-1 py-2 text-sm font-semibold capitalize transition-colors
+                  focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-indigo-400
+                  ${m === 'expanded'
+                    ? 'bg-violet-600 text-white'
+                    : 'bg-white text-gray-500 hover:text-gray-700'}`}>
+                {m === 'expanded' ? '✨ Expanded' : 'Base Game'}
+              </button>
+            ))}
+          </div>
+          <button
+            onClick={() => setSettingsOpen(true)}
+            className="shrink-0 w-9 h-9 flex items-center justify-center rounded-xl border border-gray-200 bg-white
+              text-gray-500 hover:text-gray-700 shadow-sm transition-colors
+              focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-indigo-400"
+            aria-label="Settings"
+          >
+            ⚙️
+          </button>
         </div>
-        <PuzzleOnlyToggle
-          value={showPuzzleOnly}
-          onChange={v => { setShowPuzzleOnly(v); saveShowPuzzleOnly(v); }}
-        />
 
         {/* What's New banner */}
         {showReleaseNotes && releaseEntry && onDismissReleaseNotes && (
@@ -339,8 +340,12 @@ export function ExpandedHome({ onModeChange, initialPuzzleId, showReleaseNotes, 
         </div>
 
         {/* Rules quick reference — top, closed by default */}
-        <ExpandedRulesQuickReference showPuzzleOnly={showPuzzleOnly} />
-        <ExpandedInterfaceQuickReference />
+        {settings.showQuickRef && (
+          <>
+            <ExpandedRulesQuickReference showPuzzleOnly={settings.showPuzzleOnly} />
+            <ExpandedInterfaceQuickReference />
+          </>
+        )}
 
         {/* Collections */}
         <div className="space-y-3">
@@ -349,26 +354,28 @@ export function ExpandedHome({ onModeChange, initialPuzzleId, showReleaseNotes, 
               key={coll.id}
               collection={coll}
               completed={completed}
-              puzzleOnlyBlocked={!showPuzzleOnly && coll.boardGameCompliant === false}
+              puzzleOnlyBlocked={!settings.showPuzzleOnly && coll.boardGameCompliant === false}
               onOpen={() => setActiveCollection(coll)}
             />
           ))}
         </div>
 
-        {/* Progress + reset */}
-        <div className="flex items-center justify-between">
-          <p className="text-xs text-gray-400">
-            {totalDone} / {ALL_EXPANDED_PUZZLES.length} puzzles solved
-          </p>
-          {totalDone > 0 && (
-            <button
-              onClick={() => { clearAllExpandedProgress(); setCompleted(new Set()); setResetVersion(v => v + 1); }}
-              className="text-xs text-gray-400 hover:text-red-500 transition-colors"
-              title="Clear all expanded mode progress and grid marks">
-              ✕ Reset expanded progress
-            </button>
-          )}
-        </div>
+        {/* Progress */}
+        <p className="text-xs text-gray-400">
+          {totalDone} / {ALL_EXPANDED_PUZZLES.length} puzzles solved
+        </p>
+
+        {/* Settings modal */}
+        {settingsOpen && (
+          <SettingsModal
+            settings={settings}
+            onSettingsChange={onSettingsChange}
+            onResetBase={() => { clearBaseProgress(); }}
+            onResetExpanded={() => { clearAllExpandedProgress(); setCompleted(new Set()); setResetVersion(v => v + 1); }}
+            onResetAll={() => { clearBaseProgress(); clearAllExpandedProgress(); setCompleted(new Set()); setResetVersion(v => v + 1); }}
+            onClose={() => setSettingsOpen(false)}
+          />
+        )}
 
       </div>
     </div>

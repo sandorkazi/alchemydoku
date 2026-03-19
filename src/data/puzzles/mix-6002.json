@@ -2,7 +2,7 @@
   "id": "mix-6002",
   "title": "The Midnight Experiment",
   "description": "Deduce the mixing result from the clues.",
-  "difficulty": "medium",
+  "difficulty": "easy",
   "clues": [
     {
       "kind": "mixing",

@@ -2,29 +2,67 @@
   "id": "exp-tutorial-book-01",
   "mode": "expanded",
   "title": "The Card Reader's Secret",
-  "description": "You've obtained a Book Token — it tells you whether an ingredient's alchemical is Solar or Lunar. Use it alongside aspect clues to identify the alchemical.",
+  "description": "You've obtained a Book Token \u2014 it tells you whether an ingredient's alchemical is Solar or Lunar. Use it alongside aspect clues to identify the alchemical.",
   "difficulty": "tutorial",
   "clues": [
-    { "kind": "aspect", "ingredient": 1, "color": "R", "sign": "+" },
-    { "kind": "aspect", "ingredient": 1, "color": "G", "sign": "-" },
-    { "kind": "book", "ingredient": 1, "result": "solar" }
+    {
+      "kind": "aspect",
+      "ingredient": 1,
+      "color": "R",
+      "sign": "+"
+    },
+    {
+      "kind": "aspect",
+      "ingredient": 1,
+      "color": "G",
+      "sign": "-"
+    },
+    {
+      "kind": "book",
+      "ingredient": 1,
+      "result": "solar"
+    }
   ],
   "questions": [
-    { "kind": "alchemical", "ingredient": 1 }
+    {
+      "kind": "alchemical",
+      "ingredient": 1
+    }
   ],
-  "solution": { "1": 3, "2": 2, "3": 1, "4": 4, "5": 5, "6": 6, "7": 7, "8": 8 },
+  "solution": {
+    "1": 3,
+    "2": 2,
+    "3": 1,
+    "4": 4,
+    "5": 5,
+    "6": 6,
+    "7": 7,
+    "8": 8
+  },
   "hints": [
     {
       "level": 1,
-      "text": "The Book Token tells you ingredient 1 is Solar. Solar alchemicals have 0 or 2 negative aspects. List which alchemicals have R+ and G−."
+      "text": "The Book Token tells you ingredient 1 is Solar. Solar alchemicals have 0 or 2 negative aspects. List which alchemicals have R+ and G\u2212."
     },
     {
       "level": 2,
-      "text": "R+ G− is shared by pNn and Ppn. pNn has signs R+G−B−: 2 negatives = Solar. Ppn has R+G+B−: 1 negative = Lunar. The Book Token says Solar, so it must be pNn."
+      "text": "R+ G\u2212 is shared by pNn and Ppn. pNn has signs R+G\u2212B\u2212: 2 negatives = Solar. Ppn has R+G+B\u2212: 1 negative = Lunar. The Book Token says Solar, so it must be pNn."
     },
     {
       "level": 3,
-      "text": "The answer is pNn (alchemical 3). It has R+, G−, B− — two negatives, which makes it Solar."
+      "text": "The answer is pNn (alchemical 3). It has R+, G\u2212, B\u2212 \u2014 two negatives, which makes it Solar."
     }
-  ]
+  ],
+  "complexity": {
+    "score": 1,
+    "raw": 3.267,
+    "avg_clue_strength": 1.0,
+    "ambig_penalty": 0.2,
+    "stranded_ambiguity": 0.0,
+    "chain_depth": 0,
+    "stuck": false,
+    "requires_complement_set": false,
+    "question_requires_enumeration": false,
+    "residual_worlds": 5040
+  }
 }

@@ -1,1 +1,121 @@
-{"id":"all-06","mode":"expanded","title":"The Iron Sequence","description":"The golem has been tested with 4 ingredients. Deduce the reaction pattern and identify the target group.","difficulty":"hard","golem":{"chest":{"color":"G","size":"L"},"ears":{"color":"R","size":"L"}},"clues":[{"kind":"golem_test","ingredient":7,"chest_reacted":true,"ears_reacted":true},{"kind":"golem_test","ingredient":6,"chest_reacted":false,"ears_reacted":true},{"kind":"encyclopedia","aspect":"R","entries":[{"ingredient":1,"sign":"+"},{"ingredient":2,"sign":"+"},{"ingredient":6,"sign":"+"}]},{"kind":"encyclopedia","aspect":"G","entries":[{"ingredient":4,"sign":"+"},{"ingredient":5,"sign":"+"},{"ingredient":8,"sign":"+"}]},{"kind":"golem_test","ingredient":4,"chest_reacted":false,"ears_reacted":false},{"kind":"golem_test","ingredient":5,"chest_reacted":true,"ears_reacted":false}],"questions":[{"kind":"golem_group","group":"animators"}],"solution":{"1":2,"2":3,"3":5,"4":1,"5":4,"6":6,"7":7,"8":8},"hints":[{"level":1,"text":"The golem reacts to SIZE on a specific color channel.\nKnown tests:\n  ing7: chest=✓ ears=✓  →  animators\n  ing6: chest=✗ ears=✓  →  ears_only\n  ing4: chest=✗ ears=✗  →  non_reactive\n  ing5: chest=✓ ears=✗  →  chest_only"},{"level":2,"text":"Chest reacts to G+L. Ears react to R+L. An animator needs BOTH. Cross-reference with untested ingredients."},{"level":3,"text":"The animators are: ingredients [7, 8]. Alch: ing7→NNN, ing8→PPP."}],"complexity":{"raw":3.687,"avg_clue_strength":2.383,"ambig_penalty":0.0,"chain_depth":0,"stuck":false,"requires_complement_set":false,"question_requires_enumeration":false,"residual_worlds":2}}
+{
+  "id": "all-06",
+  "mode": "expanded",
+  "title": "The Iron Sequence",
+  "description": "The golem has been tested with 4 ingredients. Deduce the reaction pattern and identify the target group.",
+  "difficulty": "expert",
+  "golem": {
+    "chest": {
+      "color": "G",
+      "size": "L"
+    },
+    "ears": {
+      "color": "R",
+      "size": "L"
+    }
+  },
+  "clues": [
+    {
+      "kind": "golem_test",
+      "ingredient": 7,
+      "chest_reacted": true,
+      "ears_reacted": true
+    },
+    {
+      "kind": "golem_test",
+      "ingredient": 6,
+      "chest_reacted": false,
+      "ears_reacted": true
+    },
+    {
+      "kind": "encyclopedia",
+      "aspect": "R",
+      "entries": [
+        {
+          "ingredient": 1,
+          "sign": "+"
+        },
+        {
+          "ingredient": 2,
+          "sign": "+"
+        },
+        {
+          "ingredient": 6,
+          "sign": "+"
+        }
+      ]
+    },
+    {
+      "kind": "encyclopedia",
+      "aspect": "G",
+      "entries": [
+        {
+          "ingredient": 4,
+          "sign": "+"
+        },
+        {
+          "ingredient": 5,
+          "sign": "+"
+        },
+        {
+          "ingredient": 8,
+          "sign": "+"
+        }
+      ]
+    },
+    {
+      "kind": "golem_test",
+      "ingredient": 4,
+      "chest_reacted": false,
+      "ears_reacted": false
+    },
+    {
+      "kind": "golem_test",
+      "ingredient": 5,
+      "chest_reacted": true,
+      "ears_reacted": false
+    }
+  ],
+  "questions": [
+    {
+      "kind": "golem_group",
+      "group": "animators"
+    }
+  ],
+  "solution": {
+    "1": 2,
+    "2": 3,
+    "3": 5,
+    "4": 1,
+    "5": 4,
+    "6": 6,
+    "7": 7,
+    "8": 8
+  },
+  "hints": [
+    {
+      "level": 1,
+      "text": "The golem reacts to SIZE on a specific color channel.\nKnown tests:\n  ing7: chest=\u2713 ears=\u2713  \u2192  animators\n  ing6: chest=\u2717 ears=\u2713  \u2192  ears_only\n  ing4: chest=\u2717 ears=\u2717  \u2192  non_reactive\n  ing5: chest=\u2713 ears=\u2717  \u2192  chest_only"
+    },
+    {
+      "level": 2,
+      "text": "Chest reacts to G+L. Ears react to R+L. An animator needs BOTH. Cross-reference with untested ingredients."
+    },
+    {
+      "level": 3,
+      "text": "The animators are: ingredients [7, 8]. Alch: ing7\u2192NNN, ing8\u2192PPP."
+    }
+  ],
+  "complexity": {
+    "score": 5,
+    "raw": 3.687,
+    "avg_clue_strength": 2.383,
+    "ambig_penalty": 0.0,
+    "stranded_ambiguity": 0.0,
+    "chain_depth": 0,
+    "stuck": false,
+    "requires_complement_set": false,
+    "question_requires_enumeration": false,
+    "residual_worlds": 2
+  }
+}

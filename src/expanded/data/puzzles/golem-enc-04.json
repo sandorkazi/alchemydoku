@@ -1,1 +1,73 @@
-{"id":"golem-enc-04","mode":"expanded","title":"The Stone Codex","description":"The golem has been tested with 2 ingredients. Deduce the reaction pattern and identify the target group.","difficulty":"medium","golem":{"chest":{"color":"R","size":"S"},"ears":{"color":"G","size":"L"}},"clues":[{"kind":"golem_test","ingredient":4,"chest_reacted":true,"ears_reacted":true},{"kind":"golem_test","ingredient":5,"chest_reacted":true,"ears_reacted":true}],"questions":[{"kind":"golem_group","group":"animators"}],"solution":{"1":1,"2":2,"3":6,"4":3,"5":4,"6":7,"7":5,"8":8},"hints":[{"level":1,"text":"The golem reacts to SIZE on a specific color channel.\nKnown tests:\n  ing4: chest=✓ ears=✓  →  animators\n  ing5: chest=✓ ears=✓  →  animators"},{"level":2,"text":"Chest reacts to R+S. Ears react to G+L. An animator needs BOTH. Cross-reference with untested ingredients."},{"level":3,"text":"The animators are: ingredients [4, 5]. Alch: ing4→pNn, ing5→nPp."}],"complexity":{"raw":2.678,"avg_clue_strength":2.404,"ambig_penalty":0.0,"chain_depth":0,"stuck":false,"requires_complement_set":false,"question_requires_enumeration":false,"residual_worlds":1440}}
+{
+  "id": "golem-enc-04",
+  "mode": "expanded",
+  "title": "The Stone Codex",
+  "description": "The golem has been tested with 2 ingredients. Deduce the reaction pattern and identify the target group.",
+  "difficulty": "medium",
+  "golem": {
+    "chest": {
+      "color": "R",
+      "size": "S"
+    },
+    "ears": {
+      "color": "G",
+      "size": "L"
+    }
+  },
+  "clues": [
+    {
+      "kind": "golem_test",
+      "ingredient": 4,
+      "chest_reacted": true,
+      "ears_reacted": true
+    },
+    {
+      "kind": "golem_test",
+      "ingredient": 5,
+      "chest_reacted": true,
+      "ears_reacted": true
+    }
+  ],
+  "questions": [
+    {
+      "kind": "golem_group",
+      "group": "animators"
+    }
+  ],
+  "solution": {
+    "1": 1,
+    "2": 2,
+    "3": 6,
+    "4": 3,
+    "5": 4,
+    "6": 7,
+    "7": 5,
+    "8": 8
+  },
+  "hints": [
+    {
+      "level": 1,
+      "text": "The golem reacts to SIZE on a specific color channel.\nKnown tests:\n  ing4: chest=\u2713 ears=\u2713  \u2192  animators\n  ing5: chest=\u2713 ears=\u2713  \u2192  animators"
+    },
+    {
+      "level": 2,
+      "text": "Chest reacts to R+S. Ears react to G+L. An animator needs BOTH. Cross-reference with untested ingredients."
+    },
+    {
+      "level": 3,
+      "text": "The animators are: ingredients [4, 5]. Alch: ing4\u2192pNn, ing5\u2192nPp."
+    }
+  ],
+  "complexity": {
+    "score": 3,
+    "raw": 2.678,
+    "avg_clue_strength": 2.404,
+    "ambig_penalty": 0.0,
+    "stranded_ambiguity": 0.0,
+    "chain_depth": 0,
+    "stuck": false,
+    "requires_complement_set": false,
+    "question_requires_enumeration": false,
+    "residual_worlds": 1440
+  }
+}

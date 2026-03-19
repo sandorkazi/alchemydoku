@@ -2,7 +2,7 @@
   "id": "ded-9000",
   "title": "The Arcane Symposium",
   "description": "Use all the evidence to deduce the mixing results.",
-  "difficulty": "hard",
+  "difficulty": "easy",
   "clues": [
     {
       "kind": "mixing",

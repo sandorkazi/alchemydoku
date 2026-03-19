@@ -141,7 +141,7 @@ function QuestionHeader({ q }: { q: QuestionTarget }) {
         </span>
       ))}
       <span className="text-indigo-300 mx-0.5">→</span>
-      <span className="text-xs font-semibold text-indigo-500">achievable potions?</span>
+      <span className="text-xs font-semibold text-indigo-500">all certainly achievable potions?</span>
     </span>
   );
 
@@ -358,6 +358,7 @@ function QuestionRow({ q, index, total, value, onChange, correctAnswer, showSolu
                 displayChoices={displayPotions}
                 selected={displaySelected}
                 onToggle={togglePotion}
+                hint="Select every potion this pair could possibly produce"
               />
             );
           })()}
@@ -407,6 +408,7 @@ function QuestionRow({ q, index, total, value, onChange, correctAnswer, showSolu
                 displayChoices={displayPotions}
                 selected={displaySelected}
                 onToggle={togglePotion}
+                hint="Select every potion that is definitely producible"
               />
             );
           })()}

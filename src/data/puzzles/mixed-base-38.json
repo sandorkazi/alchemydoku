@@ -2,7 +2,7 @@
   "id": "mixed-base-38",
   "title": "A Clue in the Crowd",
   "description": "Mixing, selling, and debunking records all point toward a single pair. Deduce what potion they produce.",
-  "difficulty": "medium",
+  "difficulty": "hard",
   "clues": [
     {
       "kind": "mixing_count_among",

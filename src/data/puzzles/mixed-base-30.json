@@ -2,7 +2,7 @@
   "id": "mixed-base-30",
   "title": "A Close Reading",
   "description": "Mixing, selling, and debunking records all point toward a single pair. Deduce what potion they produce.",
-  "difficulty": "medium",
+  "difficulty": "hard",
   "clues": [
     {
       "kind": "sell_result_among",

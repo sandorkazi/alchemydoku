@@ -2,7 +2,7 @@
   "id": "ing-profile-03",
   "title": "Full Spectrum",
   "description": "Determine all potions that the target ingredient can certainly produce when mixed with at least one partner.",
-  "difficulty": "medium",
+  "difficulty": "easy",
   "clues": [
     {
       "kind": "mixing",

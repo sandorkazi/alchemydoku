@@ -2,7 +2,7 @@
   "id": "large-comp-01",
   "title": "The Heavy Component",
   "description": "Two mixing results \u2014 one per pair \u2014 are enough to pin which ingredients carry a Large Red component.",
-  "difficulty": "hard",
+  "difficulty": "easy",
   "clues": [
     {
       "kind": "mixing",

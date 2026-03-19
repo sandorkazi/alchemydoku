@@ -1,1 +1,97 @@
-{"id":"golem-04","mode":"expanded","title":"The Warden's Notes","description":"The golem has been tested with 3 ingredients. Deduce the reaction pattern and identify the target group.","difficulty":"easy","golem":{"chest":{"color":"B","size":"L"},"ears":{"color":"R","size":"S"}},"clues":[{"kind":"golem_test","ingredient":3,"chest_reacted":true,"ears_reacted":true},{"kind":"golem_test","ingredient":8,"chest_reacted":false,"ears_reacted":true},{"kind":"mixing","ingredient1":1,"ingredient2":8,"result":{"color":"G","sign":"-"}},{"kind":"mixing","ingredient1":2,"ingredient2":7,"result":{"color":"R","sign":"+"}},{"kind":"golem_test","ingredient":2,"chest_reacted":false,"ears_reacted":false}],"questions":[{"kind":"golem_group","group":"animators"}],"solution":{"1":5,"2":6,"3":1,"4":8,"5":7,"6":4,"7":2,"8":3},"hints":[{"level":1,"text":"The golem reacts to SIZE on a specific color channel.\nKnown tests:\n  ing3: chest=✓ ears=✓  →  animators\n  ing8: chest=✗ ears=✓  →  ears_only\n  ing2: chest=✗ ears=✗  →  non_reactive"},{"level":2,"text":"Chest reacts to B+L. Ears react to R+S. An animator needs BOTH. Cross-reference with untested ingredients."},{"level":3,"text":"The animators are: ingredients [3, 7]. Alch: ing3→npN, ing7→pnP."}],"complexity":{"raw":2.615,"avg_clue_strength":2.543,"ambig_penalty":0.0,"chain_depth":0,"stuck":false,"requires_complement_set":false,"question_requires_enumeration":false,"residual_worlds":6}}
+{
+  "id": "golem-04",
+  "mode": "expanded",
+  "title": "The Warden's Notes",
+  "description": "The golem has been tested with 3 ingredients. Deduce the reaction pattern and identify the target group.",
+  "difficulty": "medium",
+  "golem": {
+    "chest": {
+      "color": "B",
+      "size": "L"
+    },
+    "ears": {
+      "color": "R",
+      "size": "S"
+    }
+  },
+  "clues": [
+    {
+      "kind": "golem_test",
+      "ingredient": 3,
+      "chest_reacted": true,
+      "ears_reacted": true
+    },
+    {
+      "kind": "golem_test",
+      "ingredient": 8,
+      "chest_reacted": false,
+      "ears_reacted": true
+    },
+    {
+      "kind": "mixing",
+      "ingredient1": 1,
+      "ingredient2": 8,
+      "result": {
+        "color": "G",
+        "sign": "-"
+      }
+    },
+    {
+      "kind": "mixing",
+      "ingredient1": 2,
+      "ingredient2": 7,
+      "result": {
+        "color": "R",
+        "sign": "+"
+      }
+    },
+    {
+      "kind": "golem_test",
+      "ingredient": 2,
+      "chest_reacted": false,
+      "ears_reacted": false
+    }
+  ],
+  "questions": [
+    {
+      "kind": "golem_group",
+      "group": "animators"
+    }
+  ],
+  "solution": {
+    "1": 5,
+    "2": 6,
+    "3": 1,
+    "4": 8,
+    "5": 7,
+    "6": 4,
+    "7": 2,
+    "8": 3
+  },
+  "hints": [
+    {
+      "level": 1,
+      "text": "The golem reacts to SIZE on a specific color channel.\nKnown tests:\n  ing3: chest=\u2713 ears=\u2713  \u2192  animators\n  ing8: chest=\u2717 ears=\u2713  \u2192  ears_only\n  ing2: chest=\u2717 ears=\u2717  \u2192  non_reactive"
+    },
+    {
+      "level": 2,
+      "text": "Chest reacts to B+L. Ears react to R+S. An animator needs BOTH. Cross-reference with untested ingredients."
+    },
+    {
+      "level": 3,
+      "text": "The animators are: ingredients [3, 7]. Alch: ing3\u2192npN, ing7\u2192pnP."
+    }
+  ],
+  "complexity": {
+    "score": 3,
+    "raw": 2.615,
+    "avg_clue_strength": 2.543,
+    "ambig_penalty": 0.0,
+    "stranded_ambiguity": 0.0,
+    "chain_depth": 0,
+    "stuck": false,
+    "requires_complement_set": false,
+    "question_requires_enumeration": false,
+    "residual_worlds": 6
+  }
+}

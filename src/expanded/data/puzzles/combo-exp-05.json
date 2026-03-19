@@ -3,7 +3,7 @@
   "mode": "expanded",
   "title": "The Researcher's Burden",
   "description": "A partial encyclopedia article lists three ingredients on the same aspect. Use the supporting clues to identify the fourth.",
-  "difficulty": "easy",
+  "difficulty": "medium",
   "clues": [
     {
       "kind": "encyclopedia",
@@ -111,9 +111,11 @@
     }
   ],
   "complexity": {
+    "score": 3,
     "raw": 2.146,
     "avg_clue_strength": 3.325,
     "ambig_penalty": 0.0,
+    "stranded_ambiguity": 0.0,
     "chain_depth": 0,
     "stuck": false,
     "requires_complement_set": false,

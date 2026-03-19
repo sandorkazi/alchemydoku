@@ -2,7 +2,7 @@
   "id": "neutral-partner-03",
   "title": "The Silent Partner",
   "description": "Use the clues to identify the one ingredient that always mixes to neutral with the target ingredient.",
-  "difficulty": "medium",
+  "difficulty": "easy",
   "clues": [
     {
       "kind": "mixing",
