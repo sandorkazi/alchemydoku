@@ -274,6 +274,7 @@ export type ExpandedCollection = {
   difficulty: 'tutorial' | 'easy' | 'medium' | 'hard';
   puzzleIds: string[];
   unlockedAfter?: string;
+  boardGameCompliant?: boolean;  // omit = true
 };
 
 export const EXPANDED_COLLECTIONS: ExpandedCollection[] = [
@@ -380,6 +381,7 @@ export const EXPANDED_COLLECTIONS: ExpandedCollection[] = [
     difficulty: 'hard',
     puzzleIds: ['among-golem-01', 'among-golem-02'],
     unlockedAfter: 'exp-hard-all',
+    boardGameCompliant: false,
   },
   {
     id: 'exp-debunk',
@@ -428,6 +430,7 @@ export const EXPANDED_COLLECTIONS: ExpandedCollection[] = [
       'mixed-exp-debunk-50', 'mixed-exp-debunk-51',
     ],
     unlockedAfter: 'exp-debunk',
+    boardGameCompliant: false,
   },
   {
     id: 'mixed-clues-exp',
@@ -447,6 +450,7 @@ export const EXPANDED_COLLECTIONS: ExpandedCollection[] = [
       'mixed-exp-golem-22', 'mixed-exp-golem-23', 'mixed-exp-golem-24', 'mixed-exp-golem-25', 'mixed-exp-golem-26',
     ],
     unlockedAfter: 'combo-exp',
+    boardGameCompliant: false,
   },
   {
     id: 'entropy-book',
@@ -458,5 +462,6 @@ export const EXPANDED_COLLECTIONS: ExpandedCollection[] = [
       'mixed-exp-07', 'mixed-exp-08', 'mixed-exp-09', 'mixed-exp-10', 'mixed-exp-11',
     ],
     unlockedAfter: 'mixed-clues-exp',
+    boardGameCompliant: false,
   },
 ];

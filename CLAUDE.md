@@ -167,6 +167,20 @@ npx vitest run tests/logic/mixer.test.ts
 
 TypeScript is strict (`strict`, `noUnusedLocals`, `noUnusedParameters`). Path alias `@/*` maps to `src/*`.
 
+## Board-game compliance
+
+`src/compliance.ts` is the authoritative registry of non-compliant clue kinds:
+
+- `NON_COMPLIANT_BASE_CLUE_KINDS` — clue kinds that have no board-game equivalent in base mode
+- `NON_COMPLIANT_EXPANDED_CLUE_KINDS` — same, extended for expanded mode
+
+**Protocol for new clue kinds:**
+1. Decide whether it maps to a real Alchemists board game action.
+2. If NOT — add its `kind` string to the appropriate set in `src/compliance.ts`.
+3. Tag any collection containing such puzzles with `boardGameCompliant: false` in `src/data/puzzles/collections.json` (base) or `src/expanded/data/puzzlesIndex.ts` (expanded).
+
+The toggle (localStorage key: `alch-show-puzzle-only`) is rendered below the `ModeSwitcher` on both home pages. When off (default), non-compliant collections are greyed out with a 🧩 icon and a note. The "Among / Group Clues" card in `RulesQuickReference` is hidden unless the toggle is on.
+
 ## Hint text conventions
 
 **Always use visual tokens in hint text — never raw ingredient names or non-token references.**

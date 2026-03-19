@@ -11,6 +11,7 @@ import { DEBUNK_MASTER_TUTORIAL_STEPS } from './data/tutorials/debunk-master';
 import type { TutorialId } from './contexts/TutorialContext';
 import { RulesQuickReference } from './components/RulesQuickReference';
 import { InterfaceQuickReference } from './components/InterfaceQuickReference';
+import { PuzzleOnlyToggle } from './components/PuzzleOnlyToggle';
 import type { Puzzle } from './types';
 import { clearPuzzleState } from './contexts/SolverContext';
 import { ExpandedHome as ExpandedHomeImpl } from './expanded/ExpandedHome';
@@ -27,6 +28,7 @@ type Collection = {
   difficulty: string;
   puzzleIds: string[];
   unlockedAfter?: string;
+  boardGameCompliant?: boolean;
 };
 
 type View =
@@ -70,6 +72,14 @@ function loadLastPuzzle(mode: 'base' | 'expanded'): string | null {
 }
 function saveLastPuzzle(mode: 'base' | 'expanded', id: string) {
   try { localStorage.setItem(`alch-last-puzzle-${mode}`, id); } catch { /* ignore */ }
+}
+
+const PUZZLE_ONLY_KEY = 'alch-show-puzzle-only';
+function loadShowPuzzleOnly(): boolean {
+  try { return localStorage.getItem(PUZZLE_ONLY_KEY) === 'true'; } catch { return false; }
+}
+function saveShowPuzzleOnly(v: boolean) {
+  try { localStorage.setItem(PUZZLE_ONLY_KEY, String(v)); } catch { /* ignore */ }
 }
 
 // ─── Style maps ───────────────────────────────────────────────────────────────
@@ -131,9 +141,9 @@ function ComplexityPips({ score }: { score: number }) {
 // ─── Collection card ──────────────────────────────────────────────────────────
 
 function CollectionCard({
-  col, completed, locked, onOpen,
+  col, completed, locked, puzzleOnlyBlocked, onOpen,
 }: {
-  col: Collection; completed: number; locked: boolean; onOpen: () => void;
+  col: Collection; completed: number; locked: boolean; puzzleOnlyBlocked?: boolean; onOpen: () => void;
 }) {
   const total = col.puzzleIds.length;
   const done  = completed === total && total > 0;
@@ -148,12 +158,14 @@ function CollectionCard({
         transition-all
         ${locked
           ? 'border-gray-200 opacity-60 cursor-not-allowed'
-          : done
-            ? 'border-green-300 hover:border-green-400 hover:shadow-md cursor-pointer'
-            : 'border-gray-200 hover:border-indigo-300 hover:shadow-md cursor-pointer'
+          : puzzleOnlyBlocked
+            ? 'border-gray-200 opacity-60 cursor-pointer'
+            : done
+              ? 'border-green-300 hover:border-green-400 hover:shadow-md cursor-pointer'
+              : 'border-gray-200 hover:border-indigo-300 hover:shadow-md cursor-pointer'
         }`}
     >
-      <div className={`px-4 py-3 ${done ? 'bg-green-50' : 'bg-gray-50'}`}>
+      <div className={`px-4 py-3 ${done && !puzzleOnlyBlocked ? 'bg-green-50' : 'bg-gray-50'}`}>
         <div className="flex items-center justify-between gap-2">
           <div className="flex items-center gap-2 min-w-0">
             <h3 className="font-bold text-gray-900 text-sm">{col.title}</h3>
@@ -165,9 +177,11 @@ function CollectionCard({
           <div className="flex items-center gap-2 shrink-0">
             {locked
               ? <span className="text-base">🔒</span>
-              : <span className={`text-xs font-semibold tabular-nums ${done ? 'text-green-600' : 'text-gray-400'}`}>
-                  {completed}/{total}
-                </span>
+              : puzzleOnlyBlocked
+                ? <span className="text-base">🧩</span>
+                : <span className={`text-xs font-semibold tabular-nums ${done ? 'text-green-600' : 'text-gray-400'}`}>
+                    {completed}/{total}
+                  </span>
             }
             <span className="text-gray-300 text-xs">›</span>
           </div>
@@ -176,6 +190,11 @@ function CollectionCard({
         {locked && col.unlockedAfter && (
           <p className="text-xs text-gray-400 mt-1">
             Complete "{(COLLECTIONS as Collection[]).find(c => c.id === col.unlockedAfter)?.title ?? col.unlockedAfter}" first
+          </p>
+        )}
+        {puzzleOnlyBlocked && (
+          <p className="text-xs text-gray-400 mt-1">
+            Puzzle-only mechanics — enable the toggle above to unlock
           </p>
         )}
       </div>
@@ -292,6 +311,7 @@ function AppInner() {
   const [showReleaseNotes, setShowReleaseNotes] = useState(() => shouldShowReleaseNotes());
   const releaseEntry = getCurrentReleaseEntry();
 
+  const [showPuzzleOnly, setShowPuzzleOnly] = useState(loadShowPuzzleOnly);
   const [mode, setMode]                 = useState<'base' | 'expanded'>(initMode);
   const [view, setView]                 = useState<View>(() => {
     if (permalink?.mode === 'base') {
@@ -462,6 +482,10 @@ function AppInner() {
           <ModeSwitcher mode="base" onChange={handleModeChange} />
           <DriveSync />
         </div>
+        <PuzzleOnlyToggle
+          value={showPuzzleOnly}
+          onChange={v => { setShowPuzzleOnly(v); saveShowPuzzleOnly(v); }}
+        />
 
         {/* What's New banner */}
         {showReleaseNotes && releaseEntry && (
@@ -478,7 +502,7 @@ function AppInner() {
         </div>
 
         {/* Rules quick reference — top, closed by default */}
-        <RulesQuickReference />
+        <RulesQuickReference showPuzzleOnly={showPuzzleOnly} />
         <InterfaceQuickReference />
 
         {/* Continue banner */}
@@ -507,6 +531,7 @@ function AppInner() {
               col={col}
               completed={col.puzzleIds.filter(id => completed.has(id)).length}
               locked={false}
+              puzzleOnlyBlocked={!showPuzzleOnly && col.boardGameCompliant === false}
               onOpen={() => {
                 const tutorialMap: Record<string, TutorialId> = {
                   'tutorial-mixing':              'mixing',

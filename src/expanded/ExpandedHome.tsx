@@ -16,6 +16,17 @@ import type { ExpandedPuzzle } from './types';
 import type { ExpandedCollection } from './data/puzzlesIndex';
 import { WhatsNewBanner } from '../components/WhatsNewBanner';
 import { getCurrentReleaseEntry } from '../utils/releaseNotes';
+import { PuzzleOnlyToggle } from '../components/PuzzleOnlyToggle';
+
+// ─── Puzzle-only toggle persistence ──────────────────────────────────────────
+
+const PUZZLE_ONLY_KEY = 'alch-show-puzzle-only';
+function loadShowPuzzleOnly(): boolean {
+  try { return localStorage.getItem(PUZZLE_ONLY_KEY) === 'true'; } catch { return false; }
+}
+function saveShowPuzzleOnly(v: boolean) {
+  try { localStorage.setItem(PUZZLE_ONLY_KEY, String(v)); } catch { /**/ }
+}
 
 // ─── Progress persistence ─────────────────────────────────────────────────────
 
@@ -66,9 +77,10 @@ function ComplexityPips({ raw }: { raw: number }) {
 
 // ─── Collection summary card (hub level) ─────────────────────────────────────
 
-function CollectionSummaryCard({ collection, completed, onOpen }: {
+function CollectionSummaryCard({ collection, completed, puzzleOnlyBlocked, onOpen }: {
   collection: ExpandedCollection;
   completed: Set<string>;
+  puzzleOnlyBlocked?: boolean;
   onOpen: () => void;
 }) {
   const puzzles = collection.puzzleIds.map(id => EXPANDED_PUZZLE_MAP[id]).filter(Boolean);
@@ -78,9 +90,14 @@ function CollectionSummaryCard({ collection, completed, onOpen }: {
   return (
     <button onClick={onOpen}
       className={`w-full text-left rounded-2xl border-2 bg-white shadow-sm overflow-hidden
-        hover:border-violet-300 hover:shadow-md transition-all
-        ${allDone ? 'border-green-300' : 'border-gray-200'}`}>
-      <div className={`px-4 py-3 ${allDone ? 'bg-green-50' : 'bg-gray-50'}`}>
+        transition-all
+        ${puzzleOnlyBlocked
+          ? 'border-gray-200 opacity-60 cursor-pointer'
+          : allDone
+            ? 'border-green-300 hover:border-violet-300 hover:shadow-md'
+            : 'border-gray-200 hover:border-violet-300 hover:shadow-md'
+        }`}>
+      <div className={`px-4 py-3 ${allDone && !puzzleOnlyBlocked ? 'bg-green-50' : 'bg-gray-50'}`}>
         <div className="flex items-center justify-between gap-2">
           <div className="flex items-center gap-2 min-w-0">
             <h3 className="font-bold text-gray-900 text-sm">{collection.title}</h3>
@@ -90,13 +107,21 @@ function CollectionSummaryCard({ collection, completed, onOpen }: {
             </span>
           </div>
           <div className="flex items-center gap-2 shrink-0">
-            <span className={`text-xs font-semibold tabular-nums ${allDone ? 'text-green-600' : 'text-gray-400'}`}>
-              {doneCount}/{puzzles.length}
-            </span>
+            {puzzleOnlyBlocked
+              ? <span className="text-base">🧩</span>
+              : <span className={`text-xs font-semibold tabular-nums ${allDone ? 'text-green-600' : 'text-gray-400'}`}>
+                  {doneCount}/{puzzles.length}
+                </span>
+            }
             <span className="text-gray-300 text-xs">›</span>
           </div>
         </div>
         <p className="text-xs text-gray-500 mt-0.5 line-clamp-2">{collection.description}</p>
+        {puzzleOnlyBlocked && (
+          <p className="text-xs text-gray-400 mt-1">
+            Puzzle-only mechanics — enable the toggle above to unlock
+          </p>
+        )}
       </div>
     </button>
   );
@@ -189,6 +214,7 @@ export function ExpandedHome({ onModeChange, initialPuzzleId, showReleaseNotes, 
 }) {
   const { puzzle: initPuzzle, queue: initQueue } = computeInitialExpanded(initialPuzzleId);
 
+  const [showPuzzleOnly, setShowPuzzleOnly] = useState(loadShowPuzzleOnly);
   const [completed, setCompleted] = useState<Set<string>>(loadCompleted as () => Set<string>);
   const [activePuzzle, setActivePuzzle] = useState<ExpandedPuzzle | null>(initPuzzle);
   const [activeCollection, setActiveCollection] = useState<ExpandedCollection | null>(null);
@@ -293,6 +319,10 @@ export function ExpandedHome({ onModeChange, initialPuzzleId, showReleaseNotes, 
             </button>
           ))}
         </div>
+        <PuzzleOnlyToggle
+          value={showPuzzleOnly}
+          onChange={v => { setShowPuzzleOnly(v); saveShowPuzzleOnly(v); }}
+        />
 
         {/* What's New banner */}
         {showReleaseNotes && releaseEntry && onDismissReleaseNotes && (
@@ -309,7 +339,7 @@ export function ExpandedHome({ onModeChange, initialPuzzleId, showReleaseNotes, 
         </div>
 
         {/* Rules quick reference — top, closed by default */}
-        <ExpandedRulesQuickReference />
+        <ExpandedRulesQuickReference showPuzzleOnly={showPuzzleOnly} />
         <ExpandedInterfaceQuickReference />
 
         {/* Collections */}
@@ -319,6 +349,7 @@ export function ExpandedHome({ onModeChange, initialPuzzleId, showReleaseNotes, 
               key={coll.id}
               collection={coll}
               completed={completed}
+              puzzleOnlyBlocked={!showPuzzleOnly && coll.boardGameCompliant === false}
               onOpen={() => setActiveCollection(coll)}
             />
           ))}

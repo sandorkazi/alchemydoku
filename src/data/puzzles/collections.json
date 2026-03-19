@@ -35,7 +35,7 @@
   {
     "id": "tutorial-two-color",
     "title": "The Two-Colour Rule",
-    "description": "Discover why a shared sign doesn't always produce the colour you expect \u2014 and how to use that to your advantage.",
+    "description": "Discover why a shared sign doesn't always produce the colour you expect — and how to use that to your advantage.",
     "difficulty": "tutorial",
     "puzzleIds": [
       "tutorial-two-color-01",
@@ -93,7 +93,7 @@
   {
     "id": "possible-outcomes",
     "title": "Possible Outcomes",
-    "description": "The evidence narrows things down \u2014 but not all the way. Mark every potion this pair could still produce.",
+    "description": "The evidence narrows things down — but not all the way. Mark every potion this pair could still produce.",
     "difficulty": "hard",
     "puzzleIds": [
       "pp-02",
@@ -122,7 +122,7 @@
   {
     "id": "tutorial-debunking-apprentice",
     "title": "Apprentice Debunking",
-    "description": "Learn how apprentice debunking reveals true aspect signs \u2014 whether the debunk succeeded or failed.",
+    "description": "Learn how apprentice debunking reveals true aspect signs — whether the debunk succeeded or failed.",
     "difficulty": "tutorial",
     "puzzleIds": [
       "debunk-plan-tutorial-01",
@@ -133,7 +133,7 @@
   {
     "id": "tutorial-debunking-master",
     "title": "Master Debunking",
-    "description": "Learn how a witnessed mix constrains alchemicals \u2014 and what failure means.",
+    "description": "Learn how a witnessed mix constrains alchemicals — and what failure means.",
     "difficulty": "tutorial",
     "puzzleIds": [
       "debunk-plan-easy-02"
@@ -156,7 +156,7 @@
   {
     "id": "expert-cross",
     "title": "All the Evidence",
-    "description": "Puzzles combining mixing, selling, and debunking clues \u2014 every tool at once.",
+    "description": "Puzzles combining mixing, selling, and debunking clues — every tool at once.",
     "difficulty": "hard",
     "puzzleIds": [
       "cross-1002",
@@ -173,7 +173,7 @@
   {
     "id": "advanced-deduction",
     "title": "Aspect Deduction",
-    "description": "Identify which ingredients share a sign or size \u2014 a new kind of question using the same mixing logic.",
+    "description": "Identify which ingredients share a sign or size — a new kind of question using the same mixing logic.",
     "difficulty": "hard",
     "puzzleIds": [
       "aspect-set-01",
@@ -195,7 +195,7 @@
   {
     "id": "debunk-master-planning",
     "title": "Advanced Debunk Planning",
-    "description": "Plans requiring master debunks \u2014 including the subtle conflict-only challenge.",
+    "description": "Plans requiring master debunks — including the subtle conflict-only challenge.",
     "difficulty": "medium",
     "puzzleIds": [
       "debunk-plan-conflict-01"
@@ -205,7 +205,7 @@
   {
     "id": "among-witnesses",
     "title": "Among Witnesses",
-    "description": "You never saw whose ingredients were involved \u2014 only overheard the outcomes. Deduce the full picture from fragmentary crowd knowledge.",
+    "description": "You never saw whose ingredients were involved — only overheard the outcomes. Deduce the full picture from fragmentary crowd knowledge.",
     "difficulty": "expert",
     "puzzleIds": [
       "among-04",
@@ -214,7 +214,8 @@
       "among-01",
       "among-02"
     ],
-    "unlockedAfter": "hard-deduction"
+    "unlockedAfter": "hard-deduction",
+    "boardGameCompliant": false
   },
   {
     "id": "new-mechanics",
@@ -249,7 +250,7 @@
   {
     "id": "combo-base",
     "title": "The Full Arsenal",
-    "description": "Mixing, selling, debunking, and overheard reactions \u2014 all in play at once. No single clue type is sufficient; you'll need to cross-reference everything.",
+    "description": "Mixing, selling, debunking, and overheard reactions — all in play at once. No single clue type is sufficient; you'll need to cross-reference everything.",
     "difficulty": "hard",
     "puzzleIds": [
       "combo-b-02",
@@ -279,7 +280,7 @@
   {
     "id": "mixed-clues",
     "title": "Mixed Clues",
-    "description": "Every puzzle has at least one ambiguous sell (opposite), one ambiguous sell (sign only), and one ambiguous mixing clue \u2014 overheard fragments that could point to any of 3 or 4 ingredients. Piece together the evidence.",
+    "description": "Every puzzle has at least one ambiguous sell (opposite), one ambiguous sell (sign only), and one ambiguous mixing clue — overheard fragments that could point to any of 3 or 4 ingredients. Piece together the evidence.",
     "difficulty": "medium",
     "puzzleIds": [
       "mixed-base-02",
@@ -333,32 +334,67 @@
       "mixed-base-50",
       "mixed-base-51"
     ],
-    "unlockedAfter": "combo-base"
+    "unlockedAfter": "combo-base",
+    "boardGameCompliant": false
   },
   {
     "id": "mixed-debunk",
     "title": "Mixed Evidence, Master Debunk",
-    "description": "These puzzles combine ambiguous sell clues, among-group observations, and master debunking. Use mixed evidence to identify which ingredients are wrong \u2014 then expose them.",
+    "description": "These puzzles combine ambiguous sell clues, among-group observations, and master debunking. Use mixed evidence to identify which ingredients are wrong — then expose them.",
     "difficulty": "expert",
     "puzzleIds": [
-      "mixed-base-debunk-02", "mixed-base-debunk-03", "mixed-base-debunk-04",
-      "mixed-base-debunk-05", "mixed-base-debunk-06", "mixed-base-debunk-07",
-      "mixed-base-debunk-08", "mixed-base-debunk-09", "mixed-base-debunk-10",
-      "mixed-base-debunk-11", "mixed-base-debunk-12", "mixed-base-debunk-13",
-      "mixed-base-debunk-14", "mixed-base-debunk-15", "mixed-base-debunk-16",
-      "mixed-base-debunk-17", "mixed-base-debunk-18", "mixed-base-debunk-19",
-      "mixed-base-debunk-20", "mixed-base-debunk-21", "mixed-base-debunk-22",
-      "mixed-base-debunk-23", "mixed-base-debunk-24", "mixed-base-debunk-25",
-      "mixed-base-debunk-26", "mixed-base-debunk-27", "mixed-base-debunk-28",
-      "mixed-base-debunk-29", "mixed-base-debunk-30", "mixed-base-debunk-31",
-      "mixed-base-debunk-32", "mixed-base-debunk-33", "mixed-base-debunk-34",
-      "mixed-base-debunk-35", "mixed-base-debunk-36", "mixed-base-debunk-37",
-      "mixed-base-debunk-38", "mixed-base-debunk-39", "mixed-base-debunk-40",
-      "mixed-base-debunk-41", "mixed-base-debunk-42", "mixed-base-debunk-43",
-      "mixed-base-debunk-44", "mixed-base-debunk-45", "mixed-base-debunk-46",
-      "mixed-base-debunk-47", "mixed-base-debunk-48", "mixed-base-debunk-49",
-      "mixed-base-debunk-50", "mixed-base-debunk-51"
+      "mixed-base-debunk-02",
+      "mixed-base-debunk-03",
+      "mixed-base-debunk-04",
+      "mixed-base-debunk-05",
+      "mixed-base-debunk-06",
+      "mixed-base-debunk-07",
+      "mixed-base-debunk-08",
+      "mixed-base-debunk-09",
+      "mixed-base-debunk-10",
+      "mixed-base-debunk-11",
+      "mixed-base-debunk-12",
+      "mixed-base-debunk-13",
+      "mixed-base-debunk-14",
+      "mixed-base-debunk-15",
+      "mixed-base-debunk-16",
+      "mixed-base-debunk-17",
+      "mixed-base-debunk-18",
+      "mixed-base-debunk-19",
+      "mixed-base-debunk-20",
+      "mixed-base-debunk-21",
+      "mixed-base-debunk-22",
+      "mixed-base-debunk-23",
+      "mixed-base-debunk-24",
+      "mixed-base-debunk-25",
+      "mixed-base-debunk-26",
+      "mixed-base-debunk-27",
+      "mixed-base-debunk-28",
+      "mixed-base-debunk-29",
+      "mixed-base-debunk-30",
+      "mixed-base-debunk-31",
+      "mixed-base-debunk-32",
+      "mixed-base-debunk-33",
+      "mixed-base-debunk-34",
+      "mixed-base-debunk-35",
+      "mixed-base-debunk-36",
+      "mixed-base-debunk-37",
+      "mixed-base-debunk-38",
+      "mixed-base-debunk-39",
+      "mixed-base-debunk-40",
+      "mixed-base-debunk-41",
+      "mixed-base-debunk-42",
+      "mixed-base-debunk-43",
+      "mixed-base-debunk-44",
+      "mixed-base-debunk-45",
+      "mixed-base-debunk-46",
+      "mixed-base-debunk-47",
+      "mixed-base-debunk-48",
+      "mixed-base-debunk-49",
+      "mixed-base-debunk-50",
+      "mixed-base-debunk-51"
     ],
-    "unlockedAfter": "mixed-clues"
+    "unlockedAfter": "mixed-clues",
+    "boardGameCompliant": false
   }
 ]

@@ -140,7 +140,7 @@ function ExpandedRulesCards() {
 
 // ─── Full details block ───────────────────────────────────────────────────────
 
-export function ExpandedRulesQuickReference() {
+export function ExpandedRulesQuickReference({ showPuzzleOnly = false }: { showPuzzleOnly?: boolean }) {
   return (
     <details className="group border border-violet-200 rounded-xl bg-white overflow-hidden">
       <summary className="flex items-center justify-between px-4 py-3 cursor-pointer
@@ -153,7 +153,7 @@ export function ExpandedRulesQuickReference() {
           Base rules
         </p>
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 mb-4">
-          <BaseRulesCards />
+          <BaseRulesCards showPuzzleOnly={showPuzzleOnly} />
         </div>
         <p className="text-[10px] text-violet-500 uppercase tracking-widest font-semibold mb-2">
           Expanded mechanics
