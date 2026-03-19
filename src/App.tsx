@@ -171,7 +171,7 @@ function CollectionCard({
               {col.difficulty}
             </span>
           </div>
-          <div className="flex items-center gap-2 shrink-0">
+          <div className="flex items-center gap-2 shrink-0 w-20 justify-end">
             {locked
               ? <span className="text-base">🔒</span>
               : visibleTotal === 0

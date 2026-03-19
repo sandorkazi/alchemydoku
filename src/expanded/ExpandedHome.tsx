@@ -104,7 +104,7 @@ function CollectionSummaryCard({ collection, completed, showPuzzleOnly, onOpen }
               {collection.difficulty}
             </span>
           </div>
-          <div className="flex items-center gap-2 shrink-0">
+          <div className="flex items-center gap-2 shrink-0 w-20 justify-end">
             {visiblePuzzles.length === 0
               ? <span className="text-xs font-semibold text-gray-400">🧩{nonCompliantCount}</span>
               : <>
