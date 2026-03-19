@@ -140,7 +140,12 @@ export function evaluatePlan(
  * Valid when:
  * 1. Plan length equals refLen.
  * 2. Every step removes at least one publication (no wasted steps).
- * 3. All publications are removed by the end.
+ * 3. All FALSE publications are removed by the end.
+ *
+ * Truth values are not given as a premise — they are derived from the
+ * solution: a publication is false iff solution[ingredient] ≠ claimedAlchemical.
+ * True publications cannot be removed by any debunk and are not part of the
+ * plan target.
  *
  * Step-kind constraints (master-only, apprentice-only) are enforced by the
  * callers validateMasterPlanAnswer and validateApprenticePlanAnswer.
@@ -153,10 +158,13 @@ export function validateMinStepsAnswer(
   refLen: number,
 ): boolean {
   if (steps.length !== refLen) return false;
-  if (publications.length === 0) return steps.length === 0;
+
+  // Only false publications need to be (and can be) removed
+  const falsePubs = publications.filter(p => solution[p.ingredient] !== p.claimedAlchemical);
+  if (falsePubs.length === 0) return steps.length === 0;
 
   const activePubs = new Map<IngredientId, AlchemicalId>(
-    publications.map(p => [p.ingredient, p.claimedAlchemical])
+    falsePubs.map(p => [p.ingredient, p.claimedAlchemical])
   );
 
   for (const step of steps) {
@@ -165,7 +173,7 @@ export function validateMinStepsAnswer(
     if (outcome.removed.length === 0) return false;
   }
 
-  // All publications removed
+  // All false publications removed
   return activePubs.size === 0;
 }
 
@@ -236,8 +244,10 @@ export function simulatePlan(
   publications: Publication[],
   worlds: WorldSet,
 ): { outcomes: PlanOutcome; remainingPubs: IngredientId[] } {
+  // Only false publications are tracked — true ones cannot be removed
+  const falsePubs = publications.filter(p => solution[p.ingredient] !== p.claimedAlchemical);
   const activePubs = new Map<IngredientId, AlchemicalId>(
-    publications.map(p => [p.ingredient, p.claimedAlchemical])
+    falsePubs.map(p => [p.ingredient, p.claimedAlchemical])
   );
   const outcomes: PlanOutcome = [];
   for (const step of steps) {
