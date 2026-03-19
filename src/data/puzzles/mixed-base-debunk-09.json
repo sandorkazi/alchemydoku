@@ -2,7 +2,7 @@
   "id": "mixed-base-debunk-09",
   "title": "A Flash of Insight",
   "description": "Mixed evidence surrounds several suspicious publications. Use master debunking to expose the lies.",
-  "difficulty": "hard",
+  "difficulty": "expert",
   "clues": [
     {
       "kind": "sell_result_among",
@@ -108,7 +108,7 @@
     }
   ],
   "complexity": {
-    "score": 4,
+    "score": 5,
     "raw": 8.061,
     "avg_clue_strength": 2.66,
     "ambig_penalty": 0.8,

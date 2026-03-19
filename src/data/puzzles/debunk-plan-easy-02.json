@@ -1,7 +1,7 @@
 {
   "id": "debunk-plan-easy-02",
   "title": "The Master's Shortcut",
-  "description": "Two wrong publications sit on the board. One ingredient is definitively known \u2014 use master mixes to expose both lies.",
+  "description": "Two wrong publications sit on the board. Use the clues to confirm which ingredient is definitively known, then plan the master mixes that guarantee both publications are exposed.",
   "difficulty": "hard",
   "clues": [
     {
@@ -20,6 +20,18 @@
       "kind": "aspect",
       "ingredient": 1,
       "color": "B",
+      "sign": "-"
+    },
+    {
+      "kind": "aspect",
+      "ingredient": 3,
+      "color": "R",
+      "sign": "+"
+    },
+    {
+      "kind": "aspect",
+      "ingredient": 5,
+      "color": "R",
       "sign": "-"
     }
   ],
@@ -71,15 +83,15 @@
   "hints": [
     {
       "level": 1,
-      "text": "A master debunk succeeds when one ingredient's alchemical is definitively known \u2014 the audience can then check whether the expected mix result (computed from that known alchemical and the claimed alchemical of a publication) contradicts the true result. ing1 is fully established by the three aspect clues. Look for publications that a master mix involving ing1 can expose."
+      "text": "A master debunk can expose a publication for ingredient X if the OTHER ingredient in the mix is definitively known — the audience computes the expected result using the known alchemical and the publication's claimed alchemical, then compares it to the true result. ing1 is fully pinned down by three aspect clues. Which publication-holders can a master mix of ing1 expose?"
     },
     {
       "level": 2,
-      "text": "ing1 is known to be npN. The true mix of ing1 + ing3 is B-. The publication for ing3 claims it is Nnp \u2014 if that were true, mix(npN, Nnp) = R-, which contradicts B-. So ing3's publication is exposed by a master mix of ing1 + ing3. Similarly, the publication for ing5 claims it is pNn \u2014 mix(npN, pNn) = B-, but the true result of ing1 + ing5 is R-. Contradiction."
+      "text": "ing1 is known to be npN. The publication for ing3 claims Nnp — if correct, mix(npN, Nnp) = R-. But ing3 has R+ (from the clue), so every alchemical consistent with that clue (pNn, Ppn, PPP, pnP) gives a different result with npN: B-, B-, G+, neutral. The prediction R- is guaranteed to be wrong — the publication will be exposed. The same logic applies to ing5: R- is known for ing5, and every consistent alchemical gives a result other than the publication's predicted B-."
     },
     {
       "level": 3,
-      "text": "Step 1: Master debunk \u2014 mix ing1 + ing3. ing1 is definitively known (npN); the claimed alch for ing3 (Nnp) predicts R-, but the true result is B- \u2192 ing3's publication removed. Step 2: Master debunk \u2014 mix ing1 + ing5. The claimed alch for ing5 (pNn) predicts B-, but the true result is R- \u2192 ing5's publication removed."
+      "text": "Step 1: Master debunk — mix ing1 + ing3. ing1 is npN; the claimed alch for ing3 (Nnp) predicts R-, but the true result is B- → ing3's publication removed. Step 2: Master debunk — mix ing1 + ing5. The claimed alch for ing5 (pNn) predicts B-, but the true result is R- → ing5's publication removed."
     }
   ],
   "complexity": {
@@ -92,6 +104,6 @@
     "stuck": true,
     "requires_complement_set": false,
     "question_requires_enumeration": false,
-    "residual_worlds": 5040
+    "residual_worlds": 1440
   }
 }

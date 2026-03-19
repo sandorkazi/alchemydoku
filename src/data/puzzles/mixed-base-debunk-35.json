@@ -2,7 +2,7 @@
   "id": "mixed-base-debunk-35",
   "title": "Reaction Chains",
   "description": "Mixed evidence surrounds several suspicious publications. Use master debunking to expose the lies.",
-  "difficulty": "hard",
+  "difficulty": "expert",
   "clues": [
     {
       "kind": "sell_result_among",
@@ -109,7 +109,7 @@
     }
   ],
   "complexity": {
-    "score": 4,
+    "score": 5,
     "raw": 8.073,
     "avg_clue_strength": 2.86,
     "ambig_penalty": 0.76,

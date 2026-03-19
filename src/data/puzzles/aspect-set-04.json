@@ -2,7 +2,7 @@
   "id": "aspect-set-04",
   "title": "The Negative Aspects",
   "description": "Red negative sign \u2014 derived purely from mixing chains, no direct aspect clues.",
-  "difficulty": "medium",
+  "difficulty": "easy",
   "clues": [
     {
       "kind": "mixing",
@@ -112,7 +112,7 @@
     }
   ],
   "complexity": {
-    "score": 3,
+    "score": 2,
     "raw": 3.073,
     "avg_clue_strength": 2.043,
     "ambig_penalty": 0.0,
