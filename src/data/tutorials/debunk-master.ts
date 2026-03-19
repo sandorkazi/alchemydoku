@@ -19,19 +19,36 @@ The audience sees the TRUE result of the mix. Any publication whose claimed alch
 Unlike an apprentice debunk, a master debunk targets a pair of ingredients rather than a single aspect. It can remove a publication in one step if the other ingredient's alchemical is already known.`,
   },
 
+  // ── The claiming requirement ──────────────────────────────────────────────
+  {
+    kind: 'explain',
+    id: 'debm-claiming',
+    title: 'You Must Claim the Result First',
+    emoji: '🎯',
+    body: `Before the mix is performed, the debunker must publicly declare which potion they believe the pair will produce.
+
+This claim is what determines how much information the result carries:
+
+  • Correct claim (success): the audience learns the exact true result. Every world in which that pair produces a different potion is eliminated — a strong constraint.
+
+  • Wrong claim (failure): the audience only learns that the true result was not the claim. Just one of the seven possible results is ruled out — a much weaker constraint.
+
+The gap is significant. A well-chosen master debunk that succeeds pins the exact mixing result. A failed one still narrows things down, but only slightly.`,
+  },
+
   // ── Success vs failure ───────────────────────────────────────────────────
   {
     kind: 'explain',
     id: 'debm-success-failure',
-    title: 'Success vs Failure — Both Constrain',
+    title: 'Success vs Failure — Publications',
     emoji: '⚖️',
-    body: `After a master debunk, one of two things happens:
+    body: `After a master debunk, one of two things happens for the publications:
 
-  • Success: the true mix result contradicts one publication and not the other → that publication is removed. The result also acts as a mixing clue for your grid.
+  • Success: the true mix result contradicts one publication and not the other → that publication is removed.
 
-  • Failure: the true result does not contradict either publication (or contradicts both simultaneously — see the next step).
+  • Failure: the true result does not contradict either publication (or contradicts both simultaneously — see the next step) → nothing is removed.
 
-Important: even a failed master debunk gives you information. You now know the true result of mixing those two ingredients — a valuable mixing clue even if no publication was removed.`,
+Either way, some information is gained: success reveals the exact true result; failure rules out exactly one possible result (the claimed one). Success is far more constraining.`,
   },
 
   // ── Conflict case ────────────────────────────────────────────────────────
