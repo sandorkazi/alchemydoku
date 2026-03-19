@@ -59,27 +59,51 @@ The player mixes two ingredients and publicly declares the **true result** of th
 The result is the true mix result (deterministic from the solution). It does not need to be
 specified in the answer because it is uniquely determined by the pair and the solution.
 
-**Conflict logic**: after declaring mix(A, B) = R, the audience compares R against every
-publication on the board that involves A or B:
+**Two independent disproof mechanisms apply in order.**
 
-- For publication `P_A` (claims A = alch_X): compute `mix(alch_X, true_B)`.
-  - `true_B` = the true alchemical for B, which the audience knows if B's publication
-    is **definitively known** (see §2d). If B is not definitively known → P_A cannot be
-    unambiguously blamed.
-  - If `mix(alch_X, true_B) ≠ R` → P_A is in conflict.
-  - Same logic for P_B symmetrically.
+#### Direct disproval — result incompatibility
 
-**Removal rule — unambiguous blame required**:
+A claimed alchemical `c_X` for ingredient X is **result-incompatible** with actual result Z if
+no partner alchemical exists such that `mix(c_X, partner) = Z`.
+
+When this is the case, `P_X` is *directly disproved*: the audience can verify, without knowing
+any other ingredient's true alchemical, that `c_X` could never have produced Z. This check is
+independent of "definitively known" (§2d) — it fires on the result alone.
+
+#### Blame-based disproval — definitively known partner
+
+When a claim is **not** result-incompatible, it can still be blamed if the partner's true
+alchemical is definitively known (§2d):
+
+- For publication `P_A` (claims A = alch_X): if B is definitively known, compute
+  `mix(alch_X, true_B)`. If `≠ R` → P_A is blame-disproved.
+- Same logic for P_B symmetrically.
+
+The "blame-disproved" path requires knowing the partner's true alchemical; without it,
+the blame is ambiguous and the publication cannot be removed via this mechanism.
+
+**Removal rule:**
 
 | Situation | Outcome |
 |---|---|
-| Only P_A is in conflict | P_A removed |
-| Only P_B is in conflict | P_B removed |
-| Both P_A and P_B are in conflict | Neither removed — audience cannot tell who is lying |
-| Neither in conflict | No effect |
+| P_A is result-incompatible (regardless of P_B) | P_A removed |
+| P_B is result-incompatible (regardless of P_A) | P_B removed |
+| Both result-incompatible | Both removed |
+| Neither result-incompatible; only P_A is blame-disproved | P_A removed |
+| Neither result-incompatible; only P_B is blame-disproved | P_B removed |
+| Neither result-incompatible; both blame-disproved | Neither removed — **CONFLICT** |
+| Neither disproved by either mechanism | No effect |
 
-The "both conflicted, neither removed" case is what makes master debunking sequentially
-interesting: the two conflicts are real and on record, but no removal occurs yet.
+The **CONFLICT** row (neither removed) is the "both blame-disproved" case: each claim is
+individually plausible (could produce Z with some partner), but together they contradict the
+observed result — `mix(c_A, c_B) ≠ Z`. The audience can tell that at least one claim is wrong,
+but cannot single out which one. This is only possible when *both* ingredients are definitively
+known yet neither claim is result-incompatible.
+
+**Why the two mechanisms are separate**: result-incompatibility can be verified by the audience
+from the result alone (no knowledge of the other ingredient needed). Blame-based disproval
+requires knowing the partner. A claim that is result-incompatible is *always* individually
+disprovable, so it never creates ambiguity — it is always removed.
 
 **Important**: this ambiguity is about *which publication is wrong*, not about the mix result
 itself. The declared result is always true, so the mix result is public information regardless.
@@ -91,8 +115,8 @@ A single apprentice reveal can simultaneously disprove:
 - Multiple encyclopedia articles (if several articles have a wrong entry for that ingredient
   on that aspect)
 
-A single master mix can simultaneously remove two publications (one for each ingredient, if
-blame is unambiguous — see §2b) and/or disprove encyclopedia articles whose entries are
+A single master mix can simultaneously remove two publications (both result-incompatible, or
+blame unambiguous for each — see §2b) and/or disprove encyclopedia articles whose entries are
 contradicted by the known mix result.
 
 In all cases: **one action = one step** no matter how many targets it hits.
@@ -245,30 +269,42 @@ plan would otherwise satisfy the minimum-step requirement.
 
 **Variant**: master only in v1.
 
-An apprentice reveal is always unambiguous and always removes. Therefore conflict-without-
-removal only arises from master debunks where **both** publications involved are wrong, so
-the audience cannot determine which is at fault → neither removed.
+An apprentice reveal is always unambiguous and always removes. Conflict-without-removal
+only arises from master debunks that satisfy all four conditions simultaneously:
+
+1. **Both ingredients are published** (with wrong claimed alchemicals `c_1` and `c_2`).
+2. **Neither claim is result-incompatible**: each claimed alchemical *could* produce the
+   actual mix result with some partner — `∃A: mix(c_1, A) = actual` and `∃B: mix(B, c_2) = actual`.
+   If either claim is result-incompatible, that publication is directly disproved → removal,
+   not a conflict. This check is independent of what the audience knows — it fires on the
+   result alone.
+3. **Not exactly one ingredient is definitively known** (§2d). If exactly one is known, the
+   blame is unambiguous → that publication is removed, not a conflict. If *both* are known,
+   both are blame-disproved simultaneously → CONFLICT (per §2b "both blame-disproved" row).
+   If *neither* is known, the audience cannot attribute blame to either side individually,
+   so both remain → also produces a CONFLICT (provided condition 4 holds).
+4. **The two claims together are wrong**: `mix(c_1, c_2) ≠ actual`. The audience observes
+   that both publications cannot simultaneously be true, but cannot single out which is lying.
+
+Conditions 2 and 3 together ensure *genuine ambiguity*: neither claim is individually disprovable
+(by result alone or by a known partner), yet the audience sees they can't both be right.
 
 **What the question asks**: "Mix ingredient `fixedIngredient` with something to produce a
 conflict on `fixedIngredient`'s publication without removing it."
 
-**Why this is interesting**: the player must identify an ingredient whose publication is also
-wrong, such that the true mix result contradicts both publications, producing the ambiguous
-outcome. This serves as a strategic demonstration that both are wrong, which may be
-useful information even if no removal occurs.
+**Why this is interesting**: the player must identify a partner ingredient whose publication
+is also wrong, such that neither can be individually blamed — creating a public record of
+mutual suspicion. Neither publication is removed, but the conflict is noted.
 
 **Answer**: a single step:
 ```
 { kind: "master", ingredient1: fixedIngredient, ingredient2: <answer> }
 ```
-`ingredient2` must have a wrong publication, and the true mix of the pair must contradict
-both publications, and neither must be definitively known in a way that would make the
-blame unambiguous. (If one *is* definitively known, the mix would unambiguously remove one
-of them — that would not be a "conflict only" answer.)
 
-**Important nuance**: "definitively known" (§2d) is determined from the puzzle clues alone.
-If the clue set fully solves one ingredient, a master mix with that ingredient would always
-be unambiguous — those pairs cannot be used for conflict-only.
+**Common mistake**: choosing a partner whose claimed alchemical is result-incompatible with
+the actual mix. Even if `mix(c_1, c_2) ≠ actual`, result-incompatibility of either claim
+makes this a direct disproval (removal), not a conflict. Both claims must be individually
+plausible with the observed result.
 
 ---
 

@@ -525,20 +525,36 @@ def _find_removal_plan(sol: dict, pub_map: dict, known: set) -> list:
     return None
 
 
-def _find_conflict_step(sol: dict, pub_map: dict, known: set):
-    """Find a pair (ing_c, ing_d) both published and both definitively known where
-    mixing creates ambiguous conflict (both pubs implicated). Returns (ing_c, ing_d) or None."""
+def _find_conflict_cover(sol: dict, pub_map: dict, _known: set):
+    """Find a minimal set of pairs that together cover all publications with conflicts.
+
+    Conflict semantics: both ingredients must be published, and their CLAIMED
+    alchemicals together predict a different result from the actual mix:
+        MIX_TABLE[pub_map[a]][pub_map[b]] != MIX_TABLE[sol[a]][sol[b]]
+    This matches the TypeScript simulateConflictOnlyStep definition.
+
+    Returns ordered list of (ing_c, ing_d) pairs (fixedIngredient = cover[0][0]), or None."""
     pub_keys = sorted(pub_map.keys())
+    valid_pairs = []
     for i, ing_c in enumerate(pub_keys):
         for ing_d in pub_keys[i + 1:]:
-            if ing_c not in known or ing_d not in known:
-                continue
             true_r = MIX_TABLE[sol[ing_c]][sol[ing_d]]
-            conflict1 = MIX_TABLE[pub_map[ing_c]][sol[ing_d]] != true_r
-            conflict2 = MIX_TABLE[sol[ing_c]][pub_map[ing_d]] != true_r
-            if conflict1 and conflict2:
-                return (ing_c, ing_d)
-    return None
+            claimed_r = MIX_TABLE[pub_map[ing_c]][pub_map[ing_d]]
+            if claimed_r != true_r:
+                valid_pairs.append((ing_c, ing_d))
+    if not valid_pairs:
+        return None
+    uncovered = set(pub_keys)
+    selected = []
+    available = list(valid_pairs)
+    while uncovered:
+        best = max(available, key=lambda p: len(uncovered & {p[0], p[1]}), default=None)
+        if best is None or not (uncovered & {best[0], best[1]}):
+            return None
+        selected.append(best)
+        uncovered -= {best[0], best[1]}
+        available.remove(best)
+    return selected
 
 
 def _make_publications(sol: dict, known: set, n: int, rng: random.Random) -> dict:
@@ -698,19 +714,19 @@ def _plan_debunk(profile, sol: dict, worlds: frozenset, rng: random.Random):
                 plan = _find_removal_plan(sol, pub_map, known)
             if plan is None:
                 continue
-            conflict_pair = _find_conflict_step(sol, pub_map, known)
+            conflict_cover = _find_conflict_cover(sol, pub_map, known)
             questions = [{'kind': 'debunk_min_steps'}]
-            if conflict_pair:
-                ing_c, _ = conflict_pair
+            if conflict_cover:
+                ing_c = conflict_cover[0][0]
                 questions.append({'kind': 'debunk_conflict_only', 'fixedIngredient': ing_c})
             pubs_array = [None] * 8
             for s, wrong_alch in pub_map.items():
                 pubs_array[s - 1] = {'ingredient': s, 'claimedAlchemical': wrong_alch}
             debunk_answers = {'debunk_min_steps': plan}
-            if conflict_pair:
-                ing_c, ing_d = conflict_pair
+            if conflict_cover:
                 debunk_answers['debunk_conflict_only'] = [
-                    {'kind': 'master', 'ingredient1': ing_c, 'ingredient2': ing_d}
+                    {'kind': 'master', 'ingredient1': a, 'ingredient2': b}
+                    for a, b in conflict_cover
                 ]
             return {
                 'publications': pubs_array,
@@ -2670,6 +2686,55 @@ def cmd_check_hints(args):
     if wrong > 0:
         sys.exit(1)
 
+def cmd_migrate_conflict_answers(_args):
+    """Recompute debunk_conflict_only reference answers for all existing puzzles
+    using the new multi-step _find_conflict_cover logic."""
+    import pathlib
+    dirs = [
+        pathlib.Path('src/data/puzzles'),
+        pathlib.Path('src/expanded/data/puzzles'),
+    ]
+    updated = 0
+    for d in dirs:
+        for path in sorted(d.glob('*.json')):
+            if path.name == 'collections.json':
+                continue
+            puz = json.loads(path.read_text())
+            questions = puz.get('questions', [])
+            if not any(q.get('kind') == 'debunk_conflict_only' for q in questions):
+                continue
+            pubs = [p for p in (puz.get('publications') or []) if p]
+            if not pubs:
+                continue
+            sol = {int(k): v for k, v in puz['solution'].items()}
+            pub_map = {p['ingredient']: p['claimedAlchemical'] for p in pubs}
+            cover = _find_conflict_cover(sol, pub_map, set())
+            if cover is None:
+                # No full cover possible — remove debunk_conflict_only from this puzzle
+                puz['questions'] = [q for q in questions if q.get('kind') != 'debunk_conflict_only']
+                if 'debunk_answers' in puz and 'debunk_conflict_only' in puz['debunk_answers']:
+                    del puz['debunk_answers']['debunk_conflict_only']
+                path.write_text(json.dumps(puz, indent=2) + '\n')
+                print(f'  removed debunk_conflict_only (no full cover): {path.name}')
+                updated += 1
+                continue
+            new_answer = [{'kind': 'master', 'ingredient1': a, 'ingredient2': b} for a, b in cover]
+            old_answer = puz.get('debunk_answers', {}).get('debunk_conflict_only', [])
+            if new_answer == old_answer:
+                continue
+            # Update answer
+            puz.setdefault('debunk_answers', {})['debunk_conflict_only'] = new_answer
+            # Update fixedIngredient in the question
+            fixed = cover[0][0]
+            for q in questions:
+                if q.get('kind') == 'debunk_conflict_only':
+                    q['fixedIngredient'] = fixed
+            path.write_text(json.dumps(puz, indent=2) + '\n')
+            print(f'  updated {path.name}: {len(old_answer)} → {len(new_answer)} step(s)')
+            updated += 1
+    print(f'\nDone. {updated} puzzle(s) updated.')
+
+
 # ══════════════════════════════════════════════════════════════════════════════
 # ENTRY POINT
 # ══════════════════════════════════════════════════════════════════════════════
@@ -2711,6 +2776,10 @@ if __name__ == '__main__':
     ch_p.add_argument('files', nargs='*', help='Puzzle JSON file paths')
     ch_p.add_argument('--all', action='store_true', help='Check all base + expanded puzzles')
 
+    # migrate-conflict-answers
+    sub.add_parser('migrate-conflict-answers',
+                   help='Recompute debunk_conflict_only reference answers for all puzzles')
+
     args = parser.parse_args()
 
     if args.cmd == 'generate':
@@ -2725,5 +2794,7 @@ if __name__ == '__main__':
         cmd_regen_hints(args)
     elif args.cmd == 'check-hints':
         cmd_check_hints(args)
+    elif args.cmd == 'migrate-conflict-answers':
+        cmd_migrate_conflict_answers(args)
     else:
         parser.print_help()

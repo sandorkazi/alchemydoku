@@ -353,11 +353,6 @@ def check_debunk_answers(path: Path, puz: dict, r: Results):
                     f"[debunk-answers] {name}: {qk} step[{i}] "
                     f"has kind='{actual}', expected '{expected}'"
                 )
-        if qk == 'debunk_conflict_only' and len(ref) != 1:
-            r.error(
-                f"[debunk-answers] {name}: debunk_conflict_only must have exactly 1 step "
-                f"(found {len(ref)})"
-            )
 
 
 def check_trivial_answers(path: Path, puz: dict, r: Results):

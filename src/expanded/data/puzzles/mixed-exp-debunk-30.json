@@ -175,6 +175,16 @@
         "kind": "master",
         "ingredient1": 3,
         "ingredient2": 4
+      },
+      {
+        "kind": "master",
+        "ingredient1": 3,
+        "ingredient2": 7
+      },
+      {
+        "kind": "master",
+        "ingredient1": 3,
+        "ingredient2": 8
       }
     ]
   },

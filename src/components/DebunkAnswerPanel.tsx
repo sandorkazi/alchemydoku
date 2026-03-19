@@ -113,7 +113,7 @@ function isComplete(s: DraftStep): s is DebunkStep {
 }
 
 function StepEditor({
-  index, draft, outcome, onUpdate, onRemove, isConflictOnly, showOutcome, isTutorial,
+  index, draft, outcome, onUpdate, onRemove, isConflictOnly, isIngredientLocked, showOutcome, isTutorial,
 }: {
   index: number;
   draft: DraftStep;
@@ -121,6 +121,7 @@ function StepEditor({
   onUpdate: (d: DraftStep) => void;
   onRemove: () => void;
   isConflictOnly: boolean;
+  isIngredientLocked: boolean;
   showOutcome: boolean;
   isTutorial: boolean;
 }) {
@@ -139,7 +140,7 @@ function StepEditor({
     if (outcome.conflicts.length > 0) {
       return (
         <span className={`text-xs font-semibold ${isConflictOnly ? 'text-green-700' : 'text-amber-600'}`}>
-          {isConflictOnly ? '✓ Conflict — both publications implicated' : '⚡ Conflict — neither publication removed'}
+          {isConflictOnly ? '✓ Conflict — counts towards cover' : '⚡ Conflict — neither publication removed'}
         </span>
       );
     }
@@ -181,8 +182,8 @@ function StepEditor({
 
       {draft.kind === 'master' && (
         <div className="flex flex-wrap gap-3">
-          {/* For conflict-only the fixed ingredient is locked — only show it as a badge */}
-          {isConflictOnly ? (
+          {/* For conflict-only step 1, the fixed ingredient is locked — only show it as a badge */}
+          {isIngredientLocked ? (
             <LockedIngDisplay slotId={(draft as { kind: 'master'; ingredient1: IngredientId | null }).ingredient1} />
           ) : (
             <IngPicker
@@ -193,7 +194,7 @@ function StepEditor({
             />
           )}
           <IngPicker
-            label={isConflictOnly ? 'Mix with' : 'Ingredient 2'}
+            label={isIngredientLocked ? 'Mix with' : 'Ingredient 2'}
             value={draft.ingredient2}
             exclude={draft.ingredient1}
             onChange={id => onUpdate({ ...draft, ingredient2: id })}
@@ -321,13 +322,19 @@ export function DebunkAnswerPanel({ onNext, isTutorial = false }: {
 
   const completedSteps = drafts.filter(isComplete) as DebunkStep[];
   const { outcomes, remainingPubs } = simulatePlan(
-    completedSteps, puzzle.solution, publications, worlds
+    completedSteps, puzzle.solution, publications, worlds, isConflictOnly
   );
   const removedSet = new Set<IngredientId>(
     outcomes.flatMap(o => o.removed)
   );
 
   const allStepsComplete = drafts.length > 0 && drafts.every(isComplete);
+  const falsePubIngredients = publications
+    .filter(p => puzzle.solution[p.ingredient] !== p.claimedAlchemical)
+    .map(p => p.ingredient);
+  const conflictCoveredIds = new Set(outcomes.flatMap(o => o.conflicts));
+  const allConflictsCovered = isConflictOnly && falsePubIngredients.length > 0
+    && falsePubIngredients.every(id => conflictCoveredIds.has(id));
   const refAnswer = isConflictOnly
     ? puzzle.debunk_answers?.debunk_conflict_only
     : isApprenticeOnly
@@ -411,8 +418,8 @@ export function DebunkAnswerPanel({ onNext, isTutorial = false }: {
             </span>
             <div className="flex items-center gap-3">
               {isConflictOnly
-                ? outcomes.length > 0 && outcomes[0].conflicts.length > 0 && (
-                  <span className="text-[10px] text-green-600 font-semibold">✓ Conflict produced</span>
+                ? allConflictsCovered && (
+                  <span className="text-[10px] text-green-600 font-semibold">✓ All publications in conflict</span>
                 )
                 : remainingPubs.length === 0 && drafts.length > 0 && (
                   <span className="text-[10px] text-green-600 font-semibold">✓ All publications covered</span>
@@ -444,7 +451,7 @@ export function DebunkAnswerPanel({ onNext, isTutorial = false }: {
 
           <p className="text-xs text-gray-500">
             {isConflictOnly
-              ? 'Find a single master mix that simultaneously contradicts all incorrect publications without removing any.'
+              ? 'Find a minimal number of master mixes which will cover all incorrect publications with contradictions (at least 1 for each), without removing any.'
               : isApprenticeOnly
                 ? 'Remove all false publications using only apprentice debunks, in as few steps as possible.'
                 : 'Remove all false publications in as few steps as possible.'}
@@ -458,37 +465,35 @@ export function DebunkAnswerPanel({ onNext, isTutorial = false }: {
               outcome={isComplete(draft) ? outcomes[completedSteps.indexOf(draft as DebunkStep)] : undefined}
               onUpdate={d => updateStep(i, d)}
               onRemove={() => removeStep(i)}
-              isConflictOnly={isConflictOnly && i === 0}
+              isConflictOnly={isConflictOnly}
+              isIngredientLocked={isConflictOnly && i === 0}
               showOutcome={showStepFeedback}
               isTutorial={isTutorial}
             />
           ))}
 
-          {/* Add step buttons — hidden for conflict-only (exactly 1 step) */}
-          {!isConflictOnly && (
-            <div className="flex gap-2">
-              {isApprenticeOnly && (
-                <button
-                  onClick={() => addStep('apprentice')}
-                  className="flex-1 border-2 border-dashed border-gray-200 hover:border-indigo-300
-                             text-gray-400 hover:text-indigo-500 rounded-lg py-2 text-xs font-semibold
-                             transition-colors"
-                >
-                  + Apprentice step
-                </button>
-              )}
-              {isMasterOnly && (
-                <button
-                  onClick={() => addStep('master')}
-                  className="flex-1 border-2 border-dashed border-gray-200 hover:border-indigo-300
-                             text-gray-400 hover:text-indigo-500 rounded-lg py-2 text-xs font-semibold
-                             transition-colors"
-                >
-                  + Master step
-                </button>
-              )}
-            </div>
-          )}
+          <div className="flex gap-2">
+            {isApprenticeOnly && (
+              <button
+                onClick={() => addStep('apprentice')}
+                className="flex-1 border-2 border-dashed border-gray-200 hover:border-indigo-300
+                           text-gray-400 hover:text-indigo-500 rounded-lg py-2 text-xs font-semibold
+                           transition-colors"
+              >
+                + Apprentice step
+              </button>
+            )}
+            {(isMasterOnly || isConflictOnly) && (
+              <button
+                onClick={() => addStep('master')}
+                className="flex-1 border-2 border-dashed border-gray-200 hover:border-indigo-300
+                           text-gray-400 hover:text-indigo-500 rounded-lg py-2 text-xs font-semibold
+                           transition-colors"
+              >
+                + Master step
+              </button>
+            )}
+          </div>
         </div>
       )}
 
@@ -528,7 +533,9 @@ export function DebunkAnswerPanel({ onNext, isTutorial = false }: {
           <div className="flex items-center gap-2 text-red-700 font-semibold">
             <IncorrectIcon width={24} />
             {isConflictOnly
-              ? "That doesn't produce a conflict-only outcome — try again."
+              ? wrongAttempts < refLen
+                ? `Plan uses ${drafts.length} step${drafts.length !== 1 ? 's' : ''} — can you do it in ${refLen}?`
+                : "That plan doesn't cover all publications — ensure each step creates a conflict without removing any."
               : wrongAttempts < refLen
                 ? `Plan has ${drafts.length} step${drafts.length !== 1 ? 's' : ''} — can you do it in ${refLen}?`
                 : "That plan doesn't work — check each step removes at least one publication."

@@ -215,8 +215,8 @@ export function checkDebunkAnswers(
       return validateApprenticePlanAnswer(steps, sol, pubs, worlds, refLen);
     }
     if (q.kind === 'debunk_conflict_only') {
-      if (steps.length !== 1) return false;
-      return validateConflictOnlyAnswer(steps[0], q.fixedIngredient, sol, pubs, worlds);
+      const refLen = (puzzle.debunk_answers?.debunk_conflict_only ?? []).length;
+      return validateConflictOnlyAnswer(steps, sol, pubs, worlds, refLen);
     }
     return false;
   });
