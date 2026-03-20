@@ -1,7 +1,7 @@
 {
   "id": "debunk-plan-tutorial-02",
   "title": "The Neutral Trap",
-  "description": "Two false publications \u2014 but mixing the two published ingredients would only give neutral. Their aspects are fully known from your notes. Use what you know.",
+  "description": "Two theories have been published. Their aspects are fully known from your notes — check each claim. Mixing the two ingredients won't help here; use what the clues tell you directly.",
   "difficulty": "hard",
   "trivial_answer_ok": true,
   "clues": [
@@ -98,7 +98,7 @@
     },
     {
       "level": 3,
-      "text": "Two-step plan: apprentice-debunk ing3 on B- (true B- contradicts the claimed B+). Then apprentice-debunk ing7 on R+ (true R+ contradicts the claimed R-). Note: ing3 (npN) and ing7 (pnP) are direct opposites \u2014 they always mix to neutral. A master debunk on this pair would reveal neutral, which doesn't challenge either publication. Clue knowledge is your only path here."
+      "text": "Two-step plan: apprentice-debunk ing3 on B- (true B- contradicts the claimed B+). Then apprentice-debunk ing7 on R+ (true R+ contradicts the claimed R-). Note: ing3 (npN) and ing7 (pnP) are direct opposites \u2014 they always mix to neutral. A master debunk on this pair would reveal neutral, creating a conflict: both publications are contradicted simultaneously, but neither can be removed. Apprentice debunks are your only path to actually removing these."
     }
   ],
   "complexity": {

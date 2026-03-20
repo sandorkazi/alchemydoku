@@ -8,9 +8,10 @@
 
 import { useState } from 'react';
 import { useExpandedSolver, useExpandedIngredient } from '../contexts/ExpandedSolverContext';
-import { IngredientIcon, AlchemicalImage, ElemImage, SignedElemImage, CorrectIcon, IncorrectIcon } from '../../components/GameSprites';
+import { IngredientIcon, AlchemicalImage, ElemImage, SignedElemImage, PotionImage, CorrectIcon, IncorrectIcon } from '../../components/GameSprites';
+import { PotionPicker } from '../../components/AnswerPickers';
 import { simulateExpandedPlan } from '../logic/debunkExpanded';
-import type { DebunkStep, IngredientId, Color, Publication } from '../../types';
+import type { DebunkStep, IngredientId, Color, Publication, PotionResult } from '../../types';
 import type { DebunkArticle } from '../types';
 
 // ─── Ingredient picker ────────────────────────────────────────────────────────
@@ -102,11 +103,11 @@ function ColorPicker({ value, onChange }: { value: Color | null; onChange: (c: C
 
 type DraftStep =
   | { kind: 'apprentice'; ingredient: IngredientId | null; color: Color | null }
-  | { kind: 'master'; ingredient1: IngredientId | null; ingredient2: IngredientId | null };
+  | { kind: 'master'; ingredient1: IngredientId | null; ingredient2: IngredientId | null; claimedPotion?: PotionResult | null };
 
 function isComplete(s: DraftStep): s is DebunkStep {
   if (s.kind === 'apprentice') return s.ingredient !== null && s.color !== null;
-  return s.ingredient1 !== null && s.ingredient2 !== null;
+  return s.ingredient1 !== null && s.ingredient2 !== null && s.claimedPotion != null;
 }
 
 // ─── Visual solution step ─────────────────────────────────────────────────────
@@ -138,6 +139,12 @@ function SolutionStep({ step, index }: { step: DebunkStep; index: number }) {
       <IngredientIcon index={idx1} width={20} />
       <span className="text-indigo-400">+</span>
       <IngredientIcon index={idx2} width={20} />
+      {step.claimedPotion && (
+        <>
+          <span className="text-indigo-300">claiming</span>
+          <PotionImage result={step.claimedPotion} width={20} />
+        </>
+      )}
     </div>
   );
 }
@@ -145,7 +152,7 @@ function SolutionStep({ step, index }: { step: DebunkStep; index: number }) {
 // ─── Step editor ──────────────────────────────────────────────────────────────
 
 function StepEditor({
-  index, draft, outcome, onUpdate, onRemove, isConflictOnly, isApprenticeOnly,
+  index, draft, outcome, onUpdate, onRemove, isConflictOnly, isIngredientLocked, isApprenticeOnly, isTutorial,
 }: {
   index: number;
   draft: DraftStep;
@@ -153,7 +160,9 @@ function StepEditor({
   onUpdate: (d: DraftStep) => void;
   onRemove: () => void;
   isConflictOnly: boolean;
+  isIngredientLocked: boolean;
   isApprenticeOnly?: boolean;
+  isTutorial: boolean;
 }) {
   const totalRemoved = (outcome?.removedPubs.length ?? 0) + (outcome?.removedArts.length ?? 0);
 
@@ -174,7 +183,7 @@ function StepEditor({
     if (outcome.conflicts.length > 0) {
       return (
         <span className={`text-xs font-semibold ${isConflictOnly ? 'text-green-700' : 'text-amber-600'}`}>
-          {isConflictOnly ? '✓ Conflict — both publications implicated' : '⚡ Conflict — neither publication removed'}
+          {isConflictOnly ? '✓ Conflict — counts towards cover' : '⚡ Conflict — neither publication removed'}
         </span>
       );
     }
@@ -195,7 +204,8 @@ function StepEditor({
                     if (draft.kind === k) return;
                     onUpdate(k === 'apprentice'
                       ? { kind: 'apprentice', ingredient: null, color: null }
-                      : { kind: 'master', ingredient1: null, ingredient2: null });
+                      : { kind: 'master', ingredient1: null, ingredient2: null,
+                          claimedPotion: isTutorial ? { type: 'neutral' } : null });
                   }}
                   className={`px-2 py-0.5 font-semibold capitalize transition-colors ${
                     draft.kind === k
@@ -234,24 +244,29 @@ function StepEditor({
 
       {draft.kind === 'master' && (
         <div className="flex flex-wrap gap-3">
-          {isConflictOnly ? (
+          {isIngredientLocked ? (
             <LockedIngDisplay slotId={(draft as { kind: 'master'; ingredient1: IngredientId | null }).ingredient1} />
           ) : (
             <IngPicker label="Ingredient 1" value={draft.ingredient1} exclude={draft.ingredient2}
               onChange={id => onUpdate({ ...draft, ingredient1: id })} />
           )}
           <IngPicker
-            label={isConflictOnly ? 'Mix with' : 'Ingredient 2'}
+            label={isIngredientLocked ? 'Mix with' : 'Ingredient 2'}
             value={draft.ingredient2}
             exclude={draft.ingredient1}
             onChange={id => onUpdate({ ...draft, ingredient2: id })}
           />
+          {!isTutorial && (
+            <div className="flex flex-col gap-1">
+              <span className="text-[10px] uppercase tracking-widest text-gray-400 font-bold">Claimed Potion</span>
+              <PotionPicker
+                selected={draft.claimedPotion ?? null}
+                onSelect={p => onUpdate({ ...draft, claimedPotion: p })}
+                potionWidth={32}
+              />
+            </div>
+          )}
         </div>
-      )}
-      {draft.kind === 'master' && (
-        <p className="text-[10px] text-gray-400 italic">
-          The true mix result is publicly declared automatically.
-        </p>
       )}
 
       {outcome && (
@@ -375,12 +390,13 @@ type QuestionPlan = {
   fixedIngredient: IngredientId | null;
 };
 
-function makeInitialPlan(q: { kind: string; fixedIngredient?: IngredientId }): QuestionPlan {
+function makeInitialPlan(q: { kind: string; fixedIngredient?: IngredientId }, isTutorial: boolean): QuestionPlan {
   const isConflictOnly = q.kind === 'debunk_conflict_only';
   const isApprenticeOnly = q.kind === 'debunk_apprentice_plan';
   const fixedIngredient = isConflictOnly ? (q.fixedIngredient ?? null) : null;
   const initialDraft: DraftStep = isConflictOnly
-    ? { kind: 'master', ingredient1: fixedIngredient, ingredient2: null }
+    ? { kind: 'master', ingredient1: fixedIngredient, ingredient2: null,
+        claimedPotion: isTutorial ? { type: 'neutral' } : null }
     : { kind: 'apprentice', ingredient: null, color: null };
   return { drafts: [initialDraft], isConflictOnly, isApprenticeOnly, fixedIngredient };
 }
@@ -399,7 +415,7 @@ export function ExpandedDebunkAnswerPanel({ onNext, isTutorial = false }: {
   ) as Array<{ kind: string; fixedIngredient?: IngredientId }>;
 
   const [plans, setPlans] = useState<QuestionPlan[]>(
-    () => debunkQuestions.map(makeInitialPlan)
+    () => debunkQuestions.map(q => makeInitialPlan(q, isTutorial))
   );
 
   function updatePlan(qi: number, newDrafts: DraftStep[]) {
@@ -412,7 +428,7 @@ export function ExpandedDebunkAnswerPanel({ onNext, isTutorial = false }: {
   // Simulation for display: show per-plan outcomes independently.
   const simulations = plans.map(plan => {
     const completedSteps = plan.drafts.filter(isComplete) as DebunkStep[];
-    return simulateExpandedPlan(completedSteps, puzzle.solution, publications, articles, worlds);
+    return simulateExpandedPlan(completedSteps, puzzle.solution, publications, articles, worlds, plan.isConflictOnly);
   });
 
   // Combined removed sets across ALL plans (for the board display)
@@ -454,12 +470,21 @@ export function ExpandedDebunkAnswerPanel({ onNext, isTutorial = false }: {
             : puzzle.debunk_answers?.debunk_min_steps;
         const refLen = refAnswer?.length ?? 1;
 
-        const allCoveredForQ = sim.remainingPubs.length === 0 && sim.remainingArts.length === 0;
+        const conflictCoveredIds = new Set<IngredientId>(sim.outcomes.flatMap(o => o.conflicts));
+        const falsePubIngredients = plan.isConflictOnly
+          ? publications
+              .filter(p => puzzle.solution[p.ingredient] !== p.claimedAlchemical)
+              .map(p => p.ingredient)
+          : [];
+        const allCoveredForQ = plan.isConflictOnly
+          ? falsePubIngredients.length > 0 && falsePubIngredients.every(id => conflictCoveredIds.has(id))
+          : sim.remainingPubs.length === 0 && sim.remainingArts.length === 0;
 
         function addStep() {
-          const initialDraft: DraftStep = plan.isConflictOnly
-            ? { kind: 'master', ingredient1: plan.fixedIngredient, ingredient2: null }
-            : { kind: 'apprentice', ingredient: null, color: null };
+          const initialDraft: DraftStep = plan.isApprenticeOnly
+            ? { kind: 'apprentice', ingredient: null, color: null }
+            : { kind: 'master', ingredient1: null, ingredient2: null,
+                claimedPotion: isTutorial ? { type: 'neutral' } : null };
           updatePlan(qi, [...plan.drafts, initialDraft]);
         }
 
@@ -468,15 +493,22 @@ export function ExpandedDebunkAnswerPanel({ onNext, isTutorial = false }: {
             <div className="flex items-center justify-between">
               <span className="text-xs font-bold text-gray-500 uppercase tracking-widest">
                 {debunkQuestions.length > 1 ? `Q${qi + 1}: ` : ''}
-                {plan.isConflictOnly ? 'Demonstrate a conflict' : 'Your debunk plan'}
+                {plan.isConflictOnly ? 'Demonstrate a conflict' : plan.isApprenticeOnly ? 'Apprentice plan' : 'Debunk plan'}
               </span>
-              {!plan.isConflictOnly && allCoveredForQ && plan.drafts.length > 0 && (
-                <span className="text-[10px] text-green-600 font-semibold">✓ All targets covered</span>
-              )}
-              {plan.isConflictOnly && sim.outcomes[0]?.conflicts.length > 0 && (
-                <span className="text-[10px] text-green-600 font-semibold">✓ Conflict produced</span>
+              {allCoveredForQ && plan.drafts.length > 0 && (
+                <span className="text-[10px] text-green-600 font-semibold">
+                  {plan.isConflictOnly ? '✓ All publications in conflict' : '✓ All targets covered'}
+                </span>
               )}
             </div>
+
+            <p className="text-xs text-gray-500">
+              {plan.isConflictOnly
+                ? 'Find a minimal number of master mixes which will cover all incorrect publications with contradictions (at least 1 for each), without removing any.'
+                : plan.isApprenticeOnly
+                  ? 'Remove all false publications using only apprentice debunks, in as few steps as possible.'
+                  : 'Remove all false publications in as few steps as possible.'}
+            </p>
 
             {plan.drafts.map((draft, i) => {
               const stepIdx = completedSteps.indexOf(draft as DebunkStep);
@@ -492,27 +524,29 @@ export function ExpandedDebunkAnswerPanel({ onNext, isTutorial = false }: {
                   }}
                   onRemove={() => updatePlan(qi, plan.drafts.filter((_, j) => j !== i))}
                   isConflictOnly={plan.isConflictOnly}
+                  isIngredientLocked={plan.isConflictOnly && i === 0}
                   isApprenticeOnly={plan.isApprenticeOnly}
+                  isTutorial={isTutorial}
                 />
               );
             })}
 
-            {!plan.isConflictOnly && (
-              <button
-                onClick={addStep}
-                className="w-full border-2 border-dashed border-gray-200 hover:border-indigo-300
-                           text-gray-400 hover:text-indigo-500 rounded-lg py-2 text-xs font-semibold
-                           transition-colors"
-              >
-                + Add step
-              </button>
-            )}
+            <button
+              onClick={addStep}
+              className="w-full border-2 border-dashed border-gray-200 hover:border-indigo-300
+                         text-gray-400 hover:text-indigo-500 rounded-lg py-2 text-xs font-semibold
+                         transition-colors"
+            >
+              + Add step
+            </button>
 
             {/* Wrong attempt hint for this question */}
             {!completed && wrongAttempts > 0 && !showSolution && (
               <p className="text-[10px] text-red-400">
                 {plan.isConflictOnly
-                  ? `Q${qi + 1}: needs to produce a conflict-only outcome on ingredient ${plan.fixedIngredient}'s publication.`
+                  ? (wrongAttempts < refLen
+                    ? `Q${qi + 1}: plan uses ${plan.drafts.length} step${plan.drafts.length !== 1 ? 's' : ''} — can you do it in ${refLen}?`
+                    : `Q${qi + 1}: plan doesn't cover all publications with conflicts.`)
                   : `Q${qi + 1}: plan uses ${plan.drafts.length} step${plan.drafts.length !== 1 ? 's' : ''}${refLen ? ` (optimal: ${refLen})` : ''}.`
                 }
               </p>

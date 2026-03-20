@@ -136,7 +136,8 @@
     "description": "Learn how a witnessed mix constrains alchemicals — and what failure means.",
     "difficulty": "tutorial",
     "puzzleIds": [
-      "debunk-plan-easy-02"
+      "debunk-plan-easy-02",
+      "debunk-plan-easy-04"
     ],
     "unlockedAfter": "tutorial-debunking-apprentice"
   },
@@ -188,7 +189,8 @@
     "description": "Plan the shortest sequence of apprentice debunks to expose all false publications.",
     "difficulty": "easy",
     "puzzleIds": [
-      "debunk-plan-easy-01"
+      "debunk-plan-easy-01",
+      "debunk-plan-easy-03"
     ],
     "unlockedAfter": "tutorial-debunking-apprentice"
   },
@@ -201,6 +203,25 @@
       "debunk-plan-conflict-01"
     ],
     "unlockedAfter": "tutorial-debunking-master"
+  },
+  {
+    "id": "mixed-debunk-r",
+    "title": "Witnessed Evidence, Master Debunk",
+    "description": "Use sell outcomes and revealed mix results — the same actions you'd perform at the table — to identify ingredients, then plan the shortest master debunk sequence.",
+    "difficulty": "hard",
+    "puzzleIds": [
+      "mixed-debunk-r-02",
+      "mixed-debunk-r-03",
+      "mixed-debunk-r-04",
+      "mixed-debunk-r-05",
+      "mixed-debunk-r-06",
+      "mixed-debunk-r-07",
+      "mixed-debunk-r-08",
+      "mixed-debunk-r-09",
+      "mixed-debunk-r-10",
+      "mixed-debunk-r-11"
+    ],
+    "unlockedAfter": "debunk-master-planning"
   },
   {
     "id": "among-witnesses",

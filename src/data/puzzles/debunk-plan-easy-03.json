@@ -1,0 +1,110 @@
+{
+  "id": "debunk-plan-easy-03",
+  "title": "The Honest and the Thief",
+  "description": "Two theories have been published about ingredients you've fully studied. Check each claim against the aspect clues — not every publication is wrong. Expose only the one that is.",
+  "difficulty": "hard",
+  "clues": [
+    {
+      "kind": "aspect",
+      "ingredient": 1,
+      "color": "R",
+      "sign": "-"
+    },
+    {
+      "kind": "aspect",
+      "ingredient": 1,
+      "color": "G",
+      "sign": "+"
+    },
+    {
+      "kind": "aspect",
+      "ingredient": 1,
+      "color": "B",
+      "sign": "-"
+    },
+    {
+      "kind": "aspect",
+      "ingredient": 4,
+      "color": "R",
+      "sign": "-"
+    },
+    {
+      "kind": "aspect",
+      "ingredient": 4,
+      "color": "G",
+      "sign": "+"
+    },
+    {
+      "kind": "aspect",
+      "ingredient": 4,
+      "color": "B",
+      "sign": "+"
+    }
+  ],
+  "publications": [
+    {
+      "ingredient": 1,
+      "claimedAlchemical": 1
+    },
+    null,
+    null,
+    {
+      "ingredient": 4,
+      "claimedAlchemical": 2
+    },
+    null,
+    null,
+    null,
+    null
+  ],
+  "questions": [
+    {
+      "kind": "debunk_apprentice_plan"
+    }
+  ],
+  "solution": {
+    "1": 1,
+    "2": 2,
+    "3": 3,
+    "4": 4,
+    "5": 5,
+    "6": 6,
+    "7": 7,
+    "8": 8
+  },
+  "debunk_answers": {
+    "debunk_apprentice_plan": [
+      {
+        "kind": "apprentice",
+        "ingredient": 4,
+        "color": "R"
+      }
+    ]
+  },
+  "hints": [
+    {
+      "level": 1,
+      "text": "Each published ingredient has all three aspect clues. Determine the true alchemical for each from its clues, then compare it to what the publication claims. Only a claim where a sign differs from the clues needs to be debunked."
+    },
+    {
+      "level": 2,
+      "text": "ing1 has R-, G+, B- → alchemical npN. The publication claims npN — all three signs match. This publication is accurate; no debunk needed. ing4 has R-, G+, B+ → alchemical nPp. The publication claims pnP (R+, G-, B+). ing4's R- contradicts the claimed R+, and G+ contradicts the claimed G-. This publication is false."
+    },
+    {
+      "level": 3,
+      "text": "One-step plan: apprentice debunk on ing4, reveal R (or G). The true sign is R- (from the clue). The publication claims pnP which has R+. Since R- ≠ R+, the publication is removed. The publication for ing1 correctly describes npN and is left untouched."
+    }
+  ],
+  "complexity": {
+    "score": 4,
+    "raw": 6.117,
+    "avg_clue_strength": 1.0,
+    "ambig_penalty": 0.3,
+    "stranded_ambiguity": 0.0,
+    "chain_depth": 2,
+    "stuck": true,
+    "requires_complement_set": false,
+    "question_requires_enumeration": false,
+    "residual_worlds": 720
+  }
+}

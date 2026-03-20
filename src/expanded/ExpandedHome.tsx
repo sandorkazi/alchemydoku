@@ -19,6 +19,7 @@ import { getCurrentReleaseEntry } from '../utils/releaseNotes';
 import { SettingsModal } from '../components/SettingsModal';
 import { clearBaseProgress } from '../utils/saveProgress';
 import type { Settings } from '../utils/settings';
+import { isPuzzleNonCompliant } from '../compliance';
 
 // ─── Progress persistence ─────────────────────────────────────────────────────
 
@@ -69,27 +70,32 @@ function ComplexityPips({ raw }: { raw: number }) {
 
 // ─── Collection summary card (hub level) ─────────────────────────────────────
 
-function CollectionSummaryCard({ collection, completed, puzzleOnlyBlocked, onOpen }: {
+function CollectionSummaryCard({ collection, completed, showPuzzleOnly, onOpen }: {
   collection: ExpandedCollection;
   completed: Set<string>;
-  puzzleOnlyBlocked?: boolean;
+  showPuzzleOnly: boolean;
   onOpen: () => void;
 }) {
-  const puzzles = collection.puzzleIds.map(id => EXPANDED_PUZZLE_MAP[id]).filter(Boolean);
-  const doneCount = puzzles.filter(p => completed.has(p.id)).length;
-  const allDone = doneCount === puzzles.length;
+  const allPuzzles = collection.puzzleIds.map(id => EXPANDED_PUZZLE_MAP[id]).filter(Boolean);
+  const nonCompliantCount = allPuzzles.filter(p => isPuzzleNonCompliant(p, 'expanded')).length;
+  const hiddenCount = showPuzzleOnly ? 0 : nonCompliantCount;
+  const visiblePuzzles = showPuzzleOnly ? allPuzzles
+    : allPuzzles.filter(p => !isPuzzleNonCompliant(p, 'expanded'));
+  const doneCount = visiblePuzzles.filter(p => completed.has(p.id)).length;
+  const allHidden = hiddenCount === allPuzzles.length && allPuzzles.length > 0;
+  const allDone = doneCount === visiblePuzzles.length && visiblePuzzles.length > 0;
 
   return (
-    <button onClick={onOpen}
+    <button onClick={allHidden ? undefined : onOpen} disabled={allHidden}
       className={`w-full text-left rounded-2xl border-2 bg-white shadow-sm overflow-hidden
         transition-all
-        ${puzzleOnlyBlocked
-          ? 'border-gray-200 opacity-60 cursor-pointer'
+        ${allHidden
+          ? 'border-gray-200 opacity-60 cursor-not-allowed'
           : allDone
             ? 'border-green-300 hover:border-violet-300 hover:shadow-md'
             : 'border-gray-200 hover:border-violet-300 hover:shadow-md'
         }`}>
-      <div className={`px-4 py-3 ${allDone && !puzzleOnlyBlocked ? 'bg-green-50' : 'bg-gray-50'}`}>
+      <div className={`px-4 py-3 ${allDone ? 'bg-green-50' : 'bg-gray-50'}`}>
         <div className="flex items-center justify-between gap-2">
           <div className="flex items-center gap-2 min-w-0">
             <h3 className="font-bold text-gray-900 text-sm">{collection.title}</h3>
@@ -98,20 +104,25 @@ function CollectionSummaryCard({ collection, completed, puzzleOnlyBlocked, onOpe
               {collection.difficulty}
             </span>
           </div>
-          <div className="flex items-center gap-2 shrink-0">
-            {puzzleOnlyBlocked
-              ? <span className="text-base">🧩</span>
-              : <span className={`text-xs font-semibold tabular-nums ${allDone ? 'text-green-600' : 'text-gray-400'}`}>
-                  {doneCount}/{puzzles.length}
-                </span>
+          <div className="flex items-center gap-2 shrink-0 w-20 justify-end">
+            {visiblePuzzles.length === 0
+              ? <span className="text-xs font-semibold text-gray-400">🧩{nonCompliantCount}</span>
+              : <>
+                  <span className={`text-xs font-semibold tabular-nums ${allDone ? 'text-green-600' : 'text-gray-400'}`}>
+                    {doneCount}/{visiblePuzzles.length}
+                  </span>
+                  {nonCompliantCount > 0 && (
+                    <span className="text-xs text-gray-400">🧩{nonCompliantCount}</span>
+                  )}
+                </>
             }
             <span className="text-gray-300 text-xs">›</span>
           </div>
         </div>
         <p className="text-xs text-gray-500 mt-0.5 line-clamp-2">{collection.description}</p>
-        {puzzleOnlyBlocked && (
+        {allHidden && (
           <p className="text-xs text-gray-400 mt-1">
-            Allow unrealistic puzzles in ⚙️ Settings to unlock
+            Allow unrealistic puzzles in ⚙️ Settings to see these puzzles
           </p>
         )}
       </div>
@@ -121,15 +132,19 @@ function CollectionSummaryCard({ collection, completed, puzzleOnlyBlocked, onOpe
 
 // ─── Collection puzzle list (collection level) ───────────────────────────────
 
-function CollectionView({ collection, completed, onSelectPuzzle, onBack }: {
+function CollectionView({ collection, completed, showPuzzleOnly, onSelectPuzzle, onBack }: {
   collection: ExpandedCollection;
   completed: Set<string>;
+  showPuzzleOnly: boolean;
   onSelectPuzzle: (puzzle: ExpandedPuzzle) => void;
   onBack: () => void;
 }) {
-  const puzzles = collection.puzzleIds.map(id => EXPANDED_PUZZLE_MAP[id]).filter(Boolean);
-  const doneCount = puzzles.filter(p => completed.has(p.id)).length;
-  const allDone = doneCount === puzzles.length;
+  const allPuzzles = collection.puzzleIds.map(id => EXPANDED_PUZZLE_MAP[id]).filter(Boolean);
+  const visiblePuzzles = showPuzzleOnly ? allPuzzles
+    : allPuzzles.filter(p => !isPuzzleNonCompliant(p, 'expanded'));
+  const hiddenCount = allPuzzles.length - visiblePuzzles.length;
+  const doneCount = visiblePuzzles.filter(p => completed.has(p.id)).length;
+  const allDone = doneCount === visiblePuzzles.length && visiblePuzzles.length > 0;
 
   return (
     <div className="min-h-screen bg-amber-50 animate-fadein">
@@ -147,13 +162,18 @@ function CollectionView({ collection, completed, onSelectPuzzle, onBack }: {
             <div className="flex items-center justify-between gap-2">
               <h2 className="font-bold text-gray-900 text-base">{collection.title}</h2>
               <span className={`text-xs font-semibold tabular-nums ${allDone ? 'text-green-600' : 'text-gray-400'}`}>
-                {doneCount}/{puzzles.length}
+                {doneCount}/{visiblePuzzles.length}
               </span>
             </div>
             <p className="text-xs text-gray-500 mt-0.5 line-clamp-2">{collection.description}</p>
+            {hiddenCount > 0 && (
+              <p className="text-xs text-gray-400 mt-1">
+                🧩 {hiddenCount} hidden — enable "Allow unrealistic puzzles" in ⚙️ Settings
+              </p>
+            )}
           </div>
           <div className="divide-y divide-gray-100">
-            {puzzles.map(puzzle => {
+            {visiblePuzzles.map(puzzle => {
               const done = completed.has(puzzle.id);
               return (
                 <button key={puzzle.id} onClick={() => onSelectPuzzle(puzzle)}
@@ -281,6 +301,7 @@ export function ExpandedHome({ onModeChange, initialPuzzleId, showReleaseNotes, 
       <CollectionView
         collection={activeCollection}
         completed={completed}
+        showPuzzleOnly={settings.showPuzzleOnly}
         onSelectPuzzle={openPuzzle}
         onBack={() => setActiveCollection(null)}
       />
@@ -354,7 +375,7 @@ export function ExpandedHome({ onModeChange, initialPuzzleId, showReleaseNotes, 
               key={coll.id}
               collection={coll}
               completed={completed}
-              puzzleOnlyBlocked={!settings.showPuzzleOnly && coll.boardGameCompliant === false}
+              showPuzzleOnly={settings.showPuzzleOnly}
               onOpen={() => setActiveCollection(coll)}
             />
           ))}

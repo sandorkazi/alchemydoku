@@ -1,7 +1,7 @@
 {
   "id": "debunk-plan-easy-02",
   "title": "The Master's Shortcut",
-  "description": "Two wrong publications sit on the board. One ingredient is definitively known \u2014 use master mixes to expose both lies.",
+  "description": "Three ingredients are fully revealed by their aspect clues. Two of them have publications claiming different alchemicals. Prove the publications false, then plan the master mixes that expose them publicly.",
   "difficulty": "hard",
   "clues": [
     {
@@ -21,6 +21,42 @@
       "ingredient": 1,
       "color": "B",
       "sign": "-"
+    },
+    {
+      "kind": "aspect",
+      "ingredient": 3,
+      "color": "R",
+      "sign": "+"
+    },
+    {
+      "kind": "aspect",
+      "ingredient": 3,
+      "color": "G",
+      "sign": "-"
+    },
+    {
+      "kind": "aspect",
+      "ingredient": 3,
+      "color": "B",
+      "sign": "-"
+    },
+    {
+      "kind": "aspect",
+      "ingredient": 5,
+      "color": "R",
+      "sign": "-"
+    },
+    {
+      "kind": "aspect",
+      "ingredient": 5,
+      "color": "G",
+      "sign": "-"
+    },
+    {
+      "kind": "aspect",
+      "ingredient": 5,
+      "color": "B",
+      "sign": "+"
     }
   ],
   "publications": [
@@ -71,15 +107,15 @@
   "hints": [
     {
       "level": 1,
-      "text": "A master debunk succeeds when one ingredient's alchemical is definitively known \u2014 the audience can then check whether the expected mix result (computed from that known alchemical and the claimed alchemical of a publication) contradicts the true result. ing1 is fully established by the three aspect clues. Look for publications that a master mix involving ing1 can expose."
+      "text": "Each ingredient with a publication has all three aspect clues revealed. Three sign clues (R, G, B) uniquely identify an alchemical. First, determine the true alchemical for each published ingredient from its clues. Then compare it to what the publication claims — that tells you whether the publication is true or false. Once both false publications are identified, which ingredient is fully known and has no publication? That is your reference for master debunks."
     },
     {
       "level": 2,
-      "text": "ing1 is known to be npN. The true mix of ing1 + ing3 is B-. The publication for ing3 claims it is Nnp \u2014 if that were true, mix(npN, Nnp) = R-, which contradicts B-. So ing3's publication is exposed by a master mix of ing1 + ing3. Similarly, the publication for ing5 claims it is pNn \u2014 mix(npN, pNn) = B-, but the true result of ing1 + ing5 is R-. Contradiction."
+      "text": "ing3 has R+, G-, B- → its alchemical is pNn. The publication claims Nnp (which has R-) — contradicted by ing3's R+, so it is false. ing5 has R-, G-, B+ → its alchemical is Nnp. The publication claims pNn (which has R+) — contradicted by ing5's R-, so it is false too. Can you just mix ing3 + ing5 to expose them? The true mix result is G-, and with both claimed alchemicals (Nnp and pNn) the predicted result is also G- — no contradiction, no effect. You need a known reference. ing1 has R-, G+, B- → its alchemical is npN, and it has no publication."
     },
     {
       "level": 3,
-      "text": "Step 1: Master debunk \u2014 mix ing1 + ing3. ing1 is definitively known (npN); the claimed alch for ing3 (Nnp) predicts R-, but the true result is B- \u2192 ing3's publication removed. Step 2: Master debunk \u2014 mix ing1 + ing5. The claimed alch for ing5 (pNn) predicts B-, but the true result is R- \u2192 ing5's publication removed."
+      "text": "Step 1: Master debunk — mix ing1 + ing3. ing1 is npN; the publication for ing3 claims Nnp, predicting mix(npN, Nnp) = R-. The true result is mix(npN, pNn) = B-. They differ → ing3's publication removed. Step 2: Master debunk — mix ing1 + ing5. The publication for ing5 claims pNn, predicting mix(npN, pNn) = B-. The true result is mix(npN, Nnp) = R-. They differ → ing5's publication removed."
     }
   ],
   "complexity": {
@@ -92,6 +128,6 @@
     "stuck": true,
     "requires_complement_set": false,
     "question_requires_enumeration": false,
-    "residual_worlds": 5040
+    "residual_worlds": 120
   }
 }

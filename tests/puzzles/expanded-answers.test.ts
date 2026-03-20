@@ -43,9 +43,8 @@ describe('expanded debunk reference answers', () => {
           ).toBe(true);
         } else if (q.kind === 'debunk_conflict_only') {
           const ref = answers['debunk_conflict_only'] ?? [];
-          expect(ref.length, 'debunk_conflict_only must have exactly 1 reference step').toBe(1);
           expect(
-            validateConflictOnlyAnswer(ref[0], q.fixedIngredient, puzzle.solution, pubs, worlds),
+            validateConflictOnlyAnswer(ref, puzzle.solution, pubs, worlds, ref.length),
             'debunk_conflict_only reference answer must pass the validator',
           ).toBe(true);
         }

@@ -1,0 +1,159 @@
+{
+  "id": "mixed-debunk-r-10",
+  "title": "The Living Stone",
+  "description": "Mixed evidence surrounds several suspicious publications. Use master debunking to expose the lies.",
+  "difficulty": "hard",
+  "clues": [
+    {
+      "kind": "debunk",
+      "variant": "master",
+      "ingredient1": 6,
+      "ingredient2": 7,
+      "claimedPotion": {
+        "color": "R",
+        "sign": "-"
+      },
+      "outcome": "success"
+    },
+    {
+      "kind": "sell",
+      "ingredient1": 2,
+      "ingredient2": 4,
+      "claimedResult": {
+        "type": "potion",
+        "color": "R",
+        "sign": "-"
+      },
+      "sellResult": "opposite"
+    },
+    {
+      "kind": "mixing",
+      "ingredient1": 3,
+      "ingredient2": 8,
+      "result": {
+        "color": "R",
+        "sign": "-"
+      }
+    },
+    {
+      "kind": "sell",
+      "ingredient1": 1,
+      "ingredient2": 6,
+      "claimedResult": {
+        "type": "potion",
+        "color": "B",
+        "sign": "+"
+      },
+      "sellResult": "sign_ok"
+    },
+    {
+      "kind": "sell",
+      "ingredient1": 2,
+      "ingredient2": 3,
+      "claimedResult": {
+        "type": "potion",
+        "color": "B",
+        "sign": "-"
+      },
+      "sellResult": "sign_ok"
+    },
+    {
+      "kind": "debunk",
+      "variant": "master",
+      "ingredient1": 5,
+      "ingredient2": 8,
+      "claimedPotion": {
+        "color": "B",
+        "sign": "+"
+      },
+      "outcome": "success"
+    }
+  ],
+  "questions": [
+    {
+      "kind": "debunk_min_steps"
+    }
+  ],
+  "solution": {
+    "1": 8,
+    "2": 3,
+    "3": 5,
+    "4": 6,
+    "5": 2,
+    "6": 1,
+    "7": 7,
+    "8": 4
+  },
+  "hints": [
+    {
+      "level": 1,
+      "text": "Use all clues to eliminate impossible worlds."
+    },
+    {
+      "level": 2,
+      "text": "Apply each clue systematically."
+    },
+    {
+      "level": 3,
+      "text": "Answer: not_validated"
+    }
+  ],
+  "complexity": {
+    "score": 4,
+    "raw": 4.662,
+    "avg_clue_strength": 2.55,
+    "ambig_penalty": 0.233,
+    "stranded_ambiguity": 0.0,
+    "chain_depth": 2,
+    "stuck": true,
+    "requires_complement_set": false,
+    "question_requires_enumeration": false,
+    "residual_worlds": 1
+  },
+  "publications": [
+    {
+      "ingredient": 1,
+      "claimedAlchemical": 3
+    },
+    null,
+    {
+      "ingredient": 3,
+      "claimedAlchemical": 7
+    },
+    null,
+    {
+      "ingredient": 5,
+      "claimedAlchemical": 5
+    },
+    null,
+    {
+      "ingredient": 7,
+      "claimedAlchemical": 6
+    },
+    null
+  ],
+  "debunk_answers": {
+    "debunk_min_steps": [
+      {
+        "kind": "master",
+        "ingredient1": 1,
+        "ingredient2": 2
+      },
+      {
+        "kind": "master",
+        "ingredient1": 3,
+        "ingredient2": 1
+      },
+      {
+        "kind": "master",
+        "ingredient1": 5,
+        "ingredient2": 1
+      },
+      {
+        "kind": "master",
+        "ingredient1": 7,
+        "ingredient2": 1
+      }
+    ]
+  }
+}

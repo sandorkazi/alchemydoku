@@ -205,7 +205,7 @@ export type QuestionTarget =
 /** A single debunking action in a plan */
 export type DebunkStep =
   | { kind: 'apprentice'; ingredient: IngredientId; color: Color }
-  | { kind: 'master'; ingredient1: IngredientId; ingredient2: IngredientId };
+  | { kind: 'master'; ingredient1: IngredientId; ingredient2: IngredientId; claimedPotion?: PotionResult | null };
 
 /** A wrong publication on the board: opponent claims ingredient has claimedAlchemical */
 export type Publication = {

@@ -2,7 +2,7 @@
   "id": "pp-01",
   "title": "Two Paths Diverge",
   "description": "The clues narrow down the mix, but two outcomes remain \u2014 which are they?",
-  "difficulty": "medium",
+  "difficulty": "easy",
   "clues": [
     {
       "kind": "mixing",
@@ -96,7 +96,7 @@
     }
   ],
   "complexity": {
-    "score": 3,
+    "score": 2,
     "raw": 3.314,
     "avg_clue_strength": 2.143,
     "ambig_penalty": 0.0,

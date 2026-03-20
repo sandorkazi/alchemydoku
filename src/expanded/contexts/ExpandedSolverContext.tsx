@@ -21,7 +21,7 @@ import { checkExpandedAnswers, computeAllExpandedAnswers } from '../puzzles/sche
 import { validateExpandedMinStepsAnswer, validateExpandedApprenticePlanAnswer, validateExpandedConflictOnlyAnswer } from '../logic/debunkExpanded';
 import { WORLD_DATA } from '../../logic/worldPack';
 import { makeDisplayMap, loadDisplayMap, saveDisplayMap, emptyGrid, mergeIntoUnifiedStore } from '../../utils/solverStorage';
-import type { CellState, WorldSet, AlchemicalId, IngredientId } from '../../types';
+import type { CellState, WorldSet, AlchemicalId } from '../../types';
 import type { ExpandedPuzzle, AnyAnswer, SolarLunarMark, SolarLunarMarks } from '../types';
 import type { Color, Size } from '../../types';
 
@@ -76,9 +76,8 @@ function checkExpandedDebunkAnswers(
       const refLen = (puzzle.debunk_answers?.debunk_apprentice_plan ?? []).length;
       if (!validateExpandedApprenticePlanAnswer(steps, solution, publications, articles, worlds, refLen)) return false;
     } else if (q.kind === 'debunk_conflict_only') {
-      const fixedIng = (q as { fixedIngredient?: IngredientId }).fixedIngredient ?? null;
-      if (!fixedIng || steps.length !== 1) return false;
-      if (!validateExpandedConflictOnlyAnswer(steps[0], fixedIng, solution, publications, articles, worlds)) return false;
+      const refLen = (puzzle.debunk_answers?.debunk_conflict_only ?? []).length;
+      if (!validateExpandedConflictOnlyAnswer(steps, solution, publications, articles, worlds, refLen)) return false;
     }
   }
   return true;

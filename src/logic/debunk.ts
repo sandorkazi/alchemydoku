@@ -32,6 +32,20 @@ function claimedMixCode(claimedAlch1: AlchemicalId, trueAlch2: AlchemicalId): nu
 }
 
 /**
+ * Returns true if `claimedAlch` can produce `resultCode` with at least one partner.
+ * When false, the claimed alchemical is result-incompatible with the actual mix result:
+ * no partner exists that would make mix(claimedAlch, partner) = resultCode.
+ * This is verified from the result alone — no knowledge of the other ingredient needed.
+ */
+function canProduceResult(claimedAlch: AlchemicalId, resultCode: number): boolean {
+  const rowStart = (claimedAlch - 1) * 8;
+  for (let j = 0; j < 8; j++) {
+    if (MIX_TABLE[rowStart + j] === resultCode) return true;
+  }
+  return false;
+}
+
+/**
  * Returns true if ingredient `slot` is definitively known from clue-derived worlds alone —
  * i.e. all worlds agree on its alchemical assignment.
  */
@@ -86,6 +100,19 @@ function simulateStep(
     const ing1Known = isDefinitivelyKnown(worlds, ingredient1);
     const ing2Known = isDefinitivelyKnown(worlds, ingredient2);
 
+    // Direct disproval (result-incompatibility): a claimed alchemical that cannot
+    // produce the actual result with any partner is removed immediately, regardless
+    // of whether the other ingredient is definitively known (§2b).
+    if (activePubs.has(ingredient1) && !canProduceResult(activePubs.get(ingredient1)!, trueCode)) {
+      removed.push(ingredient1);
+      activePubs.delete(ingredient1);
+    }
+    if (activePubs.has(ingredient2) && !canProduceResult(activePubs.get(ingredient2)!, trueCode)) {
+      removed.push(ingredient2);
+      activePubs.delete(ingredient2);
+    }
+
+    // Blame-based disproval: only for publications not already directly disproved.
     let conflict1 = false;
     let conflict2 = false;
 
@@ -101,7 +128,7 @@ function simulateStep(
       if (expectedCode !== trueCode) conflict2 = true;
     }
 
-    // Removal: only when blame is unambiguous
+    // Unambiguous blame → removal; both blame-disproved → CONFLICT (neither removed)
     if (conflict1 && !conflict2) {
       removed.push(ingredient1);
       activePubs.delete(ingredient1);
@@ -109,7 +136,6 @@ function simulateStep(
       removed.push(ingredient2);
       activePubs.delete(ingredient2);
     } else if (conflict1 && conflict2) {
-      // Both conflict → neither removed
       conflicts.push(ingredient1, ingredient2);
     }
   }
@@ -140,7 +166,12 @@ export function evaluatePlan(
  * Valid when:
  * 1. Plan length equals refLen.
  * 2. Every step removes at least one publication (no wasted steps).
- * 3. All publications are removed by the end.
+ * 3. All FALSE publications are removed by the end.
+ *
+ * Truth values are not given as a premise — they are derived from the
+ * solution: a publication is false iff solution[ingredient] ≠ claimedAlchemical.
+ * True publications cannot be removed by any debunk and are not part of the
+ * plan target.
  *
  * Step-kind constraints (master-only, apprentice-only) are enforced by the
  * callers validateMasterPlanAnswer and validateApprenticePlanAnswer.
@@ -153,10 +184,13 @@ export function validateMinStepsAnswer(
   refLen: number,
 ): boolean {
   if (steps.length !== refLen) return false;
-  if (publications.length === 0) return steps.length === 0;
+
+  // Only false publications need to be (and can be) removed
+  const falsePubs = publications.filter(p => solution[p.ingredient] !== p.claimedAlchemical);
+  if (falsePubs.length === 0) return steps.length === 0;
 
   const activePubs = new Map<IngredientId, AlchemicalId>(
-    publications.map(p => [p.ingredient, p.claimedAlchemical])
+    falsePubs.map(p => [p.ingredient, p.claimedAlchemical])
   );
 
   for (const step of steps) {
@@ -165,7 +199,7 @@ export function validateMinStepsAnswer(
     if (outcome.removed.length === 0) return false;
   }
 
-  // All publications removed
+  // All false publications removed
   return activePubs.size === 0;
 }
 
@@ -201,47 +235,111 @@ export function validateApprenticePlanAnswer(
 
 /**
  * Validate a conflict-only answer.
- * Valid when the single step:
- * 1. Is a master debunk.
- * 2. Produces zero removals.
- * 3. Produces at least one conflict on fixedIngredient's publication.
+ * Valid when all steps:
+ * 1. Are master debunks.
+ * 2. Each step creates a conflict: both ingredients published AND
+ *    mix(claimed_1, claimed_2) ≠ actual (no removals can occur).
+ * 3. Together cover every false publication with at least one conflict.
+ *
+ * Conflict semantics: the two claimed alchemicals together predict a result
+ * that differs from what was actually observed. No true alchemical knowledge
+ * is used — only the claims and the observed mix.
  */
 export function validateConflictOnlyAnswer(
-  step: DebunkStep,
-  fixedIngredient: IngredientId,
+  steps: DebunkStep[],
   solution: Assignment,
   publications: Publication[],
-  worlds: WorldSet,
+  _worlds: WorldSet,
+  refLen: number,
 ): boolean {
-  if (step.kind !== 'master') return false;
-  if (step.ingredient1 !== fixedIngredient && step.ingredient2 !== fixedIngredient) return false;
+  if (steps.length !== refLen) return false;
+  if (steps.some(s => s.kind !== 'master')) return false;
 
-  const activePubs = new Map<IngredientId, AlchemicalId>(
+  const allPubs = new Map<IngredientId, AlchemicalId>(
     publications.map(p => [p.ingredient, p.claimedAlchemical])
   );
-  const outcome = simulateStep(step, solution, worlds, activePubs);
-
-  return (
-    outcome.removed.length === 0 &&
-    outcome.conflicts.includes(fixedIngredient)
+  const falsePubIds = new Set(
+    publications
+      .filter(p => solution[p.ingredient] !== p.claimedAlchemical)
+      .map(p => p.ingredient)
   );
+  const coveredIds = new Set<IngredientId>();
+  for (const step of steps) {
+    const outcome = simulateConflictOnlyStep(step, solution, allPubs);
+    for (const c of outcome.conflicts) coveredIds.add(c);
+  }
+  return [...falsePubIds].every(id => coveredIds.has(id));
+}
+
+// ─── Conflict-only step simulation ────────────────────────────────────────────
+
+/**
+ * Simulate one step under conflict-only semantics.
+ *
+ * A true conflict requires all of (§2b, §4c):
+ * 1. Both ingredients published.
+ * 2. Neither claim is result-incompatible: each could produce the actual result
+ *    with some partner (∃A: mix(c_1, A) = actual AND ∃B: mix(B, c_2) = actual).
+ *    If either is result-incompatible that claim is directly disproved → removal,
+ *    not a conflict.
+ * 3. Together they predict the wrong result: mix(c_1, c_2) ≠ actual.
+ *
+ * No removals happen in conflict-only mode; this function only reports conflicts.
+ */
+function simulateConflictOnlyStep(
+  step: DebunkStep,
+  solution: Assignment,
+  activePubs: Map<IngredientId, AlchemicalId>,
+): StepOutcome {
+  const conflicts: IngredientId[] = [];
+
+  if (step.kind === 'master') {
+    const { ingredient1, ingredient2 } = step;
+    if (activePubs.has(ingredient1) && activePubs.has(ingredient2)) {
+      const trueCode = trueMixCode(solution, ingredient1, ingredient2);
+      const claimed1 = activePubs.get(ingredient1)!;
+      const claimed2 = activePubs.get(ingredient2)!;
+      // Both claims must be individually result-compatible (condition 2),
+      // and together they must predict the wrong result (condition 3).
+      if (
+        canProduceResult(claimed1, trueCode) &&
+        canProduceResult(claimed2, trueCode) &&
+        claimedMixCode(claimed1, claimed2) !== trueCode
+      ) {
+        conflicts.push(ingredient1, ingredient2);
+      }
+    }
+  }
+
+  return { removed: [], conflicts };
 }
 
 // ─── UI helpers ───────────────────────────────────────────────────────────────
 
-/** Simulate a plan and return per-step outcomes for live display. */
+/**
+ * Simulate a plan and return per-step outcomes for live display.
+ * Pass `conflictOnly: true` to use conflict-only semantics (no removals,
+ * conflict based on claimed+claimed vs actual).
+ */
 export function simulatePlan(
   steps: DebunkStep[],
   solution: Assignment,
   publications: Publication[],
   worlds: WorldSet,
+  conflictOnly?: boolean,
 ): { outcomes: PlanOutcome; remainingPubs: IngredientId[] } {
+  // Only false publications are tracked — true ones cannot be removed
+  const falsePubs = publications.filter(p => solution[p.ingredient] !== p.claimedAlchemical);
   const activePubs = new Map<IngredientId, AlchemicalId>(
-    publications.map(p => [p.ingredient, p.claimedAlchemical])
+    falsePubs.map(p => [p.ingredient, p.claimedAlchemical])
   );
   const outcomes: PlanOutcome = [];
   for (const step of steps) {
-    outcomes.push(simulateStep(step, solution, worlds, activePubs));
+    outcomes.push(
+      conflictOnly
+        ? simulateConflictOnlyStep(step, solution, activePubs)
+        : simulateStep(step, solution, worlds, activePubs),
+    );
   }
   return { outcomes, remainingPubs: [...activePubs.keys()] };
 }

@@ -37,6 +37,14 @@ function claimedMixCode(claimedAlch1: AlchemicalId, trueAlch2: AlchemicalId): nu
   return MIX_TABLE[(claimedAlch1 - 1) * 8 + (trueAlch2 - 1)];
 }
 
+function canProduceResult(claimedAlch: AlchemicalId, resultCode: number): boolean {
+  const rowStart = (claimedAlch - 1) * 8;
+  for (let j = 0; j < 8; j++) {
+    if (MIX_TABLE[rowStart + j] === resultCode) return true;
+  }
+  return false;
+}
+
 // ─── Step outcome (extended) ──────────────────────────────────────────────────
 
 export type ExpandedStepOutcome = {
@@ -95,10 +103,20 @@ function simulateExpandedStep(
     const ing1Known = isDefinitivelyKnown(worlds, ingredient1);
     const ing2Known = isDefinitivelyKnown(worlds, ingredient2);
 
+    // Direct disproval (result-incompatibility): remove before blame-based checks
+    if (activePubs.has(ingredient1) && !canProduceResult(activePubs.get(ingredient1)!, trueCode)) {
+      removedPubs.push(ingredient1);
+      activePubs.delete(ingredient1);
+    }
+    if (activePubs.has(ingredient2) && !canProduceResult(activePubs.get(ingredient2)!, trueCode)) {
+      removedPubs.push(ingredient2);
+      activePubs.delete(ingredient2);
+    }
+
     let conflict1 = false;
     let conflict2 = false;
 
-    // Publications
+    // Publications: blame-based (only for result-compatible claims still active)
     if (activePubs.has(ingredient1) && ing2Known) {
       const claimedAlch1 = activePubs.get(ingredient1)!;
       if (claimedMixCode(claimedAlch1, trueAlch2) !== trueCode) conflict1 = true;
@@ -144,12 +162,46 @@ function simulateExpandedStep(
 
 // ─── Full plan simulation ─────────────────────────────────────────────────────
 
+/**
+ * Simulate one step under conflict-only semantics (publications only).
+ * A true conflict requires both claims to be result-compatible AND together wrong:
+ *   canProduceResult(c1, actual) AND canProduceResult(c2, actual)
+ *   AND mix(c1, c2) ≠ actual
+ * No removals; articles unaffected.
+ */
+function simulateConflictOnlyExpandedStep(
+  step: DebunkStep,
+  solution: Assignment,
+  activePubs: Map<IngredientId, AlchemicalId>,
+): ExpandedStepOutcome {
+  const conflicts: IngredientId[] = [];
+
+  if (step.kind === 'master') {
+    const { ingredient1, ingredient2 } = step;
+    if (activePubs.has(ingredient1) && activePubs.has(ingredient2)) {
+      const trueCode = trueMixCode(solution, ingredient1, ingredient2);
+      const claimed1 = activePubs.get(ingredient1)!;
+      const claimed2 = activePubs.get(ingredient2)!;
+      if (
+        canProduceResult(claimed1, trueCode) &&
+        canProduceResult(claimed2, trueCode) &&
+        claimedMixCode(claimed1, claimed2) !== trueCode
+      ) {
+        conflicts.push(ingredient1, ingredient2);
+      }
+    }
+  }
+
+  return { removedPubs: [], removedArts: [], conflicts };
+}
+
 export function simulateExpandedPlan(
   steps: DebunkStep[],
   solution: Assignment,
   publications: Publication[],
   articles: DebunkArticle[],
   worlds: WorldSet,
+  conflictOnly?: boolean,
 ): { outcomes: ExpandedStepOutcome[]; remainingPubs: IngredientId[]; remainingArts: string[] } {
   const activePubs = new Map<IngredientId, AlchemicalId>(
     publications.map(p => [p.ingredient, p.claimedAlchemical])
@@ -159,7 +211,11 @@ export function simulateExpandedPlan(
   );
   const outcomes: ExpandedStepOutcome[] = [];
   for (const step of steps) {
-    outcomes.push(simulateExpandedStep(step, solution, worlds, activePubs, activeArts));
+    outcomes.push(
+      conflictOnly
+        ? simulateConflictOnlyExpandedStep(step, solution, activePubs)
+        : simulateExpandedStep(step, solution, worlds, activePubs, activeArts),
+    );
   }
   return {
     outcomes,
@@ -210,27 +266,28 @@ export function validateExpandedApprenticePlanAnswer(
 }
 
 export function validateExpandedConflictOnlyAnswer(
-  step: DebunkStep,
-  fixedIngredient: IngredientId,
+  steps: DebunkStep[],
   solution: Assignment,
   publications: Publication[],
-  articles: DebunkArticle[],
-  worlds: WorldSet,
+  _articles: DebunkArticle[],
+  _worlds: WorldSet,
+  refLen: number,
 ): boolean {
-  if (step.kind !== 'master') return false;
-  if (step.ingredient1 !== fixedIngredient && step.ingredient2 !== fixedIngredient) return false;
+  if (steps.length !== refLen) return false;
+  if (steps.some(s => s.kind !== 'master')) return false;
 
-  const activePubs = new Map<IngredientId, AlchemicalId>(
+  const allPubs = new Map<IngredientId, AlchemicalId>(
     publications.map(p => [p.ingredient, p.claimedAlchemical])
   );
-  const activeArts = new Map<string, DebunkArticle>(
-    articles.map(a => [a.id, a])
+  const falsePubIds = new Set(
+    publications
+      .filter(p => solution[p.ingredient] !== p.claimedAlchemical)
+      .map(p => p.ingredient)
   );
-  const outcome = simulateExpandedStep(step, solution, worlds, activePubs, activeArts);
-
-  return (
-    outcome.removedPubs.length === 0 &&
-    outcome.removedArts.length === 0 &&
-    outcome.conflicts.includes(fixedIngredient)
-  );
+  const coveredIds = new Set<IngredientId>();
+  for (const step of steps) {
+    const outcome = simulateConflictOnlyExpandedStep(step, solution, allPubs);
+    for (const c of outcome.conflicts) coveredIds.add(c);
+  }
+  return [...falsePubIds].every(id => coveredIds.has(id));
 }

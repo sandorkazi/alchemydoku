@@ -1,0 +1,142 @@
+{
+  "id": "mixed-debunk-r-06",
+  "title": "Whispers of the Archive",
+  "description": "Mixed evidence surrounds several suspicious publications. Use master debunking to expose the lies.",
+  "difficulty": "medium",
+  "clues": [
+    {
+      "kind": "debunk",
+      "variant": "master",
+      "ingredient1": 2,
+      "ingredient2": 8,
+      "claimedPotion": {
+        "color": "B",
+        "sign": "+"
+      },
+      "outcome": "success"
+    },
+    {
+      "kind": "sell",
+      "ingredient1": 4,
+      "ingredient2": 7,
+      "claimedResult": {
+        "type": "potion",
+        "color": "B",
+        "sign": "-"
+      },
+      "sellResult": "opposite"
+    },
+    {
+      "kind": "debunk",
+      "variant": "master",
+      "ingredient1": 4,
+      "ingredient2": 5,
+      "claimedPotion": {
+        "color": "B",
+        "sign": "+"
+      },
+      "outcome": "success"
+    },
+    {
+      "kind": "debunk",
+      "variant": "master",
+      "ingredient1": 3,
+      "ingredient2": 7,
+      "claimedPotion": {
+        "color": "R",
+        "sign": "-"
+      },
+      "outcome": "success"
+    },
+    {
+      "kind": "debunk",
+      "variant": "master",
+      "ingredient1": 2,
+      "ingredient2": 4,
+      "claimedPotion": {
+        "color": "R",
+        "sign": "+"
+      },
+      "outcome": "success"
+    }
+  ],
+  "questions": [
+    {
+      "kind": "debunk_min_steps"
+    }
+  ],
+  "solution": {
+    "1": 3,
+    "2": 2,
+    "3": 7,
+    "4": 8,
+    "5": 4,
+    "6": 6,
+    "7": 1,
+    "8": 5
+  },
+  "hints": [
+    {
+      "level": 1,
+      "text": "Use all clues to eliminate impossible worlds."
+    },
+    {
+      "level": 2,
+      "text": "Apply each clue systematically."
+    },
+    {
+      "level": 3,
+      "text": "Answer: not_validated"
+    }
+  ],
+  "complexity": {
+    "score": 3,
+    "raw": 4.446,
+    "avg_clue_strength": 2.66,
+    "ambig_penalty": 0.12,
+    "stranded_ambiguity": 0.0,
+    "chain_depth": 2,
+    "stuck": true,
+    "requires_complement_set": false,
+    "question_requires_enumeration": false,
+    "residual_worlds": 4
+  },
+  "publications": [
+    null,
+    {
+      "ingredient": 2,
+      "claimedAlchemical": 1
+    },
+    {
+      "ingredient": 3,
+      "claimedAlchemical": 5
+    },
+    null,
+    null,
+    null,
+    {
+      "ingredient": 7,
+      "claimedAlchemical": 6
+    },
+    null
+  ],
+  "debunk_answers": {
+    "debunk_min_steps": [
+      {
+        "kind": "master",
+        "ingredient1": 2,
+        "ingredient2": 4
+      },
+      {
+        "kind": "master",
+        "ingredient1": 3,
+        "ingredient2": 2
+      },
+      {
+        "kind": "master",
+        "ingredient1": 7,
+        "ingredient2": 2
+      }
+    ]
+  }
+}
