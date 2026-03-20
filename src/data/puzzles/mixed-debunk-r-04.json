@@ -120,18 +120,13 @@
     "debunk_min_steps": [
       {
         "kind": "master",
-        "ingredient1": 3,
-        "ingredient2": 2
-      },
-      {
-        "kind": "master",
         "ingredient1": 6,
-        "ingredient2": 2
+        "ingredient2": 7
       },
       {
         "kind": "master",
-        "ingredient1": 7,
-        "ingredient2": 2
+        "ingredient1": 3,
+        "ingredient2": 8
       }
     ]
   }
