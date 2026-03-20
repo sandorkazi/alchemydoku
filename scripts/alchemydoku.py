@@ -406,7 +406,7 @@ def answer(worlds: frozenset, q: dict, golem: Optional[dict] = None):
         return sorted(fmt_r(p) for p in potions) if len(potions) < 7 else None
 
     # Debunk plan questions require plan-search validation — not auto-checkable here
-    if k in ('debunk_min_steps', 'debunk_conflict_only', 'debunk_apprentice_plan', 'debunk_max_conflict'):
+    if k in ('debunk_min_steps', 'debunk_conflict_only', 'debunk_apprentice_plan'):
         return 'not_validated'
 
     if k == 'neutral-partner':
@@ -601,51 +601,6 @@ def _find_conflict_cover(sol: dict, pub_map: dict, _known: set):
     return selected
 
 
-def _find_max_conflict_cover(sol: dict, pub_map: dict) -> tuple:
-    """Find the min-length set of conflict pairs covering the most false publications.
-
-    Conflict conditions (same as _find_conflict_cover §4c):
-    1. Both ingredients in pub_map.
-    2. Each claim is result-compatible with the actual result.
-    3. Together the claims predict the wrong result.
-
-    Coverage counts only FALSE publications (pub_map[ing] != sol[ing]).
-    Returns (max_coverage, plan) where plan = [(ing_a, ing_b), ...].
-    max_coverage=0 if no valid conflict covers any false pub."""
-    false_pubs = frozenset(ing for ing, alch in pub_map.items() if alch != sol[ing])
-
-    conflict_pairs = []
-    for ing_a, ing_b in itertools.combinations(sorted(pub_map.keys()), 2):
-        alch_a, alch_b = pub_map[ing_a], pub_map[ing_b]
-        true_r = MIX_TABLE[sol[ing_a]][sol[ing_b]]
-        if (
-            _can_produce_result(alch_a, true_r)
-            and _can_produce_result(alch_b, true_r)
-            and MIX_TABLE[alch_a][alch_b] != true_r
-        ):
-            covered = frozenset(x for x in (ing_a, ing_b) if x in false_pubs)
-            if covered:
-                conflict_pairs.append((ing_a, ing_b, covered))
-
-    if not conflict_pairs:
-        return 0, []
-
-    # Brute-force max coverage: at most C(4,2)=6 pairs — trivially fast
-    best_coverage, best_plan, best_len = 0, [], float('inf')
-    for r in range(1, len(conflict_pairs) + 1):
-        for subset in itertools.combinations(range(len(conflict_pairs)), r):
-            covered_ids = set()
-            for i in subset:
-                covered_ids |= conflict_pairs[i][2]
-            n = len(covered_ids)
-            if n > best_coverage or (n == best_coverage and r < best_len):
-                best_coverage = n
-                best_plan = [(conflict_pairs[i][0], conflict_pairs[i][1]) for i in subset]
-                best_len = r
-
-    return best_coverage, best_plan
-
-
 def _make_publications(sol: dict, known: set, n: int, rng: random.Random) -> dict:
     """Pick n slots from known, assign each a wrong alchemical. Returns {slot: wrong_alch_id}."""
     targets = rng.sample(sorted(known), min(n, len(known)))
@@ -785,8 +740,7 @@ def _find_removal_plan_expanded(sol: dict, pub_map: dict, articles: list, known:
     return None
 
 
-DEBUNK_QUESTION_KINDS = {'debunk_min_steps', 'debunk_conflict_only', 'debunk_apprentice_plan',
-                          'debunk_max_conflict'}
+DEBUNK_QUESTION_KINDS = {'debunk_min_steps', 'debunk_conflict_only', 'debunk_apprentice_plan'}
 
 
 def _plan_debunk(profile, sol: dict, worlds: frozenset, rng: random.Random):
@@ -794,7 +748,6 @@ def _plan_debunk(profile, sol: dict, worlds: frozenset, rng: random.Random):
     Returns a dict with publications/articles/questions/debunk_answers, or None on failure."""
     known = _definitively_known(worlds, sol)
     is_expanded = not is_base_profile(profile)
-    is_max_conflict_profile = profile.question_kind == 'debunk_max_conflict'
     if len(known) < 4:
         return None
     for n_pubs in [4, 3]:
@@ -811,41 +764,18 @@ def _plan_debunk(profile, sol: dict, worlds: frozenset, rng: random.Random):
             if plan is None:
                 continue
             conflict_cover = _find_conflict_cover(sol, pub_map, known)
-            max_cov, max_cov_plan = _find_max_conflict_cover(sol, pub_map)
-
-            # Only emit debunk_min_steps for removal-plan profiles
-            if is_max_conflict_profile:
-                questions = []
-            else:
-                questions = [{'kind': 'debunk_min_steps'}]
-                if conflict_cover:
-                    ing_c = conflict_cover[0][0]
-                    questions.append({'kind': 'debunk_conflict_only', 'fixedIngredient': ing_c})
-
-            if max_cov >= 2:
-                questions.append({'kind': 'debunk_max_conflict', 'maxCoverage': max_cov})
-
-            # For max_conflict profile, skip if no max_conflict question was generated
-            if is_max_conflict_profile and not any(q['kind'] == 'debunk_max_conflict' for q in questions):
-                continue
-
+            questions = [{'kind': 'debunk_min_steps'}]
+            if conflict_cover:
+                ing_c = conflict_cover[0][0]
+                questions.append({'kind': 'debunk_conflict_only', 'fixedIngredient': ing_c})
             pubs_array = [None] * 8
             for s, wrong_alch in pub_map.items():
                 pubs_array[s - 1] = {'ingredient': s, 'claimedAlchemical': wrong_alch}
-
-            if is_max_conflict_profile:
-                debunk_answers = {}
-            else:
-                debunk_answers = {'debunk_min_steps': plan}
-                if conflict_cover:
-                    debunk_answers['debunk_conflict_only'] = [
-                        {'kind': 'master', 'ingredient1': a, 'ingredient2': b}
-                        for a, b in conflict_cover
-                    ]
-            if max_cov >= 2:
-                debunk_answers['debunk_max_conflict'] = [
+            debunk_answers = {'debunk_min_steps': plan}
+            if conflict_cover:
+                debunk_answers['debunk_conflict_only'] = [
                     {'kind': 'master', 'ingredient1': a, 'ingredient2': b}
-                    for a, b in max_cov_plan
+                    for a, b in conflict_cover
                 ]
             return {
                 'publications': pubs_array,
@@ -929,7 +859,7 @@ def compute_difficulty(puzzle: dict) -> dict:
         elif kind == 'debunk_conflict_only':
             has_debunk   = True
             has_conflict = True
-        elif kind in ('debunk_min_steps', 'debunk_apprentice_plan', 'debunk_max_conflict'):
+        elif kind in ('debunk_min_steps', 'debunk_apprentice_plan'):
             has_debunk = True
     if has_debunk:
         q_score += 10
@@ -981,7 +911,7 @@ def compute_difficulty(puzzle: dict) -> dict:
         kind = q['kind']
 
         # Debunk questions require full-board plan reasoning
-        if kind in ('debunk_min_steps', 'debunk_apprentice_plan', 'debunk_conflict_only', 'debunk_max_conflict'):
+        if kind in ('debunk_min_steps', 'debunk_apprentice_plan', 'debunk_conflict_only'):
             w_score += 15
             continue
 
@@ -1244,16 +1174,6 @@ PROFILES = {
         mandatory_clues=[
             {'kind': 'debunk', 'variant': 'master'},    # witnessed mix outcome as evidence
             {'kind': 'sell', 'sellResult': 'opposite'}, # a strong sell result
-        ]
-    ),
-    # Standalone max-conflict profile
-    'debunk_max_conflict': Profile(
-        'debunk-max-conflict',
-        ['base', 'sell', 'debunk'],
-        'debunk_max_conflict',
-        'hard', 14, False,
-        mandatory_clues=[
-            {'kind': 'debunk', 'variant': 'master'},
         ]
     ),
     # Mixed-clue debunk profiles — unrealistic (among clues)
@@ -2501,7 +2421,7 @@ def cmd_generate(args):
 
         warns = [e for e in errs if e.startswith('WARNING')]
         print(f"  ✓  {puz['id']}  clues={len(raw['clues'])}  "
-              f"worlds={len(raw['worlds'])}  raw={puz['complexity']['raw_score']:.2f}")
+              f"worlds={len(raw['worlds'])}  raw={puz['complexity']['raw']:.2f}")
         for w in warns:
             print(f"     {w}")
         generated += 1
@@ -2935,56 +2855,6 @@ def cmd_recompute_debunk_answers(_args):
     print(f'\nDone. {updated} puzzle(s) updated.')
 
 
-def cmd_recompute_max_conflict_answers(_args):
-    """Recompute debunk_max_conflict reference answers for all existing debunk puzzles.
-    Adds/updates the debunk_max_conflict question and answer where max_coverage >= 2."""
-    import pathlib
-    dirs = [
-        pathlib.Path('src/data/puzzles'),
-        pathlib.Path('src/expanded/data/puzzles'),
-    ]
-    updated = 0
-    for d in dirs:
-        for path in sorted(d.glob('*.json')):
-            if path.name == 'collections.json':
-                continue
-            puz = json.loads(path.read_text())
-            pubs = [p for p in (puz.get('publications') or []) if p]
-            if not pubs:
-                continue
-            sol = {int(k): v for k, v in puz['solution'].items()}
-            # Use full pub_map (all publications, including correct ones)
-            pub_map = {p['ingredient']: p['claimedAlchemical'] for p in pubs}
-            max_cov, max_cov_plan = _find_max_conflict_cover(sol, pub_map)
-            questions = puz.get('questions', [])
-            old_q = next((q for q in questions if q.get('kind') == 'debunk_max_conflict'), None)
-            old_ans = puz.get('debunk_answers', {}).get('debunk_max_conflict')
-            if max_cov < 2:
-                # Remove if present
-                if old_q or old_ans:
-                    puz['questions'] = [q for q in questions if q.get('kind') != 'debunk_max_conflict']
-                    puz.get('debunk_answers', {}).pop('debunk_max_conflict', None)
-                    path.write_text(json.dumps(puz, indent=2) + '\n')
-                    print(f'  {path.name}: removed debunk_max_conflict (max_cov={max_cov})')
-                    updated += 1
-                continue
-            new_q = {'kind': 'debunk_max_conflict', 'maxCoverage': max_cov}
-            new_ans = [{'kind': 'master', 'ingredient1': a, 'ingredient2': b} for a, b in max_cov_plan]
-            changed = (old_q != new_q) or (old_ans != new_ans)
-            if not changed:
-                continue
-            # Update or insert question
-            if old_q:
-                puz['questions'] = [new_q if q.get('kind') == 'debunk_max_conflict' else q for q in questions]
-            else:
-                puz['questions'] = questions + [new_q]
-            puz.setdefault('debunk_answers', {})['debunk_max_conflict'] = new_ans
-            path.write_text(json.dumps(puz, indent=2) + '\n')
-            print(f'  {path.name}: max_coverage={max_cov}, plan={len(new_ans)} step(s)')
-            updated += 1
-    print(f'\nDone. {updated} puzzle(s) updated.')
-
-
 # ══════════════════════════════════════════════════════════════════════════════
 # ENTRY POINT
 # ══════════════════════════════════════════════════════════════════════════════
@@ -3034,10 +2904,6 @@ if __name__ == '__main__':
     sub.add_parser('recompute-debunk-answers',
                    help='Recompute debunk_min_steps reference answers using fixed BFS logic')
 
-    # recompute-max-conflict-answers
-    sub.add_parser('recompute-max-conflict-answers',
-                   help='Recompute debunk_max_conflict reference answers for all debunk puzzles')
-
     args = parser.parse_args()
 
     if args.cmd == 'generate':
@@ -3056,7 +2922,5 @@ if __name__ == '__main__':
         cmd_migrate_conflict_answers(args)
     elif args.cmd == 'recompute-debunk-answers':
         cmd_recompute_debunk_answers(args)
-    elif args.cmd == 'recompute-max-conflict-answers':
-        cmd_recompute_max_conflict_answers(args)
     else:
         parser.print_help()
