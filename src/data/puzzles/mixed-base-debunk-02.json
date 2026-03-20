@@ -156,22 +156,12 @@
       {
         "kind": "master",
         "ingredient1": 4,
-        "ingredient2": 1
+        "ingredient2": 8
       },
       {
         "kind": "master",
         "ingredient1": 5,
-        "ingredient2": 1
-      },
-      {
-        "kind": "master",
-        "ingredient1": 7,
-        "ingredient2": 3
-      },
-      {
-        "kind": "master",
-        "ingredient1": 8,
-        "ingredient2": 1
+        "ingredient2": 7
       }
     ]
   }

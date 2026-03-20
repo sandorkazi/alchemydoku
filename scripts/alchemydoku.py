@@ -497,9 +497,45 @@ def _definitively_known(worlds: frozenset, sol: dict) -> set:
 
 
 def _find_removal_plan(sol: dict, pub_map: dict, known: set) -> list:
-    """BFS to find minimum master steps (ingredient1=target, ingredient2=witness)
-    to remove all publications. Returns list of step dicts or None."""
+    """BFS to find minimum master steps to remove all false publications.
+
+    Mirrors TypeScript simulateStep semantics exactly:
+    1. Result-incompatibility (§2b): if claimed alch cannot produce the observed
+       result with *any* partner, that publication is removed immediately —
+       independently for each ingredient in the mix.  Both can be removed at once.
+    2. Blame-based (§2a): after result-incompatibility removals, if the remaining
+       published ingredient predicted the wrong result given its partner's *true*
+       alchemical (and that partner is definitively known), it gets blamed.
+       Unambiguous blame → removal; mutual blame → conflict, neither removed.
+    """
     from collections import deque
+
+    def step_removals(ing_a: int, ing_b: int, state: frozenset) -> tuple:
+        """(new_state, removed_set) for one master mix; removed may be empty."""
+        true_r = MIX_TABLE[sol[ing_a]][sol[ing_b]]
+        remaining = set(state)
+        removed: set = set()
+
+        # Phase 1 – result-incompatibility (both checked independently)
+        for ing, partner_sol in ((ing_a, sol[ing_b]), (ing_b, sol[ing_a])):
+            if ing in remaining and not _can_produce_result(pub_map[ing], true_r):
+                removed.add(ing)
+                remaining.discard(ing)
+        del partner_sol  # silence linter
+
+        # Phase 2 – blame-based (only for still-active pubs, only with known partner)
+        conflict_a = (ing_a in remaining and ing_b in known
+                      and MIX_TABLE[pub_map[ing_a]][sol[ing_b]] != true_r)
+        conflict_b = (ing_b in remaining and ing_a in known
+                      and MIX_TABLE[sol[ing_a]][pub_map[ing_b]] != true_r)
+        if conflict_a and not conflict_b:
+            removed.add(ing_a)
+        elif conflict_b and not conflict_a:
+            removed.add(ing_b)
+        # both conflict → neither removed (conflict state, no blame)
+
+        return frozenset(remaining - removed), removed
+
     initial = frozenset(pub_map.keys())
     if not initial:
         return []
@@ -507,21 +543,17 @@ def _find_removal_plan(sol: dict, pub_map: dict, known: set) -> list:
     visited = {initial}
     while queue:
         state, steps = queue.popleft()
-        witnesses = known - state
-        for target in sorted(state):
-            for witness in sorted(witnesses):
-                true_r = MIX_TABLE[sol[target]][sol[witness]]
-                claimed_r = MIX_TABLE[pub_map[target]][sol[witness]]
-                if claimed_r == true_r:
-                    continue
-                new_state = state - {target}
-                new_step = {'kind': 'master', 'ingredient1': target, 'ingredient2': witness}
-                new_steps = steps + [new_step]
-                if not new_state:
-                    return new_steps
-                if new_state not in visited:
-                    visited.add(new_state)
-                    queue.append((new_state, new_steps))
+        for ing_a, ing_b in itertools.combinations(SLOTS, 2):
+            new_state, removed = step_removals(ing_a, ing_b, state)
+            if not removed:
+                continue
+            new_step = {'kind': 'master', 'ingredient1': ing_a, 'ingredient2': ing_b}
+            new_steps = steps + [new_step]
+            if not new_state:
+                return new_steps
+            if new_state not in visited:
+                visited.add(new_state)
+                queue.append((new_state, new_steps))
     return None
 
 
@@ -661,45 +693,50 @@ def _find_removal_plan_expanded(sol: dict, pub_map: dict, articles: list, known:
     if not initial_pubs and not initial_arts:
         return []
 
-    def step_effect(ing_a, ing_b, pubs, arts):
+    def step_effect(ing_a, ing_b, pubs):
         true_r = MIX_TABLE[sol[ing_a]][sol[ing_b]]
         a_known = ing_a in known
         b_known = ing_b in known
-        conflict_a = (ing_a in pubs and b_known
+        remaining = set(pubs)
+        removed_pubs: set = set()
+
+        # Phase 1 – result-incompatibility (both checked independently)
+        if ing_a in remaining and not _can_produce_result(pub_map[ing_a], true_r):
+            removed_pubs.add(ing_a)
+            remaining.discard(ing_a)
+        if ing_b in remaining and not _can_produce_result(pub_map[ing_b], true_r):
+            removed_pubs.add(ing_b)
+            remaining.discard(ing_b)
+
+        # Phase 2 – blame-based (only for still-active pubs, only with known partner)
+        conflict_a = (ing_a in remaining and b_known
                       and MIX_TABLE[pub_map[ing_a]][sol[ing_b]] != true_r)
-        conflict_b = (ing_b in pubs and a_known
+        conflict_b = (ing_b in remaining and a_known
                       and MIX_TABLE[sol[ing_a]][pub_map[ing_b]] != true_r)
-        removed_pubs = set()
         if conflict_a and not conflict_b:
             removed_pubs.add(ing_a)
         elif conflict_b and not conflict_a:
             removed_pubs.add(ing_b)
-        removed_arts = set()
-        if a_known:
-            removed_arts |= art_cleared_by_ing.get(ing_a, set()) & arts
-        if b_known:
-            removed_arts |= art_cleared_by_ing.get(ing_b, set()) & arts
-        return pubs - removed_pubs, arts - removed_arts, bool(removed_pubs or removed_arts)
 
-    initial_state = (initial_pubs, initial_arts)
-    queue = deque([(initial_state, [])])
-    visited = {initial_state}
+        # Only publications drive the BFS state and validity; articles are a bonus.
+        return pubs - removed_pubs, bool(removed_pubs)
+
+    # BFS over publication state only; articles clear as a side-effect during play.
+    queue = deque([(initial_pubs, [])])
+    visited = {initial_pubs}
     while queue:
-        (pubs, arts), steps = queue.popleft()
+        pubs, steps = queue.popleft()
         for ing_a, ing_b in itertools.combinations(SLOTS, 2):
-            if ing_a not in known and ing_b not in known:
-                continue
-            new_pubs, new_arts, valid = step_effect(ing_a, ing_b, pubs, arts)
+            new_pubs, valid = step_effect(ing_a, ing_b, pubs)
             if not valid:
                 continue
-            new_state = (new_pubs, new_arts)
             new_step = {'kind': 'master', 'ingredient1': ing_a, 'ingredient2': ing_b}
             new_steps = steps + [new_step]
-            if not new_pubs and not new_arts:
+            if not new_pubs:
                 return new_steps
-            if new_state not in visited:
-                visited.add(new_state)
-                queue.append((new_state, new_steps))
+            if new_pubs not in visited:
+                visited.add(new_pubs)
+                queue.append((new_pubs, new_steps))
     return None
 
 
@@ -2770,6 +2807,54 @@ def cmd_migrate_conflict_answers(_args):
     print(f'\nDone. {updated} puzzle(s) updated.')
 
 
+def cmd_recompute_debunk_answers(_args):
+    """Recompute debunk_min_steps reference answers for all existing puzzles
+    using the fixed _find_removal_plan / _find_removal_plan_expanded logic."""
+    import pathlib
+    dirs = [
+        pathlib.Path('src/data/puzzles'),
+        pathlib.Path('src/expanded/data/puzzles'),
+    ]
+    updated = 0
+    for d in dirs:
+        is_exp = 'expanded' in str(d)
+        for path in sorted(d.glob('*.json')):
+            if path.name == 'collections.json':
+                continue
+            puz = json.loads(path.read_text())
+            questions = puz.get('questions', [])
+            if not any(q.get('kind') == 'debunk_min_steps' for q in questions):
+                continue
+            sol = {int(k): v for k, v in puz['solution'].items()}
+            # Reconstruct worlds from clues to get definitively-known set
+            clues = puz.get('clues', [])
+            golem = puz.get('golem')
+            worlds = apply_all(all_worlds(), clues, golem)
+            known = _definitively_known(worlds, sol)
+            # pub_map = only the FALSE publications
+            pubs = [p for p in (puz.get('publications') or []) if p]
+            pub_map = {p['ingredient']: p['claimedAlchemical']
+                       for p in pubs if p['claimedAlchemical'] != sol[p['ingredient']]}
+            if not pub_map:
+                continue
+            if is_exp:
+                articles = puz.get('articles') or []
+                new_plan = _find_removal_plan_expanded(sol, pub_map, articles, known)
+            else:
+                new_plan = _find_removal_plan(sol, pub_map, known)
+            if new_plan is None:
+                print(f'  WARN: no plan found for {path.name}')
+                continue
+            old_plan = puz.get('debunk_answers', {}).get('debunk_min_steps', [])
+            if len(new_plan) == len(old_plan):
+                continue
+            puz.setdefault('debunk_answers', {})['debunk_min_steps'] = new_plan
+            path.write_text(json.dumps(puz, indent=2) + '\n')
+            print(f'  {path.name}: {len(old_plan)} → {len(new_plan)} step(s)')
+            updated += 1
+    print(f'\nDone. {updated} puzzle(s) updated.')
+
+
 # ══════════════════════════════════════════════════════════════════════════════
 # ENTRY POINT
 # ══════════════════════════════════════════════════════════════════════════════
@@ -2815,6 +2900,10 @@ if __name__ == '__main__':
     sub.add_parser('migrate-conflict-answers',
                    help='Recompute debunk_conflict_only reference answers for all puzzles')
 
+    # recompute-debunk-answers
+    sub.add_parser('recompute-debunk-answers',
+                   help='Recompute debunk_min_steps reference answers using fixed BFS logic')
+
     args = parser.parse_args()
 
     if args.cmd == 'generate':
@@ -2831,5 +2920,7 @@ if __name__ == '__main__':
         cmd_check_hints(args)
     elif args.cmd == 'migrate-conflict-answers':
         cmd_migrate_conflict_answers(args)
+    elif args.cmd == 'recompute-debunk-answers':
+        cmd_recompute_debunk_answers(args)
     else:
         parser.print_help()
