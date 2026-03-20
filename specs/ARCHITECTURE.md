@@ -19,6 +19,7 @@ alchemydoku/
 ├── public/                   ← static assets (SVG sprites, favicon)
 ├── src/
 │   ├── types.ts              ← all base game TypeScript types
+│   ├── compliance.ts         ← isPuzzleNonCompliant(); NON_COMPLIANT_*_CLUE_KINDS sets
 │   ├── main.tsx              ← React entry point
 │   ├── App.tsx               ← top-level routing, mode switcher
 │   │
@@ -33,8 +34,8 @@ alchemydoku/
 │   ├── logic/
 │   │   ├── worldPack.ts      ← WORLD_DATA, SIGN_TABLE, SIZE_TABLE, MIX_TABLE, filterWorlds
 │   │   ├── worldSet.ts       ← generateAllWorlds, applyClues, per-clue filters
-│   │   ├── deducer.ts        ← deduceMixingResult, deduceAlchemical, deduceAspect, etc.
-│   │   ├── debunk.ts         ← isDefinitivelyKnown, simulateStep, evaluatePlan, validateMinStepsAnswer, validateConflictOnlyAnswer
+│   │   ├── deducer.ts        ← deduceMixingResult, deduceAlchemical, deduceAspect, deduceNeutralPartner, getIngredientPotionProfile, getGroupPossiblePotions, getMostInformativeMix, getGuaranteedNonProducers, etc.
+│   │   ├── debunk.ts         ← canProduceResult, isDefinitivelyKnown, simulateStep, simulateConflictOnlyStep, simulatePlan, evaluatePlan, validateMinStepsAnswer, validateMasterPlanAnswer, validateApprenticePlanAnswer, validateConflictOnlyAnswer
 │   │   ├── mixer.ts          ← mix(), mixIngredients(), potionResultsEqual()
 │   │   ├── alchemicals.ts    ← isDirectOpposite(), helper functions
 │   │   ├── sellValidator.ts  ← sell outcome logic
@@ -78,7 +79,9 @@ alchemydoku/
 │       │   └── puzzles/*.json
 │       ├── logic/
 │       │   ├── solarLunar.ts
-│       │   └── worldSetExpanded.ts
+│       │   ├── worldSetExpanded.ts
+│       │   ├── debunkExpanded.ts   ← simulateExpandedStep, simulateExpandedPlan, validateExpanded* validators
+│       │   └── golem.ts
 │       ├── pages/
 │       │   └── ExpandedPuzzleSolverPage.tsx
 │       └── puzzles/
@@ -144,11 +147,18 @@ type ExpandedSolverState = {
 
 type Action =
   | { type: 'TOGGLE_CELL'; slotId: number; alchId: number }
-  | { type: 'SET_CONFIRMED'; slotId: number; alchId: number }
+  | { type: 'SET_CELL'; slotId: number; alchId: number; state: CellState }
   | { type: 'RESET' }
+  | { type: 'RESHUFFLE' }
+  | { type: 'CLEAR_GRID' }
   | { type: 'REQUEST_HINT' }
-  | { type: 'SUBMIT_ANSWERS'; answers: (PuzzleAnswer | null)[] }
-  | { type: 'REVEAL_SOLUTION' };
+  | { type: 'TOGGLE_AUTO_DEDUCTION' }
+  | { type: 'SUBMIT_ANSWER'; answer: PuzzleAnswer | null; questionIndex: number }
+  | { type: 'REVEAL_SOLUTION' }
+  | { type: 'SET_NOTE'; key: string; value: string }
+  | { type: 'LOAD_PROGRESS'; progress: PuzzleProgress }
+  | { type: 'ADD_DRAW_STROKE'; stroke: DrawStroke }
+  | { type: 'CLEAR_DRAW_STROKES' };
 ```
 
 Auto-deduction runs after every action: if every remaining world agrees that slot S maps
@@ -235,6 +245,7 @@ const url = `/sprites/ingredients.png`;
 
 ## 9. Tests
 
+
 Unit tests live in `tests/logic/` and run via **Vitest** (no browser environment needed).
 
 ```bash
@@ -242,13 +253,51 @@ npm test          # run once
 npm run test:watch  # watch mode
 ```
 
-| File                  | Covers                                                    |
-|-----------------------|-----------------------------------------------------------|
-| `worldSet.test.ts`    | `generateAllWorlds`, `filterByClue` (mixing/aspect/assignment), `applyClues` |
-| `mixer.test.ts`       | `mix()`, `potionToString()`, `isDirectOpposite()`         |
-| `deducer.test.ts`     | `deduceAlchemical`, `deduceMixingResult`, `getPossibleAlchemicals`, `getEliminatedCells` |
+| File                                | Covers                                                                              |
+|-------------------------------------|-------------------------------------------------------------------------------------|
+| `tests/logic/worldSet.test.ts`      | `generateAllWorlds`, `filterByClue` (mixing/aspect/assignment), `applyClues`       |
+| `tests/logic/mixer.test.ts`         | `mix()`, `potionToString()`, `isDirectOpposite()`                                  |
+| `tests/logic/deducer.test.ts`       | `deduceAlchemical`, `deduceMixingResult`, `getPossibleAlchemicals`, etc.            |
+| `tests/puzzles/answers.test.ts`     | Integration: all base puzzles must have consistent clues and uniquely-answerable non-debunk questions |
+| `tests/puzzles/expanded-answers.test.ts` | Same for all expanded puzzles                                                  |
 
-Tests import directly from `src/logic/` — no component rendering. They cover the core
-deduction and mixing logic that all puzzle solving depends on. Expanded logic
-(`solarLunar.ts`, `worldSetExpanded.ts`, `golem.ts`) does not currently have dedicated
-tests; correctness is verified via puzzle validation (`scripts/alchemydoku.py validate`).
+Tests import directly from `src/logic/` — no component rendering. Expanded logic
+(`solarLunar.ts`, `worldSetExpanded.ts`, `golem.ts`, `debunkExpanded.ts`) is verified
+primarily via puzzle integration tests and `scripts/alchemydoku.py validate`.
+
+## 10. Board-Game Compliance
+
+`src/compliance.ts` is the authoritative registry of non-compliant puzzle content.
+
+### `isPuzzleNonCompliant(puzzle, mode)`
+
+Returns `true` if the puzzle contains any non-compliant clue kind, **or** if the
+`publications` array contains duplicate `claimedAlchemical` values (impossible in a real
+Alchemists game where each alchemical can only be published once).
+
+```ts
+export function isPuzzleNonCompliant(
+  puzzle: { clues: { kind: string }[]; publications?: (null | { claimedAlchemical: number })[] },
+  mode: 'base' | 'expanded',
+): boolean
+```
+
+### Non-compliant clue kind sets
+
+```ts
+NON_COMPLIANT_BASE_CLUE_KINDS = new Set([
+  'mixing_among', 'mixing_count_among', 'sell_result_among', 'sell_among',
+]);
+
+NON_COMPLIANT_EXPANDED_CLUE_KINDS = new Set([
+  ...NON_COMPLIANT_BASE_CLUE_KINDS, 'book_among', 'golem_reaction_among',
+]);
+```
+
+Non-compliant puzzles are hidden by default. The "Allow unrealistic (extra) puzzles" toggle
+in the Settings modal controls visibility. When OFF, non-compliant puzzles are greyed out
+with a 🧩 icon and their count is shown per collection.
+
+**Protocol for new clue kinds:** If a new kind has no board-game equivalent, add it to the
+appropriate set above. Tag any collection containing such puzzles with
+`boardGameCompliant: false` in `collections.json` or `puzzlesIndex.ts`.

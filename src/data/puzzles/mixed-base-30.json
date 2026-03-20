@@ -117,15 +117,11 @@
     }
   ],
   "complexity": {
-    "score": 4,
-    "raw": 5.202,
-    "avg_clue_strength": 2.55,
-    "ambig_penalty": 0.85,
-    "stranded_ambiguity": 2.615,
-    "chain_depth": 0,
-    "stuck": false,
-    "requires_complement_set": false,
-    "question_requires_enumeration": false,
+    "score": 82,
+    "raw_score": 67,
+    "clue_score": 42,
+    "question_score": 0,
+    "world_score": 15,
     "residual_worlds": 1
   }
 }

@@ -2,7 +2,7 @@
   "id": "mixed-base-10",
   "title": "The Alchemist's Ledger",
   "description": "Mixing, selling, and debunking records all point toward a single pair. Deduce what potion they produce.",
-  "difficulty": "medium",
+  "difficulty": "hard",
   "clues": [
     {
       "kind": "sell_among",
@@ -81,15 +81,11 @@
     }
   ],
   "complexity": {
-    "score": 3,
-    "raw": 3.525,
-    "avg_clue_strength": 4.1,
-    "ambig_penalty": 0.8,
-    "stranded_ambiguity": 1.456,
-    "chain_depth": 0,
-    "stuck": false,
-    "requires_complement_set": false,
-    "question_requires_enumeration": false,
+    "score": 77,
+    "raw_score": 60,
+    "clue_score": 30,
+    "question_score": 0,
+    "world_score": 20,
     "residual_worlds": 8
   }
 }

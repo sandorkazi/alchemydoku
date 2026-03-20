@@ -1,119 +1,92 @@
 # Puzzle Difficulty Scoring — Specification
 
-## Motivation
+## Overview
 
-The original difficulty labels were based on clue count and collection grouping.
-This spec replaces them with a computed score that reflects **human solving effort**,
-modelled on three independent axes:
+Puzzles are scored on a **[10, 100]** integer scale stored as `complexity.score`.
+The score is the sum of three clamped components plus a base of 10:
 
----
+```
+score = 10 + clue_score + question_score + world_score
+```
 
-## Axis 1: Clue Strength (information content)
-
-For each clue, measure how many worlds it eliminates:
-
-    strength(clue) = log2(worlds_before / worlds_after)
-
-High strength = informative clue = easier puzzle.
-Weak clues force longer inference chains.
-
-**Clue type priors** (theoretical maximum, used as sanity check):
-| Clue type | Worlds eliminated | Strength |
+| Component | Range | Measures |
 |---|---|---|
-| mix → exact result | ~6/7 | ~2.8 bits |
-| sell → total_match | ~6/7 | ~2.8 bits |
-| debunk success | ~6/7 | ~2.8 bits |
-| sell → sign_ok | ~4/6 remaining | ~1.6 bits |
-| sell → opposite | ~3/6 remaining | ~1.0 bits |
-| sell → neutral | ~1/7 | ~0.2 bits |
-| debunk failure | eliminates 1/7 outcomes | ~0.2 bits |
-| aspect clue | pins one sign | ~1.0 bits |
-
-**Score contribution:**
-- `avg_clue_strength` = mean of strength(clue) across all clues
-- Low average → weak clues → harder
+| `clue_score` | 0–50 | Structural difficulty of reading / applying each clue |
+| `question_score` | 0–20 | Difficulty of the question type(s) |
+| `world_score` | 0–20 | How constrained the answer ingredients are in the world set |
 
 ---
 
-## Axis 2: Deduction Chain Depth
+## Axis 1: Clue Complexity (0–50)
 
-Simulates a human solver who can only act on what is directly deducible
-from the current world set. Models the "Naked Single" → propagation loop.
+Accumulated over all clues; clamped to [0, 50].
 
-**Algorithm:**
-
-```
-confirmed = {}                  # ingredient → alchemical
-worlds = applyClues(all_clues)
-
-depth = 0
-repeat:
-    newly_confirmed = {}
-    for each ingredient not yet confirmed:
-        possible = getPossibleAlchemicals(worlds, ingredient)
-        if len(possible) == 1:
-            newly_confirmed[ingredient] = possible[0]
-
-    if newly_confirmed is empty: break
-    confirmed.update(newly_confirmed)
-    depth += 1
-    # Remove confirmed ingredients from further consideration
-    # (humans eliminate that alchemical from other rows)
-
-chain_depth = depth
-```
-
-**Interpretation:**
-- depth 1: answer falls out directly (naked single)
-- depth 2: one confirmation unlocks another
-- depth 3+: multi-step cascade
-- depth 0 / stuck: requires advanced technique (see Axis 3)
+| Clue kind | Points | Reason |
+|---|---|---|
+| `mixing`, `assignment`, `aspect`, `debunk*`, `book`, `encyclopedia`, `golem_test` | +0 | Clear, direct information |
+| `sell` with `sign_ok` or `opposite` sellResult | +2 | Partial / indirect information |
+| `encyclopedia_uncertain` | +5 | "At least 3 of 4 correct" — requires enumeration |
+| `mixing_among`, `sell_result_among`, `book_among`, `golem_reaction_among` | +5 | Ambiguous group clue: X of Y ingredients |
+| `mixing_count_among`, `sell_among` | +10 | Combinatoric group clue: exactly X of Y pairs |
 
 ---
 
-## Axis 3: Advanced Techniques Required
+## Axis 2: Question Complexity (0–20)
 
-### Complement-Set Deduction (X-Wing analogue)
+Accumulated over all questions; clamped to [0, 20].
 
-There are 4 alchemicals with R+ and 4 with R−. If a human has confirmed
-3 of the R− alchemicals, they cannot yet confirm the 4th from the world set
-alone — but once they confirm it, the remaining 4 automatically become R+.
-
-Detection: after chain-depth simulation gets stuck, check if:
-- For any (color, sign) pair, exactly 4 ingredients have that aspect
-- If k of those are already world-set-confirmed, and (4-k) are unconfirmed
-  but all remaining candidates for those slots share that aspect → complement applies
-
-Flag: `requires_complement_set = True` adds to difficulty.
-
-### Ambiguity Tolerance
-
-If the question is `possible-potions` or `aspect-set`, the solver must reason
-about *all consistent outcomes*, not just the single forced answer.
-This is inherently harder even at the same chain depth.
-
-Flag: `question_requires_enumeration = True` adds to difficulty.
+| Condition | Points | Notes |
+|---|---|---|
+| `aspect` question | −5 | Binary sign choice — simplest question type |
+| `large-component` question | −2 | Size rather than identity |
+| Enumeration / multiple-choice question | +5 | Answer is a set: `possible-potions`, `aspect-set`, `group-possible-potions`, `ingredient-potion-profile`, `guaranteed-non-producer`, `golem_possible_potions`, `encyclopedia_which_aspect`, `encyclopedia_fourth` |
+| Any debunk question present | +10 | Plan reasoning required (applied once per puzzle) |
+| `debunk_conflict_only` present | +5 | Additional constraint on top of the +10 (applied once) |
 
 ---
 
-## Composite Score Formula
+## Axis 3: World Complexity (0–20)
 
-```
-raw_score = (
-    (1 / (avg_clue_strength + 0.5)) * 4.0   # weak clues → high score
-  + chain_depth * 1.5                         # depth penalty
-  + complement_penalty * 2.0                  # X-Wing penalty
-  + enumeration_penalty * 1.0                 # enumeration penalty
-  + residual_worlds_penalty                   # log2(remaining_worlds/8) if > 0
-)
-```
+Accumulated over all questions; clamped to [0, 20].
 
-Normalised to 1–5 pip scale after computing across all puzzles:
-- Percentile 0–20   → 1 pip
-- Percentile 20–40  → 2 pips
-- Percentile 40–60  → 3 pips
-- Percentile 60–80  → 4 pips
-- Percentile 80–100 → 5 pips
+For each question, identify the ingredients it asks about and the mixing pair (if any),
+then apply the following checks.
+
+**Debunk questions** (`debunk_min_steps`, `debunk_apprentice_plan`, `debunk_conflict_only`):
+flat +15 (full-board plan reasoning).
+
+**All other question kinds:**
+
+| Condition | Points |
+|---|---|
+| No clue directly shows the mixing result for the asked pair | +5 |
+| Each ingredient in the question not directly constrained by any clue | +5 |
+| Each ingredient in the question still having > 1 possible alchemical | +5 |
+
+"Directly constrained" clues: `assignment`, `aspect`, `book`, `debunk` (apprentice), `debunk_apprentice` (expanded), `encyclopedia` (all four entries). `mixing` clues are **not** direct ingredient constraints — they only narrow the pair combination.
+
+---
+
+## Pip Conversion and Difficulty Labels
+
+`complexity.score` ∈ [10, 100] is converted to a 1–5 pip tier for the `difficulty` field:
+
+| Score range | Pip | Difficulty |
+|---|---|---|
+| 10–35 | 1 | `"easy"` |
+| 36–45 | 2 | `"easy"` |
+| 46–52 | 3 | `"medium"` |
+| 53–58 | 4 | `"hard"` |
+| 59–100 | 5 | `"expert"` |
+
+Tutorial puzzles are exempt — their `difficulty` is always `"tutorial"` regardless of score.
+
+`check_puzzles.py` check #15 enforces this: it fails if `complexity.score` is not an integer
+in [10, 100] or if `difficulty` does not match the pip → label table above
+(skipping puzzles with `difficulty == 'tutorial'`).
+
+The same thresholds are encoded in `ComplexityPips` in `src/App.tsx` and
+`src/expanded/ExpandedHome.tsx` so the UI dot display matches exactly.
 
 ---
 
@@ -121,29 +94,26 @@ Normalised to 1–5 pip scale after computing across all puzzles:
 
 ```json
 {
-  "difficulty": {
-    "score": 3.2,
-    "pips": 3,
-    "avg_clue_strength": 1.84,
-    "chain_depth": 2,
-    "requires_complement_set": false,
-    "question_requires_enumeration": false,
-    "residual_worlds": 8,
-    "notes": "Two-step cascade from sell clue"
+  "complexity": {
+    "score": 30,
+    "clue_score": 0,
+    "question_score": 0,
+    "world_score": 20,
+    "residual_worlds": 8
   }
 }
 ```
+
+The `difficulty` field at the top level is kept in sync with `score` by
+`python scripts/alchemydoku.py analyze` (base) and `analyze-expanded` (expanded).
 
 ---
 
 ## Collection Re-ranking
 
-After all puzzles are scored:
-1. Sort each collection internally by `score`
-2. Re-evaluate collection `difficulty` label by median score:
-   - median < 1.5 → tutorial
-   - 1.5–2.5 → easy
-   - 2.5–3.5 → medium
-   - 3.5–4.5 → hard
-   - > 4.5 → expert
-3. Flag any collection whose assigned label disagrees with median by > 1 tier
+`analyze` and `analyze-expanded` report collection pip distributions:
+
+1. Compute pip for each puzzle in the collection.
+2. Report median pip → maps to a difficulty label via the tier table.
+3. Flag `← MISMATCH` if the collection's current `difficulty` label differs from the median-derived label.
+4. Flag `← SPLIT SUGGESTED` if `max_pip − min_pip > 2` — the collection spans more than two difficulty levels and should be considered for splitting.

@@ -4,7 +4,7 @@
   "kind": "debunk",
   "title": "A Flash of Insight",
   "description": "Mixed evidence surrounds several suspicious publications. Use master debunking to expose the lies.",
-  "difficulty": "expert",
+  "difficulty": "hard",
   "golem": {
     "chest": {
       "color": "G",
@@ -109,15 +109,11 @@
     }
   ],
   "complexity": {
-    "score": 5,
-    "raw": 7.63,
-    "avg_clue_strength": 2.286,
-    "ambig_penalty": 0.383,
-    "stranded_ambiguity": 1.519,
-    "chain_depth": 2,
-    "stuck": true,
-    "requires_complement_set": false,
-    "question_requires_enumeration": false,
+    "score": 77,
+    "raw_score": 60,
+    "clue_score": 25,
+    "question_score": 10,
+    "world_score": 15,
     "residual_worlds": 3
   },
   "publications": [

@@ -2,7 +2,7 @@
   "id": "mixed-base-debunk-11",
   "title": "The Living Stone",
   "description": "Mixed evidence surrounds several suspicious publications. Use master debunking to expose the lies.",
-  "difficulty": "expert",
+  "difficulty": "extreme",
   "clues": [
     {
       "kind": "sell_result_among",
@@ -122,15 +122,11 @@
     }
   ],
   "complexity": {
-    "score": 5,
-    "raw": 8.604,
-    "avg_clue_strength": 2.383,
-    "ambig_penalty": 0.617,
-    "stranded_ambiguity": 3.291,
-    "chain_depth": 2,
-    "stuck": true,
-    "requires_complement_set": false,
-    "question_requires_enumeration": false,
+    "score": 97,
+    "raw_score": 95,
+    "clue_score": 50,
+    "question_score": 15,
+    "world_score": 20,
     "residual_worlds": 2
   },
   "publications": [

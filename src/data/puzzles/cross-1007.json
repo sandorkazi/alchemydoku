@@ -2,7 +2,7 @@
   "id": "cross-1007",
   "title": "The Final Examination",
   "description": "Use all the evidence to deduce the mixing results.",
-  "difficulty": "easy",
+  "difficulty": "medium",
   "clues": [
     {
       "kind": "mixing",
@@ -107,15 +107,11 @@
     "8": 8
   },
   "complexity": {
-    "score": 2,
-    "raw": 2.201,
-    "avg_clue_strength": 1.757,
-    "ambig_penalty": 0.286,
-    "stranded_ambiguity": 0.0,
-    "chain_depth": 0,
-    "stuck": false,
-    "requires_complement_set": false,
-    "question_requires_enumeration": false,
+    "score": 60,
+    "raw_score": 38,
+    "clue_score": 8,
+    "question_score": 0,
+    "world_score": 20,
     "residual_worlds": 8
   },
   "hints": [

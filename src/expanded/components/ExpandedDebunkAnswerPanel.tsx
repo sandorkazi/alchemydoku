@@ -504,7 +504,7 @@ export function ExpandedDebunkAnswerPanel({ onNext, isTutorial = false }: {
 
             <p className="text-xs text-gray-500">
               {plan.isConflictOnly
-                ? 'Find a minimal number of master mixes which will cover all incorrect publications with contradictions (at least 1 for each), without removing any.'
+                ? 'Find a minimal number of master mixes which will cover all incorrect publications with contradictions (at least 1 for each), without removing any. The covered publications shown are those whose claims are contradicted by the mix — not removals. An ingredient can help disprove another\'s publication without its own claim being contested.'
                 : plan.isApprenticeOnly
                   ? 'Remove all false publications using only apprentice debunks, in as few steps as possible.'
                   : 'Remove all false publications in as few steps as possible.'}
@@ -544,9 +544,11 @@ export function ExpandedDebunkAnswerPanel({ onNext, isTutorial = false }: {
             {!completed && wrongAttempts > 0 && !showSolution && (
               <p className="text-[10px] text-red-400">
                 {plan.isConflictOnly
-                  ? (wrongAttempts < refLen
-                    ? `Q${qi + 1}: plan uses ${plan.drafts.length} step${plan.drafts.length !== 1 ? 's' : ''} — can you do it in ${refLen}?`
-                    : `Q${qi + 1}: plan doesn't cover all publications with conflicts.`)
+                  ? (plan.drafts.length < refLen
+                    ? `Q${qi + 1}: plan uses ${plan.drafts.length} step${plan.drafts.length !== 1 ? 's' : ''} — at least ${refLen} are needed.`
+                    : plan.drafts.length > refLen
+                      ? `Q${qi + 1}: plan uses ${plan.drafts.length} step${plan.drafts.length !== 1 ? 's' : ''} — needs exactly ${refLen}.`
+                      : `Q${qi + 1}: plan doesn't cover all publications with conflicts.`)
                   : `Q${qi + 1}: plan uses ${plan.drafts.length} step${plan.drafts.length !== 1 ? 's' : ''}${refLen ? ` (optimal: ${refLen})` : ''}.`
                 }
               </p>

@@ -236,20 +236,22 @@ function DebunkApprenticeCard({ clue }: { clue: DebunkApprenticeClue }) {
  * True result is not revealed (especially when unsuccessful).
  */
 function DebunkMasterCard({ clue }: { clue: DebunkMasterClue }) {
-  const status = clue.successful
-    ? <span className="text-green-700 font-semibold">✓ Debunk succeeded</span>
-    : <span className="text-rose-600 font-semibold">✗ Claim rejected</span>;
   return (
     <Card icon="⚗️" label="Debunk — Master (claim)" accent="rose">
-      <div className="flex items-center gap-1.5 flex-wrap text-xs mb-1">
-        {status}
-      </div>
       <div className="flex items-center gap-1.5 text-xs">
         <Ing slotId={clue.ingredient1} />
         <span className="text-gray-400">+</span>
         <Ing slotId={clue.ingredient2} />
         <span className="text-gray-400">→ claimed:</span>
         <PotionImage result={clue.claimed_result} width={24} />
+      </div>
+      <div className="mt-1">
+        <div className={`text-[10px] font-semibold leading-tight ${clue.successful ? 'text-green-700' : 'text-rose-600'}`}>
+          {clue.successful ? '✓ Debunk succeeded' : '✗ Claim rejected'}
+        </div>
+        <div className="text-[9px] text-gray-500 leading-tight">
+          {clue.successful ? 'Result as claimed' : 'Result unverified'}
+        </div>
       </div>
     </Card>
   );

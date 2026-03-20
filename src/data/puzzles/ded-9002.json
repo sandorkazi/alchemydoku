@@ -83,15 +83,11 @@
     "8": 6
   },
   "complexity": {
-    "score": 1,
-    "raw": 1.315,
-    "avg_clue_strength": 2.543,
-    "ambig_penalty": 0.0,
-    "stranded_ambiguity": 0.0,
-    "chain_depth": 0,
-    "stuck": false,
-    "requires_complement_set": false,
-    "question_requires_enumeration": false,
+    "score": 52,
+    "raw_score": 30,
+    "clue_score": 0,
+    "question_score": 0,
+    "world_score": 20,
     "residual_worlds": 6
   },
   "hints": [

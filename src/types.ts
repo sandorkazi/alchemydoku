@@ -170,7 +170,7 @@ export type Clue = MixingClue | AspectClue | FullAssignmentClue | SellClue | Deb
 
 // ─── Puzzle ───────────────────────────────────────────────────────────────────
 
-export type Difficulty = 'tutorial' | 'easy' | 'medium' | 'hard';
+export type Difficulty = 'tutorial' | 'easy' | 'medium' | 'hard' | 'expert' | 'extreme';
 
 export type QuestionTarget =
   | { kind: 'mixing-result'; ingredient1: IngredientId; ingredient2: IngredientId }

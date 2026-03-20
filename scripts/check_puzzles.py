@@ -59,7 +59,12 @@ EXP_IDX  = ROOT / "src" / "expanded" / "data" / "puzzlesIndex.ts"
 REQUIRED_BASE = {"id", "title", "difficulty", "clues", "questions", "solution", "complexity"}
 REQUIRED_EXP  = REQUIRED_BASE | {"mode"}
 
-COMPLEXITY_TIER = {1: 'easy', 2: 'easy', 3: 'medium', 4: 'hard', 5: 'expert'}
+def _score_to_difficulty(score: int) -> str:
+    """Derive difficulty label from [10–100] complexity score (mirrors score_to_pip in alchemydoku.py)."""
+    if score <= 58: return 'easy'    # pips 1–2
+    if score <= 70: return 'medium'  # pip 3
+    if score <= 82: return 'hard'    # pip 4
+    return 'expert'                  # pip 5
 
 TITLE_SIMILARITY_THRESHOLD = 0.8   # Jaccard word-token similarity
 
@@ -606,20 +611,23 @@ def check_debunk_article_integrity(path: Path, puz: dict, r: Results):
 
 
 def check_complexity(path: Path, puz: dict, r: Results):
-    """Check #15: complexity must be present, have a valid score, and match difficulty."""
+    """Check #15: complexity must be present, have a valid score [10–100], and match difficulty."""
     name = path.name
     cx = puz.get("complexity")
     if not isinstance(cx, dict):
         # already caught by required-fields check; skip to avoid duplicate noise
         return
     score = cx.get("score")
-    if score not in (1, 2, 3, 4, 5):
-        r.error(f"[complexity] {name}: complexity.score must be 1–5, got {score!r}")
+    if not isinstance(score, int) or not (10 <= score <= 100):
+        r.error(f"[complexity] {name}: complexity.score must be integer 10–100, got {score!r}")
         return
     diff = puz.get("difficulty")
     if diff == "tutorial":
         return
-    expected = COMPLEXITY_TIER.get(score)
+    expected = _score_to_difficulty(score)
+    # 'extreme' is the non-compliant variant of 'expert' — both valid at the top tier
+    if diff == "extreme" and expected == "expert":
+        return
     if diff != expected:
         r.error(
             f"[complexity] {name}: difficulty='{diff}' but complexity.score={score} "

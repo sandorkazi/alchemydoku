@@ -2,7 +2,7 @@
   "id": "mixed-base-45",
   "title": "Shadows of Evidence",
   "description": "Mixing, selling, and debunking records all point toward a single pair. Deduce what potion they produce.",
-  "difficulty": "medium",
+  "difficulty": "hard",
   "clues": [
     {
       "kind": "sell_among",
@@ -81,15 +81,11 @@
     }
   ],
   "complexity": {
-    "score": 3,
-    "raw": 3.455,
-    "avg_clue_strength": 4.766,
-    "ambig_penalty": 0.7,
-    "stranded_ambiguity": 1.646,
-    "chain_depth": 0,
-    "stuck": false,
-    "requires_complement_set": false,
-    "question_requires_enumeration": false,
+    "score": 74,
+    "raw_score": 55,
+    "clue_score": 30,
+    "question_score": 0,
+    "world_score": 15,
     "residual_worlds": 2
   }
 }

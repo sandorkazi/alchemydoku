@@ -4,7 +4,7 @@
   "kind": "debunk",
   "title": "The Scholar's Gambit",
   "description": "Mixed evidence surrounds several suspicious publications. Use master debunking to expose the lies.",
-  "difficulty": "expert",
+  "difficulty": "extreme",
   "golem": {
     "chest": {
       "color": "B",
@@ -122,15 +122,11 @@
     }
   ],
   "complexity": {
-    "score": 5,
-    "raw": 9.001,
-    "avg_clue_strength": 1.9,
-    "ambig_penalty": 0.4,
-    "stranded_ambiguity": 2.635,
-    "chain_depth": 2,
-    "stuck": true,
-    "requires_complement_set": false,
-    "question_requires_enumeration": false,
+    "score": 83,
+    "raw_score": 70,
+    "clue_score": 35,
+    "question_score": 10,
+    "world_score": 15,
     "residual_worlds": 4
   },
   "publications": [

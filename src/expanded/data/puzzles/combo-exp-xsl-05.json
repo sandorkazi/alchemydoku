@@ -3,7 +3,7 @@
   "mode": "expanded",
   "title": "The Incomplete Article",
   "description": "Use the clues to determine whether the target ingredient is Solar or Lunar.",
-  "difficulty": "hard",
+  "difficulty": "easy",
   "golem": {
     "chest": {
       "color": "G",
@@ -89,15 +89,11 @@
     }
   ],
   "complexity": {
-    "score": 4,
-    "raw": 3.129,
-    "avg_clue_strength": 3.043,
-    "ambig_penalty": 0.0,
-    "stranded_ambiguity": 0.0,
-    "chain_depth": 0,
-    "stuck": false,
-    "requires_complement_set": false,
-    "question_requires_enumeration": false,
+    "score": 31,
+    "raw_score": 15,
+    "clue_score": 0,
+    "question_score": 0,
+    "world_score": 5,
     "residual_worlds": 72
   }
 }

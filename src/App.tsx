@@ -85,6 +85,7 @@ const DIFF_BADGE: Record<string, string> = {
   medium:   'bg-yellow-100 text-yellow-700',
   hard:     'bg-red-100    text-red-700',
   expert:   'bg-orange-100 text-orange-700',
+  extreme:  'bg-rose-100   text-rose-800',
 };
 
 // ─── Mode switcher (top of every home-level page) ─────────────────────────────
@@ -122,7 +123,7 @@ function ModeSwitcher({
 // ─── Complexity pips ──────────────────────────────────────────────────────────
 
 function ComplexityPips({ score }: { score: number }) {
-  const filled = score <= 35 ? 1 : score <= 45 ? 2 : score <= 52 ? 3 : score <= 58 ? 4 : 5;
+  const filled = score <= 32 ? 1 : score <= 58 ? 2 : score <= 70 ? 3 : score <= 82 ? 4 : 5;
   return (
     <span className="inline-flex items-center gap-0.5" title={`Complexity: ${score}/100`}>
       {[1, 2, 3, 4, 5].map(i => (
@@ -249,7 +250,7 @@ function PuzzleRow({
               <ComplexityPips score={(puzzle as any).complexity.score} />
             )}
           </div>
-          <div className="text-xs text-gray-400 truncate">{puzzle.description}</div>
+          <div className="text-xs text-gray-400 break-words">{puzzle.description}</div>
         </div>
       </button>
       <button

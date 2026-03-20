@@ -311,11 +311,24 @@ function DebunkClueCard({ clue }: { clue: DebunkClue }) {
         </div>
         <div className="flex items-center gap-1.5">
           {clue.outcome === 'success' && clue.claimedPotion.type === 'neutral'
-            ? <><IncorrectIcon width={24} /><span className="text-[10px] font-semibold">Inconclusive — theories in conflict</span></>
+            ? <IncorrectIcon width={24} />
             : clue.outcome === 'success'
-              ? <><CorrectIcon width={24} /><span className="text-[10px] font-semibold">Theory disproved</span></>
-              : <><IncorrectIcon width={24} /><span className="text-[10px] font-semibold">Mix result ruled out</span></>
+              ? <CorrectIcon width={24} />
+              : <IncorrectIcon width={24} />
           }
+          <div>
+            <div className="text-[10px] font-semibold leading-tight">
+              {clue.outcome === 'success' && clue.claimedPotion.type === 'neutral'
+                ? 'Inconclusive — theories in conflict'
+                : clue.outcome === 'success'
+                  ? 'Theory disproved'
+                  : 'Mix result ruled out'
+              }
+            </div>
+            <div className="text-[9px] text-gray-500 leading-tight">
+              {clue.outcome === 'success' ? 'Result as claimed' : 'Wrong result'}
+            </div>
+          </div>
         </div>
       </div>
     </Card>

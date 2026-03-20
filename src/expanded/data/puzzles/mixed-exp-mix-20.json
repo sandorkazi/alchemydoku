@@ -3,7 +3,7 @@
   "mode": "expanded",
   "title": "A Stone That Speaks",
   "description": "Mixing, selling, and debunking records all point toward a single pair. Deduce what potion they produce.",
-  "difficulty": "expert",
+  "difficulty": "hard",
   "golem": {
     "chest": {
       "color": "R",
@@ -129,15 +129,11 @@
     }
   ],
   "complexity": {
-    "score": 5,
-    "raw": 5.77,
-    "avg_clue_strength": 1.787,
-    "ambig_penalty": 0.362,
-    "stranded_ambiguity": 2.378,
-    "chain_depth": 0,
-    "stuck": false,
-    "requires_complement_set": false,
-    "question_requires_enumeration": false,
+    "score": 77,
+    "raw_score": 60,
+    "clue_score": 35,
+    "question_score": 0,
+    "world_score": 15,
     "residual_worlds": 2
   }
 }

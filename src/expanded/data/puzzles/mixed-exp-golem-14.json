@@ -3,7 +3,7 @@
   "mode": "expanded",
   "title": "A Dim Constellation",
   "description": "The golem has been tested with 2 ingredients. Deduce the reaction pattern and identify the target group.",
-  "difficulty": "expert",
+  "difficulty": "medium",
   "golem": {
     "chest": {
       "color": "R",
@@ -131,15 +131,11 @@
     }
   ],
   "complexity": {
-    "score": 5,
-    "raw": 6.433,
-    "avg_clue_strength": 1.912,
-    "ambig_penalty": 0.438,
-    "stranded_ambiguity": 2.518,
-    "chain_depth": 0,
-    "stuck": false,
-    "requires_complement_set": false,
-    "question_requires_enumeration": false,
+    "score": 66,
+    "raw_score": 45,
+    "clue_score": 35,
+    "question_score": 0,
+    "world_score": 0,
     "residual_worlds": 1
   }
 }

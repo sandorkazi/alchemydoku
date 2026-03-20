@@ -16,11 +16,41 @@ export const NON_COMPLIANT_EXPANDED_CLUE_KINDS: ReadonlySet<string> = new Set([
   ...NON_COMPLIANT_BASE_CLUE_KINDS, 'book_among', 'golem_reaction_among',
 ]);
 
-/** True if the puzzle contains any non-compliant clue kind. */
+/** True if the puzzle contains any non-compliant clue kind or an unrealistic publication/article layout. */
 export function isPuzzleNonCompliant(
-  puzzle: { clues: { kind: string }[] },
+  puzzle: {
+    clues: { kind: string }[];
+    publications?: (null | { ingredient: number; claimedAlchemical: number })[];
+    articles?: { aspect: string; entries: { ingredient: number }[] }[];
+  },
   mode: 'base' | 'expanded',
 ): boolean {
   const set = mode === 'expanded' ? NON_COMPLIANT_EXPANDED_CLUE_KINDS : NON_COMPLIANT_BASE_CLUE_KINDS;
-  return puzzle.clues.some(c => set.has(c.kind));
+  if (puzzle.clues.some(c => set.has(c.kind))) return true;
+
+  if (puzzle.publications) {
+    const pubs = puzzle.publications.filter((p): p is { ingredient: number; claimedAlchemical: number } => p !== null);
+    // Each alchemical can only be published once in a real game.
+    const alchemicals = pubs.map(p => p.claimedAlchemical);
+    if (new Set(alchemicals).size < alchemicals.length) return true;
+    // Each ingredient can only be published once in a real game.
+    const ingredients = pubs.map(p => p.ingredient);
+    if (new Set(ingredients).size < ingredients.length) return true;
+  }
+
+  if (puzzle.articles) {
+    // Each color can appear in at most one article.
+    const aspects = puzzle.articles.map(a => a.aspect);
+    if (new Set(aspects).size < aspects.length) return true;
+    // Each ingredient can appear in at most two articles (once per color aspect).
+    const ingCounts = new Map<number, number>();
+    for (const article of puzzle.articles) {
+      for (const entry of article.entries) {
+        ingCounts.set(entry.ingredient, (ingCounts.get(entry.ingredient) ?? 0) + 1);
+      }
+    }
+    if ([...ingCounts.values()].some(n => n > 2)) return true;
+  }
+
+  return false;
 }

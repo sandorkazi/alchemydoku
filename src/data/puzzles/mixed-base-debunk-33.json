@@ -2,7 +2,7 @@
   "id": "mixed-base-debunk-33",
   "title": "The Scholar's Gambit",
   "description": "Mixed evidence surrounds several suspicious publications. Use master debunking to expose the lies.",
-  "difficulty": "expert",
+  "difficulty": "extreme",
   "clues": [
     {
       "kind": "sell_result_among",
@@ -118,15 +118,11 @@
     }
   ],
   "complexity": {
-    "score": 5,
-    "raw": 8.854,
-    "avg_clue_strength": 2.383,
-    "ambig_penalty": 0.783,
-    "stranded_ambiguity": 3.291,
-    "chain_depth": 2,
-    "stuck": true,
-    "requires_complement_set": false,
-    "question_requires_enumeration": false,
+    "score": 92,
+    "raw_score": 85,
+    "clue_score": 50,
+    "question_score": 10,
+    "world_score": 15,
     "residual_worlds": 2
   },
   "publications": [

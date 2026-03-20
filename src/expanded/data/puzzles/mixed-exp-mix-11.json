@@ -3,7 +3,7 @@
   "mode": "expanded",
   "title": "Cosmic Interference",
   "description": "Mixing, selling, and debunking records all point toward a single pair. Deduce what potion they produce.",
-  "difficulty": "expert",
+  "difficulty": "hard",
   "golem": {
     "chest": {
       "color": "R",
@@ -114,15 +114,11 @@
     }
   ],
   "complexity": {
-    "score": 5,
-    "raw": 4.882,
-    "avg_clue_strength": 1.883,
-    "ambig_penalty": 0.55,
-    "stranded_ambiguity": 1.278,
-    "chain_depth": 0,
-    "stuck": false,
-    "requires_complement_set": false,
-    "question_requires_enumeration": false,
+    "score": 75,
+    "raw_score": 57,
+    "clue_score": 27,
+    "question_score": 0,
+    "world_score": 20,
     "residual_worlds": 16
   }
 }

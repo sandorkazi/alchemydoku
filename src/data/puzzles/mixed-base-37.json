@@ -2,7 +2,7 @@
   "id": "mixed-base-37",
   "title": "The Distant Report",
   "description": "Mixing, selling, and debunking records all point toward a single pair. Deduce what potion they produce.",
-  "difficulty": "medium",
+  "difficulty": "hard",
   "clues": [
     {
       "kind": "sell_result_among",
@@ -106,15 +106,11 @@
     }
   ],
   "complexity": {
-    "score": 3,
-    "raw": 4.382,
-    "avg_clue_strength": 3.06,
-    "ambig_penalty": 0.84,
-    "stranded_ambiguity": 1.999,
-    "chain_depth": 0,
-    "stuck": false,
-    "requires_complement_set": false,
-    "question_requires_enumeration": false,
+    "score": 78,
+    "raw_score": 62,
+    "clue_score": 37,
+    "question_score": 0,
+    "world_score": 15,
     "residual_worlds": 1
   }
 }

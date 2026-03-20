@@ -362,7 +362,7 @@
     "id": "mixed-debunk",
     "title": "Mixed Evidence, Master Debunk",
     "description": "These puzzles combine ambiguous sell clues, among-group observations, and master debunking. Use mixed evidence to identify which ingredients are wrong — then expose them.",
-    "difficulty": "expert",
+    "difficulty": "extreme",
     "puzzleIds": [
       "mixed-base-debunk-02",
       "mixed-base-debunk-03",

@@ -3,7 +3,7 @@
   "mode": "expanded",
   "title": "Solar Doubt",
   "description": "Use the clues to decide which ingredient reveals the most information when consulted in the Royal Society book.",
-  "difficulty": "expert",
+  "difficulty": "easy",
   "golem": {
     "chest": {
       "color": "R",
@@ -86,15 +86,11 @@
     }
   ],
   "complexity": {
-    "score": 5,
-    "raw": 5.61,
-    "avg_clue_strength": 1.058,
-    "ambig_penalty": 0.45,
-    "stranded_ambiguity": 0.268,
-    "chain_depth": 0,
-    "stuck": false,
-    "requires_complement_set": false,
-    "question_requires_enumeration": false,
+    "score": 47,
+    "raw_score": 25,
+    "clue_score": 15,
+    "question_score": 0,
+    "world_score": 0,
     "residual_worlds": 2144
   }
 }

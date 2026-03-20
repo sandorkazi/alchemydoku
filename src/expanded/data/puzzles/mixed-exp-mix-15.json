@@ -3,7 +3,7 @@
   "mode": "expanded",
   "title": "Four Constellations",
   "description": "Mixing, selling, and debunking records all point toward a single pair. Deduce what potion they produce.",
-  "difficulty": "expert",
+  "difficulty": "hard",
   "golem": {
     "chest": {
       "color": "B",
@@ -118,15 +118,11 @@
     }
   ],
   "complexity": {
-    "score": 5,
-    "raw": 5.319,
-    "avg_clue_strength": 2.043,
-    "ambig_penalty": 0.443,
-    "stranded_ambiguity": 1.981,
-    "chain_depth": 0,
-    "stuck": false,
-    "requires_complement_set": false,
-    "question_requires_enumeration": false,
+    "score": 74,
+    "raw_score": 55,
+    "clue_score": 30,
+    "question_score": 0,
+    "world_score": 15,
     "residual_worlds": 2
   }
 }

@@ -271,7 +271,7 @@ export type ExpandedCollection = {
   id: string;
   title: string;
   description: string;
-  difficulty: 'tutorial' | 'easy' | 'medium' | 'hard';
+  difficulty: 'tutorial' | 'easy' | 'medium' | 'hard' | 'expert' | 'extreme';
   puzzleIds: string[];
   unlockedAfter?: string;
   boardGameCompliant?: boolean;  // omit = true
@@ -409,7 +409,7 @@ export const EXPANDED_COLLECTIONS: ExpandedCollection[] = [
     id: 'mixed-exp-debunk',
     title: 'Mixed Evidence, Master Debunk',
     description: 'Ambiguous clues from multiple mechanics surround wrong publications. Use master debunking to clear the board — and find the one mix that creates an irresolvable conflict.',
-    difficulty: 'hard',
+    difficulty: 'extreme',
     puzzleIds: [
       'mixed-exp-debunk-02', 'mixed-exp-debunk-03', 'mixed-exp-debunk-04',
       'mixed-exp-debunk-05', 'mixed-exp-debunk-06', 'mixed-exp-debunk-07',

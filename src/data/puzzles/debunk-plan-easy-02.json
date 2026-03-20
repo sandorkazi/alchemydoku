@@ -2,7 +2,7 @@
   "id": "debunk-plan-easy-02",
   "title": "The Master's Shortcut",
   "description": "Three ingredients are fully revealed by their aspect clues. Two of them have publications claiming different alchemicals. Prove the publications false, then plan the master mixes that expose them publicly.",
-  "difficulty": "hard",
+  "difficulty": "easy",
   "clues": [
     {
       "kind": "aspect",
@@ -107,27 +107,23 @@
   "hints": [
     {
       "level": 1,
-      "text": "Each ingredient with a publication has all three aspect clues revealed. Three sign clues (R, G, B) uniquely identify an alchemical. First, determine the true alchemical for each published ingredient from its clues. Then compare it to what the publication claims — that tells you whether the publication is true or false. Once both false publications are identified, which ingredient is fully known and has no publication? That is your reference for master debunks."
+      "text": "Each ingredient with a publication has all three aspect clues revealed. Three sign clues (R, G, B) uniquely identify an alchemical. First, determine the true alchemical for each published ingredient from its clues. Then compare it to what the publication claims \u2014 that tells you whether the publication is true or false. Once both false publications are identified, which ingredient is fully known and has no publication? That is your reference for master debunks."
     },
     {
       "level": 2,
-      "text": "ing3 has R+, G-, B- → its alchemical is pNn. The publication claims Nnp (which has R-) — contradicted by ing3's R+, so it is false. ing5 has R-, G-, B+ → its alchemical is Nnp. The publication claims pNn (which has R+) — contradicted by ing5's R-, so it is false too. Can you just mix ing3 + ing5 to expose them? The true mix result is G-, and with both claimed alchemicals (Nnp and pNn) the predicted result is also G- — no contradiction, no effect. You need a known reference. ing1 has R-, G+, B- → its alchemical is npN, and it has no publication."
+      "text": "ing3 has R+, G-, B- \u2192 its alchemical is pNn. The publication claims Nnp (which has R-) \u2014 contradicted by ing3's R+, so it is false. ing5 has R-, G-, B+ \u2192 its alchemical is Nnp. The publication claims pNn (which has R+) \u2014 contradicted by ing5's R-, so it is false too. Can you just mix ing3 + ing5 to expose them? The true mix result is G-, and with both claimed alchemicals (Nnp and pNn) the predicted result is also G- \u2014 no contradiction, no effect. You need a known reference. ing1 has R-, G+, B- \u2192 its alchemical is npN, and it has no publication."
     },
     {
       "level": 3,
-      "text": "Step 1: Master debunk — mix ing1 + ing3. ing1 is npN; the publication for ing3 claims Nnp, predicting mix(npN, Nnp) = R-. The true result is mix(npN, pNn) = B-. They differ → ing3's publication removed. Step 2: Master debunk — mix ing1 + ing5. The publication for ing5 claims pNn, predicting mix(npN, pNn) = B-. The true result is mix(npN, Nnp) = R-. They differ → ing5's publication removed."
+      "text": "Step 1: Master debunk \u2014 mix ing1 + ing3. ing1 is npN; the publication for ing3 claims Nnp, predicting mix(npN, Nnp) = R-. The true result is mix(npN, pNn) = B-. They differ \u2192 ing3's publication removed. Step 2: Master debunk \u2014 mix ing1 + ing5. The publication for ing5 claims pNn, predicting mix(npN, pNn) = B-. The true result is mix(npN, Nnp) = R-. They differ \u2192 ing5's publication removed."
     }
   ],
   "complexity": {
-    "score": 4,
-    "raw": 6.117,
-    "avg_clue_strength": 1.0,
-    "ambig_penalty": 0.3,
-    "stranded_ambiguity": 0.0,
-    "chain_depth": 2,
-    "stuck": true,
-    "requires_complement_set": false,
-    "question_requires_enumeration": false,
+    "score": 57,
+    "raw_score": 35,
+    "clue_score": 0,
+    "question_score": 10,
+    "world_score": 15,
     "residual_worlds": 120
   }
 }

@@ -1,8 +1,8 @@
 {
   "id": "debunk-plan-tutorial-02",
   "title": "The Neutral Trap",
-  "description": "Two theories have been published. Their aspects are fully known from your notes — check each claim. Mixing the two ingredients won't help here; use what the clues tell you directly.",
-  "difficulty": "hard",
+  "description": "Two theories have been published. Their aspects are fully known from your notes \u2014 check each claim. Mixing the two ingredients won't help here; use what the clues tell you directly.",
+  "difficulty": "easy",
   "trivial_answer_ok": true,
   "clues": [
     {
@@ -102,15 +102,11 @@
     }
   ],
   "complexity": {
-    "score": 4,
-    "raw": 6.175,
-    "avg_clue_strength": 0.968,
-    "ambig_penalty": 0.3,
-    "stranded_ambiguity": 0.0,
-    "chain_depth": 2,
-    "stuck": true,
-    "requires_complement_set": false,
-    "question_requires_enumeration": false,
+    "score": 57,
+    "raw_score": 35,
+    "clue_score": 0,
+    "question_score": 10,
+    "world_score": 15,
     "residual_worlds": 720
   }
 }

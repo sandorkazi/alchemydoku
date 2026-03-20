@@ -1,7 +1,6 @@
 # Debunk Puzzles — Design Specification
 
-*Status: Base-game debunk puzzles FULLY IMPLEMENTED. Expanded debunk puzzles: 3 hand-crafted
-puzzles available, generator not yet implemented.*
+*Status: Base-game debunk puzzles FULLY IMPLEMENTED. Mixed-clue debunk collections (base + expanded) fully generated and registered. Generator not yet implemented for standalone expanded puzzles.*
 
 Debunk puzzles are a distinct puzzle type (alongside `alchemical`, `encyclopedia_fourth`, etc.)
 where the player is given a solved world (via clues) plus a board state of wrong publications
@@ -276,18 +275,17 @@ only arises from master debunks that satisfy all four conditions simultaneously:
 2. **Neither claim is result-incompatible**: each claimed alchemical *could* produce the
    actual mix result with some partner — `∃A: mix(c_1, A) = actual` and `∃B: mix(B, c_2) = actual`.
    If either claim is result-incompatible, that publication is directly disproved → removal,
-   not a conflict. This check is independent of what the audience knows — it fires on the
-   result alone.
-3. **Not exactly one ingredient is definitively known** (§2d). If exactly one is known, the
-   blame is unambiguous → that publication is removed, not a conflict. If *both* are known,
-   both are blame-disproved simultaneously → CONFLICT (per §2b "both blame-disproved" row).
-   If *neither* is known, the audience cannot attribute blame to either side individually,
-   so both remain → also produces a CONFLICT (provided condition 4 holds).
-4. **The two claims together are wrong**: `mix(c_1, c_2) ≠ actual`. The audience observes
+   not a conflict. This check fires on the result alone.
+3. **The two claims together are wrong**: `mix(c_1, c_2) ≠ actual`. The audience observes
    that both publications cannot simultaneously be true, but cannot single out which is lying.
 
-Conditions 2 and 3 together ensure *genuine ambiguity*: neither claim is individually disprovable
-(by result alone or by a known partner), yet the audience sees they can't both be right.
+Conditions 2 and 3 together ensure *genuine ambiguity*: neither claim is individually
+disprovable from the result alone, yet the audience sees they can't both be right.
+
+**Important**: "definitively known" (§2d) is **not** a factor for conflict-only detection.
+The three conditions above are checked purely from the published claims and the observed result.
+`simulateConflictOnlyStep` does not call `isDefinitivelyKnown` — that check belongs to the
+blame-based disproval path of the normal `simulateStep`, not to conflict-only evaluation.
 
 **What the question asks**: "Mix ingredient `fixedIngredient` with something to produce a
 conflict on `fixedIngredient`'s publication without removing it."
@@ -324,8 +322,11 @@ For `debunk_conflict_only` the answer is a single-step sequence.
 **Validation rules**:
 1. Every apprentice step: true sign at `(ingredient, color)` must contradict at least one
    active (not yet removed) publication or article entry at the time of that step.
-2. Every master step: true mix result must conflict with at least one active publication or
-   article entry at the time of that step. (A step that produces zero conflicts is invalid.)
+2. Every master step (for `debunk_min_steps` and `debunk_apprentice_plan`): must produce at
+   least one **removal** (`removed.length > 0`). A step that creates only a CONFLICT outcome
+   (both blame-disproved, neither removed) is invalid for these question types — it counts
+   as a wasted step. For `debunk_conflict_only`, the requirement is reversed: every step
+   must produce a conflict without any removal.
 3. No step targets only already-removed publications/articles (that would be redundant).
 4. For `debunk_min_steps`: answer length equals the proven minimum.
 5. For `debunk_conflict_only`: answer has length 1, outcome is conflict-without-removal.
@@ -374,7 +375,21 @@ def evaluate_plan(steps, solution, publications, articles, clue_worlds):
             a, b = step['ingredient1'], step['ingredient2']
             true_result = MIX_TABLE[solution[a]][solution[b]]
 
-            # Is each ingredient definitively known from clue_worlds?
+            # ── Phase 1: result-incompatibility (direct disproval) ────────────
+            # A claimed alchemical that cannot produce the actual result with ANY
+            # partner is removed immediately, regardless of definitively-known status.
+            def can_produce_result(claimed_alch, result_code):
+                return any(MIX_TABLE[claimed_alch][j] == result_code for j in range(8))
+
+            if a in active_pubs and not can_produce_result(active_pubs[a]['claimedAlchemical'], true_result):
+                removed.append(('publication', a))
+                del active_pubs[a]
+            if b in active_pubs and not can_produce_result(active_pubs[b]['claimedAlchemical'], true_result):
+                removed.append(('publication', b))
+                del active_pubs[b]
+
+            # ── Phase 2: blame-based disproval (result-compatible pubs only) ──
+            # Only applies to publications that survived Phase 1.
             a_known = len({w[a-1] for w in clue_worlds}) == 1
             b_known = len({w[b-1] for w in clue_worlds}) == 1
 
@@ -404,7 +419,6 @@ def evaluate_plan(steps, solution, publications, articles, clue_worlds):
 
             # Article entries: only when the relevant ingredient is definitively known
             # (so the mix result unambiguously implies the ingredient's aspect)
-            # [detail TBD in implementation]
 
         outcomes.append({ 'removed': removed, 'conflicts': conflicts })
 
@@ -454,16 +468,25 @@ approach takes one extra step, is ideal for medium/hard difficulty.
 
 ## 8. Implemented Puzzles
 
-### Base game (registered in `src/data/puzzles/collections.json` as `"debunk-planning"`)
+### Base game (standalone — collection `"debunk-planning"`)
 
-| ID                          | Difficulty | Questions                                       |
-|-----------------------------|------------|-------------------------------------------------|
+| ID                          | Difficulty | Questions                                            |
+|-----------------------------|------------|------------------------------------------------------|
 | `debunk-plan-tutorial-01`   | tutorial   | `debunk_apprentice_plan` (1 step, single apprentice) |
-| `debunk-plan-easy-01`       | easy       | `debunk_apprentice_plan` (1–2 apprentice steps) |
-| `debunk-plan-easy-02`       | easy       | `debunk_min_steps` (mixed: 1 master + 1 apprentice) |
-| `debunk-plan-conflict-01`   | easy       | `debunk_conflict_only`                          |
+| `debunk-plan-tutorial-02`   | tutorial   | `debunk_min_steps` (introduces master debunk)        |
+| `debunk-plan-easy-01`       | easy       | `debunk_apprentice_plan` (1–2 apprentice steps)      |
+| `debunk-plan-easy-02`       | easy       | `debunk_min_steps` (mixed: 1 master + 1 apprentice)  |
+| `debunk-plan-easy-03`       | easy       | `debunk_min_steps`                                   |
+| `debunk-plan-easy-04`       | easy       | `debunk_min_steps`                                   |
+| `debunk-plan-conflict-01`   | easy       | `debunk_conflict_only`                               |
 
-### Expanded game (registered in `src/expanded/data/puzzlesIndex.ts`)
+### Base game (mixed-clue collections)
+
+Large generated sets combining standard mix/sell/debunk-evidence clues with debunk-plan questions:
+- `mixed-debunk-r-*` (11 puzzles) — collection `"witnessed-evidence-master-debunk"`
+- `mixed-base-debunk-*` (51 puzzles) — collection `"mixed-base-debunk"` (board-game non-compliant: `among` clue kinds)
+
+### Expanded game (standalone — registered in `src/expanded/data/puzzlesIndex.ts`)
 
 | ID                        | Difficulty | Notes                            |
 |---------------------------|------------|----------------------------------|
@@ -475,14 +498,18 @@ approach takes one extra step, is ideal for medium/hard difficulty.
 
 ## 9. Implementation Files
 
-| File                                           | Role                                                    |
-|------------------------------------------------|---------------------------------------------------------|
-| `src/logic/debunk.ts`                          | `isDefinitivelyKnown`, `simulateStep`, `evaluatePlan`, `validateMinStepsAnswer`, `validateConflictOnlyAnswer` |
-| `src/puzzles/schema.ts`                        | Routes debunk question kinds to debunk validators; `checkDebunkAnswers()` |
-| `src/contexts/SolverContext.tsx`               | `SUBMIT_ANSWER` dispatches to `checkDebunkAnswers()` for debunk questions |
-| `src/components/AnswerPanel.tsx`               | Wrapper: routes to `DebunkAnswerPanel` or `StandardAnswerPanel` |
-| `src/components/DebunkAnswerPanel.tsx`         | Full plan-builder UI (PublicationsBoard, StepEditor, etc.) |
-| `src/types.ts`                                 | `DebunkStep`, `Publication`, `debunk_min_steps`, `debunk_apprentice_plan`, `debunk_conflict_only` types |
+| File                                                  | Role                                                    |
+|-------------------------------------------------------|---------------------------------------------------------|
+| `src/logic/debunk.ts`                                 | `canProduceResult`, `isDefinitivelyKnown`, `simulateStep`, `simulateConflictOnlyStep`, `simulatePlan` (UI helper), `evaluatePlan`, `validateMinStepsAnswer`, `validateMasterPlanAnswer`, `validateApprenticePlanAnswer`, `validateConflictOnlyAnswer`, `describeMixResult` |
+| `src/expanded/logic/debunkExpanded.ts`                | Expanded variants: `simulateExpandedStep`, `simulateExpandedPlan`, `validateExpandedMinStepsAnswer`, `validateExpandedApprenticePlanAnswer`, `validateExpandedConflictOnlyAnswer` |
+| `src/puzzles/schema.ts`                               | Routes debunk question kinds to debunk validators; `checkDebunkAnswers()` |
+| `src/expanded/puzzles/schemaExpanded.ts`              | Expanded equivalent; handles both publications and articles |
+| `src/contexts/SolverContext.tsx`                      | `SUBMIT_ANSWER` dispatches to `checkDebunkAnswers()` for debunk questions |
+| `src/components/AnswerPanel.tsx`                      | Wrapper: routes to `DebunkAnswerPanel` or `StandardAnswerPanel` |
+| `src/components/DebunkAnswerPanel.tsx`                | Full plan-builder UI (PublicationsBoard, StepEditor, etc.) |
+| `src/expanded/components/ExpandedDebunkAnswerPanel.tsx` | Expanded plan-builder; handles articles alongside publications |
+| `src/types.ts`                                        | `DebunkStep`, `Publication`, `StepOutcome`, `PlanOutcome`, `debunk_min_steps`, `debunk_apprentice_plan`, `debunk_conflict_only` question types |
+| `src/expanded/types.ts`                               | `DebunkArticle`, `DebunkApprenticeClue`, `DebunkMasterClue`, `ExpandedStepOutcome` |
 
 ---
 

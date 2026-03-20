@@ -4,7 +4,7 @@
   "kind": "debunk",
   "title": "Cross-Reference",
   "description": "Mixed evidence surrounds several suspicious publications. Use master debunking to expose the lies.",
-  "difficulty": "expert",
+  "difficulty": "extreme",
   "golem": {
     "chest": {
       "color": "R",
@@ -122,15 +122,11 @@
     }
   ],
   "complexity": {
-    "score": 5,
-    "raw": 8.34,
-    "avg_clue_strength": 2.043,
-    "ambig_penalty": 0.457,
-    "stranded_ambiguity": 1.981,
-    "chain_depth": 2,
-    "stuck": true,
-    "requires_complement_set": false,
-    "question_requires_enumeration": false,
+    "score": 86,
+    "raw_score": 75,
+    "clue_score": 30,
+    "question_score": 15,
+    "world_score": 20,
     "residual_worlds": 2
   },
   "publications": [

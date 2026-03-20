@@ -3,7 +3,7 @@
   "mode": "expanded",
   "title": "Trial by Fire",
   "description": "A partial encyclopedia article lists three ingredients on the same aspect. Use the supporting clues to identify the fourth.",
-  "difficulty": "medium",
+  "difficulty": "easy",
   "clues": [
     {
       "kind": "encyclopedia",
@@ -111,15 +111,11 @@
     }
   ],
   "complexity": {
-    "score": 3,
-    "raw": 2.146,
-    "avg_clue_strength": 3.325,
-    "ambig_penalty": 0.0,
-    "stranded_ambiguity": 0.0,
-    "chain_depth": 0,
-    "stuck": false,
-    "requires_complement_set": false,
-    "question_requires_enumeration": false,
+    "score": 31,
+    "raw_score": 15,
+    "clue_score": 0,
+    "question_score": 5,
+    "world_score": 0,
     "residual_worlds": 4
   }
 }

@@ -1,8 +1,8 @@
 {
   "id": "debunk-plan-tutorial-01",
   "title": "The First Deception",
-  "description": "A theory has been published about ing1. Your aspect clues reveal the true signs — compare them against the claim and expose any contradiction.",
-  "difficulty": "hard",
+  "description": "A theory has been published about ing1. Your aspect clues reveal the true signs \u2014 compare them against the claim and expose any contradiction.",
+  "difficulty": "easy",
   "clues": [
     {
       "kind": "aspect",
@@ -75,15 +75,11 @@
     }
   ],
   "complexity": {
-    "score": 4,
-    "raw": 6.117,
-    "avg_clue_strength": 1.0,
-    "ambig_penalty": 0.3,
-    "stranded_ambiguity": 0.0,
-    "chain_depth": 2,
-    "stuck": true,
-    "requires_complement_set": false,
-    "question_requires_enumeration": false,
+    "score": 57,
+    "raw_score": 35,
+    "clue_score": 0,
+    "question_score": 10,
+    "world_score": 15,
     "residual_worlds": 5040
   }
 }

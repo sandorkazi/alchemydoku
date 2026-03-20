@@ -4,7 +4,7 @@
   "kind": "debunk",
   "title": "Golem Research Notes",
   "description": "Mixed evidence surrounds several suspicious publications. Use master debunking to expose the lies.",
-  "difficulty": "expert",
+  "difficulty": "extreme",
   "golem": {
     "chest": {
       "color": "R",
@@ -128,15 +128,11 @@
     }
   ],
   "complexity": {
-    "score": 5,
-    "raw": 9.181,
-    "avg_clue_strength": 1.816,
-    "ambig_penalty": 0.557,
-    "stranded_ambiguity": 2.518,
-    "chain_depth": 2,
-    "stuck": true,
-    "requires_complement_set": false,
-    "question_requires_enumeration": false,
+    "score": 86,
+    "raw_score": 75,
+    "clue_score": 40,
+    "question_score": 10,
+    "world_score": 15,
     "residual_worlds": 6
   },
   "publications": [

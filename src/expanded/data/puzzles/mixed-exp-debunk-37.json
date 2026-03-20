@@ -4,7 +4,7 @@
   "kind": "debunk",
   "title": "The Curious Formula",
   "description": "Mixed evidence surrounds several suspicious publications. Use master debunking to expose the lies.",
-  "difficulty": "expert",
+  "difficulty": "extreme",
   "golem": {
     "chest": {
       "color": "B",
@@ -127,15 +127,11 @@
     }
   ],
   "complexity": {
-    "score": 5,
-    "raw": 9.363,
-    "avg_clue_strength": 2.043,
-    "ambig_penalty": 0.586,
-    "stranded_ambiguity": 2.811,
-    "chain_depth": 2,
-    "stuck": true,
-    "requires_complement_set": false,
-    "question_requires_enumeration": false,
+    "score": 86,
+    "raw_score": 75,
+    "clue_score": 40,
+    "question_score": 10,
+    "world_score": 15,
     "residual_worlds": 2
   },
   "publications": [

@@ -89,15 +89,11 @@
     }
   ],
   "complexity": {
-    "score": 3,
-    "raw": 4.446,
-    "avg_clue_strength": 2.66,
-    "ambig_penalty": 0.12,
-    "stranded_ambiguity": 0.0,
-    "chain_depth": 2,
-    "stuck": true,
-    "requires_complement_set": false,
-    "question_requires_enumeration": false,
+    "score": 59,
+    "raw_score": 37,
+    "clue_score": 2,
+    "question_score": 10,
+    "world_score": 15,
     "residual_worlds": 4
   },
   "publications": [

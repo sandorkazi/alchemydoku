@@ -4,7 +4,7 @@
   "kind": "debunk",
   "title": "The Sealed Chamber",
   "description": "Mixed evidence surrounds several suspicious publications. Use master debunking to expose the lies.",
-  "difficulty": "expert",
+  "difficulty": "extreme",
   "golem": {
     "chest": {
       "color": "R",
@@ -134,15 +134,11 @@
     }
   ],
   "complexity": {
-    "score": 5,
-    "raw": 8.901,
-    "avg_clue_strength": 1.787,
-    "ambig_penalty": 0.45,
-    "stranded_ambiguity": 2.378,
-    "chain_depth": 2,
-    "stuck": true,
-    "requires_complement_set": false,
-    "question_requires_enumeration": false,
+    "score": 86,
+    "raw_score": 75,
+    "clue_score": 40,
+    "question_score": 10,
+    "world_score": 15,
     "residual_worlds": 2
   },
   "publications": [

@@ -2,7 +2,7 @@
   "id": "mixed-base-11",
   "title": "Disputed Batch",
   "description": "Mixing, selling, and debunking records all point toward a single pair. Deduce what potion they produce.",
-  "difficulty": "medium",
+  "difficulty": "hard",
   "clues": [
     {
       "kind": "sell_among",
@@ -81,15 +81,11 @@
     }
   ],
   "complexity": {
-    "score": 3,
-    "raw": 3.818,
-    "avg_clue_strength": 4.433,
-    "ambig_penalty": 0.967,
-    "stranded_ambiguity": 1.557,
-    "chain_depth": 0,
-    "stuck": false,
-    "requires_complement_set": false,
-    "question_requires_enumeration": false,
+    "score": 77,
+    "raw_score": 60,
+    "clue_score": 30,
+    "question_score": 0,
+    "world_score": 20,
     "residual_worlds": 4
   }
 }

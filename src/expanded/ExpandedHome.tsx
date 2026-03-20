@@ -49,17 +49,19 @@ function clearAllExpandedProgress() {
 
 const DIFF_BADGE: Record<string, string> = {
   tutorial: 'bg-purple-100 text-purple-700',
-  easy:     'bg-green-100 text-green-700',
+  easy:     'bg-green-100  text-green-700',
   medium:   'bg-yellow-100 text-yellow-700',
-  hard:     'bg-red-100 text-red-700',
+  hard:     'bg-red-100    text-red-700',
+  expert:   'bg-orange-100 text-orange-700',
+  extreme:  'bg-rose-100   text-rose-800',
 };
 
 // ─── Complexity pips (expanded) ───────────────────────────────────────────────
 
-function ComplexityPips({ raw }: { raw: number }) {
-  const filled = raw < 1.7 ? 1 : raw < 2.1 ? 2 : raw < 2.8 ? 3 : raw < 3.5 ? 4 : 5;
+function ComplexityPips({ score }: { score: number }) {
+  const filled = score <= 32 ? 1 : score <= 58 ? 2 : score <= 70 ? 3 : score <= 82 ? 4 : 5;
   return (
-    <span className="inline-flex items-center gap-0.5" title={`Complexity: ${raw.toFixed(2)}`}>
+    <span className="inline-flex items-center gap-0.5" title={`Complexity: ${score}/100`}>
       {[1, 2, 3, 4, 5].map(i => (
         <span key={i} className={`inline-block w-1.5 h-1.5 rounded-full transition-colors
           ${i <= filled ? 'bg-indigo-400' : 'bg-gray-200'}`} />
@@ -185,11 +187,11 @@ function CollectionView({ collection, completed, showPuzzleOnly, onSelectPuzzle,
                   <span className="flex-1 min-w-0">
                     <span className="flex items-center gap-2">
                       <span className="text-sm font-medium text-gray-900 truncate">{puzzle.title}</span>
-                      {(puzzle as any).complexity?.raw != null && (
-                        <ComplexityPips raw={(puzzle as any).complexity.raw} />
+                      {(puzzle as any).complexity?.score != null && (
+                        <ComplexityPips score={(puzzle as any).complexity.score} />
                       )}
                     </span>
-                    <span className="text-xs text-gray-400 truncate block">{puzzle.description}</span>
+                    <span className="text-xs text-gray-400 break-words block">{puzzle.description}</span>
                   </span>
                 </button>
               );
