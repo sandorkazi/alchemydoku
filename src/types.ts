@@ -198,10 +198,7 @@ export type QuestionTarget =
   /** Which partner maximises information (entropy) when mixed with this ingredient? */
   | { kind: 'most-informative-mix'; ingredient: IngredientId }
   /** Which ingredients can never produce this potion with any partner in any world? */
-  | { kind: 'guaranteed-non-producer'; potion: PotionResult }
-  /** Debunk planning: find the minimum steps covering the maximum number of
-   *  false publications with conflicts (neither removed). */
-  | { kind: 'debunk_max_conflict'; maxCoverage: number };
+  | { kind: 'guaranteed-non-producer'; potion: PotionResult };
 
 // ─── Debunk plan types ────────────────────────────────────────────────────────
 

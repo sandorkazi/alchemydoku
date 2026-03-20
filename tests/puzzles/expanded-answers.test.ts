@@ -1,7 +1,7 @@
 import { describe, it, expect } from 'vitest';
 import { ALL_EXPANDED_PUZZLES } from '../../src/expanded/data/puzzlesIndex';
 import { getExpandedPuzzleWorlds, computeExpandedAnswer } from '../../src/expanded/puzzles/schemaExpanded';
-import { validateMasterPlanAnswer, validateApprenticePlanAnswer, validateConflictOnlyAnswer, validateMaxConflictAnswer } from '../../src/logic/debunk';
+import { validateMasterPlanAnswer, validateApprenticePlanAnswer, validateConflictOnlyAnswer } from '../../src/logic/debunk';
 import type { AnyQuestion } from '../../src/expanded/types';
 import type { Publication } from '../../src/types';
 
@@ -10,7 +10,6 @@ const SKIP_KINDS = new Set<AnyQuestion['kind']>([
   'debunk_min_steps',
   'debunk_apprentice_plan',
   'debunk_conflict_only',
-  'debunk_max_conflict',
 ]);
 
 describe('expanded debunk reference answers', () => {
@@ -18,8 +17,7 @@ describe('expanded debunk reference answers', () => {
     const debunkQs = puzzle.questions.filter(q =>
       q.kind === 'debunk_min_steps' ||
       q.kind === 'debunk_apprentice_plan' ||
-      q.kind === 'debunk_conflict_only' ||
-      q.kind === 'debunk_max_conflict',
+      q.kind === 'debunk_conflict_only',
     );
     if (debunkQs.length === 0) continue;
 
@@ -48,14 +46,6 @@ describe('expanded debunk reference answers', () => {
           expect(
             validateConflictOnlyAnswer(ref, puzzle.solution, pubs, worlds, ref.length),
             'debunk_conflict_only reference answer must pass the validator',
-          ).toBe(true);
-        } else if (q.kind === 'debunk_max_conflict') {
-          const ref = answers['debunk_max_conflict'] ?? [];
-          const maxCoverage = (q as { kind: 'debunk_max_conflict'; maxCoverage: number }).maxCoverage;
-          expect(ref.length, 'debunk_max_conflict must have a reference answer').toBeGreaterThan(0);
-          expect(
-            validateMaxConflictAnswer(ref, puzzle.solution, pubs, worlds, maxCoverage),
-            'debunk_max_conflict reference answer must pass the validator',
           ).toBe(true);
         }
       }

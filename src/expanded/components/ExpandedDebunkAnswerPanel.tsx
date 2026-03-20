@@ -387,20 +387,18 @@ type QuestionPlan = {
   drafts: DraftStep[];
   isConflictOnly: boolean;
   isApprenticeOnly: boolean;
-  isMaxConflict: boolean;
   fixedIngredient: IngredientId | null;
 };
 
 function makeInitialPlan(q: { kind: string; fixedIngredient?: IngredientId }, isTutorial: boolean): QuestionPlan {
   const isConflictOnly = q.kind === 'debunk_conflict_only';
   const isApprenticeOnly = q.kind === 'debunk_apprentice_plan';
-  const isMaxConflict = q.kind === 'debunk_max_conflict';
   const fixedIngredient = isConflictOnly ? (q.fixedIngredient ?? null) : null;
-  const initialDraft: DraftStep = isApprenticeOnly
-    ? { kind: 'apprentice', ingredient: null, color: null }
-    : { kind: 'master', ingredient1: isConflictOnly ? fixedIngredient : null, ingredient2: null,
-        claimedPotion: isTutorial ? { type: 'neutral' } : null };
-  return { drafts: [initialDraft], isConflictOnly, isApprenticeOnly, isMaxConflict, fixedIngredient };
+  const initialDraft: DraftStep = isConflictOnly
+    ? { kind: 'master', ingredient1: fixedIngredient, ingredient2: null,
+        claimedPotion: isTutorial ? { type: 'neutral' } : null }
+    : { kind: 'apprentice', ingredient: null, color: null };
+  return { drafts: [initialDraft], isConflictOnly, isApprenticeOnly, fixedIngredient };
 }
 
 export function ExpandedDebunkAnswerPanel({ onNext, isTutorial = false }: {
@@ -413,8 +411,7 @@ export function ExpandedDebunkAnswerPanel({ onNext, isTutorial = false }: {
   const publications: Publication[] = (puzzle.publications ?? []).filter(Boolean) as Publication[];
   const articles: DebunkArticle[] = puzzle.articles ?? [];
   const debunkQuestions = puzzle.questions.filter(
-    q => q.kind === 'debunk_min_steps' || q.kind === 'debunk_apprentice_plan'
-      || q.kind === 'debunk_conflict_only' || q.kind === 'debunk_max_conflict'
+    q => q.kind === 'debunk_min_steps' || q.kind === 'debunk_apprentice_plan' || q.kind === 'debunk_conflict_only'
   ) as Array<{ kind: string; fixedIngredient?: IngredientId }>;
 
   const [plans, setPlans] = useState<QuestionPlan[]>(
@@ -431,7 +428,7 @@ export function ExpandedDebunkAnswerPanel({ onNext, isTutorial = false }: {
   // Simulation for display: show per-plan outcomes independently.
   const simulations = plans.map(plan => {
     const completedSteps = plan.drafts.filter(isComplete) as DebunkStep[];
-    return simulateExpandedPlan(completedSteps, puzzle.solution, publications, articles, worlds, plan.isConflictOnly || plan.isMaxConflict);
+    return simulateExpandedPlan(completedSteps, puzzle.solution, publications, articles, worlds, plan.isConflictOnly);
   });
 
   // Combined removed sets across ALL plans (for the board display)
@@ -466,31 +463,22 @@ export function ExpandedDebunkAnswerPanel({ onNext, isTutorial = false }: {
       {!completed && !showSolution && plans.map((plan, qi) => {
         const sim = simulations[qi];
         const completedSteps = plan.drafts.filter(isComplete) as DebunkStep[];
-        const refAnswer = plan.isMaxConflict
-          ? puzzle.debunk_answers?.debunk_max_conflict
-          : plan.isConflictOnly
-            ? puzzle.debunk_answers?.debunk_conflict_only
-            : plan.isApprenticeOnly
-              ? puzzle.debunk_answers?.debunk_apprentice_plan
-              : puzzle.debunk_answers?.debunk_min_steps;
+        const refAnswer = plan.isConflictOnly
+          ? puzzle.debunk_answers?.debunk_conflict_only
+          : plan.isApprenticeOnly
+            ? puzzle.debunk_answers?.debunk_apprentice_plan
+            : puzzle.debunk_answers?.debunk_min_steps;
         const refLen = refAnswer?.length ?? 1;
-        const maxCoverageTarget = plan.isMaxConflict
-          ? (debunkQuestions[qi] as { maxCoverage?: number }).maxCoverage ?? 0
-          : 0;
 
         const conflictCoveredIds = new Set<IngredientId>(sim.outcomes.flatMap(o => o.conflicts));
-        const falsePubIngredients = (plan.isConflictOnly || plan.isMaxConflict)
+        const falsePubIngredients = plan.isConflictOnly
           ? publications
               .filter(p => puzzle.solution[p.ingredient] !== p.claimedAlchemical)
               .map(p => p.ingredient)
           : [];
-        const maxConflictAchieved = plan.isMaxConflict
-          && conflictCoveredIds.size >= maxCoverageTarget;
-        const allCoveredForQ = plan.isMaxConflict
-          ? maxConflictAchieved
-          : plan.isConflictOnly
-            ? falsePubIngredients.length > 0 && falsePubIngredients.every(id => conflictCoveredIds.has(id))
-            : sim.remainingPubs.length === 0 && sim.remainingArts.length === 0;
+        const allCoveredForQ = plan.isConflictOnly
+          ? falsePubIngredients.length > 0 && falsePubIngredients.every(id => conflictCoveredIds.has(id))
+          : sim.remainingPubs.length === 0 && sim.remainingArts.length === 0;
 
         function addStep() {
           const initialDraft: DraftStep = plan.isApprenticeOnly
@@ -505,25 +493,21 @@ export function ExpandedDebunkAnswerPanel({ onNext, isTutorial = false }: {
             <div className="flex items-center justify-between">
               <span className="text-xs font-bold text-gray-500 uppercase tracking-widest">
                 {debunkQuestions.length > 1 ? `Q${qi + 1}: ` : ''}
-                {plan.isMaxConflict ? 'Max-conflict plan' : plan.isConflictOnly ? 'Demonstrate a conflict' : plan.isApprenticeOnly ? 'Apprentice plan' : 'Debunk plan'}
+                {plan.isConflictOnly ? 'Demonstrate a conflict' : plan.isApprenticeOnly ? 'Apprentice plan' : 'Debunk plan'}
               </span>
               {allCoveredForQ && plan.drafts.length > 0 && (
                 <span className="text-[10px] text-green-600 font-semibold">
-                  {plan.isMaxConflict
-                    ? `✓ ${maxCoverageTarget}/${maxCoverageTarget} publications in conflict`
-                    : plan.isConflictOnly ? '✓ All publications in conflict' : '✓ All targets covered'}
+                  {plan.isConflictOnly ? '✓ All publications in conflict' : '✓ All targets covered'}
                 </span>
               )}
             </div>
 
             <p className="text-xs text-gray-500">
-              {plan.isMaxConflict
-                ? 'Find the fewest master mixes that put the maximum number of false publications under conflict simultaneously. No publications should be removed.'
-                : plan.isConflictOnly
-                  ? 'Find a minimal number of master mixes which will cover all incorrect publications with contradictions (at least 1 for each), without removing any. The covered publications shown are those whose claims are contradicted by the mix — not removals. An ingredient can help disprove another\'s publication without its own claim being contested.'
-                  : plan.isApprenticeOnly
-                    ? 'Remove all false publications using only apprentice debunks, in as few steps as possible.'
-                    : 'Remove all false publications in as few steps as possible.'}
+              {plan.isConflictOnly
+                ? 'Find a minimal number of master mixes which will cover all incorrect publications with contradictions (at least 1 for each), without removing any. The covered publications shown are those whose claims are contradicted by the mix — not removals. An ingredient can help disprove another\'s publication without its own claim being contested.'
+                : plan.isApprenticeOnly
+                  ? 'Remove all false publications using only apprentice debunks, in as few steps as possible.'
+                  : 'Remove all false publications in as few steps as possible.'}
             </p>
 
             {plan.drafts.map((draft, i) => {
@@ -539,7 +523,7 @@ export function ExpandedDebunkAnswerPanel({ onNext, isTutorial = false }: {
                     updatePlan(qi, newDrafts);
                   }}
                   onRemove={() => updatePlan(qi, plan.drafts.filter((_, j) => j !== i))}
-                  isConflictOnly={plan.isConflictOnly || plan.isMaxConflict}
+                  isConflictOnly={plan.isConflictOnly}
                   isIngredientLocked={plan.isConflictOnly && i === 0}
                   isApprenticeOnly={plan.isApprenticeOnly}
                   isTutorial={isTutorial}
@@ -559,15 +543,13 @@ export function ExpandedDebunkAnswerPanel({ onNext, isTutorial = false }: {
             {/* Wrong attempt hint for this question */}
             {!completed && wrongAttempts > 0 && !showSolution && (
               <p className="text-[10px] text-red-400">
-                {plan.isMaxConflict
-                  ? `Q${qi + 1}: coverage is ${conflictCoveredIds.size} — maximum is ${maxCoverageTarget}.`
-                  : plan.isConflictOnly
-                    ? (plan.drafts.length < refLen
-                      ? `Q${qi + 1}: plan uses ${plan.drafts.length} step${plan.drafts.length !== 1 ? 's' : ''} — at least ${refLen} are needed.`
-                      : plan.drafts.length > refLen
-                        ? `Q${qi + 1}: plan uses ${plan.drafts.length} step${plan.drafts.length !== 1 ? 's' : ''} — needs exactly ${refLen}.`
-                        : `Q${qi + 1}: plan doesn't cover all publications with conflicts.`)
-                    : `Q${qi + 1}: plan uses ${plan.drafts.length} step${plan.drafts.length !== 1 ? 's' : ''}${refLen ? ` (optimal: ${refLen})` : ''}.`
+                {plan.isConflictOnly
+                  ? (plan.drafts.length < refLen
+                    ? `Q${qi + 1}: plan uses ${plan.drafts.length} step${plan.drafts.length !== 1 ? 's' : ''} — at least ${refLen} are needed.`
+                    : plan.drafts.length > refLen
+                      ? `Q${qi + 1}: plan uses ${plan.drafts.length} step${plan.drafts.length !== 1 ? 's' : ''} — needs exactly ${refLen}.`
+                      : `Q${qi + 1}: plan doesn't cover all publications with conflicts.`)
+                  : `Q${qi + 1}: plan uses ${plan.drafts.length} step${plan.drafts.length !== 1 ? 's' : ''}${refLen ? ` (optimal: ${refLen})` : ''}.`
                 }
               </p>
             )}
@@ -580,19 +562,17 @@ export function ExpandedDebunkAnswerPanel({ onNext, isTutorial = false }: {
         <div className="bg-indigo-50 border border-indigo-200 rounded-xl px-4 py-3 space-y-3">
           {debunkQuestions.map((_q, qi) => {
             const plan = plans[qi];
-            const refAnswer = plan.isMaxConflict
-              ? puzzle.debunk_answers?.debunk_max_conflict
-              : plan.isConflictOnly
-                ? puzzle.debunk_answers?.debunk_conflict_only
-                : plan.isApprenticeOnly
-                  ? puzzle.debunk_answers?.debunk_apprentice_plan
-                  : puzzle.debunk_answers?.debunk_min_steps;
+            const refAnswer = plan.isConflictOnly
+              ? puzzle.debunk_answers?.debunk_conflict_only
+              : plan.isApprenticeOnly
+                ? puzzle.debunk_answers?.debunk_apprentice_plan
+                : puzzle.debunk_answers?.debunk_min_steps;
             const solutionSteps = refAnswer ?? [];
             return (
               <div key={qi}>
                 {debunkQuestions.length > 1 && (
                   <span className="text-[10px] font-bold text-indigo-400 uppercase tracking-widest">
-                    Q{qi + 1}: {plan.isMaxConflict ? 'Max conflict' : plan.isConflictOnly ? 'Conflict' : 'Min steps'}
+                    Q{qi + 1}: {plan.isConflictOnly ? 'Conflict' : 'Min steps'}
                   </span>
                 )}
                 <div className="space-y-1 mt-1">

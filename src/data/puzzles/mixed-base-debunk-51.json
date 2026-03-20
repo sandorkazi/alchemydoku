@@ -94,10 +94,6 @@
   "questions": [
     {
       "kind": "debunk_min_steps"
-    },
-    {
-      "kind": "debunk_max_conflict",
-      "maxCoverage": 4
     }
   ],
   "solution": {
@@ -175,28 +171,6 @@
       {
         "kind": "master",
         "ingredient1": 2,
-        "ingredient2": 6
-      }
-    ],
-    "debunk_max_conflict": [
-      {
-        "kind": "master",
-        "ingredient1": 2,
-        "ingredient2": 7
-      },
-      {
-        "kind": "master",
-        "ingredient1": 3,
-        "ingredient2": 4
-      },
-      {
-        "kind": "master",
-        "ingredient1": 4,
-        "ingredient2": 5
-      },
-      {
-        "kind": "master",
-        "ingredient1": 4,
         "ingredient2": 6
       }
     ]
