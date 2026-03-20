@@ -752,208 +752,183 @@ def _plan_debunk(profile, sol: dict, worlds: frozenset, rng: random.Random):
 # ══════════════════════════════════════════════════════════════════════════════
 # DIFFICULTY SCORING  (used by both 'analyze' and 'generate')
 # ══════════════════════════════════════════════════════════════════════════════
+#
+# Three-axis scoring.  Final score = 10 + clue_score + question_score + world_score.
+# Range: [10, 100].  Each component is clamped to its declared max before summing.
+#
+# Clue complexity   [0–50]: structural difficulty of reading / applying each clue
+# Question complexity [0–20]: difficulty of answering the specific question type
+# World complexity   [0–20]: how constrained the answer ingredients are in the world set
 
-# Base-game clue type penalties (from analyze_difficulty.py)
-CLUE_TYPE_PENALTY = {
-    'mixing':              0.0,
-    'assignment':          0.0,
-    'aspect':              0.3,
-    'sell':                0.0,   # SELL_PENALTY applied separately
-    'debunk':              0.0,
-    'mixing_among':        0.3,   # existential: must consider all pairs
-    'mixing_count_among':  0.4,   # exact count: harder to exploit
-    'sell_result_among':   0.5,   # existential sell: mix + sell-rule indirection
-    'sell_among':          0.5,   # exact count sell: most complex
-    'book_among':          0.4,   # solar/lunar among-group: must consider all group members
-    'golem_reaction_among': 0.3,  # reaction among-group: which one reacted?
-}
-SELL_PENALTY = {'total_match': 0.0, 'sign_ok': 0.4, 'neutral': 0.8, 'opposite': 0.6}
-
-# Expanded surcharges (from PUZZLE_GENERATION.md §3)
-Q_SURCHARGE = {
-    'alchemical': 0.0, 'mixing-result': 0.0, 'aspect': 0.0, 'solar_lunar': 0.2,
-    'safe-publish': 0.3, 'possible-potions': 0.8, 'aspect-set': 0.5, 'large-component': 0.5,
-    'encyclopedia_fourth': 0.3, 'encyclopedia_which_aspect': 0.5,
-    'golem_group': 0.5, 'golem_animate_potion': 0.8,
-    'golem_mix_potion': 1.0, 'golem_possible_potions': 1.2,
-    'neutral-partner': 0.5, 'ingredient-potion-profile': 0.8,
-    'group-possible-potions': 0.8, 'most-informative-mix': 1.0,
-    'guaranteed-non-producer': 0.5,
-    'most_informative_book': 1.0,
-}
-
-
-def clue_strengths(clues: list, golem: Optional[dict] = None):
-    """Log2 world-reduction per clue. Returns (strengths, final_worlds)."""
-    worlds = all_worlds()
-    strengths = []
-    for c in clues:
-        before = len(worlds)
-        worlds  = filter_clue(worlds, c, golem)
-        after   = len(worlds)
-        strengths.append(math.log2(before / after) if 0 < after < before else 0.0)
-    return strengths, worlds
-
-
-def simulate_chain(worlds: frozenset, questions: list, golem: Optional[dict] = None,
-                   max_depth: int = 10):
-    """
-    Simulate naked-single propagation.
-    Returns (depth_to_answer, complement_needed, stuck).
-    """
-    confirmed: dict = {}
-    current = set(worlds)
-
-    if all_answered(current, questions, golem):
-        return 0, False, False
-
-    for depth in range(1, max_depth + 1):
-        newly = {}
-        for slot in range(8):
-            if slot in confirmed:
-                continue
-            poss = {w[slot] for w in current}
-            if len(poss) == 1:
-                newly[slot] = next(iter(poss))
-
-        if not newly:
-            complement = _complement_unlocks(current, confirmed, questions, golem)
-            return depth, complement, True
-
-        confirmed.update(newly)
-        for slot, alch in newly.items():
-            current = {w for w in current if w[slot] == alch}
-
-        if all_answered(current, questions, golem):
-            return depth, False, False
-
-    return max_depth, True, True
-
-
-def _complement_unlocks(worlds, confirmed_slots, questions, golem):
-    unconfirmed = [s for s in range(8) if s not in confirmed_slots]
-    if not unconfirmed:
-        return False
-    for col in COLORS:
-        for sgn in (+1, -1):
-            matching = {a for a in ALL_ALCH if ALCH_DATA[a][col][0] == sgn}
-            assigned = {confirmed_slots[s] for s in confirmed_slots if confirmed_slots[s] in matching}
-            remaining = matching - assigned
-            if len(remaining) == 1:
-                lone = next(iter(remaining))
-                for slot in unconfirmed:
-                    poss = {w[slot] for w in worlds}
-                    if lone in poss and len(poss) > 1:
-                        new_worlds = {w for w in worlds if w[slot] == lone}
-                        if all_answered(new_worlds, questions, golem):
-                            return True
-    return False
+# Question kinds that require enumerating a set of answers (multiple-choice)
+_ENUM_Q_KINDS = frozenset({
+    'possible-potions', 'aspect-set', 'group-possible-potions',
+    'ingredient-potion-profile', 'guaranteed-non-producer',
+    'golem_possible_potions', 'encyclopedia_which_aspect', 'encyclopedia_fourth',
+})
 
 
 def compute_difficulty(puzzle: dict) -> dict:
-    """Unified difficulty scorer for base-game and expanded puzzles."""
+    """Unified difficulty scorer for base-game and expanded puzzles.
+
+    Returns a dict with:
+        score         — integer [10, 100], stored as complexity.score in JSON
+        clue_score    — component 1 [0, 50]
+        question_score — component 2 [0, 20]
+        world_score   — component 3 [0, 20]
+        residual_worlds — remaining world count after all clues
+    """
     clues     = puzzle.get('clues', [])
     questions = puzzle.get('questions', [])
     golem     = puzzle.get('golem')
 
-    strengths, final_worlds = clue_strengths(clues, golem)
-    avg_strength = sum(strengths) / len(strengths) if strengths else 0.0
-
-    # Ambiguity penalty (per-clue average) — captures how hard each clue is to read
-    _AMBIG_KINDS = frozenset({
-        'mixing_among', 'mixing_count_among',
-        'sell_result_among', 'sell_among',
-        'book_among', 'golem_reaction_among',
-    })
-    total_penalty = 0.0
+    # ── Axis 1: Clue complexity (0–50) ────────────────────────────────────────
+    # +0  : mixing, assignment, aspect, debunk*, book, encyclopedia, golem_test — clear direct clues
+    # +2  : sell with sign_ok or opposite result — partial / indirect information
+    # +5  : ambiguous group clue (X of Y ingredients produces result)
+    # +10 : combinatoric group clue (exactly X of Y pairs produces result)
+    clue_score = 0
     for c in clues:
-        p = CLUE_TYPE_PENALTY.get(c['kind'], 0.0)
-        if c['kind'] == 'sell':
-            p += SELL_PENALTY.get(c.get('sellResult', ''), 0.0)
-        elif c['kind'] == 'sell_result_among':
-            p += SELL_PENALTY.get(c.get('sellResult', ''), 0.0)
-        elif c['kind'] == 'sell_among':
-            p += SELL_PENALTY.get(c.get('result', ''), 0.0)  # sell_among uses 'result' field
-        total_penalty += p
-    ambig_penalty = total_penalty / len(clues) if clues else 0.0
+        kind = c['kind']
+        if kind == 'sell':
+            if c.get('sellResult') in ('sign_ok', 'opposite'):
+                clue_score += 2
+        elif kind == 'encyclopedia_uncertain':
+            clue_score += 5   # "at least 3 of 4 correct" — requires enumeration
+        elif kind in ('mixing_among', 'sell_result_among',
+                      'book_among', 'golem_reaction_among'):
+            clue_score += 5   # existential: X of Y group produces result
+        elif kind in ('mixing_count_among', 'sell_among'):
+            clue_score += 10  # combinatoric: exactly X of Y pairs
+    clue_score = max(0, min(50, clue_score))
 
-    # Stranded-ambiguity burden — how many bits of info come *only* from among-group clues?
-    # If direct clues barely narrow things down, the ambiguous clues must do hard work.
-    ambig_clues  = [c for c in clues if c['kind'] in _AMBIG_KINDS]
-    direct_clues = [c for c in clues if c['kind'] not in _AMBIG_KINDS]
-    if ambig_clues:
-        w = all_worlds()
-        for c in direct_clues:
-            w = filter_clue(w, c, golem)
-        W_direct = len(w)
-        W_final  = len(final_worlds)
-        # bits of information uniquely contributed by the ambiguous clues
-        ambig_burden = math.log2(W_direct + 1) - math.log2(W_final + 1)
-        # scale by clue count so more ambiguous clues compound the difficulty
-        stranded = ambig_burden / 10.0 * len(ambig_clues) * 0.4
-    else:
-        ambig_burden = 0.0
-        stranded     = 0.0
+    # ── Axis 2: Question complexity (0–20) ────────────────────────────────────
+    # -5  : aspect question (binary sign — easiest)
+    # -2  : large-component question (size, still limited)
+    # +5  : enumeration / multiple-choice question
+    # +10 : any debunk question (plan reasoning required)
+    # +5  : conflict-only debunk (additional constraint, in addition to debunk +10)
+    q_score      = 0
+    has_debunk   = False
+    has_conflict = False
+    for q in questions:
+        kind = q['kind']
+        if kind == 'aspect':
+            q_score -= 5
+        elif kind == 'large-component':
+            q_score -= 2
+        elif kind in _ENUM_Q_KINDS:
+            q_score += 5
+        elif kind == 'debunk_conflict_only':
+            has_debunk   = True
+            has_conflict = True
+        elif kind in ('debunk_min_steps', 'debunk_apprentice_plan'):
+            has_debunk = True
+    if has_debunk:
+        q_score += 10
+    if has_conflict:
+        q_score += 5
+    q_score = max(0, min(20, q_score))
 
-    depth, complement, stuck = simulate_chain(final_worlds, questions, golem)
+    # ── Axis 3: World complexity (0–20) ───────────────────────────────────────
+    # Per question:
+    #   +5 if no clue directly shows the mixing result for the asked pair
+    #   +5 for each ingredient in question not directly constrained by any clue
+    #   +5 for each ingredient in question still having multiple possible alchemicals
+    # Debunk questions (full-board reasoning): +15 flat
+    worlds = all_worlds()
+    for c in clues:
+        worlds = filter_clue(worlds, c, golem)
 
-    # Question/mechanic surcharges for expanded puzzles
-    q_sur  = max(Q_SURCHARGE.get(q['kind'], 0.0) for q in questions) if questions else 0.0
-    has_enc    = any(c['kind'] in ('encyclopedia', 'encyclopedia_uncertain') for c in clues)
-    has_golem  = any(c['kind'] == 'golem_test' for c in clues)
-    has_sl     = any(c['kind'] in ('book', 'book_among') for c in clues)
-    m_sur = 0.0
-    if has_golem and has_enc: m_sur += 1.8
-    elif has_golem:           m_sur += 0.8
-    elif has_enc:             m_sur += 0.5
-    if has_sl:                m_sur += 0.3
+    # Build "shown" sets — clues that directly identify an ingredient's alchemical /
+    # aspect, or establish a known mixing result for a specific pair.
+    shown_ingredients: set = set()
+    shown_pairs: set = set()
+    for c in clues:
+        kind = c['kind']
+        if kind in ('assignment', 'aspect'):
+            shown_ingredients.add(c['ingredient'])
+        elif kind == 'book':
+            shown_ingredients.add(c['ingredient'])
+        elif kind == 'debunk':
+            if c.get('variant') == 'apprentice':
+                shown_ingredients.add(c['ingredient'])
+            elif c.get('variant') == 'master' and c.get('outcome') == 'success':
+                shown_pairs.add((min(c['ingredient1'], c['ingredient2']),
+                                 max(c['ingredient1'], c['ingredient2'])))
+        elif kind == 'debunk_apprentice':
+            shown_ingredients.add(c['ingredient'])
+        elif kind == 'debunk_master':
+            if c.get('successful'):
+                shown_pairs.add((min(c['ingredient1'], c['ingredient2']),
+                                 max(c['ingredient1'], c['ingredient2'])))
+        elif kind == 'mixing':
+            shown_pairs.add((min(c['ingredient1'], c['ingredient2']),
+                             max(c['ingredient1'], c['ingredient2'])))
+        elif kind == 'encyclopedia':
+            for entry in c.get('entries', []):
+                shown_ingredients.add(entry['ingredient'])
 
-    enum = any(q['kind'] in {'possible-potions', 'aspect-set', 'large-component',
-                              'golem_possible_potions', 'ingredient-potion-profile',
-                              'group-possible-potions', 'guaranteed-non-producer'} for q in questions)
+    w_score = 0
+    for q in questions:
+        kind = q['kind']
 
-    raw = (
-        (1.0 / (avg_strength + 0.5)) * 4.0
-        + ambig_penalty * 1.5   # reduced slightly; stranded term covers the rest
-        + stranded               # extra: how much work the ambiguous clues must do
-        + depth * 1.5
-        + (2.0 if complement else 0.0)
-        + (1.0 if enum else 0.0)
-        + q_sur
-        + m_sur
-    )
+        # Debunk questions require full-board plan reasoning
+        if kind in ('debunk_min_steps', 'debunk_apprentice_plan', 'debunk_conflict_only'):
+            w_score += 15
+            continue
+
+        # Extract ingredients and mixing pair from question
+        q_ingredients: list = []
+        q_pair = None
+        if kind in ('alchemical', 'aspect', 'safe-publish', 'solar_lunar',
+                    'neutral-partner', 'ingredient-potion-profile', 'most-informative-mix'):
+            ing = q.get('ingredient')
+            if ing:
+                q_ingredients = [ing]
+        elif kind in ('mixing-result', 'possible-potions'):
+            i1, i2 = q.get('ingredient1'), q.get('ingredient2')
+            if i1 and i2:
+                q_ingredients = [i1, i2]
+                q_pair = (min(i1, i2), max(i1, i2))
+        elif kind == 'group-possible-potions':
+            q_ingredients = list(q.get('ingredients', []))
+        elif kind == 'encyclopedia_which_aspect':
+            q_ingredients = [e['ingredient'] for e in q.get('entries', [])]
+
+        # +5 if no clue directly shows the mixing result for the asked pair
+        if q_pair is not None and q_pair not in shown_pairs:
+            w_score += 5
+        # +5 for each ingredient not directly constrained by any clue
+        for ing in q_ingredients:
+            if ing not in shown_ingredients:
+                w_score += 5
+        # +5 for each ingredient still having multiple possible alchemicals
+        for ing in q_ingredients:
+            slot = ing - 1  # 0-indexed
+            if len({w[slot] for w in worlds}) > 1:
+                w_score += 5
+
+    w_score = max(0, min(20, w_score))
 
     return {
-        'raw':                           round(raw, 3),
-        'avg_clue_strength':             round(avg_strength, 3),
-        'ambig_penalty':                 round(ambig_penalty, 3),
-        'stranded_ambiguity':            round(stranded, 3),
-        'chain_depth':                   depth,
-        'stuck':                         stuck,
-        'requires_complement_set':       complement,
-        'question_requires_enumeration': enum,
-        'residual_worlds':               len(final_worlds),
+        'score':          10 + clue_score + q_score + w_score,
+        'clue_score':     clue_score,
+        'question_score': q_score,
+        'world_score':    w_score,
+        'residual_worlds': len(worlds),
     }
 
 
 TIER = {1: 'easy', 2: 'easy', 3: 'medium', 4: 'hard', 5: 'expert'}
 
 
-def to_pips(score: float, all_scores: list) -> int:
-    rank = sum(1 for s in all_scores if s < score) / len(all_scores)
-    if rank < 0.20: return 1
-    if rank < 0.40: return 2
-    if rank < 0.60: return 3
-    if rank < 0.80: return 4
-    return 5
-
-
-def to_pips_expanded(raw: float) -> int:
-    """Absolute-threshold pip conversion for expanded puzzles (mirrors ExpandedHome.tsx)."""
-    if raw < 1.7: return 1
-    if raw < 2.1: return 2
-    if raw < 2.8: return 3
-    if raw < 3.5: return 4
+def score_to_pip(score: int) -> int:
+    """Convert [10–100] complexity score to 1–5 pip tier (mirrors ComplexityPips in App.tsx)."""
+    if score <= 35: return 1
+    if score <= 45: return 2
+    if score <= 52: return 3
+    if score <= 58: return 4
     return 5
 
 # ══════════════════════════════════════════════════════════════════════════════
@@ -2268,8 +2243,6 @@ def assemble(raw: dict, profile: Profile, num: int, rng: random.Random) -> dict:
         'clues': raw['clues'], 'questions': [raw['q']], 'golem': raw['golem'],
     })
     is_base = is_base_profile(profile)
-    if not is_base:
-        sc['score'] = 1 if profile.difficulty == 'tutorial' else to_pips_expanded(sc['raw'])
     golem_sec = {'golem': raw['golem']} if raw['golem'] else {}
     desc = DESCS.get(profile.question_kind, "Use the clues to answer the question.")
     if profile.question_kind in ('golem_group', 'golem_animate_potion'):
@@ -2278,7 +2251,7 @@ def assemble(raw: dict, profile: Profile, num: int, rng: random.Random) -> dict:
                 + desc.split('. ', 1)[1])
     difficulty = profile.difficulty
     if not is_base and difficulty != 'tutorial':
-        difficulty = TIER[sc['score']]
+        difficulty = TIER[score_to_pip(sc['score'])]
     puz = {
         'id':          f"{profile.id_prefix}-{num:02d}",
         'title':       rng.choice(TITLES),
@@ -2388,44 +2361,32 @@ def cmd_analyze(_args):
         print(f"  {pid} …", end=' ', flush=True)
         d = compute_difficulty(puz)
         results[pid] = (f, puz, d)
-        print(f"raw={d['raw']:.2f}  depth={d['chain_depth']}  "
-              f"str={d['avg_clue_strength']:.2f}  "
-              f"comp={'Y' if d['requires_complement_set'] else 'n'}  "
-              f"enum={'Y' if d['question_requires_enumeration'] else 'n'}")
-
-    non_tut_raws = [d['raw'] for _, puz, d in results.values()
-                    if not puz['id'].startswith('tutorial')]
+        print(f"score={d['score']:3d}  "
+              f"clue={d['clue_score']:2d}  q={d['question_score']:3d}  "
+              f"world={d['world_score']:2d}  worlds={d['residual_worlds']}")
 
     def pips_for(pid):
-        r = results[pid][2]['raw']
         if pid.startswith('tutorial'):
             return 1
-        return to_pips(r, non_tut_raws)
+        return score_to_pip(results[pid][2]['score'])
 
-    print("\n── Results sorted by difficulty ──────────────────────────────────────────")
-    print(f"{'ID':30s}  {'raw':>6}  {'pips':>4}  {'dep':>3}  {'str':>6}  c  e  title")
-    for pid, (f, puz, d) in sorted(results.items(), key=lambda x: x[1][2]['raw']):
+    print("\n── Results sorted by score ───────────────────────────────────────────────")
+    print(f"{'ID':30s}  {'score':>5}  {'pip':>3}  {'clue':>4}  {'q':>3}  {'world':>5}  title")
+    for pid, (f, puz, d) in sorted(results.items(), key=lambda x: x[1][2]['score']):
         p = pips_for(pid)
-        print(f"{pid:30s}  {d['raw']:6.2f}  {p:4d}  {d['chain_depth']:3d}  "
-              f"{d['avg_clue_strength']:6.2f}  "
-              f"{'Y' if d['requires_complement_set'] else 'n'}  "
-              f"{'Y' if d['question_requires_enumeration'] else 'n'}  "
+        print(f"{pid:30s}  {d['score']:5d}  {p:3d}  {d['clue_score']:4d}  "
+              f"{d['question_score']:3d}  {d['world_score']:5d}  "
               f"{puz.get('title', '')}")
 
     print("\nWriting back …")
     for pid, (f, puz, d) in results.items():
         pip = pips_for(pid)
         puz['complexity'] = {
-            'score':                         pip,
-            'raw':                           d['raw'],
-            'avg_clue_strength':             d['avg_clue_strength'],
-            'ambig_penalty':                 d['ambig_penalty'],
-            'stranded_ambiguity':            d['stranded_ambiguity'],
-            'chain_depth':                   d['chain_depth'],
-            'stuck':                         d['stuck'],
-            'requires_complement_set':       d['requires_complement_set'],
-            'question_requires_enumeration': d['question_requires_enumeration'],
-            'residual_worlds':               d['residual_worlds'],
+            'score':          d['score'],
+            'clue_score':     d['clue_score'],
+            'question_score': d['question_score'],
+            'world_score':    d['world_score'],
+            'residual_worlds': d['residual_worlds'],
         }
         if not pid.startswith('tutorial'):
             puz['difficulty'] = TIER[pip]
@@ -2441,11 +2402,18 @@ def cmd_analyze(_args):
             if not pip_list:
                 continue
             med_pip = pip_list[len(pip_list) // 2]
+            avg_pip = sum(pip_list) / len(pip_list)
             tier    = TIER.get(med_pip, '?')
             current = c.get('difficulty', '?')
-            flag    = ' ← MISMATCH' if tier != current and current != 'tutorial' else ''
+            spread  = max(pip_list) - min(pip_list)
+            flags   = []
+            if tier != current and current != 'tutorial':
+                flags.append('MISMATCH')
+            if spread > 2:
+                flags.append('SPLIT SUGGESTED')
+            flag = ('  ← ' + ' + '.join(flags)) if flags else ''
             print(f"  {c['id']:30s}  current={current:8s}  computed={tier:8s}  "
-                  f"pips={pip_list}{flag}")
+                  f"avg={avg_pip:.1f}  spread={spread}  pips={pip_list}{flag}")
 
     print("\nDone.")
 
@@ -2465,36 +2433,33 @@ def cmd_analyze_expanded(_args):
         print(f"  {pid} …", end=' ', flush=True)
         d = compute_difficulty(puz)
         results[pid] = (f, puz, d)
-        print(f"raw={d['raw']:.2f}  depth={d['chain_depth']}  "
-              f"str={d['avg_clue_strength']:.2f}  "
-              f"comp={'Y' if d['requires_complement_set'] else 'n'}  "
-              f"enum={'Y' if d['question_requires_enumeration'] else 'n'}")
+        print(f"score={d['score']:3d}  "
+              f"clue={d['clue_score']:2d}  q={d['question_score']:3d}  "
+              f"world={d['world_score']:2d}  worlds={d['residual_worlds']}")
 
-    print("\n── Results sorted by difficulty ──────────────────────────────────────────")
-    print(f"{'ID':35s}  {'raw':>6}  {'pips':>4}  {'dep':>3}  {'str':>6}  c  e  title")
-    for pid, (f, puz, d) in sorted(results.items(), key=lambda x: x[1][2]['raw']):
-        pip = 1 if 'tutorial' in pid else to_pips_expanded(d['raw'])
-        print(f"{pid:35s}  {d['raw']:6.2f}  {pip:4d}  {d['chain_depth']:3d}  "
-              f"{d['avg_clue_strength']:6.2f}  "
-              f"{'Y' if d['requires_complement_set'] else 'n'}  "
-              f"{'Y' if d['question_requires_enumeration'] else 'n'}  "
+    def pips_for_exp(pid):
+        if 'tutorial' in pid:
+            return 1
+        return score_to_pip(results[pid][2]['score'])
+
+    print("\n── Results sorted by score ───────────────────────────────────────────────")
+    print(f"{'ID':35s}  {'score':>5}  {'pip':>3}  {'clue':>4}  {'q':>3}  {'world':>5}  title")
+    for pid, (f, puz, d) in sorted(results.items(), key=lambda x: x[1][2]['score']):
+        p = pips_for_exp(pid)
+        print(f"{pid:35s}  {d['score']:5d}  {p:3d}  {d['clue_score']:4d}  "
+              f"{d['question_score']:3d}  {d['world_score']:5d}  "
               f"{puz.get('title', '')}")
 
     print("\nWriting back …")
     for pid, (f, puz, d) in results.items():
         is_tutorial = 'tutorial' in pid
-        pip = 1 if is_tutorial else to_pips_expanded(d['raw'])
+        pip = 1 if is_tutorial else score_to_pip(d['score'])
         puz['complexity'] = {
-            'score':                         pip,
-            'raw':                           d['raw'],
-            'avg_clue_strength':             d['avg_clue_strength'],
-            'ambig_penalty':                 d['ambig_penalty'],
-            'stranded_ambiguity':            d['stranded_ambiguity'],
-            'chain_depth':                   d['chain_depth'],
-            'stuck':                         d['stuck'],
-            'requires_complement_set':       d['requires_complement_set'],
-            'question_requires_enumeration': d['question_requires_enumeration'],
-            'residual_worlds':               d['residual_worlds'],
+            'score':          d['score'],
+            'clue_score':     d['clue_score'],
+            'question_score': d['question_score'],
+            'world_score':    d['world_score'],
+            'residual_worlds': d['residual_worlds'],
         }
         if not is_tutorial:
             puz['difficulty'] = TIER[pip]
@@ -2507,17 +2472,24 @@ def cmd_analyze_expanded(_args):
         for c in colls:
             pids     = c.get('puzzleIds', [])
             pip_list = sorted(
-                to_pips_expanded(results[p][2]['raw'])
+                pips_for_exp(p)
                 for p in pids if p in results and 'tutorial' not in p
             )
             if not pip_list:
                 continue
-            med_pip  = pip_list[len(pip_list) // 2]
-            tier     = TIER.get(med_pip, '?')
-            current  = c.get('difficulty', '?')
-            flag     = ' ← MISMATCH' if tier != current and current != 'tutorial' else ''
+            med_pip = pip_list[len(pip_list) // 2]
+            avg_pip = sum(pip_list) / len(pip_list)
+            tier    = TIER.get(med_pip, '?')
+            current = c.get('difficulty', '?')
+            spread  = max(pip_list) - min(pip_list)
+            flags   = []
+            if tier != current and current != 'tutorial':
+                flags.append('MISMATCH')
+            if spread > 2:
+                flags.append('SPLIT SUGGESTED')
+            flag = ('  ← ' + ' + '.join(flags)) if flags else ''
             print(f"  {c['id']:35s}  current={current:8s}  computed={tier:8s}  "
-                  f"pips={pip_list}{flag}")
+                  f"avg={avg_pip:.1f}  spread={spread}  pips={pip_list}{flag}")
 
     print("\nDone.")
 

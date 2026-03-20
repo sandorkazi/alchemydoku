@@ -2,7 +2,7 @@
   "id": "pp-05",
   "title": "The Open Verdict",
   "description": "Use every clue \u2014 the remaining ambiguity is the answer.",
-  "difficulty": "medium",
+  "difficulty": "easy",
   "clues": [
     {
       "kind": "mixing",
@@ -110,15 +110,10 @@
     }
   ],
   "complexity": {
-    "score": 3,
-    "raw": 3.879,
-    "avg_clue_strength": 1.749,
-    "ambig_penalty": 0.2,
-    "stranded_ambiguity": 0.0,
-    "chain_depth": 0,
-    "stuck": false,
-    "requires_complement_set": false,
-    "question_requires_enumeration": true,
+    "score": 39,
+    "clue_score": 4,
+    "question_score": 5,
+    "world_score": 20,
     "residual_worlds": 28
   }
 }

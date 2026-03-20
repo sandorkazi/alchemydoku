@@ -2,7 +2,7 @@
   "id": "among-01",
   "title": "The Witness Circle",
   "description": "You watched the other players trade and mix across the table \u2014 but never saw whose ingredients were involved. Piece together what you overheard.",
-  "difficulty": "hard",
+  "difficulty": "expert",
   "clues": [
     {
       "kind": "mixing_among",
@@ -166,15 +166,10 @@
     "8": 5
   },
   "complexity": {
-    "score": 4,
-    "raw": 4.693,
-    "avg_clue_strength": 0.98,
-    "ambig_penalty": 0.3,
-    "stranded_ambiguity": 1.54,
-    "chain_depth": 0,
-    "stuck": false,
-    "requires_complement_set": false,
-    "question_requires_enumeration": false,
+    "score": 65,
+    "clue_score": 35,
+    "question_score": 0,
+    "world_score": 20,
     "residual_worlds": 3
   },
   "hints": [

@@ -2,7 +2,7 @@
   "id": "safe-publish-01",
   "title": "The Prudent Scholar",
   "description": "You know two aspects of ingredient 1. Which aspect is still uncertain \u2014 safe to hedge?",
-  "difficulty": "medium",
+  "difficulty": "easy",
   "clues": [
     {
       "kind": "aspect",
@@ -58,15 +58,10 @@
     }
   },
   "complexity": {
-    "score": 3,
-    "raw": 3.417,
-    "avg_clue_strength": 1.0,
-    "ambig_penalty": 0.3,
-    "stranded_ambiguity": 0.0,
-    "chain_depth": 0,
-    "stuck": false,
-    "requires_complement_set": false,
-    "question_requires_enumeration": false,
+    "score": 15,
+    "clue_score": 0,
+    "question_score": 0,
+    "world_score": 5,
     "residual_worlds": 10080
   }
 }

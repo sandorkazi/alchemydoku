@@ -119,15 +119,10 @@
     }
   ],
   "complexity": {
-    "score": 5,
-    "raw": 8.968,
-    "avg_clue_strength": 2.55,
-    "ambig_penalty": 0.817,
-    "stranded_ambiguity": 3.432,
-    "chain_depth": 2,
-    "stuck": true,
-    "requires_complement_set": false,
-    "question_requires_enumeration": false,
+    "score": 85,
+    "clue_score": 50,
+    "question_score": 10,
+    "world_score": 15,
     "residual_worlds": 1
   },
   "publications": [

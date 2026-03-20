@@ -2,7 +2,7 @@
   "id": "mixed-base-16",
   "title": "Signs in the Smoke",
   "description": "Mixing, selling, and debunking records all point toward a single pair. Deduce what potion they produce.",
-  "difficulty": "easy",
+  "difficulty": "medium",
   "clues": [
     {
       "kind": "sell_among",
@@ -78,15 +78,10 @@
     }
   ],
   "complexity": {
-    "score": 2,
-    "raw": 3.051,
-    "avg_clue_strength": 4.433,
-    "ambig_penalty": 0.867,
-    "stranded_ambiguity": 0.94,
-    "chain_depth": 0,
-    "stuck": false,
-    "requires_complement_set": false,
-    "question_requires_enumeration": false,
+    "score": 47,
+    "clue_score": 22,
+    "question_score": 0,
+    "world_score": 15,
     "residual_worlds": 4
   }
 }

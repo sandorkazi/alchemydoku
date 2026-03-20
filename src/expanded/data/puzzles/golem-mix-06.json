@@ -3,7 +3,7 @@
   "mode": "expanded",
   "title": "The Third Ingredient",
   "description": "The golem has been tested with 4 ingredients. Identify the animators and determine what potion their mix would produce.",
-  "difficulty": "hard",
+  "difficulty": "easy",
   "golem": {
     "chest": {
       "color": "B",
@@ -88,15 +88,10 @@
     }
   ],
   "complexity": {
-    "score": 4,
-    "raw": 3.072,
-    "avg_clue_strength": 2.217,
-    "ambig_penalty": 0.0,
-    "stranded_ambiguity": 0.0,
-    "chain_depth": 0,
-    "stuck": false,
-    "requires_complement_set": false,
-    "question_requires_enumeration": false,
+    "score": 10,
+    "clue_score": 0,
+    "question_score": 0,
+    "world_score": 0,
     "residual_worlds": 4
   }
 }

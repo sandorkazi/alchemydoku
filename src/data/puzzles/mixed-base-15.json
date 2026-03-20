@@ -2,7 +2,7 @@
   "id": "mixed-base-15",
   "title": "Partial Evidence",
   "description": "Mixing, selling, and debunking records all point toward a single pair. Deduce what potion they produce.",
-  "difficulty": "easy",
+  "difficulty": "medium",
   "clues": [
     {
       "kind": "sell_among",
@@ -77,15 +77,10 @@
     }
   ],
   "complexity": {
-    "score": 2,
-    "raw": 2.904,
-    "avg_clue_strength": 4.433,
-    "ambig_penalty": 0.8,
-    "stranded_ambiguity": 0.894,
-    "chain_depth": 0,
-    "stuck": false,
-    "requires_complement_set": false,
-    "question_requires_enumeration": false,
+    "score": 52,
+    "clue_score": 22,
+    "question_score": 0,
+    "world_score": 20,
     "residual_worlds": 4
   }
 }

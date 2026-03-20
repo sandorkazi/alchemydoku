@@ -2,7 +2,7 @@
   "id": "mixed-base-49",
   "title": "Hidden in the Result",
   "description": "Mixing, selling, and debunking records all point toward a single pair. Deduce what potion they produce.",
-  "difficulty": "hard",
+  "difficulty": "expert",
   "clues": [
     {
       "kind": "sell_result_among",
@@ -121,15 +121,10 @@
     }
   ],
   "complexity": {
-    "score": 4,
-    "raw": 6.093,
-    "avg_clue_strength": 2.55,
-    "ambig_penalty": 0.9,
-    "stranded_ambiguity": 3.432,
-    "chain_depth": 0,
-    "stuck": false,
-    "requires_complement_set": false,
-    "question_requires_enumeration": false,
+    "score": 75,
+    "clue_score": 50,
+    "question_score": 0,
+    "world_score": 15,
     "residual_worlds": 1
   }
 }

@@ -3,7 +3,7 @@
   "mode": "expanded",
   "title": "The Incomplete Article",
   "description": "A G+ article lists three ingredients. Use the aspect clues to identify which ingredient fills the fourth slot.",
-  "difficulty": "expert",
+  "difficulty": "easy",
   "clues": [
     {
       "kind": "encyclopedia",
@@ -142,15 +142,10 @@
     }
   ],
   "complexity": {
-    "score": 5,
-    "raw": 3.715,
-    "avg_clue_strength": 1.1,
-    "ambig_penalty": 0.277,
-    "stranded_ambiguity": 0.0,
-    "chain_depth": 0,
-    "stuck": false,
-    "requires_complement_set": false,
-    "question_requires_enumeration": false,
+    "score": 15,
+    "clue_score": 0,
+    "question_score": 5,
+    "world_score": 0,
     "residual_worlds": 2
   }
 }

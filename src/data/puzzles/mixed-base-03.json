@@ -2,7 +2,7 @@
   "id": "mixed-base-03",
   "title": "Three Suspects",
   "description": "Mixing, selling, and debunking records all point toward a single pair. Deduce what potion they produce.",
-  "difficulty": "hard",
+  "difficulty": "expert",
   "clues": [
     {
       "kind": "sell_result_among",
@@ -108,15 +108,10 @@
     }
   ],
   "complexity": {
-    "score": 4,
-    "raw": 5.273,
-    "avg_clue_strength": 3.06,
-    "ambig_penalty": 0.86,
-    "stranded_ambiguity": 2.86,
-    "chain_depth": 0,
-    "stuck": false,
-    "requires_complement_set": false,
-    "question_requires_enumeration": false,
+    "score": 70,
+    "clue_score": 45,
+    "question_score": 0,
+    "world_score": 15,
     "residual_worlds": 1
   }
 }

@@ -2,7 +2,7 @@
   "id": "mixed-base-debunk-30",
   "title": "The Hidden Reaction",
   "description": "Mixed evidence surrounds several suspicious publications. Use master debunking to expose the lies.",
-  "difficulty": "hard",
+  "difficulty": "expert",
   "clues": [
     {
       "kind": "sell_result_among",
@@ -109,15 +109,10 @@
     }
   ],
   "complexity": {
-    "score": 4,
-    "raw": 6.36,
-    "avg_clue_strength": 2.217,
-    "ambig_penalty": 0.483,
-    "stranded_ambiguity": 1.162,
-    "chain_depth": 2,
-    "stuck": true,
-    "requires_complement_set": false,
-    "question_requires_enumeration": false,
+    "score": 65,
+    "clue_score": 30,
+    "question_score": 10,
+    "world_score": 15,
     "residual_worlds": 4
   },
   "publications": [

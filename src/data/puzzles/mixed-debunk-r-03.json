@@ -2,7 +2,7 @@
   "id": "mixed-debunk-r-03",
   "title": "The Witnessed Mix",
   "description": "Mixed evidence surrounds several suspicious publications. Use master debunking to expose the lies.",
-  "difficulty": "medium",
+  "difficulty": "easy",
   "clues": [
     {
       "kind": "debunk",
@@ -90,15 +90,10 @@
     }
   ],
   "complexity": {
-    "score": 3,
-    "raw": 4.371,
-    "avg_clue_strength": 2.86,
-    "ambig_penalty": 0.12,
-    "stranded_ambiguity": 0.0,
-    "chain_depth": 2,
-    "stuck": true,
-    "requires_complement_set": false,
-    "question_requires_enumeration": false,
+    "score": 37,
+    "clue_score": 2,
+    "question_score": 10,
+    "world_score": 15,
     "residual_worlds": 2
   },
   "publications": [

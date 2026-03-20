@@ -4,7 +4,7 @@
   "mode": "expanded",
   "title": "The Unwitting Witness",
   "description": "Two wrong publications sit on the board \u2014 one about Fern, one about Scorpion. A careful mix is worth more than two apprentice reveals.",
-  "difficulty": "expert",
+  "difficulty": "easy",
   "clues": [
     {
       "kind": "aspect",
@@ -170,15 +170,10 @@
     }
   ],
   "complexity": {
-    "score": 5,
-    "raw": 6.307,
-    "avg_clue_strength": 0.9,
-    "ambig_penalty": 0.3,
-    "stranded_ambiguity": 0.0,
-    "chain_depth": 2,
-    "stuck": true,
-    "requires_complement_set": false,
-    "question_requires_enumeration": false,
+    "score": 35,
+    "clue_score": 0,
+    "question_score": 10,
+    "world_score": 15,
     "residual_worlds": 1
   }
 }

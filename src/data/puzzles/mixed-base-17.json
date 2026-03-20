@@ -2,7 +2,7 @@
   "id": "mixed-base-17",
   "title": "Rumors at the Guild",
   "description": "Mixing, selling, and debunking records all point toward a single pair. Deduce what potion they produce.",
-  "difficulty": "hard",
+  "difficulty": "expert",
   "clues": [
     {
       "kind": "sell_result_among",
@@ -107,15 +107,10 @@
     }
   ],
   "complexity": {
-    "score": 4,
-    "raw": 5.043,
-    "avg_clue_strength": 2.86,
-    "ambig_penalty": 0.74,
-    "stranded_ambiguity": 2.743,
-    "chain_depth": 0,
-    "stuck": false,
-    "requires_complement_set": false,
-    "question_requires_enumeration": false,
+    "score": 65,
+    "clue_score": 40,
+    "question_score": 0,
+    "world_score": 15,
     "residual_worlds": 2
   }
 }

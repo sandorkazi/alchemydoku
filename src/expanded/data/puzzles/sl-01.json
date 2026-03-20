@@ -3,7 +3,7 @@
   "mode": "expanded",
   "title": "Sun and Moon",
   "description": "Solar alchemicals have 0 or 2 negative aspects; Lunar have 1 or 3. Use a mixing result alongside aspect clues to deduce Solar or Lunar.",
-  "difficulty": "hard",
+  "difficulty": "easy",
   "clues": [
     {
       "kind": "aspect",
@@ -55,15 +55,10 @@
     }
   ],
   "complexity": {
-    "score": 4,
-    "raw": 3.317,
-    "avg_clue_strength": 1.0,
-    "ambig_penalty": 0.3,
-    "stranded_ambiguity": 0.0,
-    "chain_depth": 0,
-    "stuck": false,
-    "requires_complement_set": false,
-    "question_requires_enumeration": false,
+    "score": 10,
+    "clue_score": 0,
+    "question_score": 0,
+    "world_score": 0,
     "residual_worlds": 5040
   }
 }

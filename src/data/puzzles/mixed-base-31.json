@@ -2,7 +2,7 @@
   "id": "mixed-base-31",
   "title": "The Rival's Error",
   "description": "Mixing, selling, and debunking records all point toward a single pair. Deduce what potion they produce.",
-  "difficulty": "medium",
+  "difficulty": "expert",
   "clues": [
     {
       "kind": "sell_among",
@@ -80,15 +80,10 @@
     }
   ],
   "complexity": {
-    "score": 3,
-    "raw": 3.475,
-    "avg_clue_strength": 4.1,
-    "ambig_penalty": 0.767,
-    "stranded_ambiguity": 1.456,
-    "chain_depth": 0,
-    "stuck": false,
-    "requires_complement_set": false,
-    "question_requires_enumeration": false,
+    "score": 60,
+    "clue_score": 30,
+    "question_score": 0,
+    "world_score": 20,
     "residual_worlds": 8
   }
 }

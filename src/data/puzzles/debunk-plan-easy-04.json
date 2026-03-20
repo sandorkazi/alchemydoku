@@ -2,7 +2,7 @@
   "id": "debunk-plan-easy-04",
   "title": "One True, One False",
   "description": "Three ingredients are fully revealed by their aspect clues. Two of them have publications \u2014 check each against the evidence. Only the false one needs to be exposed, and a single master debunk is enough.",
-  "difficulty": "hard",
+  "difficulty": "easy",
   "clues": [
     {
       "kind": "aspect",
@@ -114,15 +114,10 @@
     }
   ],
   "complexity": {
-    "score": 4,
-    "raw": 6.242,
-    "avg_clue_strength": 0.932,
-    "ambig_penalty": 0.3,
-    "stranded_ambiguity": 0.0,
-    "chain_depth": 2,
-    "stuck": true,
-    "requires_complement_set": false,
-    "question_requires_enumeration": false,
+    "score": 35,
+    "clue_score": 0,
+    "question_score": 10,
+    "world_score": 15,
     "residual_worlds": 120
   }
 }

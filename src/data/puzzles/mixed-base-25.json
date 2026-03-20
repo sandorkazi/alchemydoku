@@ -2,7 +2,7 @@
   "id": "mixed-base-25",
   "title": "Unverified Reports",
   "description": "Mixing, selling, and debunking records all point toward a single pair. Deduce what potion they produce.",
-  "difficulty": "easy",
+  "difficulty": "medium",
   "clues": [
     {
       "kind": "sell_among",
@@ -65,15 +65,10 @@
     }
   ],
   "complexity": {
-    "score": 2,
-    "raw": 2.496,
-    "avg_clue_strength": 4.857,
-    "ambig_penalty": 0.65,
-    "stranded_ambiguity": 0.775,
-    "chain_depth": 0,
-    "stuck": false,
-    "requires_complement_set": false,
-    "question_requires_enumeration": false,
+    "score": 50,
+    "clue_score": 20,
+    "question_score": 0,
+    "world_score": 20,
     "residual_worlds": 48
   }
 }

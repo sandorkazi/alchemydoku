@@ -2,7 +2,7 @@
   "id": "mixed-base-debunk-19",
   "title": "The Third Ingredient",
   "description": "Mixed evidence surrounds several suspicious publications. Use master debunking to expose the lies.",
-  "difficulty": "hard",
+  "difficulty": "expert",
   "clues": [
     {
       "kind": "sell_result_among",
@@ -113,15 +113,10 @@
     }
   ],
   "complexity": {
-    "score": 4,
-    "raw": 7.86,
-    "avg_clue_strength": 2.55,
-    "ambig_penalty": 0.7,
-    "stranded_ambiguity": 2.498,
-    "chain_depth": 2,
-    "stuck": true,
-    "requires_complement_set": false,
-    "question_requires_enumeration": false,
+    "score": 77,
+    "clue_score": 42,
+    "question_score": 10,
+    "world_score": 15,
     "residual_worlds": 1
   },
   "publications": [

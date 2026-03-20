@@ -2,7 +2,7 @@
   "id": "mixed-base-26",
   "title": "The Night Market",
   "description": "Mixing, selling, and debunking records all point toward a single pair. Deduce what potion they produce.",
-  "difficulty": "medium",
+  "difficulty": "expert",
   "clues": [
     {
       "kind": "sell_result_among",
@@ -93,15 +93,10 @@
     }
   ],
   "complexity": {
-    "score": 3,
-    "raw": 4.413,
-    "avg_clue_strength": 3.575,
-    "ambig_penalty": 0.825,
-    "stranded_ambiguity": 2.194,
-    "chain_depth": 0,
-    "stuck": false,
-    "requires_complement_set": false,
-    "question_requires_enumeration": false,
+    "score": 60,
+    "clue_score": 35,
+    "question_score": 0,
+    "world_score": 15,
     "residual_worlds": 2
   }
 }

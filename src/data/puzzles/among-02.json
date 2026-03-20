@@ -2,7 +2,7 @@
   "id": "among-02",
   "title": "Market Day Rumours",
   "description": "Vendors at the market gossiped freely \u2014 you know how many from each group reacted to each potion, but never who. The truth is hidden in the counting.",
-  "difficulty": "medium",
+  "difficulty": "expert",
   "clues": [
     {
       "kind": "mixing_among",
@@ -172,15 +172,10 @@
     "8": 1
   },
   "complexity": {
-    "score": 3,
-    "raw": 3.835,
-    "avg_clue_strength": 0.831,
-    "ambig_penalty": 0.3,
-    "stranded_ambiguity": 0.38,
-    "chain_depth": 0,
-    "stuck": false,
-    "requires_complement_set": false,
-    "question_requires_enumeration": false,
+    "score": 60,
+    "clue_score": 30,
+    "question_score": 0,
+    "world_score": 20,
     "residual_worlds": 4
   },
   "hints": [
