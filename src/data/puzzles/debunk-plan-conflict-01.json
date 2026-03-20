@@ -1,7 +1,7 @@
 {
   "id": "debunk-plan-conflict-01",
   "title": "Mutual Suspicion",
-  "description": "Two theories have been published. Your aspect clues reveal the truth about both ingredients. Find a master mix involving ing1 that puts both publications under simultaneous suspicion — without removing either one.",
+  "description": "Two theories have been published. Your aspect clues reveal the truth about both ingredients. Find a master mix involving ing1 that puts both publications under simultaneous suspicion \u2014 without removing either one.",
   "difficulty": "hard",
   "clues": [
     {
@@ -89,7 +89,7 @@
     },
     {
       "level": 2,
-      "text": "ing1 has R-, G+, B- → truly npN. The publication claims pNn — R contradicts (true R- vs claimed R+). ing2 has R+, G-, B+ → truly pnP. The publication claims Nnp — R contradicts (true R+ vs claimed R-). Both publications are false. Mix the two: true result is neutral (they are direct opposites). Under pub1: mix(pNn, pnP) = G- ≠ neutral → conflict on pub1. Under pub2: mix(npN, Nnp) = R- ≠ neutral → conflict on pub2. Both conflict simultaneously — the audience can't single out which."
+      "text": "ing1 has R-, G+, B- \u2192 truly npN. The publication claims pNn \u2014 R contradicts (true R- vs claimed R+). ing2 has R+, G-, B+ \u2192 truly pnP. The publication claims Nnp \u2014 R contradicts (true R+ vs claimed R-). Both publications are false. Mix the two: true result is neutral (they are direct opposites). Under pub1: mix(pNn, pnP) = G- \u2260 neutral \u2192 conflict on pub1. Under pub2: mix(npN, Nnp) = R- \u2260 neutral \u2192 conflict on pub2. Both conflict simultaneously \u2014 the audience can't single out which."
     },
     {
       "level": 3,

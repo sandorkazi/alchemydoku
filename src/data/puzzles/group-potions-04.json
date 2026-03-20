@@ -7,9 +7,44 @@
     {
       "kind": "mixing",
       "ingredient1": 1,
+      "ingredient2": 2,
+      "result": {
+        "type": "neutral"
+      }
+    },
+    {
+      "kind": "mixing",
+      "ingredient1": 3,
+      "ingredient2": 5,
+      "result": {
+        "color": "R",
+        "sign": "-"
+      }
+    },
+    {
+      "kind": "mixing",
+      "ingredient1": 1,
+      "ingredient2": 6,
+      "result": {
+        "color": "R",
+        "sign": "-"
+      }
+    },
+    {
+      "kind": "mixing",
+      "ingredient1": 3,
       "ingredient2": 8,
       "result": {
         "color": "G",
+        "sign": "+"
+      }
+    },
+    {
+      "kind": "mixing",
+      "ingredient1": 1,
+      "ingredient2": 4,
+      "result": {
+        "color": "B",
         "sign": "-"
       }
     }
@@ -18,46 +53,46 @@
     {
       "kind": "group-possible-potions",
       "ingredients": [
-        1,
-        4,
-        8
+        2,
+        3,
+        7
       ]
     }
   ],
   "solution": {
-    "1": 7,
-    "2": 4,
-    "3": 6,
+    "1": 1,
+    "2": 2,
+    "3": 4,
     "4": 3,
     "5": 5,
-    "6": 1,
+    "6": 7,
     "7": 8,
-    "8": 2
+    "8": 6
   },
   "hints": [
     {
       "level": 1,
-      "text": "Find all potions certainly achievable by some pair within ingredients [1, 4, 8]. Check all 3 pair combinations."
+      "text": "Find all potions certainly achievable by some pair within ingredients [2, 3, 7]. Check all 3 pair combinations."
     },
     {
       "level": 2,
-      "text": "Certain pairs so far: ing1+ing8\u2192G-."
+      "text": "Certain pairs so far: ing2+ing3\u2192B+, ing2+ing7\u2192R+, ing3+ing7\u2192B+."
     },
     {
       "level": 3,
-      "text": "Certain potions for group [1, 4, 8]: ['G-']."
+      "text": "Certain potions for group [2, 3, 7]: ['B+', 'R+']."
     }
   ],
   "complexity": {
     "score": 2,
-    "raw": 3.009,
-    "avg_clue_strength": 2.807,
+    "raw": 3.033,
+    "avg_clue_strength": 2.743,
     "ambig_penalty": 0.0,
     "stranded_ambiguity": 0.0,
     "chain_depth": 0,
     "stuck": false,
     "requires_complement_set": false,
     "question_requires_enumeration": true,
-    "residual_worlds": 5760
+    "residual_worlds": 3
   }
 }

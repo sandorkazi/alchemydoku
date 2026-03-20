@@ -547,12 +547,16 @@ export function DebunkAnswerPanel({ onNext, isTutorial = false }: {
           <div className="flex items-center gap-2 text-red-700 font-semibold">
             <IncorrectIcon width={24} />
             {isConflictOnly
-              ? wrongAttempts < refLen
+              ? drafts.length < refLen
                 ? `Plan uses ${drafts.length} step${drafts.length !== 1 ? 's' : ''} — at least ${refLen} are needed.`
-                : "That plan doesn't cover all publications — ensure each step creates a conflict without removing any."
-              : wrongAttempts < refLen
+                : drafts.length > refLen
+                  ? `Plan uses ${drafts.length} step${drafts.length !== 1 ? 's' : ''} — needs exactly ${refLen}.`
+                  : "That plan doesn't cover all publications — ensure each step creates a conflict without removing any."
+              : drafts.length < refLen
                 ? `Plan has ${drafts.length} step${drafts.length !== 1 ? 's' : ''} — at least ${refLen} are needed.`
-                : "That plan doesn't work — check each step removes at least one publication."
+                : drafts.length > refLen
+                  ? `Plan has ${drafts.length} step${drafts.length !== 1 ? 's' : ''} — needs exactly ${refLen}.`
+                  : "That plan doesn't work — check each step removes at least one publication."
             }
           </div>
           {wrongAttempts >= 3 && (

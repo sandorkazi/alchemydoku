@@ -2,7 +2,7 @@
   "id": "mixed-base-02",
   "title": "Overheard at the Market",
   "description": "Mixing, selling, and debunking records all point toward a single pair. Deduce what potion they produce.",
-  "difficulty": "medium",
+  "difficulty": "easy",
   "clues": [
     {
       "kind": "sell_result_among",
@@ -78,7 +78,7 @@
     }
   ],
   "complexity": {
-    "score": 3,
+    "score": 2,
     "raw": 3.319,
     "avg_clue_strength": 2.905,
     "ambig_penalty": 0.733,

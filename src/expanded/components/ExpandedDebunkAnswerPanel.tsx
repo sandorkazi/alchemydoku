@@ -544,9 +544,11 @@ export function ExpandedDebunkAnswerPanel({ onNext, isTutorial = false }: {
             {!completed && wrongAttempts > 0 && !showSolution && (
               <p className="text-[10px] text-red-400">
                 {plan.isConflictOnly
-                  ? (wrongAttempts < refLen
+                  ? (plan.drafts.length < refLen
                     ? `Q${qi + 1}: plan uses ${plan.drafts.length} step${plan.drafts.length !== 1 ? 's' : ''} — at least ${refLen} are needed.`
-                    : `Q${qi + 1}: plan doesn't cover all publications with conflicts.`)
+                    : plan.drafts.length > refLen
+                      ? `Q${qi + 1}: plan uses ${plan.drafts.length} step${plan.drafts.length !== 1 ? 's' : ''} — needs exactly ${refLen}.`
+                      : `Q${qi + 1}: plan doesn't cover all publications with conflicts.`)
                   : `Q${qi + 1}: plan uses ${plan.drafts.length} step${plan.drafts.length !== 1 ? 's' : ''}${refLen ? ` (optimal: ${refLen})` : ''}.`
                 }
               </p>
