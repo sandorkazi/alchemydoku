@@ -189,7 +189,7 @@ function CollectionView({ collection, completed, showPuzzleOnly, onSelectPuzzle,
                         <ComplexityPips raw={(puzzle as any).complexity.raw} />
                       )}
                     </span>
-                    <span className="text-xs text-gray-400 truncate block">{puzzle.description}</span>
+                    <span className="text-xs text-gray-400 break-words block">{puzzle.description}</span>
                   </span>
                 </button>
               );

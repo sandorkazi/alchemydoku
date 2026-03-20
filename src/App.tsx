@@ -249,7 +249,7 @@ function PuzzleRow({
               <ComplexityPips score={(puzzle as any).complexity.score} />
             )}
           </div>
-          <div className="text-xs text-gray-400 truncate">{puzzle.description}</div>
+          <div className="text-xs text-gray-400 break-words">{puzzle.description}</div>
         </div>
       </button>
       <button
