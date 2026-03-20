@@ -114,10 +114,16 @@
       "ingredient": 1,
       "claimedAlchemical": 3
     },
+    {
+      "ingredient": 2,
+      "claimedAlchemical": 2
+    },
     null,
     null,
-    null,
-    null,
+    {
+      "ingredient": 5,
+      "claimedAlchemical": 5
+    },
     {
       "ingredient": 6,
       "claimedAlchemical": 4
@@ -129,6 +135,10 @@
   "questions": [
     {
       "kind": "debunk_min_steps"
+    },
+    {
+      "kind": "debunk_max_conflict",
+      "maxCoverage": 2
     }
   ],
   "solution": {
@@ -145,12 +155,19 @@
     "debunk_min_steps": [
       {
         "kind": "master",
-        "ingredient1": 4,
-        "ingredient2": 1
+        "ingredient1": 1,
+        "ingredient2": 6
+      }
+    ],
+    "debunk_max_conflict": [
+      {
+        "kind": "master",
+        "ingredient1": 1,
+        "ingredient2": 2
       },
       {
         "kind": "master",
-        "ingredient1": 4,
+        "ingredient1": 5,
         "ingredient2": 6
       }
     ]

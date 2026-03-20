@@ -59,6 +59,10 @@
   "questions": [
     {
       "kind": "debunk_min_steps"
+    },
+    {
+      "kind": "debunk_max_conflict",
+      "maxCoverage": 3
     }
   ],
   "solution": {
@@ -94,8 +98,14 @@
     "residual_worlds": 4
   },
   "publications": [
-    null,
-    null,
+    {
+      "ingredient": 1,
+      "claimedAlchemical": 3
+    },
+    {
+      "ingredient": 2,
+      "claimedAlchemical": 7
+    },
     {
       "ingredient": 3,
       "claimedAlchemical": 1
@@ -123,6 +133,18 @@
         "kind": "master",
         "ingredient1": 3,
         "ingredient2": 8
+      }
+    ],
+    "debunk_max_conflict": [
+      {
+        "kind": "master",
+        "ingredient1": 1,
+        "ingredient2": 7
+      },
+      {
+        "kind": "master",
+        "ingredient1": 3,
+        "ingredient2": 6
       }
     ]
   }

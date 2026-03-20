@@ -95,6 +95,10 @@
     {
       "kind": "debunk_conflict_only",
       "fixedIngredient": 1
+    },
+    {
+      "kind": "debunk_max_conflict",
+      "maxCoverage": 4
     }
   ],
   "solution": {
@@ -140,7 +144,10 @@
       "claimedAlchemical": 7
     },
     null,
-    null,
+    {
+      "ingredient": 5,
+      "claimedAlchemical": 5
+    },
     {
       "ingredient": 6,
       "claimedAlchemical": 1
@@ -149,10 +156,25 @@
       "ingredient": 7,
       "claimedAlchemical": 2
     },
-    null
+    {
+      "ingredient": 8,
+      "claimedAlchemical": 6
+    }
   ],
   "debunk_answers": {
     "debunk_min_steps": [
+      {
+        "kind": "master",
+        "ingredient1": 1,
+        "ingredient2": 3
+      },
+      {
+        "kind": "master",
+        "ingredient1": 6,
+        "ingredient2": 7
+      }
+    ],
+    "debunk_conflict_only": [
       {
         "kind": "master",
         "ingredient1": 1,
@@ -162,19 +184,9 @@
         "kind": "master",
         "ingredient1": 3,
         "ingredient2": 6
-      },
-      {
-        "kind": "master",
-        "ingredient1": 1,
-        "ingredient2": 3
-      },
-      {
-        "kind": "master",
-        "ingredient1": 1,
-        "ingredient2": 6
       }
     ],
-    "debunk_conflict_only": [
+    "debunk_max_conflict": [
       {
         "kind": "master",
         "ingredient1": 1,

@@ -43,13 +43,19 @@
     }
   ],
   "publications": [
-    null,
+    {
+      "ingredient": 1,
+      "claimedAlchemical": 3
+    },
     null,
     {
       "ingredient": 3,
       "claimedAlchemical": 4
     },
-    null,
+    {
+      "ingredient": 4,
+      "claimedAlchemical": 6
+    },
     null,
     null,
     {
@@ -61,6 +67,10 @@
   "questions": [
     {
       "kind": "debunk_apprentice_plan"
+    },
+    {
+      "kind": "debunk_max_conflict",
+      "maxCoverage": 2
     }
   ],
   "solution": {
@@ -84,6 +94,13 @@
         "kind": "apprentice",
         "ingredient": 7,
         "color": "R"
+      }
+    ],
+    "debunk_max_conflict": [
+      {
+        "kind": "master",
+        "ingredient1": 3,
+        "ingredient2": 7
       }
     ]
   },

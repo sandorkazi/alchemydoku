@@ -108,6 +108,10 @@
     {
       "kind": "debunk_conflict_only",
       "fixedIngredient": 3
+    },
+    {
+      "kind": "debunk_max_conflict",
+      "maxCoverage": 4
     }
   ],
   "solution": {
@@ -143,8 +147,14 @@
     "residual_worlds": 1
   },
   "publications": [
-    null,
-    null,
+    {
+      "ingredient": 1,
+      "claimedAlchemical": 2
+    },
+    {
+      "ingredient": 2,
+      "claimedAlchemical": 1
+    },
     {
       "ingredient": 3,
       "claimedAlchemical": 5
@@ -169,25 +179,27 @@
       {
         "kind": "master",
         "ingredient1": 3,
-        "ingredient2": 1
+        "ingredient2": 7
       },
       {
         "kind": "master",
         "ingredient1": 5,
-        "ingredient2": 1
+        "ingredient2": 8
+      }
+    ],
+    "debunk_conflict_only": [
+      {
+        "kind": "master",
+        "ingredient1": 3,
+        "ingredient2": 5
       },
       {
         "kind": "master",
         "ingredient1": 7,
-        "ingredient2": 1
-      },
-      {
-        "kind": "master",
-        "ingredient1": 8,
-        "ingredient2": 2
+        "ingredient2": 8
       }
     ],
-    "debunk_conflict_only": [
+    "debunk_max_conflict": [
       {
         "kind": "master",
         "ingredient1": 3,

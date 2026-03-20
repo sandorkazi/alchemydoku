@@ -63,6 +63,10 @@
   "questions": [
     {
       "kind": "debunk_min_steps"
+    },
+    {
+      "kind": "debunk_max_conflict",
+      "maxCoverage": 4
     }
   ],
   "solution": {
@@ -106,7 +110,10 @@
       "ingredient": 2,
       "claimedAlchemical": 4
     },
-    null,
+    {
+      "ingredient": 3,
+      "claimedAlchemical": 6
+    },
     {
       "ingredient": 4,
       "claimedAlchemical": 4
@@ -116,7 +123,10 @@
       "ingredient": 6,
       "claimedAlchemical": 5
     },
-    null,
+    {
+      "ingredient": 7,
+      "claimedAlchemical": 7
+    },
     null
   ],
   "debunk_answers": {
@@ -140,6 +150,18 @@
         "kind": "master",
         "ingredient1": 6,
         "ingredient2": 1
+      }
+    ],
+    "debunk_max_conflict": [
+      {
+        "kind": "master",
+        "ingredient1": 1,
+        "ingredient2": 6
+      },
+      {
+        "kind": "master",
+        "ingredient1": 2,
+        "ingredient2": 4
       }
     ]
   }

@@ -318,13 +318,17 @@ export function DebunkAnswerPanel({ onNext, isTutorial = false }: {
 
   const isConflictOnly = puzzle.questions.some(q => q.kind === 'debunk_conflict_only');
   const isApprenticeOnly = puzzle.questions.some(q => q.kind === 'debunk_apprentice_plan');
+  const isMaxConflict = puzzle.questions.some(q => q.kind === 'debunk_max_conflict');
+  const maxCoverageTarget = isMaxConflict
+    ? (puzzle.questions.find(q => q.kind === 'debunk_max_conflict') as { maxCoverage: number }).maxCoverage
+    : 0;
   const fixedIngredient = puzzle.questions.find(q => q.kind === 'debunk_conflict_only')
     ? (puzzle.questions.find(q => q.kind === 'debunk_conflict_only') as { fixedIngredient?: IngredientId }).fixedIngredient ?? null
     : null;
 
-  const isMasterOnly = !isConflictOnly && !isApprenticeOnly;
+  const isMasterOnly = !isConflictOnly && !isApprenticeOnly && !isMaxConflict;
 
-  const initialDraft = (): DraftStep => isConflictOnly || isMasterOnly
+  const initialDraft = (): DraftStep => (isConflictOnly || isMasterOnly || isMaxConflict)
     ? { kind: 'master', ingredient1: isConflictOnly ? fixedIngredient : null, ingredient2: null,
         claimedPotion: isTutorial ? { type: 'neutral' } : null }
     : { kind: 'apprentice', ingredient: null, color: null };
@@ -334,8 +338,9 @@ export function DebunkAnswerPanel({ onNext, isTutorial = false }: {
   const [showFeedbackConfirm, setShowFeedbackConfirm] = useState(false);
 
   const completedSteps = drafts.filter(isComplete) as DebunkStep[];
+  const isConflictMode = isConflictOnly || isMaxConflict;
   const { outcomes, remainingPubs } = simulatePlan(
-    completedSteps, puzzle.solution, publications, worlds, isConflictOnly
+    completedSteps, puzzle.solution, publications, worlds, isConflictMode
   );
   const removedSet = new Set<IngredientId>(
     outcomes.flatMap(o => o.removed)
@@ -348,11 +353,14 @@ export function DebunkAnswerPanel({ onNext, isTutorial = false }: {
   const conflictCoveredIds = new Set(outcomes.flatMap(o => o.conflicts));
   const allConflictsCovered = isConflictOnly && falsePubIngredients.length > 0
     && falsePubIngredients.every(id => conflictCoveredIds.has(id));
-  const refAnswer = isConflictOnly
-    ? puzzle.debunk_answers?.debunk_conflict_only
-    : isApprenticeOnly
-      ? puzzle.debunk_answers?.debunk_apprentice_plan
-      : puzzle.debunk_answers?.debunk_min_steps;
+  const maxConflictAchieved = isMaxConflict && conflictCoveredIds.size >= maxCoverageTarget;
+  const refAnswer = isMaxConflict
+    ? puzzle.debunk_answers?.debunk_max_conflict
+    : isConflictOnly
+      ? puzzle.debunk_answers?.debunk_conflict_only
+      : isApprenticeOnly
+        ? puzzle.debunk_answers?.debunk_apprentice_plan
+        : puzzle.debunk_answers?.debunk_min_steps;
   const refLen = refAnswer?.length ?? 1;
 
   function addStep(kind: 'apprentice' | 'master') {
@@ -428,16 +436,22 @@ export function DebunkAnswerPanel({ onNext, isTutorial = false }: {
         <div className="space-y-2">
           <div className="flex items-center justify-between">
             <span className="text-xs font-bold text-gray-500 uppercase tracking-widest">
-              {isConflictOnly ? 'Demonstrate a conflict' : isApprenticeOnly ? 'Apprentice plan' : 'Debunk plan'}
+              {isMaxConflict ? 'Max-conflict plan' : isConflictOnly ? 'Demonstrate a conflict' : isApprenticeOnly ? 'Apprentice plan' : 'Debunk plan'}
             </span>
             <div className="flex items-center gap-3">
-              {isConflictOnly
-                ? allConflictsCovered && (
-                  <span className="text-[10px] text-green-600 font-semibold">✓ All publications in conflict</span>
+              {isMaxConflict
+                ? maxConflictAchieved && (
+                  <span className="text-[10px] text-green-600 font-semibold">
+                    ✓ {maxCoverageTarget}/{maxCoverageTarget} publications in conflict
+                  </span>
                 )
-                : remainingPubs.length === 0 && drafts.length > 0 && (
-                  <span className="text-[10px] text-green-600 font-semibold">✓ All publications covered</span>
-                )
+                : isConflictOnly
+                  ? allConflictsCovered && (
+                    <span className="text-[10px] text-green-600 font-semibold">✓ All publications in conflict</span>
+                  )
+                  : remainingPubs.length === 0 && drafts.length > 0 && (
+                    <span className="text-[10px] text-green-600 font-semibold">✓ All publications covered</span>
+                  )
               }
               {!isTutorial && (
                 <label className="flex items-center gap-1.5 text-xs cursor-pointer select-none">
@@ -464,11 +478,13 @@ export function DebunkAnswerPanel({ onNext, isTutorial = false }: {
           </div>
 
           <p className="text-xs text-gray-500">
-            {isConflictOnly
-              ? 'Find a minimal number of master mixes which will cover all incorrect publications with contradictions (at least 1 for each), without removing any. The covered publications shown are those whose claims are contradicted by the mix — not removals. An ingredient can help disprove another\'s publication without its own claim being contested.'
-              : isApprenticeOnly
-                ? 'Remove all false publications using only apprentice debunks, in as few steps as possible.'
-                : 'Remove all false publications in as few steps as possible.'}
+            {isMaxConflict
+              ? 'Find the fewest master mixes that put the maximum number of false publications under conflict simultaneously. No publications should be removed.'
+              : isConflictOnly
+                ? 'Find a minimal number of master mixes which will cover all incorrect publications with contradictions (at least 1 for each), without removing any. The covered publications shown are those whose claims are contradicted by the mix — not removals. An ingredient can help disprove another\'s publication without its own claim being contested.'
+                : isApprenticeOnly
+                  ? 'Remove all false publications using only apprentice debunks, in as few steps as possible.'
+                  : 'Remove all false publications in as few steps as possible.'}
           </p>
 
           {drafts.map((draft, i) => (
@@ -479,7 +495,7 @@ export function DebunkAnswerPanel({ onNext, isTutorial = false }: {
               outcome={isComplete(draft) ? outcomes[completedSteps.indexOf(draft as DebunkStep)] : undefined}
               onUpdate={d => updateStep(i, d)}
               onRemove={() => removeStep(i)}
-              isConflictOnly={isConflictOnly}
+              isConflictOnly={isConflictOnly || isMaxConflict}
               isIngredientLocked={isConflictOnly && i === 0}
               showOutcome={showStepFeedback}
               isTutorial={isTutorial}
@@ -497,7 +513,7 @@ export function DebunkAnswerPanel({ onNext, isTutorial = false }: {
                 + Apprentice step
               </button>
             )}
-            {(isMasterOnly || isConflictOnly) && (
+            {(isMasterOnly || isConflictOnly || isMaxConflict) && (
               <button
                 onClick={() => addStep('master')}
                 className="flex-1 border-2 border-dashed border-gray-200 hover:border-indigo-300
@@ -546,17 +562,19 @@ export function DebunkAnswerPanel({ onNext, isTutorial = false }: {
         <div className="rounded-xl bg-red-50 border border-red-200 p-4 space-y-2 animate-fadein">
           <div className="flex items-center gap-2 text-red-700 font-semibold">
             <IncorrectIcon width={24} />
-            {isConflictOnly
-              ? drafts.length < refLen
-                ? `Plan uses ${drafts.length} step${drafts.length !== 1 ? 's' : ''} — at least ${refLen} are needed.`
-                : drafts.length > refLen
-                  ? `Plan uses ${drafts.length} step${drafts.length !== 1 ? 's' : ''} — needs exactly ${refLen}.`
-                  : "That plan doesn't cover all publications — ensure each step creates a conflict without removing any."
-              : drafts.length < refLen
-                ? `Plan has ${drafts.length} step${drafts.length !== 1 ? 's' : ''} — at least ${refLen} are needed.`
-                : drafts.length > refLen
-                  ? `Plan has ${drafts.length} step${drafts.length !== 1 ? 's' : ''} — needs exactly ${refLen}.`
-                  : "That plan doesn't work — check each step removes at least one publication."
+            {isMaxConflict
+              ? `Coverage is ${conflictCoveredIds.size} — maximum is ${maxCoverageTarget}.`
+              : isConflictOnly
+                ? drafts.length < refLen
+                  ? `Plan uses ${drafts.length} step${drafts.length !== 1 ? 's' : ''} — at least ${refLen} are needed.`
+                  : drafts.length > refLen
+                    ? `Plan uses ${drafts.length} step${drafts.length !== 1 ? 's' : ''} — needs exactly ${refLen}.`
+                    : "That plan doesn't cover all publications — ensure each step creates a conflict without removing any."
+                : drafts.length < refLen
+                  ? `Plan has ${drafts.length} step${drafts.length !== 1 ? 's' : ''} — at least ${refLen} are needed.`
+                  : drafts.length > refLen
+                    ? `Plan has ${drafts.length} step${drafts.length !== 1 ? 's' : ''} — needs exactly ${refLen}.`
+                    : "That plan doesn't work — check each step removes at least one publication."
             }
           </div>
           {wrongAttempts >= 3 && (

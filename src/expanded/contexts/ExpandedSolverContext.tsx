@@ -19,6 +19,7 @@ import { applyAnyClues } from '../logic/worldSetExpanded';
 import { isSolar } from '../logic/solarLunar';
 import { checkExpandedAnswers, computeAllExpandedAnswers } from '../puzzles/schemaExpanded';
 import { validateExpandedMinStepsAnswer, validateExpandedApprenticePlanAnswer, validateExpandedConflictOnlyAnswer } from '../logic/debunkExpanded';
+import { validateMaxConflictAnswer } from '../../logic/debunk';
 import { WORLD_DATA } from '../../logic/worldPack';
 import { makeDisplayMap, loadDisplayMap, saveDisplayMap, emptyGrid, mergeIntoUnifiedStore } from '../../utils/solverStorage';
 import type { CellState, WorldSet, AlchemicalId } from '../../types';
@@ -78,6 +79,9 @@ function checkExpandedDebunkAnswers(
     } else if (q.kind === 'debunk_conflict_only') {
       const refLen = (puzzle.debunk_answers?.debunk_conflict_only ?? []).length;
       if (!validateExpandedConflictOnlyAnswer(steps, solution, publications, articles, worlds, refLen)) return false;
+    } else if (q.kind === 'debunk_max_conflict') {
+      const refMaxCoverage = (q as { kind: 'debunk_max_conflict'; maxCoverage: number }).maxCoverage;
+      if (!validateMaxConflictAnswer(steps, solution, publications, worlds, refMaxCoverage)) return false;
     }
   }
   return true;
@@ -256,7 +260,8 @@ function reducer(state: ExpandedSolverState, action: ExpandedAction): ExpandedSo
 
     case 'SUBMIT_ANSWER': {
       const hasDebunk = state.puzzle.questions.some(
-        q => q.kind === 'debunk_min_steps' || q.kind === 'debunk_apprentice_plan' || q.kind === 'debunk_conflict_only'
+        q => q.kind === 'debunk_min_steps' || q.kind === 'debunk_apprentice_plan'
+          || q.kind === 'debunk_conflict_only' || q.kind === 'debunk_max_conflict'
       );
       let correct: boolean;
       if (hasDebunk) {

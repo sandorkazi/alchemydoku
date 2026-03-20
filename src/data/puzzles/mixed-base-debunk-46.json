@@ -132,9 +132,15 @@
       "ingredient": 2,
       "claimedAlchemical": 1
     },
+    {
+      "ingredient": 3,
+      "claimedAlchemical": 3
+    },
     null,
-    null,
-    null,
+    {
+      "ingredient": 5,
+      "claimedAlchemical": 6
+    },
     null,
     {
       "ingredient": 7,
@@ -150,22 +156,12 @@
       {
         "kind": "master",
         "ingredient1": 1,
-        "ingredient2": 3
+        "ingredient2": 7
       },
       {
         "kind": "master",
         "ingredient1": 2,
-        "ingredient2": 3
-      },
-      {
-        "kind": "master",
-        "ingredient1": 7,
-        "ingredient2": 1
-      },
-      {
-        "kind": "master",
-        "ingredient1": 8,
-        "ingredient2": 1
+        "ingredient2": 8
       }
     ]
   }

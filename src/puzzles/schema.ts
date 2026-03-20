@@ -1,7 +1,7 @@
 import { generateAllWorlds, applyClues } from '../logic/worldSet';
 import { deduceMixingResult, deduceAlchemical, deduceAspect, deduceUncertainAspect, getPossibleResults, deduceNeutralPartner, getIngredientPotionProfile, getGroupPossiblePotions, getMostInformativeMix, getGuaranteedNonProducers } from '../logic/deducer';
 import { COLOR_INDEX, WORLD_DATA, SIGN_TABLE, SIZE_TABLE } from '../logic/worldPack';
-import { validateMasterPlanAnswer, validateApprenticePlanAnswer, validateConflictOnlyAnswer } from '../logic/debunk';
+import { validateMasterPlanAnswer, validateApprenticePlanAnswer, validateConflictOnlyAnswer, validateMaxConflictAnswer } from '../logic/debunk';
 import type {
   Puzzle, QuestionTarget, PotionResult, AlchemicalId, IngredientId, Sign, Color, WorldSet,
   DebunkStep, Publication,
@@ -103,6 +103,7 @@ export function computeAnswerFromWorlds(
     case 'debunk_min_steps':
     case 'debunk_apprentice_plan':
     case 'debunk_conflict_only':
+    case 'debunk_max_conflict':
       return null;
 
     case 'neutral-partner':
@@ -218,6 +219,10 @@ export function checkDebunkAnswers(
       const refLen = (puzzle.debunk_answers?.debunk_conflict_only ?? []).length;
       return validateConflictOnlyAnswer(steps, sol, pubs, worlds, refLen);
     }
+    if (q.kind === 'debunk_max_conflict') {
+      const refMaxCoverage = (q as { kind: 'debunk_max_conflict'; maxCoverage: number }).maxCoverage;
+      return validateMaxConflictAnswer(steps, sol, pubs, worlds, refMaxCoverage);
+    }
     return false;
   });
 }
@@ -260,6 +265,8 @@ export function questionText(question: QuestionTarget, ingredientName: (id: numb
       return 'What is the shortest apprentice-only debunk sequence to remove all publications?';
     case 'debunk_conflict_only':
       return `Mix ingredient ${ingredientName(question.fixedIngredient)} with something to create a conflict — without removing any publication.`;
+    case 'debunk_max_conflict':
+      return 'Find master mixes that put the maximum number of false publications under conflict — without removing any.';
     case 'neutral-partner':
       return `Which ingredient is always the direct opposite (neutral mix) of ${ingredientName(question.ingredient)}?`;
     case 'ingredient-potion-profile':
