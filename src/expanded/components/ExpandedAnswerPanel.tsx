@@ -57,7 +57,7 @@ function QuestionHeader({ q }: { q: AnyQuestion }) {
   if (q.kind === 'possible-potions') return (
     <span className="inline-flex items-center gap-1.5 flex-wrap">
       <Ing slotId={q.ingredient1} /><span className="text-indigo-400 font-bold">+</span><Ing slotId={q.ingredient2} />
-      <span className="text-indigo-300 mx-0.5">→</span><span className="text-xs font-semibold text-indigo-500">all possible potions?</span>
+      <span className="text-indigo-300 mx-0.5">→</span><span className="text-xs font-semibold text-indigo-500">all potions that could still be possible?</span>
     </span>
   );
   if (q.kind === 'aspect-set') return (
