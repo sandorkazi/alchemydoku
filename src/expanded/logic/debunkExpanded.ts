@@ -98,12 +98,10 @@ function simulateExpandedStep(
   else if (step.kind === 'master') {
     const { ingredient1, ingredient2 } = step;
     const trueCode = trueMixCode(solution, ingredient1, ingredient2);
-    const trueAlch1 = solution[ingredient1];
-    const trueAlch2 = solution[ingredient2];
     const ing1Known = isDefinitivelyKnown(worlds, ingredient1);
     const ing2Known = isDefinitivelyKnown(worlds, ingredient2);
 
-    // Direct disproval (result-incompatibility): remove before blame-based checks
+    // Direct disproval (result-incompatibility)
     if (activePubs.has(ingredient1) && !canProduceResult(activePubs.get(ingredient1)!, trueCode)) {
       removedPubs.push(ingredient1);
       activePubs.delete(ingredient1);
@@ -111,29 +109,6 @@ function simulateExpandedStep(
     if (activePubs.has(ingredient2) && !canProduceResult(activePubs.get(ingredient2)!, trueCode)) {
       removedPubs.push(ingredient2);
       activePubs.delete(ingredient2);
-    }
-
-    let conflict1 = false;
-    let conflict2 = false;
-
-    // Publications: blame-based (only for result-compatible claims still active)
-    if (activePubs.has(ingredient1) && ing2Known) {
-      const claimedAlch1 = activePubs.get(ingredient1)!;
-      if (claimedMixCode(claimedAlch1, trueAlch2) !== trueCode) conflict1 = true;
-    }
-    if (activePubs.has(ingredient2) && ing1Known) {
-      const claimedAlch2 = activePubs.get(ingredient2)!;
-      if (claimedMixCode(trueAlch1, claimedAlch2) !== trueCode) conflict2 = true;
-    }
-
-    if (conflict1 && !conflict2) {
-      removedPubs.push(ingredient1);
-      activePubs.delete(ingredient1);
-    } else if (conflict2 && !conflict1) {
-      removedPubs.push(ingredient2);
-      activePubs.delete(ingredient2);
-    } else if (conflict1 && conflict2) {
-      conflicts.push(ingredient1, ingredient2);
     }
 
     // Articles: if an ingredient is definitively known, the audience can verify

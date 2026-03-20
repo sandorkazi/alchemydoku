@@ -516,23 +516,12 @@ def _find_removal_plan(sol: dict, pub_map: dict, known: set) -> list:
         remaining = set(state)
         removed: set = set()
 
-        # Phase 1 – result-incompatibility (both checked independently)
-        for ing, partner_sol in ((ing_a, sol[ing_b]), (ing_b, sol[ing_a])):
+        # Result-incompatibility: remove any pub whose claimed alch cannot produce
+        # the actual result with any partner.
+        for ing in (ing_a, ing_b):
             if ing in remaining and not _can_produce_result(pub_map[ing], true_r):
                 removed.add(ing)
                 remaining.discard(ing)
-        del partner_sol  # silence linter
-
-        # Phase 2 – blame-based (only for still-active pubs, only with known partner)
-        conflict_a = (ing_a in remaining and ing_b in known
-                      and MIX_TABLE[pub_map[ing_a]][sol[ing_b]] != true_r)
-        conflict_b = (ing_b in remaining and ing_a in known
-                      and MIX_TABLE[sol[ing_a]][pub_map[ing_b]] != true_r)
-        if conflict_a and not conflict_b:
-            removed.add(ing_a)
-        elif conflict_b and not conflict_a:
-            removed.add(ing_b)
-        # both conflict → neither removed (conflict state, no blame)
 
         return frozenset(remaining - removed), removed
 
@@ -695,28 +684,17 @@ def _find_removal_plan_expanded(sol: dict, pub_map: dict, articles: list, known:
 
     def step_effect(ing_a, ing_b, pubs):
         true_r = MIX_TABLE[sol[ing_a]][sol[ing_b]]
-        a_known = ing_a in known
-        b_known = ing_b in known
         remaining = set(pubs)
         removed_pubs: set = set()
 
-        # Phase 1 – result-incompatibility (both checked independently)
+        # Result-incompatibility: remove any pub whose claimed alch cannot produce
+        # the actual result with any partner.
         if ing_a in remaining and not _can_produce_result(pub_map[ing_a], true_r):
             removed_pubs.add(ing_a)
             remaining.discard(ing_a)
         if ing_b in remaining and not _can_produce_result(pub_map[ing_b], true_r):
             removed_pubs.add(ing_b)
             remaining.discard(ing_b)
-
-        # Phase 2 – blame-based (only for still-active pubs, only with known partner)
-        conflict_a = (ing_a in remaining and b_known
-                      and MIX_TABLE[pub_map[ing_a]][sol[ing_b]] != true_r)
-        conflict_b = (ing_b in remaining and a_known
-                      and MIX_TABLE[sol[ing_a]][pub_map[ing_b]] != true_r)
-        if conflict_a and not conflict_b:
-            removed_pubs.add(ing_a)
-        elif conflict_b and not conflict_a:
-            removed_pubs.add(ing_b)
 
         # Only publications drive the BFS state and validity; articles are a bonus.
         return pubs - removed_pubs, bool(removed_pubs)
@@ -3051,7 +3029,7 @@ def cmd_recompute_debunk_answers(_args):
                 print(f'  WARN: no plan found for {path.name}')
                 continue
             old_plan = puz.get('debunk_answers', {}).get('debunk_min_steps', [])
-            if len(new_plan) == len(old_plan):
+            if new_plan == old_plan:
                 continue
             puz.setdefault('debunk_answers', {})['debunk_min_steps'] = new_plan
             path.write_text(json.dumps(puz, indent=2) + '\n')
