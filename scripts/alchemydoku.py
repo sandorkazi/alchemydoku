@@ -2277,6 +2277,7 @@ def gen_hints(raw: dict) -> list:
 # ── Assembly ──────────────────────────────────────────────────────────────────
 
 TITLES = [
+    # Original 27
     "The Curious Formula", "A Scholar's Note", "The Hidden Reaction",
     "Whispers of the Archive", "The Alchemist's Deduction", "Trial by Fire",
     "Echoes of the Laboratory", "The Golem Stirs", "Secrets of the Guild",
@@ -2286,6 +2287,128 @@ TITLES = [
     "The Sealed Chamber", "Golem Research Notes", "The Third Ingredient",
     "The Alchemist's Test", "An Unexpected Result", "Cross-Reference",
     "The Living Stone", "Second Opinion", "The Missing Entry",
+    # Extended pool
+    "The Annotated Margin", "The Flagged Formula", "Errata and Amendments",
+    "Filed Under Suspicious", "Pending Review", "A Footnote in History",
+    "The Crosschecked Claim", "The Unverified Entry", "Corrected in Ink",
+    "The Discredited Source", "The Revised Edition", "A Second Examination",
+    "The Indexed Volume", "The Final Footnote", "An Unresolved Citation",
+    "The Supplemental Notes", "The Catalogued Error", "Marginalia",
+    "The Precipitate", "Traces in the Flask", "The Catalyst",
+    "The Residual Evidence", "The Filtrate", "The Distillate",
+    "The Reaction Vessel", "The Inhibitor", "The Sublimation Point",
+    "The Failed Batch", "A Controlled Experiment", "The Condensate",
+    "The Amalgam", "The Precipitating Factor", "The Solvent Trail",
+    "The Fermentation Chamber", "The Calcination Log", "The Fixation",
+    "The Putrefaction Record", "The Vitrified Sample", "The Sublimate",
+    "The Incineration Test", "The Philosopher's Fragment", "The Calcined Rock",
+    "The Petrified Clue", "The Transmuted Stone", "A Stone's Composition",
+    "The Mineral Record", "The Hidden Variable", "Contradictions Resolved",
+    "The Corroborating Evidence", "The Circumstantial Case", "The Deductive Leap",
+    "By Process Alone", "The Logical Chain", "The Narrowing Field",
+    "The Converging Clues", "The Elimination Round", "The Obfuscated Truth",
+    "A Process of Elimination", "The Inference Engine", "The Vanishing Reagent",
+    "The Borrowed Theory", "The Contradicting Record", "The Overlooked Detail",
+    "The Subtle Distinction", "The Tangled Evidence", "The Elusive Compound",
+    "The Fractured Formula", "The Asymmetric Result", "The Unbalanced Equation",
+    "The Null Hypothesis", "The Control Group", "The Outlier",
+    "The Anomalous Reading", "The Confounding Factor", "The Spurious Correlation",
+    "The Blind Spot", "The Second Glance", "The Third Pass",
+    "The Deep Contradiction", "The Surface Tension", "The Partial Truth",
+    "The Buried Clue", "The Overlooked Margin", "The Faded Entry",
+    "The Torn Page", "The Water-Stained Record", "The Smudged Formula",
+    "The Urgent Annotation", "The Reluctant Admission", "The Quiet Confirmation",
+    "The Loud Denial", "The Tentative Conclusion", "The Firm Deduction",
+    "The Borrowed Ingredient", "The Substituted Element", "The Proxy Reagent",
+    "The Indirect Route", "The Long Derivation", "The Short Proof",
+    "The Elegant Solution", "The Brute-Force Answer", "The Counterexample",
+    "The Special Case", "The General Rule", "The Exception That Proves It",
+    "The Four-Colour Problem", "The Eight-Alchemical Limit", "The Bijection",
+    "The Permutation", "The Assignment Problem", "The Constraint",
+    "The Feasible Region", "The Binding Constraint", "The Slack Variable",
+    "The Pivot", "The Reduced Matrix", "The Augmented System",
+    "The Dual Problem", "The Primal Form", "The Optimal Trade-off",
+    "The Tightened Bound", "The Relaxed Assumption", "The Branching Point",
+    "The Backtrack", "The Dead End", "The Forcing Chain",
+    "The Hidden Single", "The Naked Pair", "The Locked Candidate",
+    "The X-Wing", "The Swordfish", "The Jellyfish",
+    "The Skyscraper", "The Empty Rectangle", "The Finned Fish",
+    "The Unique Rectangle", "The BUG Pattern", "The Sue de Coq",
+    "The Aligned Pair Exclusion", "The ALS-XZ", "The Death Blossom",
+    "The Royal Society Meeting", "The Guild Hall Records", "The Library Annex",
+    "The Private Collection", "The Confiscated Notes", "The Inherited Formula",
+    "The Donated Manuscript", "The Auctioned Grimoire", "The Stolen Recipe",
+    "The Recovered Volume", "The Translated Text", "The Deciphered Code",
+    "The Broken Cipher", "The Intercepted Letter", "The Burned Copy",
+    "The Surviving Fragment", "The Only Known Copy", "The Duplicate Volume",
+    "The Forgery Detected", "The Authentic Original", "The Expert Appraisal",
+    "The Carbon Dating", "The Spectral Analysis", "The Chemical Test",
+    "The Reagent Strip", "The Titration", "The Gravimetric Analysis",
+    "The Spectroscopic Reading", "The Chromatograph", "The Diffraction Pattern",
+    "The Electron Scan", "The Mass Spectrum", "The NMR Signal",
+    "The Infrared Absorption", "The UV Signature", "The Fluorescence Test",
+    "The Polarimetry Result", "The Viscosity Measurement", "The Density Check",
+    "The Melting Point", "The Boiling Ambiguity", "The Flash Point",
+    "The Critical Temperature", "The Triple Point", "The Phase Boundary",
+    "The Solubility Limit", "The Saturation Point", "The Supersaturated State",
+    "The Crystallisation Front", "The Nucleation Site", "The Growth Spiral",
+    "The Grain Boundary", "The Dislocation", "The Vacancy",
+    "The Interstitial", "The Substitutional Defect", "The Stacking Fault",
+    "The Twinned Crystal", "The Polymorphic Form", "The Allotrope",
+    "The Isomer", "The Enantiomer", "The Diastereomer",
+    "The Racemic Mixture", "The Optically Pure Sample", "The Chiral Centre",
+    "The Meso Compound", "The Achiral Exception", "The Symmetry Break",
+    "The Stereochemical Puzzle", "The Conformational Isomer", "The Rotational Barrier",
+    "The Torsional Strain", "The Ring Flip", "The Chair Conformation",
+    "The Half-Chair", "The Boat", "The Twist-Boat",
+    "The Axial Preference", "The Equatorial Favour", "The Gauche Interaction",
+    "The Anti Conformation", "The Eclipsed State", "The Staggered Arrangement",
+    "The Lone Pair", "The Bonding Pair", "The Pi System",
+    "The Sigma Framework", "The Delocalized Electron", "The Resonance Form",
+    "The Contributing Structure", "The Canonical Form", "The Hyperconjugation",
+    "The Inductive Effect", "The Field Effect", "The Through-Space Interaction",
+    "The Steric Demand", "The Torsional Barrier", "The Electrostatic Map",
+    "The HOMO Interaction", "The LUMO Gap", "The Frontier Orbital",
+    "The Transition State", "The Activated Complex", "The Reaction Coordinate",
+    "The Rate-Limiting Step", "The Pre-Equilibrium", "The Steady State",
+    "The Kinetic Product", "The Thermodynamic Sink", "The Reversible Path",
+    "The Irreversible Step", "The Unimolecular Collapse", "The Bimolecular Clash",
+    "The Termolecular Rarity", "The Chain Initiation", "The Propagation Step",
+    "The Termination Event", "The Inhibited Chain", "The Branching Reaction",
+    "The Explosion Limit", "The Induction Period", "The Autocatalysis",
+    "The Product Inhibition", "The Substrate Saturation", "The Michaelis Complex",
+    "The Turnover Number", "The Specific Activity", "The Catalytic Efficiency",
+    "The Dead-End Complex", "The Ping-Pong Mechanism", "The Sequential Binding",
+    "The Cooperative Effect", "The Allosteric Site", "The Feedback Loop",
+    "The Forward Inhibition", "The Retrograde Signal", "The Cross-Talk",
+    "The Upstream Effector", "The Downstream Consequence", "The Signal Cascade",
+    "The Amplification Step", "The Attenuation Signal", "The Dampening Factor",
+    "The Oscillating System", "The Limit Cycle", "The Strange Attractor",
+    "The Bifurcation Point", "The Hopf Bifurcation", "The Pitchfork",
+    "The Saddle Node", "The Transcritical Point", "The Period-Doubling",
+    "The Chaos Onset", "The Lyapunov Exponent", "The Sensitive Dependence",
+    "The Butterfly Effect", "The Initial Condition", "The Final State",
+    "The Ergodic Exploration", "The Mixing Time", "The Relaxation Rate",
+    "The Equilibration", "The Metastable Trap", "The Kinetic Glass",
+    "The Frustrated System", "The Spin Glass", "The Random Field",
+    "The Quenched Disorder", "The Annealed Average", "The Replica Method",
+    "The Order Parameter", "The Critical Exponent", "The Scaling Relation",
+    "The Renormalization", "The Fixed Point", "The Relevant Perturbation",
+    "The Marginal Direction", "The Irrelevant Operator", "The Dangerously Irrelevant",
+    "The Upper Critical Dimension", "The Lower Critical Dimension", "The Crossover",
+    "The Finite-Size Effect", "The Thermodynamic Limit", "The Infinite Volume",
+    "The Bulk Property", "The Surface Contribution", "The Edge Correction",
+    "The Corner Term", "The Topology Factor", "The Euler Characteristic",
+    "The Genus Count", "The Handle", "The Puncture",
+    "The Boundary Condition", "The Periodic Box", "The Open Chain",
+    "The Ring Topology", "The Möbius Strip", "The Klein Bottle",
+    "The Projective Plane", "The Torus Embedding", "The Knot Invariant",
+    "The Link Diagram", "The Braid Word", "The Reidemeister Move",
+    "The Alexander Polynomial", "The Jones Invariant", "The HOMFLY Polynomial",
+    "The Kauffman Bracket", "The Writhe", "The Linking Number",
+    "The Seifert Surface", "The Genus Bound", "The Crossing Number",
+    "The Bridge Number", "The Unknotting Number", "The Ribbon Disk",
+    "The Slice Genus", "The Four-Ball Genus", "The Concordance Class",
 ]
 
 DESCS = {
@@ -2323,7 +2446,8 @@ def is_base_profile(profile: Profile) -> bool:
     """True when the puzzle belongs in BASE_PUZZLE_DIR (no mode='expanded')."""
     return not any(m in _EXPANDED_MECHANICS for m in profile.mechanics)
 
-def assemble(raw: dict, profile: Profile, num: int, rng: random.Random) -> dict:
+def assemble(raw: dict, profile: Profile, num: int, rng: random.Random,
+             used_titles: set | None = None) -> dict:
     hints = gen_hints(raw)
     sc    = compute_difficulty({
         'clues': raw['clues'], 'questions': [raw['q']], 'golem': raw['golem'],
@@ -2339,9 +2463,11 @@ def assemble(raw: dict, profile: Profile, num: int, rng: random.Random) -> dict:
     if not is_base and difficulty != 'tutorial':
         pip = score_to_pip(sc['score'])
         difficulty = difficulty_for({'clues': raw['clues'], 'mode': 'expanded'}, pip)
+    available = [t for t in TITLES if used_titles is None or t not in used_titles]
+    title = rng.choice(available) if available else rng.choice(TITLES)
     puz = {
         'id':          f"{profile.id_prefix}-{num:02d}",
-        'title':       rng.choice(TITLES),
+        'title':       title,
         'description': desc,
         'difficulty':  difficulty,
         **golem_sec,
@@ -2397,6 +2523,17 @@ def cmd_generate(args):
     count   = args.count
     print(f"Generating {count} puzzle(s)  [{pname}]  difficulty={profile.difficulty}")
 
+    # Collect titles already in use so each new puzzle gets a unique one.
+    used_titles: set[str] = set()
+    for d in (BASE_PUZZLE_DIR, EXP_PUZZLE_DIR):
+        for f in d.glob('*.json'):
+            try:
+                t = json.loads(f.read_text(encoding='utf-8')).get('title', '')
+                if t:
+                    used_titles.add(t)
+            except Exception:
+                pass
+
     generated = 0
     attempts  = 0
     while generated < count and attempts < count * 200:
@@ -2409,7 +2546,7 @@ def cmd_generate(args):
             continue
         raw = minimize(raw, profile=profile, verbose=args.verbose)
 
-        tmp  = assemble(raw, profile, 0, rng)
+        tmp  = assemble(raw, profile, 0, rng, used_titles)
         errs = validate_puzzle(tmp)
         if any(e.startswith('ERROR') for e in errs):
             if args.verbose:
@@ -2418,8 +2555,9 @@ def cmd_generate(args):
 
         out_dir = BASE_PUZZLE_DIR if is_base_profile(profile) else EXP_PUZZLE_DIR
         num = _next_num(profile.id_prefix, out_dir)
-        puz = assemble(raw, profile, num, rng)
+        puz = assemble(raw, profile, num, rng, used_titles)
         puz['id'] = f"{profile.id_prefix}-{num:02d}"
+        used_titles.add(puz['title'])
         (out_dir / f"{puz['id']}.json").write_text(json.dumps(puz, indent=2))
 
         warns = [e for e in errs if e.startswith('WARNING')]
@@ -2810,6 +2948,70 @@ def cmd_migrate_conflict_answers(_args):
     print(f'\nDone. {updated} puzzle(s) updated.')
 
 
+def cmd_rename_duplicate_titles(_args):
+    """Assign unique titles to all puzzles that share a title with another puzzle.
+
+    For each group of files with the same title, the first (alphabetically by
+    filename) keeps its title; the rest are assigned unused titles from TITLES
+    (using a deterministic RNG seeded on the file path for reproducibility).
+    """
+    dirs = [BASE_PUZZLE_DIR, EXP_PUZZLE_DIR]
+
+    # Gather all puzzles
+    all_files: list[tuple[Path, dict]] = []
+    for d in dirs:
+        for f in sorted(d.glob('*.json')):
+            if f.name == 'collections.json':
+                continue
+            try:
+                puz = json.loads(f.read_text(encoding='utf-8'))
+                all_files.append((f, puz))
+            except Exception:
+                pass
+
+    # Group by title
+    from collections import defaultdict
+    by_title: dict[str, list[tuple[Path, dict]]] = defaultdict(list)
+    for f, puz in all_files:
+        t = puz.get('title', '')
+        if t:
+            by_title[t].append((f, puz))
+
+    # Collect titles that are already uniquely assigned (first-seen)
+    used_titles: set[str] = set()
+    to_rename: list[tuple[Path, dict]] = []
+    for title, entries in sorted(by_title.items()):
+        if len(entries) == 1:
+            used_titles.add(title)
+            continue
+        # Keep first (alphabetical by filename), rename the rest
+        entries_sorted = sorted(entries, key=lambda x: x[0].name)
+        used_titles.add(entries_sorted[0][1]['title'])
+        for f, puz in entries_sorted[1:]:
+            to_rename.append((f, puz))
+
+    if not to_rename:
+        print("No duplicate titles found.")
+        return
+
+    # Assign new unique titles to all duplicates
+    rng = random.Random(42)
+    updated = 0
+    for f, puz in to_rename:
+        available = [t for t in TITLES if t not in used_titles]
+        if not available:
+            print(f"  WARNING: title pool exhausted; {f.name} title unchanged")
+            continue
+        new_title = rng.choice(available)
+        used_titles.add(new_title)
+        puz['title'] = new_title
+        f.write_text(json.dumps(puz, indent=2), encoding='utf-8')
+        print(f"  {f.name}: → \"{new_title}\"")
+        updated += 1
+
+    print(f"\nRenamed {updated} puzzle(s).")
+
+
 def cmd_recompute_debunk_answers(_args):
     """Recompute debunk_min_steps reference answers for all existing puzzles
     using the fixed _find_removal_plan / _find_removal_plan_expanded logic."""
@@ -2907,6 +3109,10 @@ if __name__ == '__main__':
     sub.add_parser('recompute-debunk-answers',
                    help='Recompute debunk_min_steps reference answers using fixed BFS logic')
 
+    # rename-duplicate-titles
+    sub.add_parser('rename-duplicate-titles',
+                   help='Assign unique titles to all puzzles that share a title with another')
+
     args = parser.parse_args()
 
     if args.cmd == 'generate':
@@ -2925,5 +3131,7 @@ if __name__ == '__main__':
         cmd_migrate_conflict_answers(args)
     elif args.cmd == 'recompute-debunk-answers':
         cmd_recompute_debunk_answers(args)
+    elif args.cmd == 'rename-duplicate-titles':
+        cmd_rename_duplicate_titles(args)
     else:
         parser.print_help()
