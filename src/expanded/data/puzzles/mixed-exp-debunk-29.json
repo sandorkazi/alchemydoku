@@ -137,7 +137,10 @@
     "residual_worlds": 2
   },
   "publications": [
-    null,
+    {
+      "ingredient": 1,
+      "claimedAlchemical": 3
+    },
     {
       "ingredient": 2,
       "claimedAlchemical": 7
@@ -156,7 +159,10 @@
       "ingredient": 7,
       "claimedAlchemical": 1
     },
-    null
+    {
+      "ingredient": 8,
+      "claimedAlchemical": 8
+    }
   ],
   "debunk_answers": {
     "debunk_min_steps": [

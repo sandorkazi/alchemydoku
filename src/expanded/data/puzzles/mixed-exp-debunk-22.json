@@ -129,12 +129,18 @@
     "residual_worlds": 3
   },
   "publications": [
-    null,
+    {
+      "ingredient": 1,
+      "claimedAlchemical": 4
+    },
     {
       "ingredient": 2,
       "claimedAlchemical": 3
     },
-    null,
+    {
+      "ingredient": 3,
+      "claimedAlchemical": 1
+    },
     {
       "ingredient": 4,
       "claimedAlchemical": 7

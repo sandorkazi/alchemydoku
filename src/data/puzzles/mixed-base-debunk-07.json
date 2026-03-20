@@ -112,13 +112,19 @@
   },
   "publications": [
     null,
-    null,
+    {
+      "ingredient": 2,
+      "claimedAlchemical": 2
+    },
     null,
     {
       "ingredient": 4,
       "claimedAlchemical": 5
     },
-    null,
+    {
+      "ingredient": 5,
+      "claimedAlchemical": 4
+    },
     {
       "ingredient": 6,
       "claimedAlchemical": 7

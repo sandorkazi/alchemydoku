@@ -121,12 +121,18 @@
       "ingredient": 5,
       "claimedAlchemical": 5
     },
-    null,
+    {
+      "ingredient": 6,
+      "claimedAlchemical": 1
+    },
     {
       "ingredient": 7,
       "claimedAlchemical": 6
     },
-    null
+    {
+      "ingredient": 8,
+      "claimedAlchemical": 4
+    }
   ],
   "debunk_answers": {
     "debunk_min_steps": [

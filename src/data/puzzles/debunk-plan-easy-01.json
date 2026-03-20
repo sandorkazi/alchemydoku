@@ -46,10 +46,16 @@
       "ingredient": 1,
       "claimedAlchemical": 3
     },
+    {
+      "ingredient": 2,
+      "claimedAlchemical": 2
+    },
     null,
     null,
-    null,
-    null,
+    {
+      "ingredient": 5,
+      "claimedAlchemical": 5
+    },
     {
       "ingredient": 6,
       "claimedAlchemical": 4

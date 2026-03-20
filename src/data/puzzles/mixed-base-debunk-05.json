@@ -139,7 +139,10 @@
   },
   "publications": [
     null,
-    null,
+    {
+      "ingredient": 2,
+      "claimedAlchemical": 5
+    },
     {
       "ingredient": 3,
       "claimedAlchemical": 1
@@ -156,7 +159,10 @@
       "ingredient": 6,
       "claimedAlchemical": 8
     },
-    null,
+    {
+      "ingredient": 7,
+      "claimedAlchemical": 3
+    },
     null
   ],
   "debunk_answers": {

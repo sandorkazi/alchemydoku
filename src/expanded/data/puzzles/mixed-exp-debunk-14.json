@@ -133,13 +133,19 @@
       "claimedAlchemical": 7
     },
     null,
-    null,
+    {
+      "ingredient": 4,
+      "claimedAlchemical": 8
+    },
     null,
     {
       "ingredient": 6,
       "claimedAlchemical": 4
     },
-    null,
+    {
+      "ingredient": 7,
+      "claimedAlchemical": 6
+    },
     {
       "ingredient": 8,
       "claimedAlchemical": 4
