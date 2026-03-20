@@ -2265,9 +2265,12 @@ def gen_hints(raw: dict) -> list:
 
     else:
         ans = answer(worlds, q, golem)
-        hints.append({'level': 1, 'text': 'Use all clues to eliminate impossible worlds.'})
-        hints.append({'level': 2, 'text': 'Apply each clue systematically.'})
-        hints.append({'level': 3, 'text': f'Answer: {ans}'})
+        if ans == 'not_validated':
+            pass  # Debunk plan questions — no auto-generated hints
+        else:
+            hints.append({'level': 1, 'text': 'Use all clues to eliminate impossible worlds.'})
+            hints.append({'level': 2, 'text': 'Apply each clue systematically.'})
+            hints.append({'level': 3, 'text': f'Answer: {ans}'})
 
     return hints
 

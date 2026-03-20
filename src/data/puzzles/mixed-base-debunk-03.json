@@ -103,20 +103,7 @@
     "7": 1,
     "8": 3
   },
-  "hints": [
-    {
-      "level": 1,
-      "text": "Use all clues to eliminate impossible worlds."
-    },
-    {
-      "level": 2,
-      "text": "Apply each clue systematically."
-    },
-    {
-      "level": 3,
-      "text": "Answer: not_validated"
-    }
-  ],
+  "hints": [],
   "complexity": {
     "score": 92,
     "raw_score": 85,
