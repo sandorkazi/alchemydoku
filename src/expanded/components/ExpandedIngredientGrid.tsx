@@ -25,7 +25,7 @@ import type { SolarLunarMark } from '../types';
 
 // Fixed visual column order by display-ingredient ID
 const BOARD_DISPLAY_ORDER: IngredientId[] = [3, 1, 7, 2, 4, 5, 6, 8];
-const ALCH_IDS: AlchemicalId[] = [1, 2, 3, 4, 5, 6, 7, 8];
+const ALCH_IDS: AlchemicalId[] = [1, 2, 3, 4, 5, 6, 8, 7]; // swap 7/8 so Solar(PPP) precedes Lunar(NNN)
 
 const TINT_COLORS = [
   '#6C4FA3', '#8DBF3F', '#6B5A3A', '#D4A437',

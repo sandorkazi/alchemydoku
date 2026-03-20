@@ -16,11 +16,21 @@ export const NON_COMPLIANT_EXPANDED_CLUE_KINDS: ReadonlySet<string> = new Set([
   ...NON_COMPLIANT_BASE_CLUE_KINDS, 'book_among', 'golem_reaction_among',
 ]);
 
-/** True if the puzzle contains any non-compliant clue kind. */
+/** True if the puzzle contains any non-compliant clue kind OR duplicate claimed alchemicals. */
 export function isPuzzleNonCompliant(
-  puzzle: { clues: { kind: string }[] },
+  puzzle: { clues: { kind: string }[]; publications?: (null | { claimedAlchemical: number })[] },
   mode: 'base' | 'expanded',
 ): boolean {
   const set = mode === 'expanded' ? NON_COMPLIANT_EXPANDED_CLUE_KINDS : NON_COMPLIANT_BASE_CLUE_KINDS;
-  return puzzle.clues.some(c => set.has(c.kind));
+  if (puzzle.clues.some(c => set.has(c.kind))) return true;
+
+  // Duplicate claimed alchemicals are impossible in a real game (each alchemical can
+  // only be published once), so treat such publications as non-compliant.
+  if (puzzle.publications) {
+    const claimed = puzzle.publications
+      .filter((p): p is { claimedAlchemical: number } => p !== null)
+      .map(p => p.claimedAlchemical);
+    if (new Set(claimed).size < claimed.length) return true;
+  }
+  return false;
 }
