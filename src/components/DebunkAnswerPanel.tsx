@@ -465,7 +465,7 @@ export function DebunkAnswerPanel({ onNext, isTutorial = false }: {
 
           <p className="text-xs text-gray-500">
             {isConflictOnly
-              ? 'Find a minimal number of master mixes which will cover all incorrect publications with contradictions (at least 1 for each), without removing any.'
+              ? 'Find a minimal number of master mixes which will cover all incorrect publications with contradictions (at least 1 for each), without removing any. The covered publications shown are those whose claims are contradicted by the mix — not removals. An ingredient can help disprove another\'s publication without its own claim being contested.'
               : isApprenticeOnly
                 ? 'Remove all false publications using only apprentice debunks, in as few steps as possible.'
                 : 'Remove all false publications in as few steps as possible.'}
@@ -548,10 +548,10 @@ export function DebunkAnswerPanel({ onNext, isTutorial = false }: {
             <IncorrectIcon width={24} />
             {isConflictOnly
               ? wrongAttempts < refLen
-                ? `Plan uses ${drafts.length} step${drafts.length !== 1 ? 's' : ''} — can you do it in ${refLen}?`
+                ? `Plan uses ${drafts.length} step${drafts.length !== 1 ? 's' : ''} — at least ${refLen} are needed.`
                 : "That plan doesn't cover all publications — ensure each step creates a conflict without removing any."
               : wrongAttempts < refLen
-                ? `Plan has ${drafts.length} step${drafts.length !== 1 ? 's' : ''} — can you do it in ${refLen}?`
+                ? `Plan has ${drafts.length} step${drafts.length !== 1 ? 's' : ''} — at least ${refLen} are needed.`
                 : "That plan doesn't work — check each step removes at least one publication."
             }
           </div>
