@@ -8,9 +8,10 @@
 
 import { useState } from 'react';
 import { useExpandedSolver, useExpandedIngredient } from '../contexts/ExpandedSolverContext';
-import { IngredientIcon, AlchemicalImage, ElemImage, SignedElemImage, CorrectIcon, IncorrectIcon } from '../../components/GameSprites';
+import { IngredientIcon, AlchemicalImage, ElemImage, SignedElemImage, PotionImage, CorrectIcon, IncorrectIcon } from '../../components/GameSprites';
+import { PotionPicker } from '../../components/AnswerPickers';
 import { simulateExpandedPlan } from '../logic/debunkExpanded';
-import type { DebunkStep, IngredientId, Color, Publication } from '../../types';
+import type { DebunkStep, IngredientId, Color, Publication, PotionResult } from '../../types';
 import type { DebunkArticle } from '../types';
 
 // ─── Ingredient picker ────────────────────────────────────────────────────────
@@ -102,11 +103,11 @@ function ColorPicker({ value, onChange }: { value: Color | null; onChange: (c: C
 
 type DraftStep =
   | { kind: 'apprentice'; ingredient: IngredientId | null; color: Color | null }
-  | { kind: 'master'; ingredient1: IngredientId | null; ingredient2: IngredientId | null };
+  | { kind: 'master'; ingredient1: IngredientId | null; ingredient2: IngredientId | null; claimedPotion?: PotionResult | null };
 
 function isComplete(s: DraftStep): s is DebunkStep {
   if (s.kind === 'apprentice') return s.ingredient !== null && s.color !== null;
-  return s.ingredient1 !== null && s.ingredient2 !== null;
+  return s.ingredient1 !== null && s.ingredient2 !== null && s.claimedPotion != null;
 }
 
 // ─── Visual solution step ─────────────────────────────────────────────────────
@@ -138,6 +139,12 @@ function SolutionStep({ step, index }: { step: DebunkStep; index: number }) {
       <IngredientIcon index={idx1} width={20} />
       <span className="text-indigo-400">+</span>
       <IngredientIcon index={idx2} width={20} />
+      {step.claimedPotion && (
+        <>
+          <span className="text-indigo-300">claiming</span>
+          <PotionImage result={step.claimedPotion} width={20} />
+        </>
+      )}
     </div>
   );
 }
@@ -197,7 +204,8 @@ function StepEditor({
                     if (draft.kind === k) return;
                     onUpdate(k === 'apprentice'
                       ? { kind: 'apprentice', ingredient: null, color: null }
-                      : { kind: 'master', ingredient1: null, ingredient2: null });
+                      : { kind: 'master', ingredient1: null, ingredient2: null,
+                          claimedPotion: isTutorial ? { type: 'neutral' } : null });
                   }}
                   className={`px-2 py-0.5 font-semibold capitalize transition-colors ${
                     draft.kind === k
@@ -248,12 +256,17 @@ function StepEditor({
             exclude={draft.ingredient1}
             onChange={id => onUpdate({ ...draft, ingredient2: id })}
           />
+          {!isTutorial && (
+            <div className="flex flex-col gap-1">
+              <span className="text-[10px] uppercase tracking-widest text-gray-400 font-bold">Claimed Potion</span>
+              <PotionPicker
+                selected={draft.claimedPotion ?? null}
+                onSelect={p => onUpdate({ ...draft, claimedPotion: p })}
+                potionWidth={32}
+              />
+            </div>
+          )}
         </div>
-      )}
-      {draft.kind === 'master' && isTutorial && (
-        <p className="text-[10px] text-gray-400 italic">
-          The true mix result is publicly declared automatically.
-        </p>
       )}
 
       {outcome && (
@@ -377,12 +390,13 @@ type QuestionPlan = {
   fixedIngredient: IngredientId | null;
 };
 
-function makeInitialPlan(q: { kind: string; fixedIngredient?: IngredientId }): QuestionPlan {
+function makeInitialPlan(q: { kind: string; fixedIngredient?: IngredientId }, isTutorial: boolean): QuestionPlan {
   const isConflictOnly = q.kind === 'debunk_conflict_only';
   const isApprenticeOnly = q.kind === 'debunk_apprentice_plan';
   const fixedIngredient = isConflictOnly ? (q.fixedIngredient ?? null) : null;
   const initialDraft: DraftStep = isConflictOnly
-    ? { kind: 'master', ingredient1: fixedIngredient, ingredient2: null }
+    ? { kind: 'master', ingredient1: fixedIngredient, ingredient2: null,
+        claimedPotion: isTutorial ? { type: 'neutral' } : null }
     : { kind: 'apprentice', ingredient: null, color: null };
   return { drafts: [initialDraft], isConflictOnly, isApprenticeOnly, fixedIngredient };
 }
@@ -401,7 +415,7 @@ export function ExpandedDebunkAnswerPanel({ onNext, isTutorial = false }: {
   ) as Array<{ kind: string; fixedIngredient?: IngredientId }>;
 
   const [plans, setPlans] = useState<QuestionPlan[]>(
-    () => debunkQuestions.map(makeInitialPlan)
+    () => debunkQuestions.map(q => makeInitialPlan(q, isTutorial))
   );
 
   function updatePlan(qi: number, newDrafts: DraftStep[]) {
@@ -469,7 +483,8 @@ export function ExpandedDebunkAnswerPanel({ onNext, isTutorial = false }: {
         function addStep() {
           const initialDraft: DraftStep = plan.isApprenticeOnly
             ? { kind: 'apprentice', ingredient: null, color: null }
-            : { kind: 'master', ingredient1: null, ingredient2: null };
+            : { kind: 'master', ingredient1: null, ingredient2: null,
+                claimedPotion: isTutorial ? { type: 'neutral' } : null };
           updatePlan(qi, [...plan.drafts, initialDraft]);
         }
 

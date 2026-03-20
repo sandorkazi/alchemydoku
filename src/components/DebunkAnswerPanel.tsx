@@ -7,9 +7,10 @@
 
 import { useState } from 'react';
 import { useSolver, useIngredient } from '../contexts/SolverContext';
-import { IngredientIcon, AlchemicalImage, ElemImage, CorrectIcon, IncorrectIcon } from './GameSprites';
+import { IngredientIcon, AlchemicalImage, ElemImage, PotionImage, CorrectIcon, IncorrectIcon } from './GameSprites';
+import { PotionPicker } from './AnswerPickers';
 import { simulatePlan } from '../logic/debunk';
-import type { DebunkStep, IngredientId, Color, Publication } from '../types';
+import type { DebunkStep, IngredientId, Color, Publication, PotionResult } from '../types';
 
 // ─── Ingredient picker ────────────────────────────────────────────────────────
 
@@ -105,11 +106,11 @@ function ColorPicker({
 
 type DraftStep =
   | { kind: 'apprentice'; ingredient: IngredientId | null; color: Color | null }
-  | { kind: 'master'; ingredient1: IngredientId | null; ingredient2: IngredientId | null };
+  | { kind: 'master'; ingredient1: IngredientId | null; ingredient2: IngredientId | null; claimedPotion?: PotionResult | null };
 
 function isComplete(s: DraftStep): s is DebunkStep {
   if (s.kind === 'apprentice') return s.ingredient !== null && s.color !== null;
-  return s.ingredient1 !== null && s.ingredient2 !== null;
+  return s.ingredient1 !== null && s.ingredient2 !== null && s.claimedPotion != null;
 }
 
 function StepEditor({
@@ -199,12 +200,17 @@ function StepEditor({
             exclude={draft.ingredient1}
             onChange={id => onUpdate({ ...draft, ingredient2: id })}
           />
+          {!isTutorial && (
+            <div className="flex flex-col gap-1">
+              <span className="text-[10px] uppercase tracking-widest text-gray-400 font-bold">Claimed Potion</span>
+              <PotionPicker
+                selected={draft.claimedPotion ?? null}
+                onSelect={p => onUpdate({ ...draft, claimedPotion: p })}
+                potionWidth={32}
+              />
+            </div>
+          )}
         </div>
-      )}
-      {draft.kind === 'master' && isTutorial && (
-        <p className="text-[10px] text-gray-400 italic">
-          The true mix result is publicly declared automatically — no potion selection needed.
-        </p>
       )}
 
       {/* Live outcome */}
@@ -289,6 +295,12 @@ function SolutionStep({ step, index }: { step: DebunkStep; index: number }) {
       <IngredientIcon index={idx1} width={20} />
       <span className="text-indigo-400">+</span>
       <IngredientIcon index={idx2} width={20} />
+      {step.claimedPotion && (
+        <>
+          <span className="text-indigo-300">claiming</span>
+          <PotionImage result={step.claimedPotion} width={20} />
+        </>
+      )}
     </div>
   );
 }
@@ -313,7 +325,8 @@ export function DebunkAnswerPanel({ onNext, isTutorial = false }: {
   const isMasterOnly = !isConflictOnly && !isApprenticeOnly;
 
   const initialDraft = (): DraftStep => isConflictOnly || isMasterOnly
-    ? { kind: 'master', ingredient1: isConflictOnly ? fixedIngredient : null, ingredient2: null }
+    ? { kind: 'master', ingredient1: isConflictOnly ? fixedIngredient : null, ingredient2: null,
+        claimedPotion: isTutorial ? { type: 'neutral' } : null }
     : { kind: 'apprentice', ingredient: null, color: null };
 
   const [drafts, setDrafts] = useState<DraftStep[]>([initialDraft()]);
@@ -344,7 +357,8 @@ export function DebunkAnswerPanel({ onNext, isTutorial = false }: {
 
   function addStep(kind: 'apprentice' | 'master') {
     const newDraft: DraftStep = kind === 'master'
-      ? { kind: 'master', ingredient1: null, ingredient2: null }
+      ? { kind: 'master', ingredient1: null, ingredient2: null,
+          claimedPotion: isTutorial ? { type: 'neutral' } : null }
       : { kind: 'apprentice', ingredient: null, color: null };
     setDrafts(prev => [...prev, newDraft]);
   }
