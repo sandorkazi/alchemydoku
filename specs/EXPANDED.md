@@ -117,7 +117,7 @@ Labelled "Uncertain Article — [Color]".
 
 ---
 
-### 2d. Debunk Clue — Apprentice Variant (`kind: 'debunk_apprentice'`)
+### 2d. Debunk Clue — Apprentice Variant (`kind: 'debunk_apprentice'`) — see also DEBUNK_PUZZLES.md §2e
 
 **Meaning:** An article was challenged by revealing the **true** aspect sign of one
 ingredient, which directly contradicts the article's claim for that slot.
@@ -147,7 +147,38 @@ Status badge shows "✓ Debunk succeeded" or "⚠ Blocked by hedge".
 
 ---
 
-### 2e. Debunk Clue — Master Variant (`kind: 'debunk_master'`)
+### 2e. Book Among (`kind: 'book_among'`) — non-compliant
+
+**Meaning:** Exactly `count` of the listed ingredients are Solar (or Lunar).
+The player witnessed a group outcome but not which specific ingredients.
+
+```ts
+{
+  kind: 'book_among';
+  ingredients: IngredientId[];
+  result: 'solar' | 'lunar';
+  count: number;
+}
+```
+
+**World filter:** Keep only worlds where exactly `count` of `ingredients` map to alchemicals
+of the stated Solar/Lunar class.
+
+**Non-compliant**: no direct board-game equivalent. Only visible when "Allow unrealistic
+puzzles" is ON (`book_among` ∈ `NON_COMPLIANT_EXPANDED_CLUE_KINDS`).
+
+---
+
+### 2f. Golem Reaction Among (`kind: 'golem_reaction_among'`) — non-compliant
+
+**Meaning:** Among a group of ingredients, exactly `count` produce the stated golem reaction.
+
+Non-compliant: no direct board-game equivalent (`golem_reaction_among` ∈
+`NON_COMPLIANT_EXPANDED_CLUE_KINDS`). Reserved for unrealistic puzzle use only.
+
+---
+
+### 2g. Debunk Clue — Master Variant (`kind: 'debunk_master'`)
 
 **Meaning:** An article was challenged by producing a mixing result that contradicts one or
 two entries via the game's potion logic (possibly via the two-colour rule).
@@ -360,15 +391,16 @@ Encyclopedia fourth question example:
 ## 7. Implemented Since Initial Design
 
 - **Golem Project mechanics**: fully implemented — see `GOLEM.md`
-- **Base-game debunking puzzles**: fully implemented. Four hand-crafted puzzles:
-  - `debunk-plan-tutorial-01` — single apprentice, 1-step min
-  - `debunk-plan-easy-01`, `debunk-plan-easy-02` — easy 1–2 step plans
-  - `debunk-plan-conflict-01` — `debunk_conflict_only` question type
+- **Base-game debunking puzzles**: fully implemented. Standalone tutorials and easy puzzles
+  plus large generated mixed-clue collections (`mixed-debunk-r-*`, `mixed-base-debunk-*`).
   Logic lives in `src/logic/debunk.ts`; schema validation in `src/puzzles/schema.ts`;
   UI in `src/components/DebunkAnswerPanel.tsx`.
-- **Expanded debunking puzzle type**: three hand-crafted puzzles
-  (`exp-debunk-tutorial-01`, `exp-debunk-easy-01`, `exp-debunk-medium-01`);
-  generator not yet implemented.
+- **Expanded debunking puzzle type**: three hand-crafted standalone puzzles
+  (`exp-debunk-tutorial-01`, `exp-debunk-easy-01`, `exp-debunk-medium-01`) plus large
+  generated mixed-clue collections (`mixed-exp-debunk-*`). Logic in
+  `src/expanded/logic/debunkExpanded.ts`; UI in
+  `src/expanded/components/ExpandedDebunkAnswerPanel.tsx`. Generator not yet implemented
+  for standalone expanded puzzles.
 
 ## 8. Deferred / Out of Scope
 

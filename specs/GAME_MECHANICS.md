@@ -151,6 +151,36 @@ aspect clue). Both `success` and `failure` reveal the same truth.
 - `success` → treat as a `mixing` clue: `mix(i1, i2) === claimedPotion`
 - `failure` → treat as a negative mixing constraint: `mix(i1, i2) !== claimedPotion`
 
+Note: `claimedPotion` is what the debunker publicly claimed to produce. For `success` it equals the actual mix result; for `failure` the actual result is different (and not publicly known).
+
+### 5g. "Among" clue variants (non-compliant — no board-game equivalent)
+
+These clue types are registered in `NON_COMPLIANT_BASE_CLUE_KINDS` in `src/compliance.ts` and are only visible when "Allow unrealistic puzzles" is ON.
+
+#### `kind: 'mixing_among'`
+```ts
+{ kind: 'mixing_among'; ingredients: IngredientId[]; result: PotionResult }
+```
+**Filter:** Keep worlds where at least one pair from `ingredients` produces `result`.
+
+#### `kind: 'mixing_count_among'`
+```ts
+{ kind: 'mixing_count_among'; ingredients: IngredientId[]; result: PotionResult; count: number }
+```
+**Filter:** Keep worlds where exactly `count` of the C(n,2) pairs produce `result`.
+
+#### `kind: 'sell_result_among'`
+```ts
+{ kind: 'sell_result_among'; ingredients: IngredientId[]; claimedPotion: { color, sign }; sellResult: SellResult }
+```
+**Filter:** Keep worlds where at least one pair from `ingredients` produces `sellResult` when sold as `claimedPotion`.
+
+#### `kind: 'sell_among'`
+```ts
+{ kind: 'sell_among'; ingredients: IngredientId[]; claimedPotion: { color, sign }; result: SellResult; count: number }
+```
+**Filter:** Keep worlds where exactly `count` pairs produce `result` when sold as `claimedPotion`.
+
 ---
 
 ## 6. World Representation
@@ -175,21 +205,30 @@ via `applyClues(generateAllWorlds(), puzzle.clues)`.
 
 ## 7. Question / Answer Types (Base Game)
 
-| Question kind          | Input                        | Answer type                          |
-|------------------------|------------------------------|--------------------------------------|
-| `mixing-result`        | two ingredient IDs           | `PotionResult`                       |
-| `alchemical`           | one ingredient ID            | `AlchemicalId` (number 1–8)          |
-| `aspect`               | ingredient ID + color        | `{ sign: Sign }`                     |
-| `safe-publish`         | ingredient ID                | `{ kind: 'hedge-color'; color }`     |
-| `possible-potions`     | two ingredient IDs           | `{ kind: 'possible-potions'; potions: string[] }` |
-| `aspect-set`           | color + sign                 | `{ kind: 'aspect-set'; ingredients: IngredientId[] }` |
-| `large-component`      | color                        | `{ kind: 'large-component'; ingredients: IngredientId[] }` |
+| Question kind               | Input                          | Answer type / notes                                                   |
+|-----------------------------|--------------------------------|-----------------------------------------------------------------------|
+| `mixing-result`             | two ingredient IDs             | `PotionResult`                                                        |
+| `alchemical`                | one ingredient ID              | `AlchemicalId` (number 1–8)                                           |
+| `aspect`                    | ingredient ID + color          | `{ sign: Sign }`                                                      |
+| `safe-publish`              | ingredient ID                  | `Color` — which aspect color is safe to hedge                         |
+| `possible-potions`          | two ingredient IDs             | `{ kind: 'possible-potions'; potions: string[] }` — all potions possible in any remaining world |
+| `aspect-set`                | color + sign                   | `{ kind: 'aspect-set'; ingredients: IngredientId[] }` — ingredients every world agrees on |
+| `large-component`           | color                          | `{ kind: 'large-component'; ingredients: IngredientId[] }` — ingredients with Large size every world agrees on |
+| `neutral-partner`           | one ingredient ID              | `IngredientId` — unique partner that always mixes neutral with this ingredient |
+| `ingredient-potion-profile` | one ingredient ID              | `PotionResult[]` — all potions certainly producible (same in every world); neutral always included |
+| `group-possible-potions`    | list of ingredient IDs         | `PotionResult[]` — potions **certainly** achievable by at least one pair in the group (not just possible) |
+| `most-informative-mix`      | one ingredient ID              | `IngredientId \| null` — partner maximising Shannon entropy of mix result distribution; `null` on ties |
+| `guaranteed-non-producer`   | `PotionResult` target          | `IngredientId[] \| null` — ingredients that can never produce the target; `null` if set is empty |
+| `debunk_min_steps`          | (debunk board)                 | validated via `debunk_answers` — see DEBUNK_PUZZLES.md                |
+| `debunk_apprentice_plan`    | (debunk board)                 | validated via `debunk_answers`; only apprentice steps allowed         |
+| `debunk_conflict_only`      | `fixedIngredient: IngredientId`| validated via `debunk_answers`; every step must create a conflict without removal |
 
-For `possible-potions`, the answer is the set of all potions that any remaining world
-could produce for that pair — not a single forced result.
+`computeAnswerFromWorlds` returns `null` for all three debunk question kinds — answers are
+validated externally via `debunk_answers` in the puzzle JSON.
 
-For `aspect-set` and `large-component`, the answer is the subset of ingredient IDs that
-every remaining world agrees on — ingredients where the deduction is forced.
+For `possible-potions`, the answer is the set of potions possible in **any** remaining world.
+For `group-possible-potions`, the answer is the set of potions certain in **every** remaining world for at least one pair — the stronger "certainly achievable" criterion.
+For `aspect-set` and `large-component`, the answer is the subset every world agrees on.
 
 ---
 

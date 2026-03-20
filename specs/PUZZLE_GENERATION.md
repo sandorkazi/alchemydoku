@@ -609,20 +609,40 @@ python scripts/alchemydoku.py generate --profile <name> [--count N] [--seed S] [
 python scripts/alchemydoku.py generate --profiles   # list all available profiles
 ```
 
-| Profile           | Mechanics                          |
-|-------------------|------------------------------------|
-| `tutorial_golem`  | Golem tutorial                     |
-| `easy_enc`        | Encyclopedia only                  |
-| `easy_sl`         | Solar/Lunar only                   |
-| `easy_golem`      | Golem only                         |
-| `medium_enc_sl`   | Encyclopedia + Solar/Lunar         |
-| `medium_golem_enc`| Golem + Encyclopedia               |
-| `medium_golem_sl` | Golem + Solar/Lunar                |
-| `hard_all`        | All three mechanics                |
-| `hard_golem_mix`  | Golem-heavy mix                    |
+**Expanded profiles** (output to `src/expanded/data/puzzles/`):
 
-Output files land in `src/expanded/data/puzzles/` with auto-incremented filenames
-(e.g. `exp-easy-enc-05.json`).
+| Profile            | Mechanics / question                        |
+|--------------------|---------------------------------------------|
+| `tutorial_golem`   | Golem tutorial                              |
+| `easy_enc`         | Encyclopedia only                           |
+| `easy_sl`          | Solar/Lunar only                            |
+| `easy_golem`       | Golem only                                  |
+| `medium_enc_sl`    | Encyclopedia + Solar/Lunar                  |
+| `medium_golem_enc` | Golem + Encyclopedia                        |
+| `medium_golem_sl`  | Golem + Solar/Lunar                         |
+| `hard_all`         | All three mechanics                         |
+| `hard_golem_mix`   | Golem-heavy mix                             |
+| `combo_exp_easy`   | Combination expanded (easy)                 |
+| `combo_exp_med_sl` | Combination expanded + Solar/Lunar (medium) |
+| `combo_exp_med_all`| Combination expanded all (medium)           |
+| `combo_exp_hard_wha`| Combination + which-aspect (hard)          |
+| `combo_exp_hard_sl`| Combination + Solar/Lunar (hard)            |
+
+**Base profiles** (output to `src/data/puzzles/`):
+
+| Profile              | Mechanics / question                          |
+|----------------------|-----------------------------------------------|
+| `q_neutral_partner`  | `neutral-partner` question                    |
+| `q_ing_profile`      | `ingredient-potion-profile` question          |
+| `q_group_potions`    | `group-possible-potions` question             |
+| `q_best_mix`         | `most-informative-mix` question               |
+| `q_non_producer`     | `guaranteed-non-producer` question            |
+| `q_among`            | Among clue variants (non-compliant)           |
+| `combo_b_easy`       | Combination base easy                         |
+| `combo_b_med_asp`    | Combination base + aspect-set (medium)        |
+| `combo_b_med_np`     | Combination base + neutral-partner (medium)   |
+| `combo_b_hard_pp`    | Combination base + potion-profile (hard)      |
+| `combo_b_hard_ip`    | Combination base + ing-profile (hard)         |
 
 ### validate
 
@@ -640,8 +660,35 @@ expected warnings.
 python scripts/alchemydoku.py analyze
 ```
 
-Rescores all puzzles in `src/data/puzzles/*.json` and writes `complexity` metadata back
-into each file.
+Rescores all base puzzles in `src/data/puzzles/*.json` using percentile-based normalisation
+and writes `complexity` metadata (including `score` and `difficulty`) back into each file.
+
+### analyze-expanded
+
+```bash
+python scripts/alchemydoku.py analyze-expanded
+```
+
+Rescores all expanded puzzles in `src/expanded/data/puzzles/*.json` using absolute
+thresholds (see DIFFICULTY.md). Updates `complexity.score` and `difficulty` in each file.
+
+### regen-hints
+
+```bash
+python scripts/alchemydoku.py regen-hints [files...] [--all] [--missing-only] [--include-tutorials]
+```
+
+Regenerates hints for specified puzzle files (or all, with `--all`). Skips tutorial puzzles
+by default. Use `--missing-only` to only add hints to puzzles that have none.
+
+### check-hints
+
+```bash
+python scripts/alchemydoku.py check-hints [files...] [--all]
+```
+
+Detects wrong or stale hints by checking the last hint level against the computed answer.
+Exits with code 1 if any hints are incorrect. Used in CI / pre-release validation.
 
 ---
 
@@ -665,7 +712,6 @@ export const ALL_EXPANDED_PUZZLES: ExpandedPuzzle[] =
 }
 ```
 
-> ⚠️ As of the current codebase, 18 generated puzzle files exist in `src/expanded/data/puzzles/`
-> that are not yet registered (enc-02..07, golem-02..03, sl-02..03, medium-enc-sl-02..03,
-> medium-golem-enc-02..03, medium-golem-sl-02..03, hard-all-02, hard-golem-mix-02).
-> They are valid and passing `validate`, but invisible in-game until added to `puzzlesIndex.ts`.
+After generating a base puzzle, register it in `src/data/puzzles/index.ts` (import + add to `ALL_PUZZLES` + add to relevant collection in `COLLECTIONS`).
+
+After generating an expanded puzzle, register it in `src/expanded/data/puzzlesIndex.ts` (import + add to `ALL_EXPANDED_PUZZLES` + optionally add to a collection in `EXPANDED_COLLECTIONS`).

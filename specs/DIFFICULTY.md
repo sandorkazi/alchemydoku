@@ -108,31 +108,56 @@ raw_score = (
 )
 ```
 
-Normalised to 1–5 pip scale after computing across all puzzles:
+**Base puzzles** — normalised to 1–5 pip scale via percentile across the full base puzzle population:
 - Percentile 0–20   → 1 pip
 - Percentile 20–40  → 2 pips
 - Percentile 40–60  → 3 pips
 - Percentile 60–80  → 4 pips
 - Percentile 80–100 → 5 pips
 
+**Expanded puzzles** — use absolute thresholds (population too small for meaningful percentiles):
+- raw < 1.7 → 1 pip (easy)
+- raw < 2.1 → 2 pips (easy)
+- raw < 2.8 → 3 pips (medium)
+- raw < 3.5 → 4 pips (hard)
+- raw ≥ 3.5 → 5 pips (expert)
+
 ---
+
+## Difficulty field auto-assignment
+
+After scoring, the `difficulty` field in the puzzle JSON is set to match the score tier:
+
+| score | difficulty |
+|-------|------------|
+| 1–2   | `"easy"`   |
+| 3     | `"medium"` |
+| 4     | `"hard"`   |
+| 5     | `"expert"` |
+
+Tutorial puzzles are exempt — their `difficulty` is always `"tutorial"` regardless of score.
+
+`check_puzzles.py` check #15 enforces this: it fails if `complexity.score` is absent or
+if `difficulty` does not match the tier table (skipping puzzles with `difficulty == 'tutorial'`).
 
 ## Output per puzzle
 
 ```json
 {
-  "difficulty": {
-    "score": 3.2,
-    "pips": 3,
+  "complexity": {
+    "score": 3,
+    "raw": 3.2,
     "avg_clue_strength": 1.84,
     "chain_depth": 2,
     "requires_complement_set": false,
     "question_requires_enumeration": false,
-    "residual_worlds": 8,
-    "notes": "Two-step cascade from sell clue"
+    "residual_worlds": 8
   }
 }
 ```
+
+The `difficulty` field at the top level of the puzzle JSON is kept in sync with `score` by
+`python scripts/alchemydoku.py analyze` (base) and `analyze-expanded` (expanded).
 
 ---
 
