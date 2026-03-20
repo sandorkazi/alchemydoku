@@ -2,7 +2,7 @@
   "id": "mixed-exp-debunk-41",
   "mode": "expanded",
   "kind": "debunk",
-  "title": "Trial by Fire",
+  "title": "The Specific Activity",
   "description": "Mixed evidence surrounds several suspicious publications. Use master debunking to expose the lies.",
   "difficulty": "hard",
   "golem": {
@@ -102,20 +102,7 @@
     "7": 7,
     "8": 8
   },
-  "hints": [
-    {
-      "level": 1,
-      "text": "Use all clues to eliminate impossible worlds."
-    },
-    {
-      "level": 2,
-      "text": "Apply each clue systematically."
-    },
-    {
-      "level": 3,
-      "text": "Answer: not_validated"
-    }
-  ],
+  "hints": [],
   "complexity": {
     "score": 80,
     "raw_score": 65,
@@ -166,8 +153,8 @@
       },
       {
         "kind": "master",
-        "ingredient1": 5,
-        "ingredient2": 8
+        "ingredient1": 4,
+        "ingredient2": 5
       }
     ]
   },

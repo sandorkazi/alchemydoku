@@ -72,7 +72,7 @@ export type StepOutcome = {
 function simulateStep(
   step: DebunkStep,
   solution: Assignment,
-  worlds: WorldSet,
+  _worlds: WorldSet,
   activePubs: Map<IngredientId, AlchemicalId>,
 ): StepOutcome {
   const removed: IngredientId[] = [];
@@ -95,14 +95,9 @@ function simulateStep(
   else if (step.kind === 'master') {
     const { ingredient1, ingredient2 } = step;
     const trueCode = trueMixCode(solution, ingredient1, ingredient2);
-    const truAlch2 = solution[ingredient2];
-    const truAlch1 = solution[ingredient1];
-    const ing1Known = isDefinitivelyKnown(worlds, ingredient1);
-    const ing2Known = isDefinitivelyKnown(worlds, ingredient2);
 
     // Direct disproval (result-incompatibility): a claimed alchemical that cannot
-    // produce the actual result with any partner is removed immediately, regardless
-    // of whether the other ingredient is definitively known (§2b).
+    // produce the actual result with any partner is removed immediately.
     if (activePubs.has(ingredient1) && !canProduceResult(activePubs.get(ingredient1)!, trueCode)) {
       removed.push(ingredient1);
       activePubs.delete(ingredient1);
@@ -110,33 +105,6 @@ function simulateStep(
     if (activePubs.has(ingredient2) && !canProduceResult(activePubs.get(ingredient2)!, trueCode)) {
       removed.push(ingredient2);
       activePubs.delete(ingredient2);
-    }
-
-    // Blame-based disproval: only for publications not already directly disproved.
-    let conflict1 = false;
-    let conflict2 = false;
-
-    if (activePubs.has(ingredient1) && ing2Known) {
-      const claimedAlch1 = activePubs.get(ingredient1)!;
-      const expectedCode = claimedMixCode(claimedAlch1, truAlch2);
-      if (expectedCode !== trueCode) conflict1 = true;
-    }
-
-    if (activePubs.has(ingredient2) && ing1Known) {
-      const claimedAlch2 = activePubs.get(ingredient2)!;
-      const expectedCode = claimedMixCode(truAlch1, claimedAlch2);
-      if (expectedCode !== trueCode) conflict2 = true;
-    }
-
-    // Unambiguous blame → removal; both blame-disproved → CONFLICT (neither removed)
-    if (conflict1 && !conflict2) {
-      removed.push(ingredient1);
-      activePubs.delete(ingredient1);
-    } else if (conflict2 && !conflict1) {
-      removed.push(ingredient2);
-      activePubs.delete(ingredient2);
-    } else if (conflict1 && conflict2) {
-      conflicts.push(ingredient1, ingredient2);
     }
   }
 

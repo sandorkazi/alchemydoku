@@ -1,6 +1,6 @@
 {
   "id": "mixed-base-debunk-43",
-  "title": "Patterns in the Ash",
+  "title": "Filed Under Suspicious",
   "description": "Mixed evidence surrounds several suspicious publications. Use master debunking to expose the lies.",
   "difficulty": "extreme",
   "clues": [
@@ -102,20 +102,7 @@
     "7": 4,
     "8": 8
   },
-  "hints": [
-    {
-      "level": 1,
-      "text": "Use all clues to eliminate impossible worlds."
-    },
-    {
-      "level": 2,
-      "text": "Apply each clue systematically."
-    },
-    {
-      "level": 3,
-      "text": "Answer: not_validated"
-    }
-  ],
+  "hints": [],
   "complexity": {
     "score": 92,
     "raw_score": 85,
@@ -156,13 +143,18 @@
     "debunk_min_steps": [
       {
         "kind": "master",
-        "ingredient1": 3,
-        "ingredient2": 4
+        "ingredient1": 1,
+        "ingredient2": 8
       },
       {
         "kind": "master",
-        "ingredient1": 7,
-        "ingredient2": 8
+        "ingredient1": 2,
+        "ingredient2": 7
+      },
+      {
+        "kind": "master",
+        "ingredient1": 3,
+        "ingredient2": 4
       }
     ]
   }

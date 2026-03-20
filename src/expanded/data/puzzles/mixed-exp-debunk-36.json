@@ -2,7 +2,7 @@
   "id": "mixed-exp-debunk-36",
   "mode": "expanded",
   "kind": "debunk",
-  "title": "The Final Entry",
+  "title": "The Recovered Volume",
   "description": "Mixed evidence surrounds several suspicious publications. Use master debunking to expose the lies.",
   "difficulty": "hard",
   "golem": {
@@ -93,20 +93,7 @@
     "7": 8,
     "8": 1
   },
-  "hints": [
-    {
-      "level": 1,
-      "text": "Use all clues to eliminate impossible worlds."
-    },
-    {
-      "level": 2,
-      "text": "Apply each clue systematically."
-    },
-    {
-      "level": 3,
-      "text": "Answer: not_validated"
-    }
-  ],
+  "hints": [],
   "complexity": {
     "score": 77,
     "raw_score": 60,
@@ -157,7 +144,7 @@
       },
       {
         "kind": "master",
-        "ingredient1": 2,
+        "ingredient1": 3,
         "ingredient2": 5
       }
     ]

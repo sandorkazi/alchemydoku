@@ -2,7 +2,7 @@
   "id": "mixed-exp-debunk-26",
   "mode": "expanded",
   "kind": "debunk",
-  "title": "Golem Research Notes",
+  "title": "The Contributing Structure",
   "description": "Mixed evidence surrounds several suspicious publications. Use master debunking to expose the lies.",
   "difficulty": "extreme",
   "golem": {
@@ -113,20 +113,7 @@
     "7": 5,
     "8": 2
   },
-  "hints": [
-    {
-      "level": 1,
-      "text": "Use all clues to eliminate impossible worlds."
-    },
-    {
-      "level": 2,
-      "text": "Apply each clue systematically."
-    },
-    {
-      "level": 3,
-      "text": "Answer: not_validated"
-    }
-  ],
+  "hints": [],
   "complexity": {
     "score": 86,
     "raw_score": 75,
@@ -164,17 +151,17 @@
     "debunk_min_steps": [
       {
         "kind": "master",
-        "ingredient1": 1,
-        "ingredient2": 3
-      },
-      {
-        "kind": "master",
         "ingredient1": 2,
         "ingredient2": 6
       },
       {
         "kind": "master",
-        "ingredient1": 4,
+        "ingredient1": 3,
+        "ingredient2": 4
+      },
+      {
+        "kind": "master",
+        "ingredient1": 3,
         "ingredient2": 7
       }
     ]

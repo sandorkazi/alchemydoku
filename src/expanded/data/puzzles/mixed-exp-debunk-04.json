@@ -2,7 +2,7 @@
   "id": "mixed-exp-debunk-04",
   "mode": "expanded",
   "kind": "debunk",
-  "title": "A Scholar's Note",
+  "title": "The Narrowing Field",
   "description": "Mixed evidence surrounds several suspicious publications. Use master debunking to expose the lies.",
   "difficulty": "hard",
   "golem": {
@@ -94,20 +94,7 @@
     "7": 1,
     "8": 8
   },
-  "hints": [
-    {
-      "level": 1,
-      "text": "Use all clues to eliminate impossible worlds."
-    },
-    {
-      "level": 2,
-      "text": "Apply each clue systematically."
-    },
-    {
-      "level": 3,
-      "text": "Answer: not_validated"
-    }
-  ],
+  "hints": [],
   "complexity": {
     "score": 77,
     "raw_score": 60,

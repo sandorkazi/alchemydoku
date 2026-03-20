@@ -1,6 +1,6 @@
 {
   "id": "mixed-base-debunk-14",
-  "title": "An Unexpected Result",
+  "title": "The Mineral Record",
   "description": "Mixed evidence surrounds several suspicious publications. Use master debunking to expose the lies.",
   "difficulty": "extreme",
   "clues": [
@@ -105,20 +105,7 @@
     "7": 3,
     "8": 1
   },
-  "hints": [
-    {
-      "level": 1,
-      "text": "Use all clues to eliminate impossible worlds."
-    },
-    {
-      "level": 2,
-      "text": "Apply each clue systematically."
-    },
-    {
-      "level": 3,
-      "text": "Answer: not_validated"
-    }
-  ],
+  "hints": [],
   "complexity": {
     "score": 92,
     "raw_score": 85,

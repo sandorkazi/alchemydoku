@@ -2,7 +2,7 @@
   "id": "mixed-exp-debunk-09",
   "mode": "expanded",
   "kind": "debunk",
-  "title": "Reaction Chains",
+  "title": "The Writhe",
   "description": "Mixed evidence surrounds several suspicious publications. Use master debunking to expose the lies.",
   "difficulty": "hard",
   "golem": {
@@ -100,20 +100,7 @@
     "7": 5,
     "8": 2
   },
-  "hints": [
-    {
-      "level": 1,
-      "text": "Use all clues to eliminate impossible worlds."
-    },
-    {
-      "level": 2,
-      "text": "Apply each clue systematically."
-    },
-    {
-      "level": 3,
-      "text": "Answer: not_validated"
-    }
-  ],
+  "hints": [],
   "complexity": {
     "score": 80,
     "raw_score": 65,
@@ -154,13 +141,18 @@
     "debunk_min_steps": [
       {
         "kind": "master",
-        "ingredient1": 2,
-        "ingredient2": 7
+        "ingredient1": 1,
+        "ingredient2": 5
       },
       {
         "kind": "master",
-        "ingredient1": 5,
+        "ingredient1": 1,
         "ingredient2": 8
+      },
+      {
+        "kind": "master",
+        "ingredient1": 2,
+        "ingredient2": 7
       }
     ]
   },

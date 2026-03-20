@@ -1,6 +1,6 @@
 {
   "id": "mixed-debunk-r-05",
-  "title": "Trial by Fire",
+  "title": "The Upper Critical Dimension",
   "description": "Mixed evidence surrounds several suspicious publications. Use master debunking to expose the lies.",
   "difficulty": "medium",
   "clues": [
@@ -75,20 +75,7 @@
     "7": 7,
     "8": 4
   },
-  "hints": [
-    {
-      "level": 1,
-      "text": "Use all clues to eliminate impossible worlds."
-    },
-    {
-      "level": 2,
-      "text": "Apply each clue systematically."
-    },
-    {
-      "level": 3,
-      "text": "Answer: not_validated"
-    }
-  ],
+  "hints": [],
   "complexity": {
     "score": 59,
     "raw_score": 37,
@@ -130,22 +117,22 @@
       {
         "kind": "master",
         "ingredient1": 1,
-        "ingredient2": 8
+        "ingredient2": 2
+      },
+      {
+        "kind": "master",
+        "ingredient1": 1,
+        "ingredient2": 4
       },
       {
         "kind": "master",
         "ingredient1": 2,
-        "ingredient2": 1
+        "ingredient2": 6
       },
       {
         "kind": "master",
         "ingredient1": 4,
-        "ingredient2": 3
-      },
-      {
-        "kind": "master",
-        "ingredient1": 6,
-        "ingredient2": 1
+        "ingredient2": 5
       }
     ]
   }

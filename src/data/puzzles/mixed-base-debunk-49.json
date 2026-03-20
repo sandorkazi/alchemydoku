@@ -1,6 +1,6 @@
 {
   "id": "mixed-base-debunk-49",
-  "title": "The Hidden Reaction",
+  "title": "The Retrograde Signal",
   "description": "Mixed evidence surrounds several suspicious publications. Use master debunking to expose the lies.",
   "difficulty": "extreme",
   "clues": [
@@ -108,20 +108,7 @@
     "7": 6,
     "8": 3
   },
-  "hints": [
-    {
-      "level": 1,
-      "text": "Use all clues to eliminate impossible worlds."
-    },
-    {
-      "level": 2,
-      "text": "Apply each clue systematically."
-    },
-    {
-      "level": 3,
-      "text": "Answer: not_validated"
-    }
-  ],
+  "hints": [],
   "complexity": {
     "score": 97,
     "raw_score": 95,
@@ -167,13 +154,18 @@
       },
       {
         "kind": "master",
-        "ingredient1": 3,
-        "ingredient2": 5
+        "ingredient1": 1,
+        "ingredient2": 4
       },
       {
         "kind": "master",
         "ingredient1": 4,
         "ingredient2": 8
+      },
+      {
+        "kind": "master",
+        "ingredient1": 5,
+        "ingredient2": 6
       }
     ],
     "debunk_conflict_only": [

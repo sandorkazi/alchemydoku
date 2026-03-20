@@ -1,6 +1,6 @@
 {
   "id": "mixed-base-debunk-34",
-  "title": "The Missing Entry",
+  "title": "The Pitchfork",
   "description": "Mixed evidence surrounds several suspicious publications. Use master debunking to expose the lies.",
   "difficulty": "extreme",
   "clues": [
@@ -104,20 +104,7 @@
     "7": 6,
     "8": 3
   },
-  "hints": [
-    {
-      "level": 1,
-      "text": "Use all clues to eliminate impossible worlds."
-    },
-    {
-      "level": 2,
-      "text": "Apply each clue systematically."
-    },
-    {
-      "level": 3,
-      "text": "Answer: not_validated"
-    }
-  ],
+  "hints": [],
   "complexity": {
     "score": 92,
     "raw_score": 85,
@@ -160,6 +147,11 @@
         "kind": "master",
         "ingredient1": 1,
         "ingredient2": 2
+      },
+      {
+        "kind": "master",
+        "ingredient1": 2,
+        "ingredient2": 7
       },
       {
         "kind": "master",

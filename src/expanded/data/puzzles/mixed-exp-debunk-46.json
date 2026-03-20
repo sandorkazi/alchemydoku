@@ -2,7 +2,7 @@
   "id": "mixed-exp-debunk-46",
   "mode": "expanded",
   "kind": "debunk",
-  "title": "The Waking Stone",
+  "title": "The Amplification Step",
   "description": "Mixed evidence surrounds several suspicious publications. Use master debunking to expose the lies.",
   "difficulty": "extreme",
   "golem": {
@@ -108,20 +108,7 @@
     "7": 5,
     "8": 8
   },
-  "hints": [
-    {
-      "level": 1,
-      "text": "Use all clues to eliminate impossible worlds."
-    },
-    {
-      "level": 2,
-      "text": "Apply each clue systematically."
-    },
-    {
-      "level": 3,
-      "text": "Answer: not_validated"
-    }
-  ],
+  "hints": [],
   "complexity": {
     "score": 83,
     "raw_score": 70,

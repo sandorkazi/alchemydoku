@@ -1,6 +1,6 @@
 {
   "id": "mixed-base-debunk-26",
-  "title": "Echoes of the Laboratory",
+  "title": "The Constraint",
   "description": "Mixed evidence surrounds several suspicious publications. Use master debunking to expose the lies.",
   "difficulty": "extreme",
   "clues": [
@@ -100,20 +100,7 @@
     "7": 1,
     "8": 3
   },
-  "hints": [
-    {
-      "level": 1,
-      "text": "Use all clues to eliminate impossible worlds."
-    },
-    {
-      "level": 2,
-      "text": "Apply each clue systematically."
-    },
-    {
-      "level": 3,
-      "text": "Answer: not_validated"
-    }
-  ],
+  "hints": [],
   "complexity": {
     "score": 86,
     "raw_score": 75,
@@ -155,17 +142,22 @@
       {
         "kind": "master",
         "ingredient1": 1,
+        "ingredient2": 3
+      },
+      {
+        "kind": "master",
+        "ingredient1": 1,
         "ingredient2": 4
+      },
+      {
+        "kind": "master",
+        "ingredient1": 1,
+        "ingredient2": 5
       },
       {
         "kind": "master",
         "ingredient1": 2,
         "ingredient2": 8
-      },
-      {
-        "kind": "master",
-        "ingredient1": 3,
-        "ingredient2": 5
       }
     ]
   }

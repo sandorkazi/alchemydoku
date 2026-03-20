@@ -1,6 +1,6 @@
 {
   "id": "mixed-base-debunk-23",
-  "title": "A Flash of Insight",
+  "title": "A Process of Elimination",
   "description": "Mixed evidence surrounds several suspicious publications. Use master debunking to expose the lies.",
   "difficulty": "extreme",
   "clues": [
@@ -89,20 +89,7 @@
     "7": 3,
     "8": 7
   },
-  "hints": [
-    {
-      "level": 1,
-      "text": "Use all clues to eliminate impossible worlds."
-    },
-    {
-      "level": 2,
-      "text": "Apply each clue systematically."
-    },
-    {
-      "level": 3,
-      "text": "Answer: not_validated"
-    }
-  ],
+  "hints": [],
   "complexity": {
     "score": 86,
     "raw_score": 75,
@@ -143,8 +130,13 @@
     "debunk_min_steps": [
       {
         "kind": "master",
-        "ingredient1": 2,
+        "ingredient1": 1,
         "ingredient2": 5
+      },
+      {
+        "kind": "master",
+        "ingredient1": 2,
+        "ingredient2": 3
       },
       {
         "kind": "master",

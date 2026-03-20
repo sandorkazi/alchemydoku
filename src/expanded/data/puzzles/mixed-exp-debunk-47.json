@@ -2,7 +2,7 @@
   "id": "mixed-exp-debunk-47",
   "mode": "expanded",
   "kind": "debunk",
-  "title": "The Researcher's Burden",
+  "title": "The Irrelevant Operator",
   "description": "Mixed evidence surrounds several suspicious publications. Use master debunking to expose the lies.",
   "difficulty": "extreme",
   "golem": {
@@ -107,20 +107,7 @@
     "7": 8,
     "8": 3
   },
-  "hints": [
-    {
-      "level": 1,
-      "text": "Use all clues to eliminate impossible worlds."
-    },
-    {
-      "level": 2,
-      "text": "Apply each clue systematically."
-    },
-    {
-      "level": 3,
-      "text": "Answer: not_validated"
-    }
-  ],
+  "hints": [],
   "complexity": {
     "score": 86,
     "raw_score": 75,
@@ -166,7 +153,12 @@
       },
       {
         "kind": "master",
-        "ingredient1": 5,
+        "ingredient1": 3,
+        "ingredient2": 5
+      },
+      {
+        "kind": "master",
+        "ingredient1": 3,
         "ingredient2": 8
       }
     ],

@@ -2,7 +2,7 @@
   "id": "mixed-exp-debunk-19",
   "mode": "expanded",
   "kind": "debunk",
-  "title": "The Dormant Giant",
+  "title": "The Equilibration",
   "description": "Mixed evidence surrounds several suspicious publications. Use master debunking to expose the lies.",
   "difficulty": "extreme",
   "golem": {
@@ -119,20 +119,7 @@
     "7": 4,
     "8": 7
   },
-  "hints": [
-    {
-      "level": 1,
-      "text": "Use all clues to eliminate impossible worlds."
-    },
-    {
-      "level": 2,
-      "text": "Apply each clue systematically."
-    },
-    {
-      "level": 3,
-      "text": "Answer: not_validated"
-    }
-  ],
+  "hints": [],
   "complexity": {
     "score": 89,
     "raw_score": 80,
@@ -178,7 +165,17 @@
       },
       {
         "kind": "master",
+        "ingredient1": 1,
+        "ingredient2": 4
+      },
+      {
+        "kind": "master",
         "ingredient1": 3,
+        "ingredient2": 5
+      },
+      {
+        "kind": "master",
+        "ingredient1": 4,
         "ingredient2": 6
       }
     ],

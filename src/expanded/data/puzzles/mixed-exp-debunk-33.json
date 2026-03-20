@@ -2,7 +2,7 @@
   "id": "mixed-exp-debunk-33",
   "mode": "expanded",
   "kind": "debunk",
-  "title": "The Scholar's Gambit",
+  "title": "The Gravimetric Analysis",
   "description": "Mixed evidence surrounds several suspicious publications. Use master debunking to expose the lies.",
   "difficulty": "extreme",
   "golem": {
@@ -107,20 +107,7 @@
     "7": 6,
     "8": 5
   },
-  "hints": [
-    {
-      "level": 1,
-      "text": "Use all clues to eliminate impossible worlds."
-    },
-    {
-      "level": 2,
-      "text": "Apply each clue systematically."
-    },
-    {
-      "level": 3,
-      "text": "Answer: not_validated"
-    }
-  ],
+  "hints": [],
   "complexity": {
     "score": 83,
     "raw_score": 70,
@@ -161,18 +148,18 @@
     "debunk_min_steps": [
       {
         "kind": "master",
-        "ingredient1": 1,
-        "ingredient2": 2
-      },
-      {
-        "kind": "master",
         "ingredient1": 2,
-        "ingredient2": 6
+        "ingredient2": 5
       },
       {
         "kind": "master",
         "ingredient1": 3,
-        "ingredient2": 5
+        "ingredient2": 4
+      },
+      {
+        "kind": "master",
+        "ingredient1": 4,
+        "ingredient2": 6
       }
     ]
   },

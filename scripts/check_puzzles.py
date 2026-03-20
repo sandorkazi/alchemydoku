@@ -221,7 +221,7 @@ def check_duplicates(puzzles: list, r: Results):
 
         if title:
             if title in seen_titles:
-                r.warning(
+                r.error(
                     f"[duplicates] Identical title '{title}': "
                     f"{seen_titles[title].name} and {path.name}"
                 )

@@ -2,7 +2,7 @@
   "id": "mixed-exp-debunk-51",
   "mode": "expanded",
   "kind": "debunk",
-  "title": "A Flash of Insight",
+  "title": "The Library Annex",
   "description": "Mixed evidence surrounds several suspicious publications. Use master debunking to expose the lies.",
   "difficulty": "extreme",
   "golem": {
@@ -107,20 +107,7 @@
     "7": 4,
     "8": 6
   },
-  "hints": [
-    {
-      "level": 1,
-      "text": "Use all clues to eliminate impossible worlds."
-    },
-    {
-      "level": 2,
-      "text": "Apply each clue systematically."
-    },
-    {
-      "level": 3,
-      "text": "Answer: not_validated"
-    }
-  ],
+  "hints": [],
   "complexity": {
     "score": 86,
     "raw_score": 75,
@@ -162,12 +149,22 @@
       {
         "kind": "master",
         "ingredient1": 1,
+        "ingredient2": 2
+      },
+      {
+        "kind": "master",
+        "ingredient1": 1,
         "ingredient2": 3
       },
       {
         "kind": "master",
-        "ingredient1": 6,
+        "ingredient1": 2,
         "ingredient2": 7
+      },
+      {
+        "kind": "master",
+        "ingredient1": 4,
+        "ingredient2": 6
       }
     ],
     "debunk_conflict_only": [

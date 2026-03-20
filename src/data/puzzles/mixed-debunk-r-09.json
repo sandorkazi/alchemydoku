@@ -1,6 +1,6 @@
 {
   "id": "mixed-debunk-r-09",
-  "title": "A Scholar's Note",
+  "title": "The Confounding Factor",
   "description": "Mixed evidence surrounds several suspicious publications. Use master debunking to expose the lies.",
   "difficulty": "medium",
   "clues": [
@@ -75,20 +75,7 @@
     "7": 1,
     "8": 6
   },
-  "hints": [
-    {
-      "level": 1,
-      "text": "Use all clues to eliminate impossible worlds."
-    },
-    {
-      "level": 2,
-      "text": "Apply each clue systematically."
-    },
-    {
-      "level": 3,
-      "text": "Answer: not_validated"
-    }
-  ],
+  "hints": [],
   "complexity": {
     "score": 61,
     "raw_score": 39,
@@ -134,7 +121,7 @@
       },
       {
         "kind": "master",
-        "ingredient1": 1,
+        "ingredient1": 2,
         "ingredient2": 5
       },
       {
