@@ -2421,7 +2421,7 @@ def cmd_generate(args):
 
         warns = [e for e in errs if e.startswith('WARNING')]
         print(f"  ✓  {puz['id']}  clues={len(raw['clues'])}  "
-              f"worlds={len(raw['worlds'])}  raw={puz['complexity']['raw']:.2f}")
+              f"worlds={len(raw['worlds'])}  raw={puz['complexity']['raw_score']:.2f}")
         for w in warns:
             print(f"     {w}")
         generated += 1
