@@ -125,7 +125,8 @@
     }
   ],
   "complexity": {
-    "score": 55,
+    "score": 74,
+    "raw_score": 55,
     "clue_score": 30,
     "question_score": 0,
     "world_score": 15,

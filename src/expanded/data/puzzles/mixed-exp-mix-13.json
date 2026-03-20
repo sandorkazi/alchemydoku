@@ -3,7 +3,7 @@
   "mode": "expanded",
   "title": "An Oblique Sign",
   "description": "Mixing, selling, and debunking records all point toward a single pair. Deduce what potion they produce.",
-  "difficulty": "expert",
+  "difficulty": "hard",
   "golem": {
     "chest": {
       "color": "G",
@@ -124,7 +124,8 @@
     }
   ],
   "complexity": {
-    "score": 65,
+    "score": 80,
+    "raw_score": 65,
     "clue_score": 35,
     "question_score": 0,
     "world_score": 20,

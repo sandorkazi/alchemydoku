@@ -2,7 +2,7 @@
   "id": "mixed-base-36",
   "title": "Three Witnesses",
   "description": "Mixing, selling, and debunking records all point toward a single pair. Deduce what potion they produce.",
-  "difficulty": "expert",
+  "difficulty": "hard",
   "clues": [
     {
       "kind": "sell_among",
@@ -97,7 +97,8 @@
     }
   ],
   "complexity": {
-    "score": 65,
+    "score": 80,
+    "raw_score": 65,
     "clue_score": 40,
     "question_score": 0,
     "world_score": 15,

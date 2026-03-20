@@ -61,11 +61,10 @@ REQUIRED_EXP  = REQUIRED_BASE | {"mode"}
 
 def _score_to_difficulty(score: int) -> str:
     """Derive difficulty label from [10–100] complexity score (mirrors score_to_pip in alchemydoku.py)."""
-    if score <= 35: return 'easy'
-    if score <= 45: return 'easy'
-    if score <= 52: return 'medium'
-    if score <= 58: return 'hard'
-    return 'expert'
+    if score <= 58: return 'easy'    # pips 1–2
+    if score <= 70: return 'medium'  # pip 3
+    if score <= 82: return 'hard'    # pip 4
+    return 'expert'                  # pip 5
 
 TITLE_SIMILARITY_THRESHOLD = 0.8   # Jaccard word-token similarity
 

@@ -2,7 +2,7 @@
   "id": "mixed-debunk-r-11",
   "title": "The Alchemist's Test",
   "description": "Mixed evidence surrounds several suspicious publications. Use master debunking to expose the lies.",
-  "difficulty": "easy",
+  "difficulty": "medium",
   "clues": [
     {
       "kind": "debunk",
@@ -89,7 +89,8 @@
     }
   ],
   "complexity": {
-    "score": 37,
+    "score": 59,
+    "raw_score": 37,
     "clue_score": 2,
     "question_score": 10,
     "world_score": 15,

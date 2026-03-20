@@ -98,7 +98,8 @@
     "8": 5
   },
   "complexity": {
-    "score": 36,
+    "score": 58,
+    "raw_score": 36,
     "clue_score": 6,
     "question_score": 0,
     "world_score": 20,

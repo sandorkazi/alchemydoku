@@ -3,7 +3,7 @@
   "mode": "expanded",
   "title": "The Merchant's Whispers",
   "description": "The merchants kept their trades vague \u2014 only letting slip how many from each group reacted. Cross-reference the golem's selective responses with the ambiguous sell outcomes.",
-  "difficulty": "expert",
+  "difficulty": "hard",
   "golem": {
     "chest": {
       "color": "G",
@@ -174,7 +174,8 @@
     }
   ],
   "complexity": {
-    "score": 60,
+    "score": 77,
+    "raw_score": 60,
     "clue_score": 40,
     "question_score": 0,
     "world_score": 10,

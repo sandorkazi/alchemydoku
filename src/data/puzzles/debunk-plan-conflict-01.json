@@ -2,7 +2,7 @@
   "id": "debunk-plan-conflict-01",
   "title": "Mutual Suspicion",
   "description": "Two theories have been published. Your aspect clues reveal the truth about both ingredients. Find a master mix involving ing1 that puts both publications under simultaneous suspicion \u2014 without removing either one.",
-  "difficulty": "easy",
+  "difficulty": "medium",
   "clues": [
     {
       "kind": "aspect",
@@ -97,7 +97,8 @@
     }
   ],
   "complexity": {
-    "score": 40,
+    "score": 62,
+    "raw_score": 40,
     "clue_score": 0,
     "question_score": 15,
     "world_score": 15,

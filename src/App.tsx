@@ -122,7 +122,7 @@ function ModeSwitcher({
 // ─── Complexity pips ──────────────────────────────────────────────────────────
 
 function ComplexityPips({ score }: { score: number }) {
-  const filled = score <= 35 ? 1 : score <= 45 ? 2 : score <= 52 ? 3 : score <= 58 ? 4 : 5;
+  const filled = score <= 32 ? 1 : score <= 58 ? 2 : score <= 70 ? 3 : score <= 82 ? 4 : 5;
   return (
     <span className="inline-flex items-center gap-0.5" title={`Complexity: ${score}/100`}>
       {[1, 2, 3, 4, 5].map(i => (

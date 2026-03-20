@@ -2,7 +2,7 @@
   "id": "mixed-base-27",
   "title": "A Scattered Trail",
   "description": "Mixing, selling, and debunking records all point toward a single pair. Deduce what potion they produce.",
-  "difficulty": "expert",
+  "difficulty": "hard",
   "clues": [
     {
       "kind": "mixing_among",
@@ -92,7 +92,8 @@
     }
   ],
   "complexity": {
-    "score": 60,
+    "score": 77,
+    "raw_score": 60,
     "clue_score": 35,
     "question_score": 0,
     "world_score": 15,

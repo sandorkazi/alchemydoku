@@ -48,7 +48,8 @@
     }
   ],
   "complexity": {
-    "score": 25,
+    "score": 47,
+    "raw_score": 25,
     "clue_score": 0,
     "question_score": 5,
     "world_score": 10,

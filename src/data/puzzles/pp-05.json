@@ -2,7 +2,7 @@
   "id": "pp-05",
   "title": "The Open Verdict",
   "description": "Use every clue \u2014 the remaining ambiguity is the answer.",
-  "difficulty": "easy",
+  "difficulty": "medium",
   "clues": [
     {
       "kind": "mixing",
@@ -110,7 +110,8 @@
     }
   ],
   "complexity": {
-    "score": 39,
+    "score": 61,
+    "raw_score": 39,
     "clue_score": 4,
     "question_score": 5,
     "world_score": 20,

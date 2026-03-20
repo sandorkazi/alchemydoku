@@ -3,7 +3,7 @@
   "mode": "expanded",
   "title": "A Celestial Clue",
   "description": "Use the clues to decide which ingredient reveals the most information when consulted in the Royal Society book.",
-  "difficulty": "easy",
+  "difficulty": "medium",
   "golem": {
     "chest": {
       "color": "G",
@@ -118,7 +118,8 @@
     }
   ],
   "complexity": {
-    "score": 37,
+    "score": 59,
+    "raw_score": 37,
     "clue_score": 27,
     "question_score": 0,
     "world_score": 0,

@@ -3,7 +3,7 @@
   "mode": "expanded",
   "title": "Lunar Fragments",
   "description": "The golem has been tested with 2 ingredients. Deduce the reaction pattern and identify the target group.",
-  "difficulty": "easy",
+  "difficulty": "medium",
   "golem": {
     "chest": {
       "color": "G",
@@ -129,7 +129,8 @@
     }
   ],
   "complexity": {
-    "score": 45,
+    "score": 66,
+    "raw_score": 45,
     "clue_score": 35,
     "question_score": 0,
     "world_score": 0,

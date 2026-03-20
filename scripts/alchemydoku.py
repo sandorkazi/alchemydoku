@@ -911,8 +911,10 @@ def compute_difficulty(puzzle: dict) -> dict:
 
     w_score = max(0, min(20, w_score))
 
+    raw = 10 + clue_score + q_score + w_score
     return {
-        'score':          10 + clue_score + q_score + w_score,
+        'score':          _scale_score(raw),
+        'raw_score':      raw,
         'clue_score':     clue_score,
         'question_score': q_score,
         'world_score':    w_score,
@@ -920,15 +922,26 @@ def compute_difficulty(puzzle: dict) -> dict:
     }
 
 
+def _scale_score(raw: int) -> int:
+    """Apply sqrt scaling to convert raw [10, 100] linear sum → final [10, 100] score.
+
+    The raw sum clusters heavily at the low end (most puzzles score 10–35).
+    Sqrt stretches the low end and compresses the high end, producing a more
+    uniform distribution across the 1–5 pip tiers.
+    """
+    t = max(0.0, (raw - 10) / 90)
+    return round(10 + 90 * math.sqrt(t))
+
+
 TIER = {1: 'easy', 2: 'easy', 3: 'medium', 4: 'hard', 5: 'expert'}
 
 
 def score_to_pip(score: int) -> int:
     """Convert [10–100] complexity score to 1–5 pip tier (mirrors ComplexityPips in App.tsx)."""
-    if score <= 35: return 1
-    if score <= 45: return 2
-    if score <= 52: return 3
-    if score <= 58: return 4
+    if score <= 32: return 1
+    if score <= 58: return 2
+    if score <= 70: return 3
+    if score <= 82: return 4
     return 5
 
 # ══════════════════════════════════════════════════════════════════════════════
@@ -2361,7 +2374,7 @@ def cmd_analyze(_args):
         print(f"  {pid} …", end=' ', flush=True)
         d = compute_difficulty(puz)
         results[pid] = (f, puz, d)
-        print(f"score={d['score']:3d}  "
+        print(f"score={d['score']:3d}(raw={d['raw_score']:3d})  "
               f"clue={d['clue_score']:2d}  q={d['question_score']:3d}  "
               f"world={d['world_score']:2d}  worlds={d['residual_worlds']}")
 
@@ -2383,6 +2396,7 @@ def cmd_analyze(_args):
         pip = pips_for(pid)
         puz['complexity'] = {
             'score':          d['score'],
+            'raw_score':      d['raw_score'],
             'clue_score':     d['clue_score'],
             'question_score': d['question_score'],
             'world_score':    d['world_score'],
@@ -2433,7 +2447,7 @@ def cmd_analyze_expanded(_args):
         print(f"  {pid} …", end=' ', flush=True)
         d = compute_difficulty(puz)
         results[pid] = (f, puz, d)
-        print(f"score={d['score']:3d}  "
+        print(f"score={d['score']:3d}(raw={d['raw_score']:3d})  "
               f"clue={d['clue_score']:2d}  q={d['question_score']:3d}  "
               f"world={d['world_score']:2d}  worlds={d['residual_worlds']}")
 
@@ -2456,6 +2470,7 @@ def cmd_analyze_expanded(_args):
         pip = 1 if is_tutorial else score_to_pip(d['score'])
         puz['complexity'] = {
             'score':          d['score'],
+            'raw_score':      d['raw_score'],
             'clue_score':     d['clue_score'],
             'question_score': d['question_score'],
             'world_score':    d['world_score'],

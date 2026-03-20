@@ -3,7 +3,7 @@
   "mode": "expanded",
   "title": "The Crowded Laboratory",
   "description": "You watched experiments unfold across the room \u2014 never sure who used which ingredient. Combine the golem's reactions with overheard market results to uncover the truth.",
-  "difficulty": "easy",
+  "difficulty": "medium",
   "golem": {
     "chest": {
       "color": "R",
@@ -143,7 +143,8 @@
     }
   ],
   "complexity": {
-    "score": 40,
+    "score": 62,
+    "raw_score": 40,
     "clue_score": 30,
     "question_score": 0,
     "world_score": 0,

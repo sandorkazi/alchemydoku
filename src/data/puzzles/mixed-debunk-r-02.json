@@ -2,7 +2,7 @@
   "id": "mixed-debunk-r-02",
   "title": "The Revealed Formula",
   "description": "Mixed evidence surrounds several suspicious publications. Use master debunking to expose the lies.",
-  "difficulty": "easy",
+  "difficulty": "medium",
   "clues": [
     {
       "kind": "debunk",
@@ -90,7 +90,8 @@
     }
   ],
   "complexity": {
-    "score": 37,
+    "score": 59,
+    "raw_score": 37,
     "clue_score": 2,
     "question_score": 10,
     "world_score": 15,

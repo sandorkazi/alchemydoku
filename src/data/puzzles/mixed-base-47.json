@@ -2,7 +2,7 @@
   "id": "mixed-base-47",
   "title": "The Crowded Vial",
   "description": "Mixing, selling, and debunking records all point toward a single pair. Deduce what potion they produce.",
-  "difficulty": "easy",
+  "difficulty": "medium",
   "clues": [
     {
       "kind": "mixing_among",
@@ -63,7 +63,8 @@
     }
   ],
   "complexity": {
-    "score": 45,
+    "score": 66,
+    "raw_score": 45,
     "clue_score": 15,
     "question_score": 0,
     "world_score": 20,

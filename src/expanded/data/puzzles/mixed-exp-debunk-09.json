@@ -4,7 +4,7 @@
   "kind": "debunk",
   "title": "Reaction Chains",
   "description": "Mixed evidence surrounds several suspicious publications. Use master debunking to expose the lies.",
-  "difficulty": "expert",
+  "difficulty": "hard",
   "golem": {
     "chest": {
       "color": "G",
@@ -115,7 +115,8 @@
     }
   ],
   "complexity": {
-    "score": 65,
+    "score": 80,
+    "raw_score": 65,
     "clue_score": 30,
     "question_score": 10,
     "world_score": 15,

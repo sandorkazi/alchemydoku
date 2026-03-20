@@ -2,7 +2,7 @@
   "id": "mixed-debunk-r-09",
   "title": "A Scholar's Note",
   "description": "Mixed evidence surrounds several suspicious publications. Use master debunking to expose the lies.",
-  "difficulty": "easy",
+  "difficulty": "medium",
   "clues": [
     {
       "kind": "debunk",
@@ -90,7 +90,8 @@
     }
   ],
   "complexity": {
-    "score": 39,
+    "score": 61,
+    "raw_score": 39,
     "clue_score": 4,
     "question_score": 10,
     "world_score": 15,

@@ -3,7 +3,7 @@
   "mode": "expanded",
   "title": "Moonlit Clues",
   "description": "The golem has been tested with 2 ingredients. Deduce the reaction pattern and identify the target group.",
-  "difficulty": "easy",
+  "difficulty": "medium",
   "golem": {
     "chest": {
       "color": "R",
@@ -119,7 +119,8 @@
     }
   ],
   "complexity": {
-    "score": 40,
+    "score": 62,
+    "raw_score": 40,
     "clue_score": 30,
     "question_score": 0,
     "world_score": 0,

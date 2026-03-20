@@ -4,7 +4,7 @@
   "kind": "debunk",
   "title": "A Scholar's Note",
   "description": "Mixed evidence surrounds several suspicious publications. Use master debunking to expose the lies.",
-  "difficulty": "expert",
+  "difficulty": "hard",
   "golem": {
     "chest": {
       "color": "R",
@@ -109,7 +109,8 @@
     }
   ],
   "complexity": {
-    "score": 60,
+    "score": 77,
+    "raw_score": 60,
     "clue_score": 25,
     "question_score": 10,
     "world_score": 15,

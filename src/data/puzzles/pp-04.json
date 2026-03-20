@@ -2,7 +2,7 @@
   "id": "pp-04",
   "title": "The Narrowing Gauntlet",
   "description": "Systematic deduction leaves exactly two achievable results for this pair.",
-  "difficulty": "easy",
+  "difficulty": "medium",
   "clues": [
     {
       "kind": "sell",
@@ -111,7 +111,8 @@
     }
   ],
   "complexity": {
-    "score": 41,
+    "score": 63,
+    "raw_score": 41,
     "clue_score": 6,
     "question_score": 5,
     "world_score": 20,
