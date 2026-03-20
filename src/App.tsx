@@ -85,6 +85,7 @@ const DIFF_BADGE: Record<string, string> = {
   medium:   'bg-yellow-100 text-yellow-700',
   hard:     'bg-red-100    text-red-700',
   expert:   'bg-orange-100 text-orange-700',
+  extreme:  'bg-rose-100   text-rose-800',
 };
 
 // ─── Mode switcher (top of every home-level page) ─────────────────────────────

@@ -3,7 +3,7 @@
   "mode": "expanded",
   "title": "Patterns in the Ash",
   "description": "Mixing, selling, and debunking records all point toward a single pair. Deduce what potion they produce.",
-  "difficulty": "expert",
+  "difficulty": "extreme",
   "golem": {
     "chest": {
       "color": "B",

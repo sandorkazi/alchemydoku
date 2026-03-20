@@ -4,7 +4,7 @@
   "kind": "debunk",
   "title": "Second Opinion",
   "description": "Mixed evidence surrounds several suspicious publications. Use master debunking to expose the lies.",
-  "difficulty": "expert",
+  "difficulty": "extreme",
   "golem": {
     "chest": {
       "color": "R",

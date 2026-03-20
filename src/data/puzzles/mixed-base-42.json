@@ -2,7 +2,7 @@
   "id": "mixed-base-42",
   "title": "Four-Way Cross",
   "description": "Mixing, selling, and debunking records all point toward a single pair. Deduce what potion they produce.",
-  "difficulty": "expert",
+  "difficulty": "extreme",
   "clues": [
     {
       "kind": "sell_result_among",

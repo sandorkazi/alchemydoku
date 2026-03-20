@@ -625,6 +625,9 @@ def check_complexity(path: Path, puz: dict, r: Results):
     if diff == "tutorial":
         return
     expected = _score_to_difficulty(score)
+    # 'extreme' is the non-compliant variant of 'expert' — both valid at the top tier
+    if diff == "extreme" and expected == "expert":
+        return
     if diff != expected:
         r.error(
             f"[complexity] {name}: difficulty='{diff}' but complexity.score={score} "

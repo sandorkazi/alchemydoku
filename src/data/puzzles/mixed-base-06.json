@@ -2,7 +2,7 @@
   "id": "mixed-base-06",
   "title": "Second-Hand Evidence",
   "description": "Mixing, selling, and debunking records all point toward a single pair. Deduce what potion they produce.",
-  "difficulty": "expert",
+  "difficulty": "extreme",
   "clues": [
     {
       "kind": "mixing_count_among",

@@ -2,7 +2,7 @@
   "id": "mixed-base-debunk-38",
   "title": "The Sealed Chamber",
   "description": "Mixed evidence surrounds several suspicious publications. Use master debunking to expose the lies.",
-  "difficulty": "expert",
+  "difficulty": "extreme",
   "clues": [
     {
       "kind": "sell_result_among",

@@ -935,6 +935,39 @@ def _scale_score(raw: int) -> int:
 
 TIER = {1: 'easy', 2: 'easy', 3: 'medium', 4: 'hard', 5: 'expert'}
 
+# ── Compliance (mirrors src/compliance.ts) ─────────────────────────────────────
+_NC_BASE_KINDS = frozenset({'mixing_among', 'mixing_count_among', 'sell_result_among', 'sell_among'})
+_NC_EXP_KINDS  = _NC_BASE_KINDS | frozenset({'book_among', 'golem_reaction_among'})
+
+def is_non_compliant(puz: dict) -> bool:
+    """Mirror of isPuzzleNonCompliant() in src/compliance.ts."""
+    nc = _NC_EXP_KINDS if puz.get('mode') == 'expanded' else _NC_BASE_KINDS
+    if any(c['kind'] in nc for c in puz.get('clues', [])):
+        return True
+    pubs = [p for p in (puz.get('publications') or []) if p is not None]
+    if pubs:
+        alch = [p['claimedAlchemical'] for p in pubs]
+        if len(set(alch)) < len(alch): return True
+        ings = [p['ingredient'] for p in pubs]
+        if len(set(ings)) < len(ings): return True
+    arts = puz.get('articles') or []
+    if arts:
+        aspects = [a['aspect'] for a in arts]
+        if len(set(aspects)) < len(aspects): return True
+        ing_counts: dict = {}
+        for a in arts:
+            for e in a.get('entries', []):
+                ing_counts[e['ingredient']] = ing_counts.get(e['ingredient'], 0) + 1
+        if any(v > 2 for v in ing_counts.values()): return True
+    return False
+
+
+def difficulty_for(puz: dict, pip: int) -> str:
+    """Return the correct difficulty label for a puzzle given its pip tier."""
+    if pip == 5 and is_non_compliant(puz):
+        return 'extreme'
+    return TIER[pip]
+
 
 def score_to_pip(score: int) -> int:
     """Convert [10–100] complexity score to 1–5 pip tier (mirrors ComplexityPips in App.tsx)."""
@@ -2264,7 +2297,8 @@ def assemble(raw: dict, profile: Profile, num: int, rng: random.Random) -> dict:
                 + desc.split('. ', 1)[1])
     difficulty = profile.difficulty
     if not is_base and difficulty != 'tutorial':
-        difficulty = TIER[score_to_pip(sc['score'])]
+        pip = score_to_pip(sc['score'])
+        difficulty = difficulty_for({'clues': raw['clues'], 'mode': 'expanded'}, pip)
     puz = {
         'id':          f"{profile.id_prefix}-{num:02d}",
         'title':       rng.choice(TITLES),
@@ -2403,7 +2437,7 @@ def cmd_analyze(_args):
             'residual_worlds': d['residual_worlds'],
         }
         if not pid.startswith('tutorial'):
-            puz['difficulty'] = TIER[pip]
+            puz['difficulty'] = difficulty_for(puz, pip)
         f.write_text(json.dumps(puz, indent=2))
 
     colls_file = BASE_PUZZLE_DIR / 'collections.json'
@@ -2421,12 +2455,14 @@ def cmd_analyze(_args):
             current = c.get('difficulty', '?')
             spread  = max(pip_list) - min(pip_list)
             flags   = []
-            if tier != current and current != 'tutorial':
+            # 'extreme' is the non-compliant variant of 'expert' — treat as a match
+            effective_tier = 'extreme' if (tier == 'expert' and not c.get('boardGameCompliant', True)) else tier
+            if effective_tier != current and current != 'tutorial':
                 flags.append('MISMATCH')
             if spread > 2:
                 flags.append('SPLIT SUGGESTED')
             flag = ('  ← ' + ' + '.join(flags)) if flags else ''
-            print(f"  {c['id']:30s}  current={current:8s}  computed={tier:8s}  "
+            print(f"  {c['id']:30s}  current={current:8s}  computed={effective_tier:8s}  "
                   f"avg={avg_pip:.1f}  spread={spread}  pips={pip_list}{flag}")
 
     print("\nDone.")
@@ -2477,7 +2513,7 @@ def cmd_analyze_expanded(_args):
             'residual_worlds': d['residual_worlds'],
         }
         if not is_tutorial:
-            puz['difficulty'] = TIER[pip]
+            puz['difficulty'] = difficulty_for(puz, pip)
         f.write_text(json.dumps(puz, indent=2))
 
     colls_file = EXP_PUZZLE_DIR / 'collections.json'

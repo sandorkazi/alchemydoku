@@ -49,9 +49,11 @@ function clearAllExpandedProgress() {
 
 const DIFF_BADGE: Record<string, string> = {
   tutorial: 'bg-purple-100 text-purple-700',
-  easy:     'bg-green-100 text-green-700',
+  easy:     'bg-green-100  text-green-700',
   medium:   'bg-yellow-100 text-yellow-700',
-  hard:     'bg-red-100 text-red-700',
+  hard:     'bg-red-100    text-red-700',
+  expert:   'bg-orange-100 text-orange-700',
+  extreme:  'bg-rose-100   text-rose-800',
 };
 
 // ─── Complexity pips (expanded) ───────────────────────────────────────────────
