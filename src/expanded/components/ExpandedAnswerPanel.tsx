@@ -635,7 +635,8 @@ export function ExpandedAnswerPanel({ onNext, isTutorial = false }: {
 }) {
   const { state } = useExpandedSolver();
   const isDebunkPuzzle = state.puzzle.questions.some(
-    q => q.kind === 'debunk_min_steps' || q.kind === 'debunk_apprentice_plan' || q.kind === 'debunk_conflict_only'
+    q => q.kind === 'debunk_min_steps' || q.kind === 'debunk_apprentice_plan'
+      || q.kind === 'debunk_conflict_only' || q.kind === 'debunk_max_conflict'
   );
   if (isDebunkPuzzle) {
     return <ExpandedDebunkAnswerPanel onNext={onNext} isTutorial={isTutorial} />;

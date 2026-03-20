@@ -66,6 +66,10 @@
   "questions": [
     {
       "kind": "debunk_apprentice_plan"
+    },
+    {
+      "kind": "debunk_max_conflict",
+      "maxCoverage": 2
     }
   ],
   "solution": {
@@ -89,6 +93,18 @@
         "kind": "apprentice",
         "ingredient": 6,
         "color": "R"
+      }
+    ],
+    "debunk_max_conflict": [
+      {
+        "kind": "master",
+        "ingredient1": 1,
+        "ingredient2": 2
+      },
+      {
+        "kind": "master",
+        "ingredient1": 5,
+        "ingredient2": 6
       }
     ]
   },

@@ -427,7 +427,8 @@ export function AnswerPanel({ onNext, isTutorial = false }: {
 }) {
   const { state } = useSolver();
   const isDebunkPuzzle = state.puzzle.questions.some(
-    q => q.kind === 'debunk_min_steps' || q.kind === 'debunk_conflict_only' || q.kind === 'debunk_apprentice_plan'
+    q => q.kind === 'debunk_min_steps' || q.kind === 'debunk_conflict_only'
+      || q.kind === 'debunk_apprentice_plan' || q.kind === 'debunk_max_conflict'
   );
 
   if (isDebunkPuzzle) {

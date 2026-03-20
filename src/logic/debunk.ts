@@ -271,6 +271,43 @@ export function validateConflictOnlyAnswer(
   return [...falsePubIds].every(id => coveredIds.has(id));
 }
 
+/**
+ * Validate a max-conflict answer.
+ * Valid when:
+ * 1. All steps are master steps.
+ * 2. Each complete step simulates with conflict-only semantics.
+ * 3. The total distinct FALSE publications covered by conflicts ≥ refMaxCoverage.
+ *
+ * Uses >= so that plans leveraging correct publications as conflict partners
+ * (added by add_correct_pubs.py after generation) are also accepted.
+ */
+export function validateMaxConflictAnswer(
+  steps: DebunkStep[],
+  solution: Assignment,
+  publications: Publication[],
+  _worlds: WorldSet,
+  refMaxCoverage: number,
+): boolean {
+  if (steps.some(s => s.kind !== 'master')) return false;
+
+  const allPubs = new Map<IngredientId, AlchemicalId>(
+    publications.map(p => [p.ingredient, p.claimedAlchemical])
+  );
+  const falsePubIds = new Set(
+    publications
+      .filter(p => solution[p.ingredient] !== p.claimedAlchemical)
+      .map(p => p.ingredient)
+  );
+  const coveredIds = new Set<IngredientId>();
+  for (const step of steps) {
+    const outcome = simulateConflictOnlyStep(step, solution, allPubs);
+    for (const c of outcome.conflicts) {
+      if (falsePubIds.has(c)) coveredIds.add(c);
+    }
+  }
+  return coveredIds.size >= refMaxCoverage;
+}
+
 // ─── Conflict-only step simulation ────────────────────────────────────────────
 
 /**
@@ -286,7 +323,7 @@ export function validateConflictOnlyAnswer(
  *
  * No removals happen in conflict-only mode; this function only reports conflicts.
  */
-function simulateConflictOnlyStep(
+export function simulateConflictOnlyStep(
   step: DebunkStep,
   solution: Assignment,
   activePubs: Map<IngredientId, AlchemicalId>,

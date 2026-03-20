@@ -1,7 +1,7 @@
 import { describe, it, expect } from 'vitest';
 import { ALL_PUZZLES } from '../../src/data/puzzles/index';
 import { getPuzzleWorlds, computeAnswerFromWorlds } from '../../src/puzzles/schema';
-import { validateMasterPlanAnswer, validateApprenticePlanAnswer, validateConflictOnlyAnswer } from '../../src/logic/debunk';
+import { validateMasterPlanAnswer, validateApprenticePlanAnswer, validateConflictOnlyAnswer, validateMaxConflictAnswer } from '../../src/logic/debunk';
 import type { QuestionTarget, Publication } from '../../src/types';
 
 // Debunk questions are validated externally (via debunk_answers); computeAnswerFromWorlds
@@ -10,6 +10,7 @@ const DEBUNK_KINDS = new Set<QuestionTarget['kind']>([
   'debunk_min_steps',
   'debunk_apprentice_plan',
   'debunk_conflict_only',
+  'debunk_max_conflict',
 ]);
 
 describe('debunk reference answers', () => {
@@ -17,7 +18,8 @@ describe('debunk reference answers', () => {
     const debunkQs = puzzle.questions.filter(q =>
       q.kind === 'debunk_min_steps' ||
       q.kind === 'debunk_apprentice_plan' ||
-      q.kind === 'debunk_conflict_only',
+      q.kind === 'debunk_conflict_only' ||
+      q.kind === 'debunk_max_conflict',
     );
     if (debunkQs.length === 0) continue;
 
@@ -46,6 +48,14 @@ describe('debunk reference answers', () => {
           expect(
             validateConflictOnlyAnswer(ref, puzzle.solution, pubs, worlds, ref.length),
             'debunk_conflict_only reference answer must pass the validator',
+          ).toBe(true);
+        } else if (q.kind === 'debunk_max_conflict') {
+          const ref = answers['debunk_max_conflict'] ?? [];
+          const maxCoverage = (q as { kind: 'debunk_max_conflict'; maxCoverage: number }).maxCoverage;
+          expect(ref.length, 'debunk_max_conflict must have a reference answer').toBeGreaterThan(0);
+          expect(
+            validateMaxConflictAnswer(ref, puzzle.solution, pubs, worlds, maxCoverage),
+            'debunk_max_conflict reference answer must pass the validator',
           ).toBe(true);
         }
       }

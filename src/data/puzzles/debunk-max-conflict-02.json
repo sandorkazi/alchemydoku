@@ -1,38 +1,27 @@
 {
-  "id": "mixed-debunk-r-03",
-  "title": "The Witnessed Mix",
-  "description": "Mixed evidence surrounds several suspicious publications. Use master debunking to expose the lies.",
-  "difficulty": "medium",
+  "id": "debunk-max-conflict-02",
+  "title": "A Scholar's Note",
+  "description": "Use the clues to answer the question.",
+  "difficulty": "easy",
   "clues": [
     {
       "kind": "debunk",
       "variant": "master",
-      "ingredient1": 5,
-      "ingredient2": 6,
+      "ingredient1": 4,
+      "ingredient2": 5,
       "claimedPotion": {
         "color": "G",
-        "sign": "+"
+        "sign": "-"
       },
       "outcome": "success"
     },
     {
       "kind": "sell",
-      "ingredient1": 1,
-      "ingredient2": 3,
+      "ingredient1": 7,
+      "ingredient2": 8,
       "claimedResult": {
         "type": "potion",
         "color": "G",
-        "sign": "+"
-      },
-      "sellResult": "opposite"
-    },
-    {
-      "kind": "sell",
-      "ingredient1": 2,
-      "ingredient2": 5,
-      "claimedResult": {
-        "type": "potion",
-        "color": "R",
         "sign": "-"
       },
       "sellResult": "total_match"
@@ -40,11 +29,22 @@
     {
       "kind": "debunk",
       "variant": "master",
-      "ingredient1": 1,
-      "ingredient2": 8,
+      "ingredient1": 2,
+      "ingredient2": 5,
       "claimedPotion": {
-        "color": "G",
-        "sign": "+"
+        "color": "B",
+        "sign": "-"
+      },
+      "outcome": "success"
+    },
+    {
+      "kind": "debunk",
+      "variant": "master",
+      "ingredient1": 1,
+      "ingredient2": 7,
+      "claimedPotion": {
+        "color": "B",
+        "sign": "-"
       },
       "outcome": "success"
     },
@@ -52,9 +52,9 @@
       "kind": "debunk",
       "variant": "master",
       "ingredient1": 3,
-      "ingredient2": 8,
+      "ingredient2": 7,
       "claimedPotion": {
-        "color": "B",
+        "color": "R",
         "sign": "-"
       },
       "outcome": "success"
@@ -62,22 +62,19 @@
   ],
   "questions": [
     {
-      "kind": "debunk_min_steps"
-    },
-    {
       "kind": "debunk_max_conflict",
-      "maxCoverage": 4
+      "maxCoverage": 3
     }
   ],
   "solution": {
-    "1": 4,
-    "2": 5,
-    "3": 7,
+    "1": 6,
+    "2": 1,
+    "3": 4,
     "4": 2,
-    "5": 1,
+    "5": 3,
     "6": 8,
-    "7": 3,
-    "8": 6
+    "7": 7,
+    "8": 5
   },
   "hints": [
     {
@@ -94,9 +91,9 @@
     }
   ],
   "complexity": {
-    "score": 59,
-    "raw_score": 37,
-    "clue_score": 2,
+    "score": 57,
+    "raw_score": 35,
+    "clue_score": 0,
     "question_score": 10,
     "world_score": 15,
     "residual_worlds": 2
@@ -104,59 +101,36 @@
   "publications": [
     {
       "ingredient": 1,
-      "claimedAlchemical": 8
-    },
-    {
-      "ingredient": 2,
-      "claimedAlchemical": 8
-    },
-    {
-      "ingredient": 3,
       "claimedAlchemical": 4
-    },
-    {
-      "ingredient": 4,
-      "claimedAlchemical": 2
     },
     null,
     {
-      "ingredient": 6,
+      "ingredient": 3,
       "claimedAlchemical": 1
+    },
+    null,
+    null,
+    {
+      "ingredient": 6,
+      "claimedAlchemical": 3
     },
     {
       "ingredient": 7,
-      "claimedAlchemical": 3
+      "claimedAlchemical": 1
     },
     null
   ],
   "debunk_answers": {
-    "debunk_min_steps": [
-      {
-        "kind": "master",
-        "ingredient1": 1,
-        "ingredient2": 3
-      },
-      {
-        "kind": "master",
-        "ingredient1": 2,
-        "ingredient2": 6
-      }
-    ],
     "debunk_max_conflict": [
       {
         "kind": "master",
-        "ingredient1": 1,
-        "ingredient2": 4
-      },
-      {
-        "kind": "master",
-        "ingredient1": 2,
-        "ingredient2": 4
-      },
-      {
-        "kind": "master",
         "ingredient1": 3,
-        "ingredient2": 6
+        "ingredient2": 7
+      },
+      {
+        "kind": "master",
+        "ingredient1": 6,
+        "ingredient2": 7
       }
     ]
   }

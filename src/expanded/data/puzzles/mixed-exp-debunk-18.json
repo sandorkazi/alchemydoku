@@ -101,6 +101,10 @@
     {
       "kind": "debunk_conflict_only",
       "fixedIngredient": 1
+    },
+    {
+      "kind": "debunk_max_conflict",
+      "maxCoverage": 4
     }
   ],
   "solution": {
@@ -182,6 +186,18 @@
       }
     ],
     "debunk_conflict_only": [
+      {
+        "kind": "master",
+        "ingredient1": 1,
+        "ingredient2": 3
+      },
+      {
+        "kind": "master",
+        "ingredient1": 6,
+        "ingredient2": 7
+      }
+    ],
+    "debunk_max_conflict": [
       {
         "kind": "master",
         "ingredient1": 1,
