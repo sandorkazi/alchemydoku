@@ -314,7 +314,8 @@ function mergeSettings(a: Settings | undefined, b: Settings | undefined): Settin
   if (!b) return a;
   return {
     showLatestUpdates: a.showLatestUpdates && b.showLatestUpdates, // false = dismissed wins
-    showQuickRef:      a.showQuickRef      || b.showQuickRef,      // true = shown wins
+    showRulesRef:      a.showRulesRef      || b.showRulesRef,      // true = shown wins
+    showInterfaceRef:  a.showInterfaceRef  || b.showInterfaceRef,  // true = shown wins
     showPuzzleOnly:    a.showPuzzleOnly    || b.showPuzzleOnly,    // true = enabled wins
   };
 }

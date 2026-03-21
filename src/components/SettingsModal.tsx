@@ -64,18 +64,35 @@ const UpdatesPreview = (
   </div>
 );
 
-const QuickRefPreview = (
+const RulesRefPreview = (
   <div className="space-y-1.5 pointer-events-none select-none opacity-80">
     <div className="rounded-lg bg-indigo-50 border border-indigo-200 px-2.5 py-1.5">
       <p className="text-[10px] font-bold uppercase tracking-wide text-indigo-900">⚗️ Mixing Rule</p>
       <p className="text-[11px] leading-relaxed text-indigo-900 mt-0.5">
-        Mix two ingredients → potion color comes from the aspect where signs differ; neutral if all match or all differ.
+        Mix two ingredients → potion color comes from the aspect where signs differ; neutral if all cancel.
       </p>
     </div>
     <div className="rounded-lg bg-emerald-50 border border-emerald-200 px-2.5 py-1.5">
       <p className="text-[10px] font-bold uppercase tracking-wide text-emerald-900">💰 Selling</p>
       <p className="text-[11px] leading-relaxed text-emerald-900 mt-0.5">
-        Claim an aspect when selling a potion — result depends on whether your claim matches the truth.
+        Claim an aspect when selling — result depends on whether your claim matches the truth.
+      </p>
+    </div>
+  </div>
+);
+
+const InterfaceRefPreview = (
+  <div className="space-y-1.5 pointer-events-none select-none opacity-80">
+    <div className="rounded-lg bg-sky-50 border border-sky-200 px-2.5 py-1.5">
+      <p className="text-[10px] font-bold uppercase tracking-wide text-sky-900">🖱️ Grid Controls</p>
+      <p className="text-[11px] leading-relaxed text-sky-900 mt-0.5">
+        Click to select · drag to fill · right-click to clear · toggle auto-deduction.
+      </p>
+    </div>
+    <div className="rounded-lg bg-violet-50 border border-violet-200 px-2.5 py-1.5">
+      <p className="text-[10px] font-bold uppercase tracking-wide text-violet-900">💡 Hints &amp; Notes</p>
+      <p className="text-[11px] leading-relaxed text-violet-900 mt-0.5">
+        Reveal step-by-step hints per question · attach freehand notes to any clue.
       </p>
     </div>
   </div>
@@ -158,11 +175,18 @@ export function SettingsModal({
               onChange={v => set({ showLatestUpdates: v })}
             />
             <ToggleRow
-              label="Show quick references"
-              description="Show the Rules and Interface reference sections on the home page"
-              preview={QuickRefPreview}
-              value={settings.showQuickRef}
-              onChange={v => set({ showQuickRef: v })}
+              label="Show rules quick reference"
+              description="Show the Rules reference section on the home page"
+              preview={RulesRefPreview}
+              value={settings.showRulesRef}
+              onChange={v => set({ showRulesRef: v })}
+            />
+            <ToggleRow
+              label="Show interface quick reference"
+              description="Show the Interface reference section on the home page"
+              preview={InterfaceRefPreview}
+              value={settings.showInterfaceRef}
+              onChange={v => set({ showInterfaceRef: v })}
             />
             <ToggleRow
               label="🧩 Allow unrealistic (extra) puzzles"
