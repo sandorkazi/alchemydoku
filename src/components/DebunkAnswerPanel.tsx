@@ -145,7 +145,7 @@ function StepEditor({
       );
     }
     return (
-      <span className="text-red-400 text-xs">No effect — try a different pair</span>
+      <span className="text-red-400 text-xs">Not sure on the effect — try a different pair</span>
     );
   })();
 
