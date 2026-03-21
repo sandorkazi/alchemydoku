@@ -9,7 +9,7 @@ import { useState } from 'react';
 import { useSolver, useIngredient } from '../contexts/SolverContext';
 import { IngredientIcon, AlchemicalImage, ElemImage, PotionImage, CorrectIcon, IncorrectIcon } from './GameSprites';
 import { PotionPicker } from './AnswerPickers';
-import { simulatePlan } from '../logic/debunk';
+import { simulatePlan, simulatePlanForDisplay } from '../logic/debunk';
 import type { DebunkStep, IngredientId, Color, Publication, PotionResult } from '../types';
 
 // ─── Ingredient picker ────────────────────────────────────────────────────────
@@ -224,10 +224,11 @@ function StepEditor({
 // ─── Publications board ───────────────────────────────────────────────────────
 
 function PublicationsBoard({
-  publications, removedSet,
+  publications, removedSet, conflictedSet,
 }: {
   publications: Publication[];
   removedSet: Set<IngredientId>;
+  conflictedSet: Set<IngredientId>;
 }) {
   const getIngredient = useIngredient();
   return (
@@ -238,6 +239,7 @@ function PublicationsBoard({
       <div className="flex flex-wrap gap-2">
         {publications.map(pub => {
           const removed = removedSet.has(pub.ingredient);
+          const conflicted = !removed && conflictedSet.has(pub.ingredient);
           const { index } = getIngredient(pub.ingredient);
           return (
             <div
@@ -246,7 +248,9 @@ function PublicationsBoard({
                 transition-all ${
                   removed
                     ? 'border-green-200 bg-green-50 text-green-400 line-through opacity-50'
-                    : 'border-red-200 bg-red-50 text-red-700'
+                    : conflicted
+                      ? 'border-amber-200 bg-amber-50 text-amber-700'
+                      : 'border-red-200 bg-red-50 text-red-700'
                 }`}
             >
               <IngredientIcon index={index} width={36} />
@@ -255,6 +259,7 @@ function PublicationsBoard({
                 <AlchemicalImage id={pub.claimedAlchemical} width={80} />
               </span>
               {removed && <span className="text-green-500 ml-0.5">✓</span>}
+              {conflicted && <span className="ml-0.5">⚡</span>}
             </div>
           );
         })}
@@ -333,9 +338,10 @@ export function DebunkAnswerPanel({ onNext, isTutorial = false }: {
   const { outcomes, remainingPubs } = simulatePlan(
     completedSteps, puzzle.solution, publications, worlds, isConflictOnly
   );
-  const removedSet = new Set<IngredientId>(
-    outcomes.flatMap(o => o.removed)
-  );
+  // Display sets: based on all publications + claims only, never the hidden truth
+  const displayOutcomes = simulatePlanForDisplay(completedSteps, puzzle.solution, publications);
+  const removedSet = new Set<IngredientId>(displayOutcomes.flatMap(o => o.removed));
+  const conflictedSet = new Set<IngredientId>(displayOutcomes.flatMap(o => o.conflicts));
 
   const allStepsComplete = drafts.length > 0 && drafts.every(isComplete);
   const falsePubIngredients = publications
@@ -382,7 +388,7 @@ export function DebunkAnswerPanel({ onNext, isTutorial = false }: {
 
       {/* Publications board */}
       <div className="bg-red-50 border border-red-200 rounded-xl px-4 py-3">
-        <PublicationsBoard publications={publications} removedSet={removedSet} />
+        <PublicationsBoard publications={publications} removedSet={removedSet} conflictedSet={conflictedSet} />
       </div>
 
       {/* Step-feedback confirmation modal (non-tutorial only) */}

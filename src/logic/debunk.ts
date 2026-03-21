@@ -282,6 +282,68 @@ function simulateConflictOnlyStep(
   return { removed: [], conflicts };
 }
 
+// ─── Display simulation (solution-neutral) ────────────────────────────────────
+
+/**
+ * Compute per-step outcomes for DISPLAY PURPOSES ONLY.
+ *
+ * Uses ALL publications (not just false ones) so that the publications board
+ * never leaks which publications are true — checkmarks and conflict markers are
+ * derived solely from claimed alchemicals + the publicly-observed mix result.
+ *
+ * In practice, only false publications can be directly disproved (a true
+ * publication's claimed alch always produces its own mix result), but this
+ * function does not filter by truth and detects conflicts too.
+ */
+export function simulatePlanForDisplay(
+  steps: DebunkStep[],
+  solution: Assignment,
+  allPublications: Publication[],
+): StepOutcome[] {
+  const activePubs = new Map<IngredientId, AlchemicalId>(
+    allPublications.map(p => [p.ingredient, p.claimedAlchemical])
+  );
+  return steps.map(step => {
+    const removed: IngredientId[] = [];
+    const conflicts: IngredientId[] = [];
+
+    if (step.kind === 'apprentice') {
+      const { ingredient, color } = step;
+      const sign = trueSign(solution, ingredient, color);
+      for (const [ing, claimedAlch] of activePubs) {
+        if (ing === ingredient) {
+          const claimedSign = ALCHEMICALS[claimedAlch][color].sign === '+' ? 1 : 0;
+          if (sign !== claimedSign) { removed.push(ing); break; }
+        }
+      }
+      for (const ing of removed) activePubs.delete(ing);
+    } else if (step.kind === 'master') {
+      const { ingredient1, ingredient2 } = step;
+      const trueCode = trueMixCode(solution, ingredient1, ingredient2);
+      // Direct disproval
+      if (activePubs.has(ingredient1) && !canProduceResult(activePubs.get(ingredient1)!, trueCode)) {
+        removed.push(ingredient1); activePubs.delete(ingredient1);
+      }
+      if (activePubs.has(ingredient2) && !canProduceResult(activePubs.get(ingredient2)!, trueCode)) {
+        removed.push(ingredient2); activePubs.delete(ingredient2);
+      }
+      // Conflict: both still active, each result-compatible, together predict wrong
+      if (activePubs.has(ingredient1) && activePubs.has(ingredient2)) {
+        const c1 = activePubs.get(ingredient1)!;
+        const c2 = activePubs.get(ingredient2)!;
+        if (
+          canProduceResult(c1, trueCode) &&
+          canProduceResult(c2, trueCode) &&
+          claimedMixCode(c1, c2) !== trueCode
+        ) {
+          conflicts.push(ingredient1, ingredient2);
+        }
+      }
+    }
+    return { removed, conflicts };
+  });
+}
+
 // ─── UI helpers ───────────────────────────────────────────────────────────────
 
 /**

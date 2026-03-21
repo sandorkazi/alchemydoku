@@ -10,7 +10,7 @@ import { useState } from 'react';
 import { useExpandedSolver, useExpandedIngredient } from '../contexts/ExpandedSolverContext';
 import { IngredientIcon, AlchemicalImage, ElemImage, SignedElemImage, PotionImage, CorrectIcon, IncorrectIcon } from '../../components/GameSprites';
 import { PotionPicker } from '../../components/AnswerPickers';
-import { simulateExpandedPlan } from '../logic/debunkExpanded';
+import { simulateExpandedPlan, simulateExpandedPlanForDisplay } from '../logic/debunkExpanded';
 import type { DebunkStep, IngredientId, Color, Publication, PotionResult } from '../../types';
 import type { DebunkArticle } from '../types';
 
@@ -279,10 +279,11 @@ function StepEditor({
 // ─── Publications board ───────────────────────────────────────────────────────
 
 function PublicationsBoard({
-  publications, removedPubSet,
+  publications, removedPubSet, conflictedPubSet,
 }: {
   publications: Publication[];
   removedPubSet: Set<IngredientId>;
+  conflictedPubSet: Set<IngredientId>;
 }) {
   const getIngredient = useExpandedIngredient();
   if (publications.length === 0) return null;
@@ -294,6 +295,7 @@ function PublicationsBoard({
       <div className="flex flex-wrap gap-2">
         {publications.map(pub => {
           const removed = removedPubSet.has(pub.ingredient);
+          const conflicted = !removed && conflictedPubSet.has(pub.ingredient);
           const { index } = getIngredient(pub.ingredient);
           return (
             <div
@@ -302,7 +304,9 @@ function PublicationsBoard({
                 transition-all ${
                   removed
                     ? 'border-green-200 bg-green-50 text-green-400 line-through opacity-50'
-                    : 'border-red-200 bg-red-50 text-red-700'
+                    : conflicted
+                      ? 'border-amber-200 bg-amber-50 text-amber-700'
+                      : 'border-red-200 bg-red-50 text-red-700'
                 }`}
             >
               <IngredientIcon index={index} width={36} />
@@ -311,6 +315,7 @@ function PublicationsBoard({
                 <AlchemicalImage id={pub.claimedAlchemical} width={44} />
               </span>
               {removed && <span className="text-green-500 ml-0.5">✓</span>}
+              {conflicted && <span className="ml-0.5">⚡</span>}
             </div>
           );
         })}
@@ -429,10 +434,12 @@ export function ExpandedDebunkAnswerPanel({ onNext, isTutorial = false }: {
     return simulateExpandedPlan(completedSteps, puzzle.solution, publications, articles, worlds, plan.isConflictOnly);
   });
 
-  // Combined removed sets across ALL plans (for the board display)
-  const removedPubSet = new Set<IngredientId>(
-    simulations.flatMap(s => s.outcomes.flatMap(o => o.removedPubs))
-  );
+  // Display sets: based on all publications + claims only, never the hidden truth
+  const allCompletedSteps = plans.flatMap(p => p.drafts.filter(isComplete) as DebunkStep[]);
+  const displayOutcomes = simulateExpandedPlanForDisplay(allCompletedSteps, puzzle.solution, publications);
+  const removedPubSet = new Set<IngredientId>(displayOutcomes.flatMap(o => o.removedPubs));
+  const conflictedPubSet = new Set<IngredientId>(displayOutcomes.flatMap(o => o.conflicts));
+  // Article removals still require the worlds set (definitively-known check), use validation sim
   const removedArtSet = new Set<string>(
     simulations.flatMap(s => s.outcomes.flatMap(o => o.removedArts))
   );
@@ -453,7 +460,7 @@ export function ExpandedDebunkAnswerPanel({ onNext, isTutorial = false }: {
 
       {/* Board */}
       <div className="bg-red-50 border border-red-200 rounded-xl px-4 py-3 space-y-3">
-        <PublicationsBoard publications={publications} removedPubSet={removedPubSet} />
+        <PublicationsBoard publications={publications} removedPubSet={removedPubSet} conflictedPubSet={conflictedPubSet} />
         <ArticlesBoard articles={articles} removedArtSet={removedArtSet} />
       </div>
 

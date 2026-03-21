@@ -199,6 +199,65 @@ export function simulateExpandedPlan(
   };
 }
 
+// ─── Display simulation (solution-neutral) ────────────────────────────────────
+
+/**
+ * Compute per-step outcomes for DISPLAY PURPOSES ONLY.
+ * Uses ALL publications (not just false ones) and detects both direct disproval
+ * and conflicts so the board never leaks which publications are true.
+ * Articles are not included — they are only challengeable when an ingredient is
+ * definitively known, which requires the full worlds set; display-only
+ * article indicators are out of scope.
+ */
+export function simulateExpandedPlanForDisplay(
+  steps: DebunkStep[],
+  solution: Assignment,
+  allPublications: Publication[],
+): ExpandedStepOutcome[] {
+  const activePubs = new Map<IngredientId, AlchemicalId>(
+    allPublications.map(p => [p.ingredient, p.claimedAlchemical])
+  );
+  return steps.map(step => {
+    const removedPubs: IngredientId[] = [];
+    const conflicts: IngredientId[] = [];
+
+    if (step.kind === 'apprentice') {
+      const { ingredient, color } = step;
+      const sign = trueSign(solution, ingredient, color);
+      for (const [ing, claimedAlch] of activePubs) {
+        if (ing === ingredient) {
+          const claimedSign = ALCHEMICALS[claimedAlch][color].sign === '+' ? 1 : 0;
+          if (sign !== claimedSign) { removedPubs.push(ing); break; }
+        }
+      }
+      for (const ing of removedPubs) activePubs.delete(ing);
+    } else if (step.kind === 'master') {
+      const { ingredient1, ingredient2 } = step;
+      const trueCode = trueMixCode(solution, ingredient1, ingredient2);
+      // Direct disproval
+      if (activePubs.has(ingredient1) && !canProduceResult(activePubs.get(ingredient1)!, trueCode)) {
+        removedPubs.push(ingredient1); activePubs.delete(ingredient1);
+      }
+      if (activePubs.has(ingredient2) && !canProduceResult(activePubs.get(ingredient2)!, trueCode)) {
+        removedPubs.push(ingredient2); activePubs.delete(ingredient2);
+      }
+      // Conflict
+      if (activePubs.has(ingredient1) && activePubs.has(ingredient2)) {
+        const c1 = activePubs.get(ingredient1)!;
+        const c2 = activePubs.get(ingredient2)!;
+        if (
+          canProduceResult(c1, trueCode) &&
+          canProduceResult(c2, trueCode) &&
+          claimedMixCode(c1, c2) !== trueCode
+        ) {
+          conflicts.push(ingredient1, ingredient2);
+        }
+      }
+    }
+    return { removedPubs, removedArts: [], conflicts };
+  });
+}
+
 // ─── Validators ───────────────────────────────────────────────────────────────
 
 export function validateExpandedMinStepsAnswer(
