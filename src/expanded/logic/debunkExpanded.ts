@@ -15,7 +15,7 @@
  */
 
 import { ALCHEMICALS } from '../../data/alchemicals';
-import { isDefinitivelyKnown } from '../../logic/debunk';
+import { isDefinitivelyKnown, isMixResultDetermined } from '../../logic/debunk';
 import { MIX_TABLE } from '../../logic/worldPack';
 import type { IngredientId, AlchemicalId, Color, Assignment, WorldSet } from '../../types';
 import type { DebunkStep, Publication } from '../../types';
@@ -97,6 +97,10 @@ function simulateExpandedStep(
 
   else if (step.kind === 'master') {
     const { ingredient1, ingredient2 } = step;
+    // Only proceed if the mix result is deterministically known from the clues.
+    if (!isMixResultDetermined(worlds, ingredient1, ingredient2)) {
+      return { removedPubs: [], removedArts: [], conflicts: [] };
+    }
     const trueCode = trueMixCode(solution, ingredient1, ingredient2);
     const ing1Known = isDefinitivelyKnown(worlds, ingredient1);
     const ing2Known = isDefinitivelyKnown(worlds, ingredient2);
@@ -147,12 +151,17 @@ function simulateExpandedStep(
 function simulateConflictOnlyExpandedStep(
   step: DebunkStep,
   solution: Assignment,
+  worlds: WorldSet,
   activePubs: Map<IngredientId, AlchemicalId>,
 ): ExpandedStepOutcome {
   const conflicts: IngredientId[] = [];
 
   if (step.kind === 'master') {
     const { ingredient1, ingredient2 } = step;
+    // Result must be deterministically known from clues for the audience to verify.
+    if (!isMixResultDetermined(worlds, ingredient1, ingredient2)) {
+      return { removedPubs: [], removedArts: [], conflicts: [] };
+    }
     if (activePubs.has(ingredient1) && activePubs.has(ingredient2)) {
       const trueCode = trueMixCode(solution, ingredient1, ingredient2);
       const claimed1 = activePubs.get(ingredient1)!;
@@ -188,7 +197,7 @@ export function simulateExpandedPlan(
   for (const step of steps) {
     outcomes.push(
       conflictOnly
-        ? simulateConflictOnlyExpandedStep(step, solution, activePubs)
+        ? simulateConflictOnlyExpandedStep(step, solution, worlds, activePubs)
         : simulateExpandedStep(step, solution, worlds, activePubs, activeArts),
     );
   }
@@ -213,6 +222,7 @@ export function simulateExpandedPlanForDisplay(
   steps: DebunkStep[],
   solution: Assignment,
   allPublications: Publication[],
+  worlds: WorldSet,
 ): ExpandedStepOutcome[] {
   const activePubs = new Map<IngredientId, AlchemicalId>(
     allPublications.map(p => [p.ingredient, p.claimedAlchemical])
@@ -233,6 +243,10 @@ export function simulateExpandedPlanForDisplay(
       for (const ing of removedPubs) activePubs.delete(ing);
     } else if (step.kind === 'master') {
       const { ingredient1, ingredient2 } = step;
+      // Only show effect if the result is deterministically known from the clues.
+      if (!isMixResultDetermined(worlds, ingredient1, ingredient2)) {
+        return { removedPubs: [], removedArts: [], conflicts: [] };
+      }
       const trueCode = trueMixCode(solution, ingredient1, ingredient2);
       // Direct disproval
       if (activePubs.has(ingredient1) && !canProduceResult(activePubs.get(ingredient1)!, trueCode)) {
@@ -304,7 +318,7 @@ export function validateExpandedConflictOnlyAnswer(
   solution: Assignment,
   publications: Publication[],
   _articles: DebunkArticle[],
-  _worlds: WorldSet,
+  worlds: WorldSet,
   refLen: number,
 ): boolean {
   if (steps.length !== refLen) return false;
@@ -320,7 +334,7 @@ export function validateExpandedConflictOnlyAnswer(
   );
   const coveredIds = new Set<IngredientId>();
   for (const step of steps) {
-    const outcome = simulateConflictOnlyExpandedStep(step, solution, allPubs);
+    const outcome = simulateConflictOnlyExpandedStep(step, solution, worlds, allPubs);
     for (const c of outcome.conflicts) coveredIds.add(c);
   }
   return [...falsePubIds].every(id => coveredIds.has(id));

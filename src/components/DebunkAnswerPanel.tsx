@@ -339,7 +339,7 @@ export function DebunkAnswerPanel({ onNext, isTutorial = false }: {
     completedSteps, puzzle.solution, publications, worlds, isConflictOnly
   );
   // Display sets: based on all publications + claims only, never the hidden truth
-  const displayOutcomes = simulatePlanForDisplay(completedSteps, puzzle.solution, publications);
+  const displayOutcomes = simulatePlanForDisplay(completedSteps, puzzle.solution, publications, worlds);
   const removedSet = new Set<IngredientId>(displayOutcomes.flatMap(o => o.removed));
   const conflictedSet = new Set<IngredientId>(displayOutcomes.flatMap(o => o.conflicts));
 

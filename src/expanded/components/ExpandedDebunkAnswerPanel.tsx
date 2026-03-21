@@ -436,7 +436,7 @@ export function ExpandedDebunkAnswerPanel({ onNext, isTutorial = false }: {
 
   // Display sets: based on all publications + claims only, never the hidden truth
   const allCompletedSteps = plans.flatMap(p => p.drafts.filter(isComplete) as DebunkStep[]);
-  const displayOutcomes = simulateExpandedPlanForDisplay(allCompletedSteps, puzzle.solution, publications);
+  const displayOutcomes = simulateExpandedPlanForDisplay(allCompletedSteps, puzzle.solution, publications, worlds);
   const removedPubSet = new Set<IngredientId>(displayOutcomes.flatMap(o => o.removedPubs));
   const conflictedPubSet = new Set<IngredientId>(displayOutcomes.flatMap(o => o.conflicts));
   // Article removals still require the worlds set (definitively-known check), use validation sim

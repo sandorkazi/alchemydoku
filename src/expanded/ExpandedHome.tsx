@@ -190,6 +190,9 @@ function CollectionView({ collection, completed, showPuzzleOnly, onSelectPuzzle,
                       {(puzzle as any).complexity?.score != null && (
                         <ComplexityPips score={(puzzle as any).complexity.score} />
                       )}
+                      {isPuzzleNonCompliant(puzzle, 'expanded') && (
+                        <span className="text-xs text-gray-400 shrink-0" title="Unrealistic puzzle">🧩</span>
+                      )}
                     </span>
                     <span className="text-xs text-gray-400 break-words block">{puzzle.description}</span>
                   </span>

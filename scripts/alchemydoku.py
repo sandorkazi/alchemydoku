@@ -496,22 +496,32 @@ def _definitively_known(worlds: frozenset, sol: dict) -> set:
     return {s for s in SLOTS if all(w[s - 1] == sol[s] for w in worlds)}
 
 
-def _find_removal_plan(sol: dict, pub_map: dict, known: set) -> list:
+def _mix_result_determined(worlds: frozenset, ing_a: int, ing_b: int) -> bool:
+    """True if all worlds give the same mix result for (ing_a, ing_b) (1-indexed slots).
+    When False, the result is ambiguous and cannot be used to verify any debunk."""
+    if not worlds:
+        return False
+    i1, i2 = ing_a - 1, ing_b - 1
+    results = {MIX_TABLE[w[i1]][w[i2]] for w in worlds}
+    return len(results) == 1
+
+
+def _find_removal_plan(sol: dict, pub_map: dict, known: set, worlds: frozenset) -> list:
     """BFS to find minimum master steps to remove all false publications.
 
     Mirrors TypeScript simulateStep semantics exactly:
-    1. Result-incompatibility (§2b): if claimed alch cannot produce the observed
-       result with *any* partner, that publication is removed immediately —
-       independently for each ingredient in the mix.  Both can be removed at once.
-    2. Blame-based (§2a): after result-incompatibility removals, if the remaining
-       published ingredient predicted the wrong result given its partner's *true*
-       alchemical (and that partner is definitively known), it gets blamed.
-       Unambiguous blame → removal; mutual blame → conflict, neither removed.
+    - Result-incompatibility: if claimed alch cannot produce the observed result with
+      *any* partner, that publication is removed immediately.
+    - Steps are only valid if the mix result is deterministically known from the clues
+      (i.e. all worlds agree on the result for that pair).
     """
     from collections import deque
 
     def step_removals(ing_a: int, ing_b: int, state: frozenset) -> tuple:
         """(new_state, removed_set) for one master mix; removed may be empty."""
+        # Skip if the result is not deterministically known from the clues.
+        if not _mix_result_determined(worlds, ing_a, ing_b):
+            return state, set()
         true_r = MIX_TABLE[sol[ing_a]][sol[ing_b]]
         remaining = set(state)
         removed: set = set()
@@ -552,20 +562,24 @@ def _can_produce_result(claimed_alch: int, true_r) -> bool:
     return any(MIX_TABLE[claimed_alch][j] == true_r for j in ALL_ALCH)
 
 
-def _find_conflict_cover(sol: dict, pub_map: dict, _known: set):
+def _find_conflict_cover(sol: dict, pub_map: dict, worlds: frozenset):
     """Find a minimal set of pairs that together cover all publications with conflicts.
 
     True conflict requires (DEBUNK_PUZZLES.md §4c):
     1. Both ingredients published.
-    2. Neither claim is result-incompatible: each can produce the actual result with
-       some partner (∃j: MIX_TABLE[c_i][j] == true_r AND ∃j: MIX_TABLE[c_j][j] == true_r).
-    3. Together they predict the wrong result: MIX_TABLE[c_i][c_j] != true_r.
+    2. The mix result is deterministically known from the clues (all worlds agree).
+    3. Neither claim is result-incompatible: each can produce the actual result with
+       some partner.
+    4. Together they predict the wrong result: MIX_TABLE[c_i][c_j] != true_r.
 
     Returns ordered list of (ing_c, ing_d) pairs (fixedIngredient = cover[0][0]), or None."""
     pub_keys = sorted(pub_map.keys())
     valid_pairs = []
     for i, ing_c in enumerate(pub_keys):
         for ing_d in pub_keys[i + 1:]:
+            # Result must be deterministically known from the clues.
+            if not _mix_result_determined(worlds, ing_c, ing_d):
+                continue
             true_r = MIX_TABLE[sol[ing_c]][sol[ing_d]]
             c_i = pub_map[ing_c]  # claimed alchemical (1-indexed)
             c_j = pub_map[ing_d]
@@ -577,7 +591,10 @@ def _find_conflict_cover(sol: dict, pub_map: dict, _known: set):
                 valid_pairs.append((ing_c, ing_d))
     if not valid_pairs:
         return None
-    uncovered = set(pub_keys)
+    # Only FALSE publications need to be covered; true ones can participate in conflicts
+    # but don't need to appear in the conflict cover.
+    false_pub_ids = {k for k, v in pub_map.items() if sol[k] != v}
+    uncovered = set(false_pub_ids)
     selected = []
     available = list(valid_pairs)
     while uncovered:
@@ -661,7 +678,7 @@ def _make_articles(sol: dict, known: set, n_colors: int, rng: random.Random,
     return articles
 
 
-def _find_removal_plan_expanded(sol: dict, pub_map: dict, articles: list, known: set) -> list:
+def _find_removal_plan_expanded(sol: dict, pub_map: dict, articles: list, known: set, worlds: frozenset) -> list:
     """BFS to find minimum master steps to remove all publications AND articles.
     Returns list of step dicts or None."""
     from collections import deque
@@ -683,6 +700,9 @@ def _find_removal_plan_expanded(sol: dict, pub_map: dict, articles: list, known:
         return []
 
     def step_effect(ing_a, ing_b, pubs):
+        # Skip if the result is not deterministically known from the clues.
+        if not _mix_result_determined(worlds, ing_a, ing_b):
+            return pubs, False
         true_r = MIX_TABLE[sol[ing_a]][sol[ing_b]]
         remaining = set(pubs)
         removed_pubs: set = set()
@@ -735,13 +755,13 @@ def _plan_debunk(profile, sol: dict, worlds: frozenset, rng: random.Random):
             pub_map = _make_publications(sol, known, n_pubs, rng)
             if is_expanded:
                 articles = _make_articles(sol, known, 3, rng)
-                plan = _find_removal_plan_expanded(sol, pub_map, articles, known)
+                plan = _find_removal_plan_expanded(sol, pub_map, articles, known, worlds)
             else:
                 articles = []
-                plan = _find_removal_plan(sol, pub_map, known)
+                plan = _find_removal_plan(sol, pub_map, known, worlds)
             if plan is None:
                 continue
-            conflict_cover = _find_conflict_cover(sol, pub_map, known)
+            conflict_cover = _find_conflict_cover(sol, pub_map, worlds)
             questions = [{'kind': 'debunk_min_steps'}]
             if conflict_cover:
                 ing_c = conflict_cover[0][0]
@@ -2899,7 +2919,10 @@ def cmd_migrate_conflict_answers(_args):
                 continue
             sol = {int(k): v for k, v in puz['solution'].items()}
             pub_map = {p['ingredient']: p['claimedAlchemical'] for p in pubs}
-            cover = _find_conflict_cover(sol, pub_map, set())
+            clues = puz.get('clues', [])
+            golem = puz.get('golem')
+            worlds = apply_all(all_worlds(), clues, golem)
+            cover = _find_conflict_cover(sol, pub_map, worlds)
             if cover is None:
                 # No full cover possible — remove debunk_conflict_only from this puzzle
                 puz['questions'] = [q for q in questions if q.get('kind') != 'debunk_conflict_only']
@@ -3022,9 +3045,9 @@ def cmd_recompute_debunk_answers(_args):
                 continue
             if is_exp:
                 articles = puz.get('articles') or []
-                new_plan = _find_removal_plan_expanded(sol, pub_map, articles, known)
+                new_plan = _find_removal_plan_expanded(sol, pub_map, articles, known, worlds)
             else:
-                new_plan = _find_removal_plan(sol, pub_map, known)
+                new_plan = _find_removal_plan(sol, pub_map, known, worlds)
             if new_plan is None:
                 print(f'  WARN: no plan found for {path.name}')
                 continue

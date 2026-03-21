@@ -2,41 +2,41 @@
   "id": "mixed-exp-debunk-14",
   "mode": "expanded",
   "kind": "debunk",
-  "title": "The Cooperative Effect",
+  "title": "The Hopf Bifurcation",
   "description": "Mixed evidence surrounds several suspicious publications. Use master debunking to expose the lies.",
   "difficulty": "hard",
   "golem": {
     "chest": {
-      "color": "R",
-      "size": "L"
+      "color": "G",
+      "size": "S"
     },
     "ears": {
       "color": "B",
-      "size": "L"
+      "size": "S"
     }
   },
   "clues": [
     {
       "kind": "golem_test",
-      "ingredient": 6,
+      "ingredient": 1,
       "chest_reacted": true,
       "ears_reacted": true
     },
     {
       "kind": "golem_test",
-      "ingredient": 1,
-      "chest_reacted": false,
-      "ears_reacted": true
+      "ingredient": 6,
+      "chest_reacted": true,
+      "ears_reacted": false
     },
     {
       "kind": "sell_result_among",
       "ingredients": [
         1,
-        4,
-        6
+        6,
+        7
       ],
       "claimedPotion": {
-        "color": "B",
+        "color": "R",
         "sign": "-"
       },
       "sellResult": "opposite"
@@ -44,11 +44,12 @@
     {
       "kind": "golem_reaction_among",
       "ingredients": [
-        2,
         4,
-        5
+        6,
+        7,
+        8
       ],
-      "reaction": "animators",
+      "reaction": "ears_only",
       "count": 1
     },
     {
@@ -56,21 +57,22 @@
       "ingredients": [
         1,
         2,
-        7
+        6
       ],
-      "result": "solar",
+      "result": "lunar",
       "count": 1
     },
     {
       "kind": "sell_among",
       "ingredients": [
+        1,
         2,
-        6,
-        8
+        4,
+        6
       ],
       "claimedPotion": {
-        "color": "R",
-        "sign": "-"
+        "color": "B",
+        "sign": "+"
       },
       "result": "sign_ok",
       "count": 3
@@ -79,10 +81,11 @@
       "kind": "golem_reaction_among",
       "ingredients": [
         1,
-        2,
-        6
+        5,
+        6,
+        7
       ],
-      "reaction": "non_reactive",
+      "reaction": "ears_only",
       "count": 1
     }
   ],
@@ -92,14 +95,14 @@
     }
   ],
   "solution": {
-    "1": 2,
-    "2": 3,
-    "3": 1,
-    "4": 8,
-    "5": 4,
-    "6": 7,
-    "7": 6,
-    "8": 5
+    "1": 5,
+    "2": 8,
+    "3": 4,
+    "4": 6,
+    "5": 1,
+    "6": 2,
+    "7": 3,
+    "8": 7
   },
   "hints": [],
   "complexity": {
@@ -108,35 +111,29 @@
     "clue_score": 30,
     "question_score": 10,
     "world_score": 15,
-    "residual_worlds": 6
+    "residual_worlds": 8
   },
   "publications": [
     {
       "ingredient": 1,
-      "claimedAlchemical": 1
+      "claimedAlchemical": 7
     },
     {
       "ingredient": 2,
-      "claimedAlchemical": 7
+      "claimedAlchemical": 3
     },
     null,
     {
       "ingredient": 4,
-      "claimedAlchemical": 8
+      "claimedAlchemical": 5
     },
     null,
     {
       "ingredient": 6,
-      "claimedAlchemical": 4
+      "claimedAlchemical": 7
     },
-    {
-      "ingredient": 7,
-      "claimedAlchemical": 6
-    },
-    {
-      "ingredient": 8,
-      "claimedAlchemical": 4
-    }
+    null,
+    null
   ],
   "debunk_answers": {
     "debunk_min_steps": [
@@ -147,50 +144,23 @@
       },
       {
         "kind": "master",
-        "ingredient1": 2,
-        "ingredient2": 4
-      },
-      {
-        "kind": "master",
-        "ingredient1": 6,
-        "ingredient2": 8
+        "ingredient1": 4,
+        "ingredient2": 6
       }
     ]
   },
   "articles": [
     {
-      "id": "art-R-1",
-      "aspect": "R",
-      "entries": [
-        {
-          "ingredient": 1,
-          "sign": "-"
-        },
-        {
-          "ingredient": 2,
-          "sign": "+"
-        },
-        {
-          "ingredient": 5,
-          "sign": "+"
-        },
-        {
-          "ingredient": 8,
-          "sign": "-"
-        }
-      ]
-    },
-    {
-      "id": "art-G-2",
-      "aspect": "G",
+      "id": "art-B-1",
+      "aspect": "B",
       "entries": [
         {
           "ingredient": 2,
-          "sign": "+"
+          "sign": "-"
         },
         {
           "ingredient": 3,
-          "sign": "-"
+          "sign": "+"
         },
         {
           "ingredient": 5,
@@ -203,16 +173,34 @@
       ]
     },
     {
-      "id": "art-B-3",
-      "aspect": "B",
+      "id": "art-G-2",
+      "aspect": "G",
+      "entries": [
+        {
+          "ingredient": 1,
+          "sign": "+"
+        },
+        {
+          "ingredient": 2,
+          "sign": "-"
+        },
+        {
+          "ingredient": 4,
+          "sign": "-"
+        },
+        {
+          "ingredient": 8,
+          "sign": "+"
+        }
+      ]
+    },
+    {
+      "id": "art-R-3",
+      "aspect": "R",
       "entries": [
         {
           "ingredient": 1,
           "sign": "-"
-        },
-        {
-          "ingredient": 3,
-          "sign": "+"
         },
         {
           "ingredient": 4,
@@ -220,6 +208,10 @@
         },
         {
           "ingredient": 6,
+          "sign": "+"
+        },
+        {
+          "ingredient": 7,
           "sign": "+"
         }
       ]

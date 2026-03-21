@@ -58,6 +58,24 @@ export function isDefinitivelyKnown(worlds: WorldSet, slot: IngredientId): boole
   return true;
 }
 
+/**
+ * Returns true if the mix result for (ing1, ing2) is the same across ALL worlds.
+ * If false, the result is ambiguous — the audience cannot verify any debunk based on it,
+ * so any master step using this pair must be rejected.
+ */
+export function isMixResultDetermined(worlds: WorldSet, ing1: IngredientId, ing2: IngredientId): boolean {
+  if (worlds.length === 0) return false;
+  const a0 = WORLD_DATA[worlds[0] * 8 + (ing1 - 1)];
+  const b0 = WORLD_DATA[worlds[0] * 8 + (ing2 - 1)];
+  const firstCode = MIX_TABLE[a0 * 8 + b0];
+  for (let i = 1; i < worlds.length; i++) {
+    const ai = WORLD_DATA[worlds[i] * 8 + (ing1 - 1)];
+    const bi = WORLD_DATA[worlds[i] * 8 + (ing2 - 1)];
+    if (MIX_TABLE[ai * 8 + bi] !== firstCode) return false;
+  }
+  return true;
+}
+
 // ─── Step outcome ─────────────────────────────────────────────────────────────
 
 export type StepOutcome = {
@@ -72,7 +90,7 @@ export type StepOutcome = {
 function simulateStep(
   step: DebunkStep,
   solution: Assignment,
-  _worlds: WorldSet,
+  worlds: WorldSet,
   activePubs: Map<IngredientId, AlchemicalId>,
 ): StepOutcome {
   const removed: IngredientId[] = [];
@@ -94,6 +112,12 @@ function simulateStep(
 
   else if (step.kind === 'master') {
     const { ingredient1, ingredient2 } = step;
+    // Only proceed if the mix result is deterministically known from the clues.
+    // If different worlds yield different results, the audience cannot verify any
+    // debunk based on this pair, so the step produces no removals.
+    if (!isMixResultDetermined(worlds, ingredient1, ingredient2)) {
+      return { removed: [], conflicts: [] };
+    }
     const trueCode = trueMixCode(solution, ingredient1, ingredient2);
 
     // Direct disproval (result-incompatibility): a claimed alchemical that cannot
@@ -217,7 +241,7 @@ export function validateConflictOnlyAnswer(
   steps: DebunkStep[],
   solution: Assignment,
   publications: Publication[],
-  _worlds: WorldSet,
+  worlds: WorldSet,
   refLen: number,
 ): boolean {
   if (steps.length !== refLen) return false;
@@ -233,7 +257,7 @@ export function validateConflictOnlyAnswer(
   );
   const coveredIds = new Set<IngredientId>();
   for (const step of steps) {
-    const outcome = simulateConflictOnlyStep(step, solution, allPubs);
+    const outcome = simulateConflictOnlyStep(step, solution, worlds, allPubs);
     for (const c of outcome.conflicts) coveredIds.add(c);
   }
   return [...falsePubIds].every(id => coveredIds.has(id));
@@ -257,12 +281,17 @@ export function validateConflictOnlyAnswer(
 function simulateConflictOnlyStep(
   step: DebunkStep,
   solution: Assignment,
+  worlds: WorldSet,
   activePubs: Map<IngredientId, AlchemicalId>,
 ): StepOutcome {
   const conflicts: IngredientId[] = [];
 
   if (step.kind === 'master') {
     const { ingredient1, ingredient2 } = step;
+    // Result must be deterministically known from clues for the audience to verify.
+    if (!isMixResultDetermined(worlds, ingredient1, ingredient2)) {
+      return { removed: [], conflicts: [] };
+    }
     if (activePubs.has(ingredient1) && activePubs.has(ingredient2)) {
       const trueCode = trueMixCode(solution, ingredient1, ingredient2);
       const claimed1 = activePubs.get(ingredient1)!;
@@ -299,6 +328,7 @@ export function simulatePlanForDisplay(
   steps: DebunkStep[],
   solution: Assignment,
   allPublications: Publication[],
+  worlds: WorldSet,
 ): StepOutcome[] {
   const activePubs = new Map<IngredientId, AlchemicalId>(
     allPublications.map(p => [p.ingredient, p.claimedAlchemical])
@@ -319,6 +349,10 @@ export function simulatePlanForDisplay(
       for (const ing of removed) activePubs.delete(ing);
     } else if (step.kind === 'master') {
       const { ingredient1, ingredient2 } = step;
+      // Only show effect if the result is deterministically known from the clues.
+      if (!isMixResultDetermined(worlds, ingredient1, ingredient2)) {
+        return { removed: [], conflicts: [] };
+      }
       const trueCode = trueMixCode(solution, ingredient1, ingredient2);
       // Direct disproval
       if (activePubs.has(ingredient1) && !canProduceResult(activePubs.get(ingredient1)!, trueCode)) {
@@ -367,7 +401,7 @@ export function simulatePlan(
   for (const step of steps) {
     outcomes.push(
       conflictOnly
-        ? simulateConflictOnlyStep(step, solution, activePubs)
+        ? simulateConflictOnlyStep(step, solution, worlds, activePubs)
         : simulateStep(step, solution, worlds, activePubs),
     );
   }
