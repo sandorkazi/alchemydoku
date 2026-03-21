@@ -15,7 +15,7 @@
  */
 
 import { ALCHEMICALS } from '../../data/alchemicals';
-import { isDefinitivelyKnown } from '../../logic/debunk';
+import { isDefinitivelyKnown, isMixResultDetermined, isPublicationDefinitelyFalse } from '../../logic/debunk';
 import { MIX_TABLE } from '../../logic/worldPack';
 import type { IngredientId, AlchemicalId, Color, Assignment, WorldSet } from '../../types';
 import type { DebunkStep, Publication } from '../../types';
@@ -97,6 +97,10 @@ function simulateExpandedStep(
 
   else if (step.kind === 'master') {
     const { ingredient1, ingredient2 } = step;
+    // Only proceed if the mix result is deterministically known from the clues.
+    if (!isMixResultDetermined(worlds, ingredient1, ingredient2)) {
+      return { removedPubs: [], removedArts: [], conflicts: [] };
+    }
     const trueCode = trueMixCode(solution, ingredient1, ingredient2);
     const ing1Known = isDefinitivelyKnown(worlds, ingredient1);
     const ing2Known = isDefinitivelyKnown(worlds, ingredient2);
@@ -147,12 +151,17 @@ function simulateExpandedStep(
 function simulateConflictOnlyExpandedStep(
   step: DebunkStep,
   solution: Assignment,
+  worlds: WorldSet,
   activePubs: Map<IngredientId, AlchemicalId>,
 ): ExpandedStepOutcome {
   const conflicts: IngredientId[] = [];
 
   if (step.kind === 'master') {
     const { ingredient1, ingredient2 } = step;
+    // Result must be deterministically known from clues for the audience to verify.
+    if (!isMixResultDetermined(worlds, ingredient1, ingredient2)) {
+      return { removedPubs: [], removedArts: [], conflicts: [] };
+    }
     if (activePubs.has(ingredient1) && activePubs.has(ingredient2)) {
       const trueCode = trueMixCode(solution, ingredient1, ingredient2);
       const claimed1 = activePubs.get(ingredient1)!;
@@ -188,7 +197,7 @@ export function simulateExpandedPlan(
   for (const step of steps) {
     outcomes.push(
       conflictOnly
-        ? simulateConflictOnlyExpandedStep(step, solution, activePubs)
+        ? simulateConflictOnlyExpandedStep(step, solution, worlds, activePubs)
         : simulateExpandedStep(step, solution, worlds, activePubs, activeArts),
     );
   }
@@ -197,6 +206,70 @@ export function simulateExpandedPlan(
     remainingPubs: [...activePubs.keys()],
     remainingArts: [...activeArts.keys()],
   };
+}
+
+// ─── Display simulation (solution-neutral) ────────────────────────────────────
+
+/**
+ * Compute per-step outcomes for DISPLAY PURPOSES ONLY.
+ * Uses ALL publications (not just false ones) and detects both direct disproval
+ * and conflicts so the board never leaks which publications are true.
+ * Articles are not included — they are only challengeable when an ingredient is
+ * definitively known, which requires the full worlds set; display-only
+ * article indicators are out of scope.
+ */
+export function simulateExpandedPlanForDisplay(
+  steps: DebunkStep[],
+  solution: Assignment,
+  allPublications: Publication[],
+  worlds: WorldSet,
+): ExpandedStepOutcome[] {
+  const activePubs = new Map<IngredientId, AlchemicalId>(
+    allPublications.map(p => [p.ingredient, p.claimedAlchemical])
+  );
+  return steps.map(step => {
+    const removedPubs: IngredientId[] = [];
+    const conflicts: IngredientId[] = [];
+
+    if (step.kind === 'apprentice') {
+      const { ingredient, color } = step;
+      const sign = trueSign(solution, ingredient, color);
+      for (const [ing, claimedAlch] of activePubs) {
+        if (ing === ingredient) {
+          const claimedSign = ALCHEMICALS[claimedAlch][color].sign === '+' ? 1 : 0;
+          if (sign !== claimedSign) { removedPubs.push(ing); break; }
+        }
+      }
+      for (const ing of removedPubs) activePubs.delete(ing);
+    } else if (step.kind === 'master') {
+      const { ingredient1, ingredient2 } = step;
+      // Only show effect if the result is deterministically known from the clues.
+      if (!isMixResultDetermined(worlds, ingredient1, ingredient2)) {
+        return { removedPubs: [], removedArts: [], conflicts: [] };
+      }
+      const trueCode = trueMixCode(solution, ingredient1, ingredient2);
+      // Direct disproval
+      if (activePubs.has(ingredient1) && !canProduceResult(activePubs.get(ingredient1)!, trueCode)) {
+        removedPubs.push(ingredient1); activePubs.delete(ingredient1);
+      }
+      if (activePubs.has(ingredient2) && !canProduceResult(activePubs.get(ingredient2)!, trueCode)) {
+        removedPubs.push(ingredient2); activePubs.delete(ingredient2);
+      }
+      // Conflict
+      if (activePubs.has(ingredient1) && activePubs.has(ingredient2)) {
+        const c1 = activePubs.get(ingredient1)!;
+        const c2 = activePubs.get(ingredient2)!;
+        if (
+          canProduceResult(c1, trueCode) &&
+          canProduceResult(c2, trueCode) &&
+          claimedMixCode(c1, c2) !== trueCode
+        ) {
+          conflicts.push(ingredient1, ingredient2);
+        }
+      }
+    }
+    return { removedPubs, removedArts: [], conflicts };
+  });
 }
 
 // ─── Validators ───────────────────────────────────────────────────────────────
@@ -245,7 +318,7 @@ export function validateExpandedConflictOnlyAnswer(
   solution: Assignment,
   publications: Publication[],
   _articles: DebunkArticle[],
-  _worlds: WorldSet,
+  worlds: WorldSet,
   refLen: number,
 ): boolean {
   if (steps.length !== refLen) return false;
@@ -254,14 +327,15 @@ export function validateExpandedConflictOnlyAnswer(
   const allPubs = new Map<IngredientId, AlchemicalId>(
     publications.map(p => [p.ingredient, p.claimedAlchemical])
   );
+  // Only definitively-false publications (false in ALL worlds) need conflict coverage.
   const falsePubIds = new Set(
     publications
-      .filter(p => solution[p.ingredient] !== p.claimedAlchemical)
+      .filter(p => isPublicationDefinitelyFalse(worlds, p))
       .map(p => p.ingredient)
   );
   const coveredIds = new Set<IngredientId>();
   for (const step of steps) {
-    const outcome = simulateConflictOnlyExpandedStep(step, solution, allPubs);
+    const outcome = simulateConflictOnlyExpandedStep(step, solution, worlds, allPubs);
     for (const c of outcome.conflicts) coveredIds.add(c);
   }
   return [...falsePubIds].every(id => coveredIds.has(id));

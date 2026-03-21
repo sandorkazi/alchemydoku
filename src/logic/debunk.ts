@@ -58,6 +58,41 @@ export function isDefinitivelyKnown(worlds: WorldSet, slot: IngredientId): boole
   return true;
 }
 
+/**
+ * Returns true if the publication is definitively false in ALL worlds —
+ * i.e. every world consistent with the clues assigns a different alchemical to
+ * this ingredient than the one claimed. Publications that are false only per the
+ * hidden solution but true in some worlds are "ambiguous" and cannot be
+ * deterministically targeted by a debunk plan using publicly-observable info.
+ */
+export function isPublicationDefinitelyFalse(worlds: WorldSet, pub: Publication): boolean {
+  if (worlds.length === 0) return false;
+  const ingIdx = pub.ingredient - 1;
+  const claimedAlch0 = pub.claimedAlchemical - 1; // convert to 0-indexed like WORLD_DATA
+  for (let i = 0; i < worlds.length; i++) {
+    if (WORLD_DATA[worlds[i] * 8 + ingIdx] === claimedAlch0) return false; // true in this world
+  }
+  return true;
+}
+
+/**
+ * Returns true if the mix result for (ing1, ing2) is the same across ALL worlds.
+ * If false, the result is ambiguous — the audience cannot verify any debunk based on it,
+ * so any master step using this pair must be rejected.
+ */
+export function isMixResultDetermined(worlds: WorldSet, ing1: IngredientId, ing2: IngredientId): boolean {
+  if (worlds.length === 0) return false;
+  const a0 = WORLD_DATA[worlds[0] * 8 + (ing1 - 1)];
+  const b0 = WORLD_DATA[worlds[0] * 8 + (ing2 - 1)];
+  const firstCode = MIX_TABLE[a0 * 8 + b0];
+  for (let i = 1; i < worlds.length; i++) {
+    const ai = WORLD_DATA[worlds[i] * 8 + (ing1 - 1)];
+    const bi = WORLD_DATA[worlds[i] * 8 + (ing2 - 1)];
+    if (MIX_TABLE[ai * 8 + bi] !== firstCode) return false;
+  }
+  return true;
+}
+
 // ─── Step outcome ─────────────────────────────────────────────────────────────
 
 export type StepOutcome = {
@@ -72,7 +107,7 @@ export type StepOutcome = {
 function simulateStep(
   step: DebunkStep,
   solution: Assignment,
-  _worlds: WorldSet,
+  worlds: WorldSet,
   activePubs: Map<IngredientId, AlchemicalId>,
 ): StepOutcome {
   const removed: IngredientId[] = [];
@@ -94,6 +129,12 @@ function simulateStep(
 
   else if (step.kind === 'master') {
     const { ingredient1, ingredient2 } = step;
+    // Only proceed if the mix result is deterministically known from the clues.
+    // If different worlds yield different results, the audience cannot verify any
+    // debunk based on this pair, so the step produces no removals.
+    if (!isMixResultDetermined(worlds, ingredient1, ingredient2)) {
+      return { removed: [], conflicts: [] };
+    }
     const trueCode = trueMixCode(solution, ingredient1, ingredient2);
 
     // Direct disproval (result-incompatibility): a claimed alchemical that cannot
@@ -153,8 +194,10 @@ export function validateMinStepsAnswer(
 ): boolean {
   if (steps.length !== refLen) return false;
 
-  // Only false publications need to be (and can be) removed
-  const falsePubs = publications.filter(p => solution[p.ingredient] !== p.claimedAlchemical);
+  // Only definitively-false publications (false in ALL worlds) are required targets.
+  // True publications cannot be removed, and ambiguous publications cannot be
+  // deterministically disproved — only definitively-false ones count.
+  const falsePubs = publications.filter(p => isPublicationDefinitelyFalse(worlds, p));
   if (falsePubs.length === 0) return steps.length === 0;
 
   const activePubs = new Map<IngredientId, AlchemicalId>(
@@ -217,7 +260,7 @@ export function validateConflictOnlyAnswer(
   steps: DebunkStep[],
   solution: Assignment,
   publications: Publication[],
-  _worlds: WorldSet,
+  worlds: WorldSet,
   refLen: number,
 ): boolean {
   if (steps.length !== refLen) return false;
@@ -226,14 +269,15 @@ export function validateConflictOnlyAnswer(
   const allPubs = new Map<IngredientId, AlchemicalId>(
     publications.map(p => [p.ingredient, p.claimedAlchemical])
   );
+  // Only definitively-false publications need to be covered by conflicts.
   const falsePubIds = new Set(
     publications
-      .filter(p => solution[p.ingredient] !== p.claimedAlchemical)
+      .filter(p => isPublicationDefinitelyFalse(worlds, p))
       .map(p => p.ingredient)
   );
   const coveredIds = new Set<IngredientId>();
   for (const step of steps) {
-    const outcome = simulateConflictOnlyStep(step, solution, allPubs);
+    const outcome = simulateConflictOnlyStep(step, solution, worlds, allPubs);
     for (const c of outcome.conflicts) coveredIds.add(c);
   }
   return [...falsePubIds].every(id => coveredIds.has(id));
@@ -257,12 +301,17 @@ export function validateConflictOnlyAnswer(
 function simulateConflictOnlyStep(
   step: DebunkStep,
   solution: Assignment,
+  worlds: WorldSet,
   activePubs: Map<IngredientId, AlchemicalId>,
 ): StepOutcome {
   const conflicts: IngredientId[] = [];
 
   if (step.kind === 'master') {
     const { ingredient1, ingredient2 } = step;
+    // Result must be deterministically known from clues for the audience to verify.
+    if (!isMixResultDetermined(worlds, ingredient1, ingredient2)) {
+      return { removed: [], conflicts: [] };
+    }
     if (activePubs.has(ingredient1) && activePubs.has(ingredient2)) {
       const trueCode = trueMixCode(solution, ingredient1, ingredient2);
       const claimed1 = activePubs.get(ingredient1)!;
@@ -282,6 +331,73 @@ function simulateConflictOnlyStep(
   return { removed: [], conflicts };
 }
 
+// ─── Display simulation (solution-neutral) ────────────────────────────────────
+
+/**
+ * Compute per-step outcomes for DISPLAY PURPOSES ONLY.
+ *
+ * Uses ALL publications (not just false ones) so that the publications board
+ * never leaks which publications are true — checkmarks and conflict markers are
+ * derived solely from claimed alchemicals + the publicly-observed mix result.
+ *
+ * In practice, only false publications can be directly disproved (a true
+ * publication's claimed alch always produces its own mix result), but this
+ * function does not filter by truth and detects conflicts too.
+ */
+export function simulatePlanForDisplay(
+  steps: DebunkStep[],
+  solution: Assignment,
+  allPublications: Publication[],
+  worlds: WorldSet,
+): StepOutcome[] {
+  const activePubs = new Map<IngredientId, AlchemicalId>(
+    allPublications.map(p => [p.ingredient, p.claimedAlchemical])
+  );
+  return steps.map(step => {
+    const removed: IngredientId[] = [];
+    const conflicts: IngredientId[] = [];
+
+    if (step.kind === 'apprentice') {
+      const { ingredient, color } = step;
+      const sign = trueSign(solution, ingredient, color);
+      for (const [ing, claimedAlch] of activePubs) {
+        if (ing === ingredient) {
+          const claimedSign = ALCHEMICALS[claimedAlch][color].sign === '+' ? 1 : 0;
+          if (sign !== claimedSign) { removed.push(ing); break; }
+        }
+      }
+      for (const ing of removed) activePubs.delete(ing);
+    } else if (step.kind === 'master') {
+      const { ingredient1, ingredient2 } = step;
+      // Only show effect if the result is deterministically known from the clues.
+      if (!isMixResultDetermined(worlds, ingredient1, ingredient2)) {
+        return { removed: [], conflicts: [] };
+      }
+      const trueCode = trueMixCode(solution, ingredient1, ingredient2);
+      // Direct disproval
+      if (activePubs.has(ingredient1) && !canProduceResult(activePubs.get(ingredient1)!, trueCode)) {
+        removed.push(ingredient1); activePubs.delete(ingredient1);
+      }
+      if (activePubs.has(ingredient2) && !canProduceResult(activePubs.get(ingredient2)!, trueCode)) {
+        removed.push(ingredient2); activePubs.delete(ingredient2);
+      }
+      // Conflict: both still active, each result-compatible, together predict wrong
+      if (activePubs.has(ingredient1) && activePubs.has(ingredient2)) {
+        const c1 = activePubs.get(ingredient1)!;
+        const c2 = activePubs.get(ingredient2)!;
+        if (
+          canProduceResult(c1, trueCode) &&
+          canProduceResult(c2, trueCode) &&
+          claimedMixCode(c1, c2) !== trueCode
+        ) {
+          conflicts.push(ingredient1, ingredient2);
+        }
+      }
+    }
+    return { removed, conflicts };
+  });
+}
+
 // ─── UI helpers ───────────────────────────────────────────────────────────────
 
 /**
@@ -296,16 +412,16 @@ export function simulatePlan(
   worlds: WorldSet,
   conflictOnly?: boolean,
 ): { outcomes: PlanOutcome; remainingPubs: IngredientId[] } {
-  // Only false publications are tracked — true ones cannot be removed
-  const falsePubs = publications.filter(p => solution[p.ingredient] !== p.claimedAlchemical);
+  // Only definitively-false publications are tracked — true and ambiguous ones cannot be removed.
+  const definitivelyFalsePubs = publications.filter(p => isPublicationDefinitelyFalse(worlds, p));
   const activePubs = new Map<IngredientId, AlchemicalId>(
-    falsePubs.map(p => [p.ingredient, p.claimedAlchemical])
+    definitivelyFalsePubs.map(p => [p.ingredient, p.claimedAlchemical])
   );
   const outcomes: PlanOutcome = [];
   for (const step of steps) {
     outcomes.push(
       conflictOnly
-        ? simulateConflictOnlyStep(step, solution, activePubs)
+        ? simulateConflictOnlyStep(step, solution, worlds, activePubs)
         : simulateStep(step, solution, worlds, activePubs),
     );
   }

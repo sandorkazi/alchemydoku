@@ -208,9 +208,9 @@ function CollectionCard({
 // ─── Puzzle row ───────────────────────────────────────────────────────────────
 
 function PuzzleRow({
-  puzzle, isDone, onPlay,
+  puzzle, isDone, isNonCompliant, onPlay,
 }: {
-  puzzle: Puzzle; isDone: boolean; onPlay: () => void;
+  puzzle: Puzzle; isDone: boolean; isNonCompliant?: boolean; onPlay: () => void;
 }) {
   const [confirmReset, setConfirmReset] = useState(false);
 
@@ -248,6 +248,9 @@ function PuzzleRow({
             <span className="font-medium text-gray-900 text-sm truncate">{puzzle.title}</span>
             {(puzzle as any).complexity?.score != null && (
               <ComplexityPips score={(puzzle as any).complexity.score} />
+            )}
+            {isNonCompliant && (
+              <span className="text-xs text-gray-400 shrink-0" title="Unrealistic puzzle">🧩</span>
             )}
           </div>
           <div className="text-xs text-gray-400 break-words">{puzzle.description}</div>
@@ -500,6 +503,7 @@ function AppInner() {
                   key={p.id}
                   puzzle={p}
                   isDone={completed.has(p.id)}
+                  isNonCompliant={isPuzzleNonCompliant(p, 'base')}
                   onPlay={() => openPuzzle(p.id, col.id)}
                 />
               ))}

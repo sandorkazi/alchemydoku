@@ -9,7 +9,7 @@ import { useState } from 'react';
 import { useSolver, useIngredient } from '../contexts/SolverContext';
 import { IngredientIcon, AlchemicalImage, ElemImage, PotionImage, CorrectIcon, IncorrectIcon } from './GameSprites';
 import { PotionPicker } from './AnswerPickers';
-import { simulatePlan } from '../logic/debunk';
+import { simulatePlanForDisplay, isPublicationDefinitelyFalse } from '../logic/debunk';
 import type { DebunkStep, IngredientId, Color, Publication, PotionResult } from '../types';
 
 // ─── Ingredient picker ────────────────────────────────────────────────────────
@@ -114,7 +114,7 @@ function isComplete(s: DraftStep): s is DebunkStep {
 }
 
 function StepEditor({
-  index, draft, outcome, onUpdate, onRemove, isConflictOnly, isIngredientLocked, showOutcome, isTutorial,
+  index, draft, outcome, onUpdate, onRemove, isConflictOnly, isIngredientLocked, showOutcome,
 }: {
   index: number;
   draft: DraftStep;
@@ -124,7 +124,6 @@ function StepEditor({
   isConflictOnly: boolean;
   isIngredientLocked: boolean;
   showOutcome: boolean;
-  isTutorial: boolean;
 }) {
   const getIngredient = useIngredient();
   void getIngredient;
@@ -146,7 +145,7 @@ function StepEditor({
       );
     }
     return (
-      <span className="text-red-400 text-xs">No effect — try a different pair</span>
+      <span className="text-red-400 text-xs">Not sure on the effect — try a different pair</span>
     );
   })();
 
@@ -200,16 +199,14 @@ function StepEditor({
             exclude={draft.ingredient1}
             onChange={id => onUpdate({ ...draft, ingredient2: id })}
           />
-          {!isTutorial && (
-            <div className="flex flex-col gap-1">
-              <span className="text-[10px] uppercase tracking-widest text-gray-400 font-bold">Claimed Potion</span>
-              <PotionPicker
-                selected={draft.claimedPotion ?? null}
-                onSelect={p => onUpdate({ ...draft, claimedPotion: p })}
-                potionWidth={32}
-              />
-            </div>
-          )}
+          <div className="flex flex-col gap-1">
+            <span className="text-[10px] uppercase tracking-widest text-gray-400 font-bold">Claimed Potion</span>
+            <PotionPicker
+              selected={draft.claimedPotion ?? null}
+              onSelect={p => onUpdate({ ...draft, claimedPotion: p })}
+              potionWidth={32}
+            />
+          </div>
         </div>
       )}
 
@@ -227,10 +224,11 @@ function StepEditor({
 // ─── Publications board ───────────────────────────────────────────────────────
 
 function PublicationsBoard({
-  publications, removedSet,
+  publications, removedSet, conflictedSet,
 }: {
   publications: Publication[];
   removedSet: Set<IngredientId>;
+  conflictedSet: Set<IngredientId>;
 }) {
   const getIngredient = useIngredient();
   return (
@@ -241,6 +239,7 @@ function PublicationsBoard({
       <div className="flex flex-wrap gap-2">
         {publications.map(pub => {
           const removed = removedSet.has(pub.ingredient);
+          const conflicted = !removed && conflictedSet.has(pub.ingredient);
           const { index } = getIngredient(pub.ingredient);
           return (
             <div
@@ -249,7 +248,9 @@ function PublicationsBoard({
                 transition-all ${
                   removed
                     ? 'border-green-200 bg-green-50 text-green-400 line-through opacity-50'
-                    : 'border-red-200 bg-red-50 text-red-700'
+                    : conflicted
+                      ? 'border-amber-200 bg-amber-50 text-amber-700'
+                      : 'border-red-200 bg-red-50 text-red-700'
                 }`}
             >
               <IngredientIcon index={index} width={36} />
@@ -258,6 +259,7 @@ function PublicationsBoard({
                 <AlchemicalImage id={pub.claimedAlchemical} width={80} />
               </span>
               {removed && <span className="text-green-500 ml-0.5">✓</span>}
+              {conflicted && <span className="ml-0.5">⚡</span>}
             </div>
           );
         })}
@@ -325,8 +327,7 @@ export function DebunkAnswerPanel({ onNext, isTutorial = false }: {
   const isMasterOnly = !isConflictOnly && !isApprenticeOnly;
 
   const initialDraft = (): DraftStep => isConflictOnly || isMasterOnly
-    ? { kind: 'master', ingredient1: isConflictOnly ? fixedIngredient : null, ingredient2: null,
-        claimedPotion: isTutorial ? { type: 'neutral' } : null }
+    ? { kind: 'master', ingredient1: isConflictOnly ? fixedIngredient : null, ingredient2: null, claimedPotion: null }
     : { kind: 'apprentice', ingredient: null, color: null };
 
   const [drafts, setDrafts] = useState<DraftStep[]>([initialDraft()]);
@@ -334,20 +335,20 @@ export function DebunkAnswerPanel({ onNext, isTutorial = false }: {
   const [showFeedbackConfirm, setShowFeedbackConfirm] = useState(false);
 
   const completedSteps = drafts.filter(isComplete) as DebunkStep[];
-  const { outcomes, remainingPubs } = simulatePlan(
-    completedSteps, puzzle.solution, publications, worlds, isConflictOnly
-  );
-  const removedSet = new Set<IngredientId>(
-    outcomes.flatMap(o => o.removed)
-  );
+  // All outcomes derived from public information only (claimed alchemicals + observed results).
+  // No hidden solution used — publication truth is determined from worlds.
+  const displayOutcomes = simulatePlanForDisplay(completedSteps, puzzle.solution, publications, worlds);
+  const removedSet = new Set<IngredientId>(displayOutcomes.flatMap(o => o.removed));
+  const conflictedSet = new Set<IngredientId>(displayOutcomes.flatMap(o => o.conflicts));
+
+  // Definitively-false publications: false in ALL worlds consistent with clues.
+  // These are the only valid debunk targets — ambiguous publications cannot be
+  // deterministically disproved and are not required to be covered.
+  const definitivelyFalsePubs = publications.filter(p => isPublicationDefinitelyFalse(worlds, p));
 
   const allStepsComplete = drafts.length > 0 && drafts.every(isComplete);
-  const falsePubIngredients = publications
-    .filter(p => puzzle.solution[p.ingredient] !== p.claimedAlchemical)
-    .map(p => p.ingredient);
-  const conflictCoveredIds = new Set(outcomes.flatMap(o => o.conflicts));
-  const allConflictsCovered = isConflictOnly && falsePubIngredients.length > 0
-    && falsePubIngredients.every(id => conflictCoveredIds.has(id));
+  const allConflictsCovered = isConflictOnly && definitivelyFalsePubs.length > 0
+    && definitivelyFalsePubs.every(p => conflictedSet.has(p.ingredient));
   const refAnswer = isConflictOnly
     ? puzzle.debunk_answers?.debunk_conflict_only
     : isApprenticeOnly
@@ -357,8 +358,7 @@ export function DebunkAnswerPanel({ onNext, isTutorial = false }: {
 
   function addStep(kind: 'apprentice' | 'master') {
     const newDraft: DraftStep = kind === 'master'
-      ? { kind: 'master', ingredient1: null, ingredient2: null,
-          claimedPotion: isTutorial ? { type: 'neutral' } : null }
+      ? { kind: 'master', ingredient1: null, ingredient2: null, claimedPotion: null }
       : { kind: 'apprentice', ingredient: null, color: null };
     setDrafts(prev => [...prev, newDraft]);
   }
@@ -387,7 +387,7 @@ export function DebunkAnswerPanel({ onNext, isTutorial = false }: {
 
       {/* Publications board */}
       <div className="bg-red-50 border border-red-200 rounded-xl px-4 py-3">
-        <PublicationsBoard publications={publications} removedSet={removedSet} />
+        <PublicationsBoard publications={publications} removedSet={removedSet} conflictedSet={conflictedSet} />
       </div>
 
       {/* Step-feedback confirmation modal (non-tutorial only) */}
@@ -431,14 +431,16 @@ export function DebunkAnswerPanel({ onNext, isTutorial = false }: {
               {isConflictOnly ? 'Demonstrate a conflict' : isApprenticeOnly ? 'Apprentice plan' : 'Debunk plan'}
             </span>
             <div className="flex items-center gap-3">
-              {isConflictOnly
+              {showStepFeedback && (isConflictOnly
                 ? allConflictsCovered && (
                   <span className="text-[10px] text-green-600 font-semibold">✓ All publications in conflict</span>
                 )
-                : remainingPubs.length === 0 && drafts.length > 0 && (
+                : definitivelyFalsePubs.length > 0
+                  && definitivelyFalsePubs.every(p => removedSet.has(p.ingredient))
+                  && drafts.length > 0 && (
                   <span className="text-[10px] text-green-600 font-semibold">✓ All publications covered</span>
                 )
-              }
+              )}
               {!isTutorial && (
                 <label className="flex items-center gap-1.5 text-xs cursor-pointer select-none">
                   <span className={showStepFeedback ? 'text-indigo-600 font-semibold' : 'text-gray-400'}>
@@ -476,13 +478,12 @@ export function DebunkAnswerPanel({ onNext, isTutorial = false }: {
               key={i}
               index={i}
               draft={draft}
-              outcome={isComplete(draft) ? outcomes[completedSteps.indexOf(draft as DebunkStep)] : undefined}
+              outcome={isComplete(draft) ? displayOutcomes[completedSteps.indexOf(draft as DebunkStep)] : undefined}
               onUpdate={d => updateStep(i, d)}
               onRemove={() => removeStep(i)}
               isConflictOnly={isConflictOnly}
               isIngredientLocked={isConflictOnly && i === 0}
               showOutcome={showStepFeedback}
-              isTutorial={isTutorial}
             />
           ))}
 

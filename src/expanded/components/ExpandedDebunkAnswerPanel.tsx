@@ -10,7 +10,8 @@ import { useState } from 'react';
 import { useExpandedSolver, useExpandedIngredient } from '../contexts/ExpandedSolverContext';
 import { IngredientIcon, AlchemicalImage, ElemImage, SignedElemImage, PotionImage, CorrectIcon, IncorrectIcon } from '../../components/GameSprites';
 import { PotionPicker } from '../../components/AnswerPickers';
-import { simulateExpandedPlan } from '../logic/debunkExpanded';
+import { simulateExpandedPlan, simulateExpandedPlanForDisplay } from '../logic/debunkExpanded';
+import { isPublicationDefinitelyFalse } from '../../logic/debunk';
 import type { DebunkStep, IngredientId, Color, Publication, PotionResult } from '../../types';
 import type { DebunkArticle } from '../types';
 
@@ -152,7 +153,7 @@ function SolutionStep({ step, index }: { step: DebunkStep; index: number }) {
 // ─── Step editor ──────────────────────────────────────────────────────────────
 
 function StepEditor({
-  index, draft, outcome, onUpdate, onRemove, isConflictOnly, isIngredientLocked, isApprenticeOnly, isTutorial,
+  index, draft, outcome, onUpdate, onRemove, isConflictOnly, isIngredientLocked, isApprenticeOnly, showOutcome,
 }: {
   index: number;
   draft: DraftStep;
@@ -162,7 +163,7 @@ function StepEditor({
   isConflictOnly: boolean;
   isIngredientLocked: boolean;
   isApprenticeOnly?: boolean;
-  isTutorial: boolean;
+  showOutcome: boolean;
 }) {
   const totalRemoved = (outcome?.removedPubs.length ?? 0) + (outcome?.removedArts.length ?? 0);
 
@@ -187,7 +188,7 @@ function StepEditor({
         </span>
       );
     }
-    return <span className="text-red-400 text-xs">No effect — try a different action</span>;
+    return <span className="text-red-400 text-xs">Not sure on the effect — try a different action</span>;
   })();
 
   return (
@@ -204,8 +205,7 @@ function StepEditor({
                     if (draft.kind === k) return;
                     onUpdate(k === 'apprentice'
                       ? { kind: 'apprentice', ingredient: null, color: null }
-                      : { kind: 'master', ingredient1: null, ingredient2: null,
-                          claimedPotion: isTutorial ? { type: 'neutral' } : null });
+                      : { kind: 'master', ingredient1: null, ingredient2: null, claimedPotion: null });
                   }}
                   className={`px-2 py-0.5 font-semibold capitalize transition-colors ${
                     draft.kind === k
@@ -256,20 +256,18 @@ function StepEditor({
             exclude={draft.ingredient1}
             onChange={id => onUpdate({ ...draft, ingredient2: id })}
           />
-          {!isTutorial && (
-            <div className="flex flex-col gap-1">
-              <span className="text-[10px] uppercase tracking-widest text-gray-400 font-bold">Claimed Potion</span>
-              <PotionPicker
-                selected={draft.claimedPotion ?? null}
-                onSelect={p => onUpdate({ ...draft, claimedPotion: p })}
-                potionWidth={32}
-              />
-            </div>
-          )}
+          <div className="flex flex-col gap-1">
+            <span className="text-[10px] uppercase tracking-widest text-gray-400 font-bold">Claimed Potion</span>
+            <PotionPicker
+              selected={draft.claimedPotion ?? null}
+              onSelect={p => onUpdate({ ...draft, claimedPotion: p })}
+              potionWidth={32}
+            />
+          </div>
         </div>
       )}
 
-      {outcome && (
+      {showOutcome && outcome && (
         <div className="border-t border-gray-100 pt-1.5 flex items-center gap-1.5">
           <span className="text-[10px] text-gray-400">→</span>
           {outcomeLabel}
@@ -282,10 +280,11 @@ function StepEditor({
 // ─── Publications board ───────────────────────────────────────────────────────
 
 function PublicationsBoard({
-  publications, removedPubSet,
+  publications, removedPubSet, conflictedPubSet,
 }: {
   publications: Publication[];
   removedPubSet: Set<IngredientId>;
+  conflictedPubSet: Set<IngredientId>;
 }) {
   const getIngredient = useExpandedIngredient();
   if (publications.length === 0) return null;
@@ -297,6 +296,7 @@ function PublicationsBoard({
       <div className="flex flex-wrap gap-2">
         {publications.map(pub => {
           const removed = removedPubSet.has(pub.ingredient);
+          const conflicted = !removed && conflictedPubSet.has(pub.ingredient);
           const { index } = getIngredient(pub.ingredient);
           return (
             <div
@@ -305,7 +305,9 @@ function PublicationsBoard({
                 transition-all ${
                   removed
                     ? 'border-green-200 bg-green-50 text-green-400 line-through opacity-50'
-                    : 'border-red-200 bg-red-50 text-red-700'
+                    : conflicted
+                      ? 'border-amber-200 bg-amber-50 text-amber-700'
+                      : 'border-red-200 bg-red-50 text-red-700'
                 }`}
             >
               <IngredientIcon index={index} width={36} />
@@ -314,6 +316,7 @@ function PublicationsBoard({
                 <AlchemicalImage id={pub.claimedAlchemical} width={44} />
               </span>
               {removed && <span className="text-green-500 ml-0.5">✓</span>}
+              {conflicted && <span className="ml-0.5">⚡</span>}
             </div>
           );
         })}
@@ -390,13 +393,12 @@ type QuestionPlan = {
   fixedIngredient: IngredientId | null;
 };
 
-function makeInitialPlan(q: { kind: string; fixedIngredient?: IngredientId }, isTutorial: boolean): QuestionPlan {
+function makeInitialPlan(q: { kind: string; fixedIngredient?: IngredientId }): QuestionPlan {
   const isConflictOnly = q.kind === 'debunk_conflict_only';
   const isApprenticeOnly = q.kind === 'debunk_apprentice_plan';
   const fixedIngredient = isConflictOnly ? (q.fixedIngredient ?? null) : null;
   const initialDraft: DraftStep = isConflictOnly
-    ? { kind: 'master', ingredient1: fixedIngredient, ingredient2: null,
-        claimedPotion: isTutorial ? { type: 'neutral' } : null }
+    ? { kind: 'master', ingredient1: fixedIngredient, ingredient2: null, claimedPotion: null }
     : { kind: 'apprentice', ingredient: null, color: null };
   return { drafts: [initialDraft], isConflictOnly, isApprenticeOnly, fixedIngredient };
 }
@@ -415,8 +417,10 @@ export function ExpandedDebunkAnswerPanel({ onNext, isTutorial = false }: {
   ) as Array<{ kind: string; fixedIngredient?: IngredientId }>;
 
   const [plans, setPlans] = useState<QuestionPlan[]>(
-    () => debunkQuestions.map(q => makeInitialPlan(q, isTutorial))
+    () => debunkQuestions.map(q => makeInitialPlan(q))
   );
+  const [showStepFeedback, setShowStepFeedback] = useState(isTutorial);
+  const [showFeedbackConfirm, setShowFeedbackConfirm] = useState(false);
 
   function updatePlan(qi: number, newDrafts: DraftStep[]) {
     setPlans(prev => prev.map((p, i) => i === qi ? { ...p, drafts: newDrafts } : p));
@@ -431,10 +435,12 @@ export function ExpandedDebunkAnswerPanel({ onNext, isTutorial = false }: {
     return simulateExpandedPlan(completedSteps, puzzle.solution, publications, articles, worlds, plan.isConflictOnly);
   });
 
-  // Combined removed sets across ALL plans (for the board display)
-  const removedPubSet = new Set<IngredientId>(
-    simulations.flatMap(s => s.outcomes.flatMap(o => o.removedPubs))
-  );
+  // Display sets: based on all publications + claims only, never the hidden truth
+  const allCompletedSteps = plans.flatMap(p => p.drafts.filter(isComplete) as DebunkStep[]);
+  const displayOutcomes = simulateExpandedPlanForDisplay(allCompletedSteps, puzzle.solution, publications, worlds);
+  const removedPubSet = new Set<IngredientId>(displayOutcomes.flatMap(o => o.removedPubs));
+  const conflictedPubSet = new Set<IngredientId>(displayOutcomes.flatMap(o => o.conflicts));
+  // Article removals still require the worlds set (definitively-known check), use validation sim
   const removedArtSet = new Set<string>(
     simulations.flatMap(s => s.outcomes.flatMap(o => o.removedArts))
   );
@@ -455,9 +461,42 @@ export function ExpandedDebunkAnswerPanel({ onNext, isTutorial = false }: {
 
       {/* Board */}
       <div className="bg-red-50 border border-red-200 rounded-xl px-4 py-3 space-y-3">
-        <PublicationsBoard publications={publications} removedPubSet={removedPubSet} />
+        <PublicationsBoard publications={publications} removedPubSet={removedPubSet} conflictedPubSet={conflictedPubSet} />
         <ArticlesBoard articles={articles} removedArtSet={removedArtSet} />
       </div>
+
+      {/* Step-feedback confirmation modal (non-tutorial only) */}
+      {showFeedbackConfirm && (
+        <div className="fixed inset-0 z-50 bg-black/40 flex items-center justify-center p-4"
+             onClick={() => setShowFeedbackConfirm(false)}>
+          <div className="bg-white rounded-2xl shadow-xl max-w-sm w-full p-6 space-y-4"
+               onClick={e => e.stopPropagation()}>
+            <h3 className="font-bold text-gray-900">Enable Step Feedback?</h3>
+            <p className="text-sm text-gray-600">
+              Step feedback shows the effect of each step as you build your plan — how many publications each action removes or conflicts.
+            </p>
+            <div className="bg-amber-50 border border-amber-200 rounded-xl p-3 text-xs text-amber-800">
+              Recommended only if you're stuck. Seeing live feedback reduces the challenge.
+            </div>
+            <div className="flex gap-3">
+              <button
+                onClick={() => setShowFeedbackConfirm(false)}
+                className="flex-1 py-2 rounded-lg border border-gray-200 text-sm font-semibold
+                           text-gray-700 hover:bg-gray-50 transition-colors"
+              >
+                Cancel
+              </button>
+              <button
+                onClick={() => { setShowFeedbackConfirm(false); setShowStepFeedback(true); }}
+                className="flex-1 py-2 rounded-lg bg-indigo-600 text-white text-sm font-semibold
+                           hover:bg-indigo-700 transition-colors"
+              >
+                Enable
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
 
       {/* One plan section per debunk question */}
       {!completed && !showSolution && plans.map((plan, qi) => {
@@ -471,20 +510,16 @@ export function ExpandedDebunkAnswerPanel({ onNext, isTutorial = false }: {
         const refLen = refAnswer?.length ?? 1;
 
         const conflictCoveredIds = new Set<IngredientId>(sim.outcomes.flatMap(o => o.conflicts));
-        const falsePubIngredients = plan.isConflictOnly
-          ? publications
-              .filter(p => puzzle.solution[p.ingredient] !== p.claimedAlchemical)
-              .map(p => p.ingredient)
-          : [];
+        // Definitively-false publications: false in ALL worlds — the only valid debunk targets.
+        const definitivelyFalsePubs = publications.filter(p => isPublicationDefinitelyFalse(worlds, p));
         const allCoveredForQ = plan.isConflictOnly
-          ? falsePubIngredients.length > 0 && falsePubIngredients.every(id => conflictCoveredIds.has(id))
-          : sim.remainingPubs.length === 0 && sim.remainingArts.length === 0;
+          ? definitivelyFalsePubs.length > 0 && definitivelyFalsePubs.every(p => conflictCoveredIds.has(p.ingredient))
+          : definitivelyFalsePubs.every(p => removedPubSet.has(p.ingredient)) && sim.remainingArts.length === 0;
 
         function addStep() {
           const initialDraft: DraftStep = plan.isApprenticeOnly
             ? { kind: 'apprentice', ingredient: null, color: null }
-            : { kind: 'master', ingredient1: null, ingredient2: null,
-                claimedPotion: isTutorial ? { type: 'neutral' } : null };
+            : { kind: 'master', ingredient1: null, ingredient2: null, claimedPotion: null };
           updatePlan(qi, [...plan.drafts, initialDraft]);
         }
 
@@ -495,11 +530,34 @@ export function ExpandedDebunkAnswerPanel({ onNext, isTutorial = false }: {
                 {debunkQuestions.length > 1 ? `Q${qi + 1}: ` : ''}
                 {plan.isConflictOnly ? 'Demonstrate a conflict' : plan.isApprenticeOnly ? 'Apprentice plan' : 'Debunk plan'}
               </span>
-              {allCoveredForQ && plan.drafts.length > 0 && (
-                <span className="text-[10px] text-green-600 font-semibold">
-                  {plan.isConflictOnly ? '✓ All publications in conflict' : '✓ All targets covered'}
-                </span>
-              )}
+              <div className="flex items-center gap-3">
+                {showStepFeedback && allCoveredForQ && plan.drafts.length > 0 && (
+                  <span className="text-[10px] text-green-600 font-semibold">
+                    {plan.isConflictOnly ? '✓ All publications in conflict' : '✓ All targets covered'}
+                  </span>
+                )}
+                {!isTutorial && qi === 0 && (
+                  <label className="flex items-center gap-1.5 text-xs cursor-pointer select-none">
+                    <span className={showStepFeedback ? 'text-indigo-600 font-semibold' : 'text-gray-400'}>
+                      Step hints
+                    </span>
+                    <button
+                      role="switch"
+                      aria-checked={showStepFeedback}
+                      onClick={() => {
+                        if (!showStepFeedback) setShowFeedbackConfirm(true);
+                        else setShowStepFeedback(false);
+                      }}
+                      className={`relative inline-flex h-5 w-9 items-center rounded-full transition-colors
+                        focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-indigo-400
+                        ${showStepFeedback ? 'bg-indigo-600' : 'bg-gray-200'}`}
+                    >
+                      <span className={`inline-block h-3.5 w-3.5 transform rounded-full bg-white shadow
+                        transition-transform ${showStepFeedback ? 'translate-x-4' : 'translate-x-1'}`} />
+                    </button>
+                  </label>
+                )}
+              </div>
             </div>
 
             <p className="text-xs text-gray-500">
@@ -526,7 +584,7 @@ export function ExpandedDebunkAnswerPanel({ onNext, isTutorial = false }: {
                   isConflictOnly={plan.isConflictOnly}
                   isIngredientLocked={plan.isConflictOnly && i === 0}
                   isApprenticeOnly={plan.isApprenticeOnly}
-                  isTutorial={isTutorial}
+                  showOutcome={showStepFeedback}
                 />
               );
             })}

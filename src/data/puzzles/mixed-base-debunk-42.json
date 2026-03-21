@@ -131,8 +131,8 @@
       },
       {
         "kind": "master",
-        "ingredient1": 5,
-        "ingredient2": 6
+        "ingredient1": 6,
+        "ingredient2": 8
       }
     ]
   }
