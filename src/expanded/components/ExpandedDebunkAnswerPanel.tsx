@@ -152,7 +152,7 @@ function SolutionStep({ step, index }: { step: DebunkStep; index: number }) {
 // ─── Step editor ──────────────────────────────────────────────────────────────
 
 function StepEditor({
-  index, draft, outcome, onUpdate, onRemove, isConflictOnly, isIngredientLocked, isApprenticeOnly,
+  index, draft, outcome, onUpdate, onRemove, isConflictOnly, isIngredientLocked, isApprenticeOnly, showOutcome,
 }: {
   index: number;
   draft: DraftStep;
@@ -162,6 +162,7 @@ function StepEditor({
   isConflictOnly: boolean;
   isIngredientLocked: boolean;
   isApprenticeOnly?: boolean;
+  showOutcome: boolean;
 }) {
   const totalRemoved = (outcome?.removedPubs.length ?? 0) + (outcome?.removedArts.length ?? 0);
 
@@ -265,7 +266,7 @@ function StepEditor({
         </div>
       )}
 
-      {outcome && (
+      {showOutcome && outcome && (
         <div className="border-t border-gray-100 pt-1.5 flex items-center gap-1.5">
           <span className="text-[10px] text-gray-400">→</span>
           {outcomeLabel}
@@ -412,6 +413,8 @@ export function ExpandedDebunkAnswerPanel({ onNext, isTutorial = false }: {
   const [plans, setPlans] = useState<QuestionPlan[]>(
     () => debunkQuestions.map(q => makeInitialPlan(q))
   );
+  const [showStepFeedback, setShowStepFeedback] = useState(isTutorial);
+  const [showFeedbackConfirm, setShowFeedbackConfirm] = useState(false);
 
   function updatePlan(qi: number, newDrafts: DraftStep[]) {
     setPlans(prev => prev.map((p, i) => i === qi ? { ...p, drafts: newDrafts } : p));
@@ -454,6 +457,39 @@ export function ExpandedDebunkAnswerPanel({ onNext, isTutorial = false }: {
         <ArticlesBoard articles={articles} removedArtSet={removedArtSet} />
       </div>
 
+      {/* Step-feedback confirmation modal (non-tutorial only) */}
+      {showFeedbackConfirm && (
+        <div className="fixed inset-0 z-50 bg-black/40 flex items-center justify-center p-4"
+             onClick={() => setShowFeedbackConfirm(false)}>
+          <div className="bg-white rounded-2xl shadow-xl max-w-sm w-full p-6 space-y-4"
+               onClick={e => e.stopPropagation()}>
+            <h3 className="font-bold text-gray-900">Enable Step Feedback?</h3>
+            <p className="text-sm text-gray-600">
+              Step feedback shows the effect of each step as you build your plan — how many publications each action removes or conflicts.
+            </p>
+            <div className="bg-amber-50 border border-amber-200 rounded-xl p-3 text-xs text-amber-800">
+              Recommended only if you're stuck. Seeing live feedback reduces the challenge.
+            </div>
+            <div className="flex gap-3">
+              <button
+                onClick={() => setShowFeedbackConfirm(false)}
+                className="flex-1 py-2 rounded-lg border border-gray-200 text-sm font-semibold
+                           text-gray-700 hover:bg-gray-50 transition-colors"
+              >
+                Cancel
+              </button>
+              <button
+                onClick={() => { setShowFeedbackConfirm(false); setShowStepFeedback(true); }}
+                className="flex-1 py-2 rounded-lg bg-indigo-600 text-white text-sm font-semibold
+                           hover:bg-indigo-700 transition-colors"
+              >
+                Enable
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
       {/* One plan section per debunk question */}
       {!completed && !showSolution && plans.map((plan, qi) => {
         const sim = simulations[qi];
@@ -489,11 +525,34 @@ export function ExpandedDebunkAnswerPanel({ onNext, isTutorial = false }: {
                 {debunkQuestions.length > 1 ? `Q${qi + 1}: ` : ''}
                 {plan.isConflictOnly ? 'Demonstrate a conflict' : plan.isApprenticeOnly ? 'Apprentice plan' : 'Debunk plan'}
               </span>
-              {allCoveredForQ && plan.drafts.length > 0 && (
-                <span className="text-[10px] text-green-600 font-semibold">
-                  {plan.isConflictOnly ? '✓ All publications in conflict' : '✓ All targets covered'}
-                </span>
-              )}
+              <div className="flex items-center gap-3">
+                {showStepFeedback && allCoveredForQ && plan.drafts.length > 0 && (
+                  <span className="text-[10px] text-green-600 font-semibold">
+                    {plan.isConflictOnly ? '✓ All publications in conflict' : '✓ All targets covered'}
+                  </span>
+                )}
+                {!isTutorial && qi === 0 && (
+                  <label className="flex items-center gap-1.5 text-xs cursor-pointer select-none">
+                    <span className={showStepFeedback ? 'text-indigo-600 font-semibold' : 'text-gray-400'}>
+                      Step hints
+                    </span>
+                    <button
+                      role="switch"
+                      aria-checked={showStepFeedback}
+                      onClick={() => {
+                        if (!showStepFeedback) setShowFeedbackConfirm(true);
+                        else setShowStepFeedback(false);
+                      }}
+                      className={`relative inline-flex h-5 w-9 items-center rounded-full transition-colors
+                        focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-indigo-400
+                        ${showStepFeedback ? 'bg-indigo-600' : 'bg-gray-200'}`}
+                    >
+                      <span className={`inline-block h-3.5 w-3.5 transform rounded-full bg-white shadow
+                        transition-transform ${showStepFeedback ? 'translate-x-4' : 'translate-x-1'}`} />
+                    </button>
+                  </label>
+                )}
+              </div>
             </div>
 
             <p className="text-xs text-gray-500">
@@ -520,6 +579,7 @@ export function ExpandedDebunkAnswerPanel({ onNext, isTutorial = false }: {
                   isConflictOnly={plan.isConflictOnly}
                   isIngredientLocked={plan.isConflictOnly && i === 0}
                   isApprenticeOnly={plan.isApprenticeOnly}
+                  showOutcome={showStepFeedback}
                 />
               );
             })}

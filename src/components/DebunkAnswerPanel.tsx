@@ -426,14 +426,14 @@ export function DebunkAnswerPanel({ onNext, isTutorial = false }: {
               {isConflictOnly ? 'Demonstrate a conflict' : isApprenticeOnly ? 'Apprentice plan' : 'Debunk plan'}
             </span>
             <div className="flex items-center gap-3">
-              {isConflictOnly
+              {showStepFeedback && (isConflictOnly
                 ? allConflictsCovered && (
                   <span className="text-[10px] text-green-600 font-semibold">✓ All publications in conflict</span>
                 )
                 : remainingPubs.length === 0 && drafts.length > 0 && (
                   <span className="text-[10px] text-green-600 font-semibold">✓ All publications covered</span>
                 )
-              }
+              )}
               {!isTutorial && (
                 <label className="flex items-center gap-1.5 text-xs cursor-pointer select-none">
                   <span className={showStepFeedback ? 'text-indigo-600 font-semibold' : 'text-gray-400'}>
