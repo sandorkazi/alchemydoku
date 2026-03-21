@@ -553,12 +553,12 @@ function AppInner() {
           </p>
         </div>
 
-        {/* Rules quick reference — shown only when enabled in settings */}
-        {settings.showQuickRef && (
-          <>
-            <RulesQuickReference showPuzzleOnly={settings.showPuzzleOnly} />
-            <InterfaceQuickReference />
-          </>
+        {/* Quick references — each toggled independently in settings */}
+        {settings.showRulesRef && (
+          <RulesQuickReference showPuzzleOnly={settings.showPuzzleOnly} />
+        )}
+        {settings.showInterfaceRef && (
+          <InterfaceQuickReference />
         )}
 
         {/* Continue banner */}

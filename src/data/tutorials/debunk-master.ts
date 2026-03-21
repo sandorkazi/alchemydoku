@@ -14,9 +14,9 @@ export const DEBUNK_MASTER_TUTORIAL_STEPS: TutorialStep[] = [
     emoji: '⚗️',
     body: `A master debunk involves mixing two ingredients in public.
 
-The audience sees the TRUE result of the mix. Any publication whose claimed alchemical would predict a different result is contradicted — and if only one publication is implicated, it is removed.
+The audience sees the TRUE result of the mix. A publication is removed only when its claimed alchemical is directly disproved — unable to produce the observed result with any partner, regardless of who the other ingredient is.
 
-Unlike an apprentice debunk, a master debunk targets a pair of ingredients rather than a single aspect. It can remove a publication in one step if the other ingredient's alchemical is already known.`,
+Unlike an apprentice debunk, a master debunk targets a pair of ingredients rather than a single aspect. It can expose a false publication in one step when the true result is one the claimed alchemical simply cannot produce.`,
   },
 
   // ── The claiming requirement ──────────────────────────────────────────────
@@ -46,13 +46,11 @@ Importantly, what happens to the publications is a separate question — covered
     emoji: '⚖️',
     body: `A master debunk achieves something against the publications in exactly two cases:
 
-  • A publication is removed: the true result exposes a publication as impossible. There are two ways this can happen:
-      – Direct disproval: the claimed alchemical cannot produce the observed result with ANY partner. The audience can verify this from the result alone — no knowledge of the other ingredient is needed.
-      – Blame-based disproval: the other ingredient's alchemical is definitively known. The audience tests the claim directly: if the claimed alchemical would predict a different result when mixed with that known alchemical, the claim is disproved.
+  • A publication is removed: the claimed alchemical is directly disproved — it cannot produce the observed result with ANY partner. The audience can verify this from the result alone, with no knowledge of the other ingredient needed. This is the only way a master debunk removes a publication.
 
-  • A conflict is created: both publications are simultaneously caught — each claim individually could produce the observed result with some partner, but together they predict the wrong result. Neither can be singled out, but the conflict itself is recorded. There is even a puzzle type where creating a conflict is the goal.
+  • A conflict is created: both publications are simultaneously caught — each claim individually could produce the observed result with some partner, but together they predict the wrong result. Neither can be singled out; the conflict is recorded instead of a removal. There is even a puzzle type where creating a conflict is the goal.
 
-If neither happens — neither publication is caught, or the other ingredient is unknown and the claim is not individually incompatible with the result — the debunk has no effect on the publications.
+If neither happens — neither publication's claim is individually result-incompatible, and the two claims don't jointly produce the wrong result — the debunk has no effect on the publications.
 
 Whether the claim was correct or wrong does not determine which of these outcomes occurs. Both claim outcomes can lead to removal, conflict, or no effect.`,
   },
@@ -86,13 +84,11 @@ Before planning any debunk, check whether a clue directly contradicts a publicat
 
 Once you have identified which publications are false, the planning question becomes: what is the minimum sequence of master debunks to publicly expose each one?
 
-Master debunk strategy: two paths to exposing a false publication:
+The only way a master debunk removes a publication is the direct path: the true result must be one that the claimed alchemical cannot produce with any partner. The audience can verify this from the result alone.
 
-  • Direct path — no reference needed: if the observed result is one that the claimed alchemical can never produce with any partner, the claim is directly disproved. The audience verifies this from the result alone.
+When an ingredient's true alchemical is fully known from the clues, you can use that knowledge as a planning tool: mix the target publication's ingredient with the known one. Because you know both alchemicals, you can predict the true result in advance and verify that it will be impossible for the false claim before committing to the step.
 
-  • Reference path — needs a known partner: if the other ingredient is definitively known, the audience can mix the claimed alchemical against that known reference. If the predicted result doesn't match the true result, the claim is disproved.
-
-In practice, plan your mix so that the true result makes the false claim look impossible — either directly incompatible with the result, or contradicted by a known reference.`,
+In practice, plan your mix so that the true result is one the claimed alchemical cannot produce at all.`,
   },
 
   // ── Puzzle: apply a master debunk's planning ─────────────────────────────
@@ -100,7 +96,7 @@ In practice, plan your mix so that the true result makes the false claim look im
     kind: 'puzzle',
     id: 'debm-puzzle-negative',
     puzzleId: 'debunk-plan-easy-02',
-    banner: 'First, use the clues to prove which publications are false. Then find the minimum sequence of master debunks to expose them — one ingredient is fully known and ready to serve as your reference.',
+    banner: 'First, use the clues to prove which publications are false. Then find the minimum sequence of master debunks to expose them — one ingredient is fully known, letting you predict the true mix result in advance.',
   },
 
   // ── Not every publication is false (master context) ──────────────────────
@@ -116,7 +112,7 @@ Before planning any master debunk, verify each publication:
   2. Compare it to what the publication claims.
   3. Only the publications whose claimed alchemical differs from the truth are targets.
 
-A correct publication is not a target and cannot be removed — even if you mix the published ingredient with a known reference, a true publication's prediction will match the true result and nothing happens.
+A correct publication is not a target and cannot be removed — a true publication's claimed alchemical is always compatible with the true mix result, so the direct-disproval condition is never met.
 
 Check first, then plan.`,
   },

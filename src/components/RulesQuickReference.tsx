@@ -176,7 +176,7 @@ export function BaseRulesCards({ showPuzzleOnly = false }: { showPuzzleOnly?: bo
             <span className="text-[10px] text-rose-300 italic ml-0.5">(true)</span>
           </>
         }
-        text="A master debunker publicly mixes two ingredients, revealing the true mixing result to everyone. Any publication whose implied mix result contradicts the observed result is removed."
+        text="A master debunker publicly mixes two ingredients, revealing the true mixing result to everyone. A publication is removed only when its claimed alchemical cannot produce that result with any partner. If both claims are jointly contradicted, a conflict is recorded instead."
       />
     </>
   );

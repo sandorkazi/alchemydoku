@@ -4,13 +4,15 @@
 
 export type Settings = {
   showLatestUpdates: boolean;  // show What's New banner for new releases (default: true)
-  showQuickRef: boolean;       // show Rules/Interface quick reference sections (default: false)
+  showRulesRef: boolean;       // show Rules quick reference section (default: false)
+  showInterfaceRef: boolean;   // show Interface quick reference section (default: false)
   showPuzzleOnly: boolean;     // show non-board-game (puzzle-only) collections (default: false)
 };
 
 export const DEFAULT_SETTINGS: Settings = {
   showLatestUpdates: true,
-  showQuickRef: false,
+  showRulesRef: false,
+  showInterfaceRef: false,
   showPuzzleOnly: false,
 };
 

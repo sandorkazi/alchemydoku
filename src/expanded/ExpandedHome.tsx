@@ -362,12 +362,12 @@ export function ExpandedHome({ onModeChange, initialPuzzleId, showReleaseNotes, 
           </p>
         </div>
 
-        {/* Rules quick reference — top, closed by default */}
-        {settings.showQuickRef && (
-          <>
-            <ExpandedRulesQuickReference showPuzzleOnly={settings.showPuzzleOnly} />
-            <ExpandedInterfaceQuickReference />
-          </>
+        {/* Quick references — each toggled independently in settings */}
+        {settings.showRulesRef && (
+          <ExpandedRulesQuickReference showPuzzleOnly={settings.showPuzzleOnly} />
+        )}
+        {settings.showInterfaceRef && (
+          <ExpandedInterfaceQuickReference />
         )}
 
         {/* Collections */}
