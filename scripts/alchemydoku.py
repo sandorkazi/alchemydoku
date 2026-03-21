@@ -506,6 +506,14 @@ def _mix_result_determined(worlds: frozenset, ing_a: int, ing_b: int) -> bool:
     return len(results) == 1
 
 
+def _pub_definitively_false(worlds: frozenset, ing: int, claimed_alch: int) -> bool:
+    """True if pub (ing → claimed_alch) is definitely false in ALL worlds — i.e. every
+    world consistent with the clues assigns a different alchemical to this slot.
+    ing is 1-indexed; claimed_alch is 0-indexed (same convention as sol, pub_map)."""
+    i = ing - 1
+    return all(w[i] != claimed_alch for w in worlds)
+
+
 def _find_removal_plan(sol: dict, pub_map: dict, known: set, worlds: frozenset) -> list:
     """BFS to find minimum master steps to remove all false publications.
 
@@ -535,7 +543,8 @@ def _find_removal_plan(sol: dict, pub_map: dict, known: set, worlds: frozenset) 
 
         return frozenset(remaining - removed), removed
 
-    initial = frozenset(pub_map.keys())
+    # Only definitively-false publications (false in ALL worlds) are required targets.
+    initial = frozenset(k for k, v in pub_map.items() if _pub_definitively_false(worlds, k, v))
     if not initial:
         return []
     queue = deque([(initial, [])])
@@ -591,9 +600,9 @@ def _find_conflict_cover(sol: dict, pub_map: dict, worlds: frozenset):
                 valid_pairs.append((ing_c, ing_d))
     if not valid_pairs:
         return None
-    # Only FALSE publications need to be covered; true ones can participate in conflicts
-    # but don't need to appear in the conflict cover.
-    false_pub_ids = {k for k, v in pub_map.items() if sol[k] != v}
+    # Only definitively-false publications (false in ALL worlds) need to be covered;
+    # ambiguous ones cannot be reliably targeted.
+    false_pub_ids = {k for k, v in pub_map.items() if _pub_definitively_false(worlds, k, v)}
     uncovered = set(false_pub_ids)
     selected = []
     available = list(valid_pairs)
@@ -694,7 +703,8 @@ def _find_removal_plan_expanded(sol: dict, pub_map: dict, articles: list, known:
             if entry['sign'] != true_sgn_str:
                 art_cleared_by_ing.setdefault(ing, set()).add(art['id'])
 
-    initial_pubs = frozenset(pub_map.keys())
+    # Only definitively-false publications (false in ALL worlds) are required targets.
+    initial_pubs = frozenset(k for k, v in pub_map.items() if _pub_definitively_false(worlds, k, v))
     initial_arts = frozenset(a['id'] for a in articles)
     if not initial_pubs and not initial_arts:
         return []

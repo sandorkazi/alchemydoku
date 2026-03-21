@@ -59,6 +59,23 @@ export function isDefinitivelyKnown(worlds: WorldSet, slot: IngredientId): boole
 }
 
 /**
+ * Returns true if the publication is definitively false in ALL worlds —
+ * i.e. every world consistent with the clues assigns a different alchemical to
+ * this ingredient than the one claimed. Publications that are false only per the
+ * hidden solution but true in some worlds are "ambiguous" and cannot be
+ * deterministically targeted by a debunk plan using publicly-observable info.
+ */
+export function isPublicationDefinitelyFalse(worlds: WorldSet, pub: Publication): boolean {
+  if (worlds.length === 0) return false;
+  const ingIdx = pub.ingredient - 1;
+  const claimedAlch0 = pub.claimedAlchemical - 1; // convert to 0-indexed like WORLD_DATA
+  for (let i = 0; i < worlds.length; i++) {
+    if (WORLD_DATA[worlds[i] * 8 + ingIdx] === claimedAlch0) return false; // true in this world
+  }
+  return true;
+}
+
+/**
  * Returns true if the mix result for (ing1, ing2) is the same across ALL worlds.
  * If false, the result is ambiguous — the audience cannot verify any debunk based on it,
  * so any master step using this pair must be rejected.
@@ -177,8 +194,10 @@ export function validateMinStepsAnswer(
 ): boolean {
   if (steps.length !== refLen) return false;
 
-  // Only false publications need to be (and can be) removed
-  const falsePubs = publications.filter(p => solution[p.ingredient] !== p.claimedAlchemical);
+  // Only definitively-false publications (false in ALL worlds) are required targets.
+  // True publications cannot be removed, and ambiguous publications cannot be
+  // deterministically disproved — only definitively-false ones count.
+  const falsePubs = publications.filter(p => isPublicationDefinitelyFalse(worlds, p));
   if (falsePubs.length === 0) return steps.length === 0;
 
   const activePubs = new Map<IngredientId, AlchemicalId>(
@@ -250,9 +269,10 @@ export function validateConflictOnlyAnswer(
   const allPubs = new Map<IngredientId, AlchemicalId>(
     publications.map(p => [p.ingredient, p.claimedAlchemical])
   );
+  // Only definitively-false publications need to be covered by conflicts.
   const falsePubIds = new Set(
     publications
-      .filter(p => solution[p.ingredient] !== p.claimedAlchemical)
+      .filter(p => isPublicationDefinitelyFalse(worlds, p))
       .map(p => p.ingredient)
   );
   const coveredIds = new Set<IngredientId>();
@@ -392,10 +412,10 @@ export function simulatePlan(
   worlds: WorldSet,
   conflictOnly?: boolean,
 ): { outcomes: PlanOutcome; remainingPubs: IngredientId[] } {
-  // Only false publications are tracked — true ones cannot be removed
-  const falsePubs = publications.filter(p => solution[p.ingredient] !== p.claimedAlchemical);
+  // Only definitively-false publications are tracked — true and ambiguous ones cannot be removed.
+  const definitivelyFalsePubs = publications.filter(p => isPublicationDefinitelyFalse(worlds, p));
   const activePubs = new Map<IngredientId, AlchemicalId>(
-    falsePubs.map(p => [p.ingredient, p.claimedAlchemical])
+    definitivelyFalsePubs.map(p => [p.ingredient, p.claimedAlchemical])
   );
   const outcomes: PlanOutcome = [];
   for (const step of steps) {

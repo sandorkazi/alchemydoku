@@ -15,7 +15,7 @@
  */
 
 import { ALCHEMICALS } from '../../data/alchemicals';
-import { isDefinitivelyKnown, isMixResultDetermined } from '../../logic/debunk';
+import { isDefinitivelyKnown, isMixResultDetermined, isPublicationDefinitelyFalse } from '../../logic/debunk';
 import { MIX_TABLE } from '../../logic/worldPack';
 import type { IngredientId, AlchemicalId, Color, Assignment, WorldSet } from '../../types';
 import type { DebunkStep, Publication } from '../../types';
@@ -327,9 +327,10 @@ export function validateExpandedConflictOnlyAnswer(
   const allPubs = new Map<IngredientId, AlchemicalId>(
     publications.map(p => [p.ingredient, p.claimedAlchemical])
   );
+  // Only definitively-false publications (false in ALL worlds) need conflict coverage.
   const falsePubIds = new Set(
     publications
-      .filter(p => solution[p.ingredient] !== p.claimedAlchemical)
+      .filter(p => isPublicationDefinitelyFalse(worlds, p))
       .map(p => p.ingredient)
   );
   const coveredIds = new Set<IngredientId>();

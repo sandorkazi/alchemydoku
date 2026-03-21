@@ -9,7 +9,7 @@ import { useState } from 'react';
 import { useSolver, useIngredient } from '../contexts/SolverContext';
 import { IngredientIcon, AlchemicalImage, ElemImage, PotionImage, CorrectIcon, IncorrectIcon } from './GameSprites';
 import { PotionPicker } from './AnswerPickers';
-import { simulatePlan, simulatePlanForDisplay } from '../logic/debunk';
+import { simulatePlanForDisplay, isPublicationDefinitelyFalse } from '../logic/debunk';
 import type { DebunkStep, IngredientId, Color, Publication, PotionResult } from '../types';
 
 // ─── Ingredient picker ────────────────────────────────────────────────────────
@@ -335,21 +335,20 @@ export function DebunkAnswerPanel({ onNext, isTutorial = false }: {
   const [showFeedbackConfirm, setShowFeedbackConfirm] = useState(false);
 
   const completedSteps = drafts.filter(isComplete) as DebunkStep[];
-  const { outcomes, remainingPubs } = simulatePlan(
-    completedSteps, puzzle.solution, publications, worlds, isConflictOnly
-  );
-  // Display sets: based on all publications + claims only, never the hidden truth
+  // All outcomes derived from public information only (claimed alchemicals + observed results).
+  // No hidden solution used — publication truth is determined from worlds.
   const displayOutcomes = simulatePlanForDisplay(completedSteps, puzzle.solution, publications, worlds);
   const removedSet = new Set<IngredientId>(displayOutcomes.flatMap(o => o.removed));
   const conflictedSet = new Set<IngredientId>(displayOutcomes.flatMap(o => o.conflicts));
 
+  // Definitively-false publications: false in ALL worlds consistent with clues.
+  // These are the only valid debunk targets — ambiguous publications cannot be
+  // deterministically disproved and are not required to be covered.
+  const definitivelyFalsePubs = publications.filter(p => isPublicationDefinitelyFalse(worlds, p));
+
   const allStepsComplete = drafts.length > 0 && drafts.every(isComplete);
-  const falsePubIngredients = publications
-    .filter(p => puzzle.solution[p.ingredient] !== p.claimedAlchemical)
-    .map(p => p.ingredient);
-  const conflictCoveredIds = new Set(outcomes.flatMap(o => o.conflicts));
-  const allConflictsCovered = isConflictOnly && falsePubIngredients.length > 0
-    && falsePubIngredients.every(id => conflictCoveredIds.has(id));
+  const allConflictsCovered = isConflictOnly && definitivelyFalsePubs.length > 0
+    && definitivelyFalsePubs.every(p => conflictedSet.has(p.ingredient));
   const refAnswer = isConflictOnly
     ? puzzle.debunk_answers?.debunk_conflict_only
     : isApprenticeOnly
@@ -436,7 +435,9 @@ export function DebunkAnswerPanel({ onNext, isTutorial = false }: {
                 ? allConflictsCovered && (
                   <span className="text-[10px] text-green-600 font-semibold">✓ All publications in conflict</span>
                 )
-                : remainingPubs.length === 0 && drafts.length > 0 && (
+                : definitivelyFalsePubs.length > 0
+                  && definitivelyFalsePubs.every(p => removedSet.has(p.ingredient))
+                  && drafts.length > 0 && (
                   <span className="text-[10px] text-green-600 font-semibold">✓ All publications covered</span>
                 )
               )}
@@ -477,7 +478,7 @@ export function DebunkAnswerPanel({ onNext, isTutorial = false }: {
               key={i}
               index={i}
               draft={draft}
-              outcome={isComplete(draft) ? outcomes[completedSteps.indexOf(draft as DebunkStep)] : undefined}
+              outcome={isComplete(draft) ? displayOutcomes[completedSteps.indexOf(draft as DebunkStep)] : undefined}
               onUpdate={d => updateStep(i, d)}
               onRemove={() => removeStep(i)}
               isConflictOnly={isConflictOnly}

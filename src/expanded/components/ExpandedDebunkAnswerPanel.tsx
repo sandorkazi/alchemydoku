@@ -11,6 +11,7 @@ import { useExpandedSolver, useExpandedIngredient } from '../contexts/ExpandedSo
 import { IngredientIcon, AlchemicalImage, ElemImage, SignedElemImage, PotionImage, CorrectIcon, IncorrectIcon } from '../../components/GameSprites';
 import { PotionPicker } from '../../components/AnswerPickers';
 import { simulateExpandedPlan, simulateExpandedPlanForDisplay } from '../logic/debunkExpanded';
+import { isPublicationDefinitelyFalse } from '../../logic/debunk';
 import type { DebunkStep, IngredientId, Color, Publication, PotionResult } from '../../types';
 import type { DebunkArticle } from '../types';
 
@@ -509,14 +510,11 @@ export function ExpandedDebunkAnswerPanel({ onNext, isTutorial = false }: {
         const refLen = refAnswer?.length ?? 1;
 
         const conflictCoveredIds = new Set<IngredientId>(sim.outcomes.flatMap(o => o.conflicts));
-        const falsePubIngredients = plan.isConflictOnly
-          ? publications
-              .filter(p => puzzle.solution[p.ingredient] !== p.claimedAlchemical)
-              .map(p => p.ingredient)
-          : [];
+        // Definitively-false publications: false in ALL worlds — the only valid debunk targets.
+        const definitivelyFalsePubs = publications.filter(p => isPublicationDefinitelyFalse(worlds, p));
         const allCoveredForQ = plan.isConflictOnly
-          ? falsePubIngredients.length > 0 && falsePubIngredients.every(id => conflictCoveredIds.has(id))
-          : sim.remainingPubs.length === 0 && sim.remainingArts.length === 0;
+          ? definitivelyFalsePubs.length > 0 && definitivelyFalsePubs.every(p => conflictCoveredIds.has(p.ingredient))
+          : definitivelyFalsePubs.every(p => removedPubSet.has(p.ingredient)) && sim.remainingArts.length === 0;
 
         function addStep() {
           const initialDraft: DraftStep = plan.isApprenticeOnly
