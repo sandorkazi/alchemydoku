@@ -114,7 +114,7 @@ function isComplete(s: DraftStep): s is DebunkStep {
 }
 
 function StepEditor({
-  index, draft, outcome, onUpdate, onRemove, isConflictOnly, isIngredientLocked, showOutcome, isTutorial,
+  index, draft, outcome, onUpdate, onRemove, isConflictOnly, isIngredientLocked, showOutcome,
 }: {
   index: number;
   draft: DraftStep;
@@ -124,7 +124,6 @@ function StepEditor({
   isConflictOnly: boolean;
   isIngredientLocked: boolean;
   showOutcome: boolean;
-  isTutorial: boolean;
 }) {
   const getIngredient = useIngredient();
   void getIngredient;
@@ -200,16 +199,14 @@ function StepEditor({
             exclude={draft.ingredient1}
             onChange={id => onUpdate({ ...draft, ingredient2: id })}
           />
-          {!isTutorial && (
-            <div className="flex flex-col gap-1">
-              <span className="text-[10px] uppercase tracking-widest text-gray-400 font-bold">Claimed Potion</span>
-              <PotionPicker
-                selected={draft.claimedPotion ?? null}
-                onSelect={p => onUpdate({ ...draft, claimedPotion: p })}
-                potionWidth={32}
-              />
-            </div>
-          )}
+          <div className="flex flex-col gap-1">
+            <span className="text-[10px] uppercase tracking-widest text-gray-400 font-bold">Claimed Potion</span>
+            <PotionPicker
+              selected={draft.claimedPotion ?? null}
+              onSelect={p => onUpdate({ ...draft, claimedPotion: p })}
+              potionWidth={32}
+            />
+          </div>
         </div>
       )}
 
@@ -325,8 +322,7 @@ export function DebunkAnswerPanel({ onNext, isTutorial = false }: {
   const isMasterOnly = !isConflictOnly && !isApprenticeOnly;
 
   const initialDraft = (): DraftStep => isConflictOnly || isMasterOnly
-    ? { kind: 'master', ingredient1: isConflictOnly ? fixedIngredient : null, ingredient2: null,
-        claimedPotion: isTutorial ? { type: 'neutral' } : null }
+    ? { kind: 'master', ingredient1: isConflictOnly ? fixedIngredient : null, ingredient2: null, claimedPotion: null }
     : { kind: 'apprentice', ingredient: null, color: null };
 
   const [drafts, setDrafts] = useState<DraftStep[]>([initialDraft()]);
@@ -357,8 +353,7 @@ export function DebunkAnswerPanel({ onNext, isTutorial = false }: {
 
   function addStep(kind: 'apprentice' | 'master') {
     const newDraft: DraftStep = kind === 'master'
-      ? { kind: 'master', ingredient1: null, ingredient2: null,
-          claimedPotion: isTutorial ? { type: 'neutral' } : null }
+      ? { kind: 'master', ingredient1: null, ingredient2: null, claimedPotion: null }
       : { kind: 'apprentice', ingredient: null, color: null };
     setDrafts(prev => [...prev, newDraft]);
   }
@@ -482,7 +477,6 @@ export function DebunkAnswerPanel({ onNext, isTutorial = false }: {
               isConflictOnly={isConflictOnly}
               isIngredientLocked={isConflictOnly && i === 0}
               showOutcome={showStepFeedback}
-              isTutorial={isTutorial}
             />
           ))}
 

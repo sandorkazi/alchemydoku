@@ -152,7 +152,7 @@ function SolutionStep({ step, index }: { step: DebunkStep; index: number }) {
 // ─── Step editor ──────────────────────────────────────────────────────────────
 
 function StepEditor({
-  index, draft, outcome, onUpdate, onRemove, isConflictOnly, isIngredientLocked, isApprenticeOnly, isTutorial,
+  index, draft, outcome, onUpdate, onRemove, isConflictOnly, isIngredientLocked, isApprenticeOnly,
 }: {
   index: number;
   draft: DraftStep;
@@ -162,7 +162,6 @@ function StepEditor({
   isConflictOnly: boolean;
   isIngredientLocked: boolean;
   isApprenticeOnly?: boolean;
-  isTutorial: boolean;
 }) {
   const totalRemoved = (outcome?.removedPubs.length ?? 0) + (outcome?.removedArts.length ?? 0);
 
@@ -204,8 +203,7 @@ function StepEditor({
                     if (draft.kind === k) return;
                     onUpdate(k === 'apprentice'
                       ? { kind: 'apprentice', ingredient: null, color: null }
-                      : { kind: 'master', ingredient1: null, ingredient2: null,
-                          claimedPotion: isTutorial ? { type: 'neutral' } : null });
+                      : { kind: 'master', ingredient1: null, ingredient2: null, claimedPotion: null });
                   }}
                   className={`px-2 py-0.5 font-semibold capitalize transition-colors ${
                     draft.kind === k
@@ -256,16 +254,14 @@ function StepEditor({
             exclude={draft.ingredient1}
             onChange={id => onUpdate({ ...draft, ingredient2: id })}
           />
-          {!isTutorial && (
-            <div className="flex flex-col gap-1">
-              <span className="text-[10px] uppercase tracking-widest text-gray-400 font-bold">Claimed Potion</span>
-              <PotionPicker
-                selected={draft.claimedPotion ?? null}
-                onSelect={p => onUpdate({ ...draft, claimedPotion: p })}
-                potionWidth={32}
-              />
-            </div>
-          )}
+          <div className="flex flex-col gap-1">
+            <span className="text-[10px] uppercase tracking-widest text-gray-400 font-bold">Claimed Potion</span>
+            <PotionPicker
+              selected={draft.claimedPotion ?? null}
+              onSelect={p => onUpdate({ ...draft, claimedPotion: p })}
+              potionWidth={32}
+            />
+          </div>
         </div>
       )}
 
@@ -390,13 +386,12 @@ type QuestionPlan = {
   fixedIngredient: IngredientId | null;
 };
 
-function makeInitialPlan(q: { kind: string; fixedIngredient?: IngredientId }, isTutorial: boolean): QuestionPlan {
+function makeInitialPlan(q: { kind: string; fixedIngredient?: IngredientId }): QuestionPlan {
   const isConflictOnly = q.kind === 'debunk_conflict_only';
   const isApprenticeOnly = q.kind === 'debunk_apprentice_plan';
   const fixedIngredient = isConflictOnly ? (q.fixedIngredient ?? null) : null;
   const initialDraft: DraftStep = isConflictOnly
-    ? { kind: 'master', ingredient1: fixedIngredient, ingredient2: null,
-        claimedPotion: isTutorial ? { type: 'neutral' } : null }
+    ? { kind: 'master', ingredient1: fixedIngredient, ingredient2: null, claimedPotion: null }
     : { kind: 'apprentice', ingredient: null, color: null };
   return { drafts: [initialDraft], isConflictOnly, isApprenticeOnly, fixedIngredient };
 }
@@ -415,7 +410,7 @@ export function ExpandedDebunkAnswerPanel({ onNext, isTutorial = false }: {
   ) as Array<{ kind: string; fixedIngredient?: IngredientId }>;
 
   const [plans, setPlans] = useState<QuestionPlan[]>(
-    () => debunkQuestions.map(q => makeInitialPlan(q, isTutorial))
+    () => debunkQuestions.map(q => makeInitialPlan(q))
   );
 
   function updatePlan(qi: number, newDrafts: DraftStep[]) {
@@ -483,8 +478,7 @@ export function ExpandedDebunkAnswerPanel({ onNext, isTutorial = false }: {
         function addStep() {
           const initialDraft: DraftStep = plan.isApprenticeOnly
             ? { kind: 'apprentice', ingredient: null, color: null }
-            : { kind: 'master', ingredient1: null, ingredient2: null,
-                claimedPotion: isTutorial ? { type: 'neutral' } : null };
+            : { kind: 'master', ingredient1: null, ingredient2: null, claimedPotion: null };
           updatePlan(qi, [...plan.drafts, initialDraft]);
         }
 
@@ -526,7 +520,6 @@ export function ExpandedDebunkAnswerPanel({ onNext, isTutorial = false }: {
                   isConflictOnly={plan.isConflictOnly}
                   isIngredientLocked={plan.isConflictOnly && i === 0}
                   isApprenticeOnly={plan.isApprenticeOnly}
-                  isTutorial={isTutorial}
                 />
               );
             })}
