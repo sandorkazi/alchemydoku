@@ -454,21 +454,20 @@ const REACTION_LABEL: Record<GolemReactionGroup, string> = {
   any_reactive: 'reactive',
 };
 
-function GolemReactionAmongCard({ clue }: { clue: GolemReactionAmongClue }) {
-  const getIngredient = useExpandedIngredient();
+function GolemReactionAmongCard({ clue, clueIndex }: { clue: GolemReactionAmongClue; clueIndex?: number }) {
   const n = clue.ingredients.length;
   const label = REACTION_LABEL[clue.reaction];
+  const article = /^[aeiou]/i.test(label) ? 'an' : 'a';
   return (
     <Card icon="🤖" label="Observed Golem Test" accent="purple">
       <div className="text-xs text-gray-600 mb-1">
         {clue.count} of {n === 2 ? 'these 2' : `these ${n}`}{' '}
-        triggered a <span className="font-semibold">{label}</span> reaction.
+        triggered {article} <span className="font-semibold">{label}</span> reaction.
       </div>
       <div className="flex flex-wrap gap-1">
-        {clue.ingredients.map(id => {
-          const { index } = getIngredient(id);
-          return <IngredientIcon key={id} index={index} width={ING_W} />;
-        })}
+        {clue.ingredients.map(id => (
+          <IngMarkableExpanded key={id} slotId={id} clueIndex={clueIndex ?? -1} />
+        ))}
       </div>
     </Card>
   );
@@ -486,7 +485,7 @@ export function ExpandedClueCard({ clue, clueIndex }: { clue: AnyClue; clueIndex
     case 'golem_test':             return <GolemTestCard clue={clue} />;
     case 'golem_hint_color':       return <GolemHintColorCard clue={clue} />;
     case 'golem_hint_size':           return <GolemHintSizeCard          clue={clue} />;
-    case 'golem_reaction_among':      return <GolemReactionAmongCard       clue={clue} />;
+    case 'golem_reaction_among':      return <GolemReactionAmongCard       clue={clue} clueIndex={clueIndex} />;
     default:                       return <ExpandedBaseClueCard clue={clue} clueIndex={clueIndex} />;
   }
 }
