@@ -1,8 +1,8 @@
 {
   "id": "golem-sl-05",
   "mode": "expanded",
-  "title": "The Clay Chain",
-  "description": "The golem has been tested with 2 ingredients. Identify the animators and determine what potion their mix would produce.",
+  "title": "The Retrograde Signal",
+  "description": "The golem has been tested with 3 ingredients. Identify the animators and determine what potion their mix would produce.",
   "difficulty": "easy",
   "golem": {
     "chest": {
@@ -10,22 +10,48 @@
       "size": "L"
     },
     "ears": {
-      "color": "G",
+      "color": "B",
       "size": "L"
     }
   },
   "clues": [
     {
       "kind": "golem_test",
-      "ingredient": 2,
+      "ingredient": 6,
       "chest_reacted": true,
       "ears_reacted": true
     },
     {
       "kind": "golem_test",
-      "ingredient": 8,
+      "ingredient": 2,
+      "chest_reacted": false,
+      "ears_reacted": false
+    },
+    {
+      "kind": "mixing",
+      "ingredient1": 6,
+      "ingredient2": 7,
+      "result": {
+        "color": "B",
+        "sign": "+"
+      }
+    },
+    {
+      "kind": "book_among",
+      "ingredients": [
+        3,
+        5,
+        7,
+        8
+      ],
+      "result": "lunar",
+      "count": 1
+    },
+    {
+      "kind": "golem_test",
+      "ingredient": 1,
       "chest_reacted": true,
-      "ears_reacted": true
+      "ears_reacted": false
     }
   ],
   "questions": [
@@ -35,34 +61,34 @@
   ],
   "solution": {
     "1": 6,
-    "2": 8,
-    "3": 3,
-    "4": 2,
-    "5": 5,
-    "6": 1,
-    "7": 4,
-    "8": 7
+    "2": 4,
+    "3": 1,
+    "4": 7,
+    "5": 3,
+    "6": 8,
+    "7": 5,
+    "8": 2
   },
   "hints": [
     {
       "level": 1,
-      "text": "The golem reacts to SIZE on a specific color channel.\nKnown tests:\n  ing2: chest=\u2713 ears=\u2713  \u2192  animators\n  ing8: chest=\u2713 ears=\u2713  \u2192  animators"
+      "text": "The golem reacts to SIZE on a specific color channel.\nKnown tests:\n  ing6: chest=\u2713 ears=\u2713  \u2192  animators\n  ing2: chest=\u2717 ears=\u2717  \u2192  non_reactive\n  ing1: chest=\u2713 ears=\u2717  \u2192  chest_only"
     },
     {
       "level": 2,
-      "text": "Chest reacts to R+L. Ears react to G+L. An animator needs BOTH. Cross-reference with untested ingredients."
+      "text": "Chest reacts to R+L. Ears react to B+L. Animation rule: Large reaction \u2192 '+', Small reaction \u2192 '\u2212'. So animation ingredients must have R+ AND B+. Cross-reference with the mixing clues to identify those ingredients."
     },
     {
       "level": 3,
-      "text": "Animators: ingredients [2, 8] (PPP, NNN). Mix: neutral."
+      "text": "Animation ingredients: ing[6, 8] (PPP, pnP). Mix: R+."
     }
   ],
   "complexity": {
-    "score": 10,
-    "raw_score": 10,
-    "clue_score": 0,
+    "score": 31,
+    "raw_score": 15,
+    "clue_score": 5,
     "question_score": 0,
     "world_score": 0,
-    "residual_worlds": 1440
+    "residual_worlds": 12
   }
 }

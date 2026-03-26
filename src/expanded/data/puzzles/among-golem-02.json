@@ -1,184 +1,97 @@
 {
   "id": "among-golem-02",
   "mode": "expanded",
-  "title": "The Merchant's Whispers",
-  "description": "The merchants kept their trades vague \u2014 only letting slip how many from each group reacted. Cross-reference the golem's selective responses with the ambiguous sell outcomes.",
-  "difficulty": "hard",
+  "title": "The Irrelevant Operator",
+  "description": "The golem has been tested with 2 ingredients. Identify the animators and determine what potion their mix would produce.",
+  "difficulty": "easy",
   "golem": {
     "chest": {
       "color": "G",
       "size": "S"
     },
     "ears": {
-      "color": "R",
+      "color": "B",
       "size": "L"
     }
   },
   "clues": [
     {
       "kind": "golem_test",
-      "ingredient": 2,
-      "chest_reacted": false,
+      "ingredient": 3,
+      "chest_reacted": true,
       "ears_reacted": true
     },
     {
       "kind": "golem_test",
-      "ingredient": 6,
-      "chest_reacted": true,
+      "ingredient": 2,
+      "chest_reacted": false,
       "ears_reacted": false
     },
     {
-      "kind": "golem_reaction_among",
+      "kind": "sell_among",
       "ingredients": [
-        1,
         3,
         4,
         7
       ],
-      "reaction": "animators",
-      "count": 1
-    },
-    {
-      "kind": "golem_reaction_among",
-      "ingredients": [
-        3,
-        5,
-        6,
-        7,
-        8
-      ],
-      "reaction": "non_reactive",
-      "count": 2
-    },
-    {
-      "kind": "sell_result_among",
-      "ingredients": [
-        1,
-        2,
-        4,
-        5
-      ],
       "claimedPotion": {
-        "color": "R",
+        "color": "B",
         "sign": "-"
       },
-      "sellResult": "opposite"
+      "result": "sign_ok",
+      "count": 3
     },
     {
-      "kind": "sell_result_among",
+      "kind": "sell_among",
       "ingredients": [
-        6,
-        7,
+        2,
+        4,
+        5,
         8
       ],
       "claimedPotion": {
         "color": "G",
         "sign": "+"
       },
-      "sellResult": "opposite"
-    },
-    {
-      "kind": "sell_result_among",
-      "ingredients": [
-        2,
-        4,
-        6,
-        8
-      ],
-      "claimedPotion": {
-        "color": "B",
-        "sign": "-"
-      },
-      "sellResult": "sign_ok"
-    },
-    {
-      "kind": "mixing_among",
-      "ingredients": [
-        1,
-        3,
-        4
-      ],
-      "result": {
-        "type": "potion",
-        "color": "R",
-        "sign": "-"
-      }
-    },
-    {
-      "kind": "sell_result_among",
-      "ingredients": [
-        1,
-        6,
-        7
-      ],
-      "claimedPotion": {
-        "color": "B",
-        "sign": "-"
-      },
-      "sellResult": "sign_ok"
-    },
-    {
-      "kind": "mixing_among",
-      "ingredients": [
-        1,
-        3,
-        8
-      ],
-      "result": {
-        "type": "potion",
-        "color": "R",
-        "sign": "+"
-      }
-    },
-    {
-      "kind": "book",
-      "ingredient": 2,
-      "result": "lunar"
+      "result": "total_match",
+      "count": 2
     }
   ],
   "questions": [
     {
       "kind": "golem_animate_potion"
-    },
-    {
-      "kind": "solar_lunar",
-      "ingredient": 3
-    },
-    {
-      "kind": "solar_lunar",
-      "ingredient": 4
     }
   ],
   "solution": {
     "1": 2,
-    "2": 7,
-    "3": 4,
+    "2": 4,
+    "3": 1,
     "4": 5,
     "5": 8,
-    "6": 1,
-    "7": 3,
+    "6": 3,
+    "7": 7,
     "8": 6
   },
   "hints": [
     {
       "level": 1,
-      "text": "Golem chest reacts to G+S; ears react to R+L.\nSlot 2 (ears only) and slot 6 (chest only) are confirmed by golem tests. The book also confirms slot 2 is lunar.\nExactly 1 of {1,3,4,7} is an animator."
+      "text": "The golem reacts to SIZE on a specific color channel.\nKnown tests:\n  ing3: chest=\u2713 ears=\u2713  \u2192  animators\n  ing2: chest=\u2717 ears=\u2717  \u2192  non_reactive"
     },
     {
       "level": 2,
-      "text": "An 'opposite' result for R\u2212 means the true mix was R+. A 'sign_ok' for B\u2212 means the mix had sign \u2212 but wasn't Blue.\nUse these to narrow which pairs could fit."
+      "text": "Chest reacts to G+S. Ears react to B+L. Animation rule: Large reaction \u2192 '+', Small reaction \u2192 '\u2212'. So animation ingredients must have G\u2212 AND B+. Cross-reference with the mixing clues to identify those ingredients."
     },
     {
       "level": 3,
-      "text": "Animators mix to Neutral. Slots 4 and 8 are the animators.\nSlot 3 is always lunar (1 negative aspect); slot 4 is always solar (2 negative aspects)."
+      "text": "Animation ingredients: ing[1, 4] (pnP, Nnp). Mix: B+."
     }
   ],
   "complexity": {
-    "score": 77,
-    "raw_score": 60,
-    "clue_score": 40,
+    "score": 52,
+    "raw_score": 30,
+    "clue_score": 20,
     "question_score": 0,
-    "world_score": 10,
-    "residual_worlds": 2
+    "world_score": 0,
+    "residual_worlds": 8
   }
 }

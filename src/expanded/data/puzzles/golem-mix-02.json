@@ -1,61 +1,55 @@
 {
   "id": "golem-mix-02",
   "mode": "expanded",
-  "title": "The Catalogued Error",
-  "description": "The golem has been tested with 4 ingredients. Identify the animators and determine what potion their mix would produce.",
+  "title": "The Only Known Copy",
+  "description": "The golem has been tested with 3 ingredients. Identify the animators and determine what potion their mix would produce.",
   "difficulty": "easy",
   "golem": {
     "chest": {
-      "color": "G",
+      "color": "B",
       "size": "S"
     },
     "ears": {
-      "color": "R",
+      "color": "G",
       "size": "L"
     }
   },
   "clues": [
     {
       "kind": "golem_test",
-      "ingredient": 2,
+      "ingredient": 4,
       "chest_reacted": true,
       "ears_reacted": true
     },
     {
+      "kind": "golem_test",
+      "ingredient": 2,
+      "chest_reacted": true,
+      "ears_reacted": false
+    },
+    {
       "kind": "mixing",
-      "ingredient1": 1,
-      "ingredient2": 7,
+      "ingredient1": 2,
+      "ingredient2": 8,
       "result": {
         "color": "G",
         "sign": "+"
       }
     },
     {
-      "kind": "mixing",
-      "ingredient1": 2,
-      "ingredient2": 5,
-      "result": {
-        "color": "B",
-        "sign": "-"
-      }
-    },
-    {
-      "kind": "golem_test",
-      "ingredient": 3,
-      "chest_reacted": true,
-      "ears_reacted": false
-    },
-    {
-      "kind": "golem_test",
-      "ingredient": 4,
-      "chest_reacted": false,
-      "ears_reacted": false
-    },
-    {
       "kind": "golem_test",
       "ingredient": 6,
-      "chest_reacted": false,
+      "chest_reacted": true,
       "ears_reacted": true
+    },
+    {
+      "kind": "mixing",
+      "ingredient1": 6,
+      "ingredient2": 7,
+      "result": {
+        "color": "G",
+        "sign": "+"
+      }
     }
   ],
   "questions": [
@@ -64,27 +58,27 @@
     }
   ],
   "solution": {
-    "1": 1,
+    "1": 7,
     "2": 6,
     "3": 2,
     "4": 3,
-    "5": 7,
-    "6": 8,
-    "7": 4,
-    "8": 5
+    "5": 5,
+    "6": 4,
+    "7": 1,
+    "8": 8
   },
   "hints": [
     {
       "level": 1,
-      "text": "The golem reacts to SIZE on a specific color channel.\nKnown tests:\n  ing2: chest=\u2713 ears=\u2713  \u2192  animators\n  ing3: chest=\u2713 ears=\u2717  \u2192  chest_only\n  ing4: chest=\u2717 ears=\u2717  \u2192  non_reactive\n  ing6: chest=\u2717 ears=\u2713  \u2192  ears_only"
+      "text": "The golem reacts to SIZE on a specific color channel.\nKnown tests:\n  ing4: chest=\u2713 ears=\u2713  \u2192  animators\n  ing2: chest=\u2713 ears=\u2717  \u2192  chest_only\n  ing6: chest=\u2713 ears=\u2713  \u2192  animators"
     },
     {
       "level": 2,
-      "text": "Chest reacts to G+S. Ears react to R+L. An animator needs BOTH. Cross-reference with untested ingredients."
+      "text": "Chest reacts to B+S. Ears react to G+L. Animation rule: Large reaction \u2192 '+', Small reaction \u2192 '\u2212'. So animation ingredients must have B\u2212 AND G+. Cross-reference with the mixing clues to identify those ingredients."
     },
     {
       "level": 3,
-      "text": "Animators: ingredients [2, 8] (Ppn, Nnp). Mix: neutral."
+      "text": "Animation ingredients: ing[2, 7] (Ppn, npN). Mix: B-."
     }
   ],
   "complexity": {
@@ -93,6 +87,6 @@
     "clue_score": 0,
     "question_score": 0,
     "world_score": 0,
-    "residual_worlds": 2
+    "residual_worlds": 6
   }
 }

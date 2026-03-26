@@ -1,17 +1,17 @@
 {
   "id": "golem-mix-03",
   "mode": "expanded",
-  "title": "The Sequential Binding",
-  "description": "The golem has been tested with 2 ingredients. Identify the animators and determine what potion their mix would produce.",
+  "title": "The Delocalized Electron",
+  "description": "The golem has been tested with 3 ingredients. Identify the animators and determine what potion their mix would produce.",
   "difficulty": "easy",
   "golem": {
     "chest": {
-      "color": "G",
-      "size": "L"
+      "color": "B",
+      "size": "S"
     },
     "ears": {
       "color": "R",
-      "size": "L"
+      "size": "S"
     }
   },
   "clues": [
@@ -29,21 +29,27 @@
     },
     {
       "kind": "mixing",
-      "ingredient1": 2,
-      "ingredient2": 3,
+      "ingredient1": 6,
+      "ingredient2": 8,
       "result": {
-        "color": "B",
+        "color": "G",
         "sign": "+"
       }
     },
     {
       "kind": "mixing",
-      "ingredient1": 5,
-      "ingredient2": 8,
+      "ingredient1": 4,
+      "ingredient2": 6,
       "result": {
         "color": "G",
-        "sign": "-"
+        "sign": "+"
       }
+    },
+    {
+      "kind": "golem_test",
+      "ingredient": 7,
+      "chest_reacted": true,
+      "ears_reacted": true
     }
   ],
   "questions": [
@@ -52,27 +58,27 @@
     }
   ],
   "solution": {
-    "1": 1,
-    "2": 5,
-    "3": 8,
+    "1": 7,
+    "2": 2,
+    "3": 5,
     "4": 6,
-    "5": 2,
-    "6": 7,
-    "7": 4,
-    "8": 3
+    "5": 8,
+    "6": 4,
+    "7": 3,
+    "8": 1
   },
   "hints": [
     {
       "level": 1,
-      "text": "The golem reacts to SIZE on a specific color channel.\nKnown tests:\n  ing6: chest=\u2713 ears=\u2713  \u2192  animators\n  ing2: chest=\u2717 ears=\u2713  \u2192  ears_only"
+      "text": "The golem reacts to SIZE on a specific color channel.\nKnown tests:\n  ing6: chest=\u2713 ears=\u2713  \u2192  animators\n  ing2: chest=\u2717 ears=\u2713  \u2192  ears_only\n  ing7: chest=\u2713 ears=\u2713  \u2192  animators"
     },
     {
       "level": 2,
-      "text": "Chest reacts to G+L. Ears react to R+L. An animator needs BOTH. Cross-reference with untested ingredients."
+      "text": "Chest reacts to B+S. Ears react to R+S. Animation rule: Large reaction \u2192 '+', Small reaction \u2192 '\u2212'. So animation ingredients must have B\u2212 AND R\u2212. Cross-reference with the mixing clues to identify those ingredients."
     },
     {
       "level": 3,
-      "text": "Animators: ingredients [3, 6] (PPP, NNN). Mix: neutral."
+      "text": "Animation ingredients: ing[1, 8] (NNN, npN). Mix: R-."
     }
   ],
   "complexity": {

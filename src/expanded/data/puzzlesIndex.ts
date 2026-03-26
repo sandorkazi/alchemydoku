@@ -36,6 +36,7 @@ import golem03              from './puzzles/golem-03.json';
 import golem04              from './puzzles/golem-04.json';
 import golem05              from './puzzles/golem-05.json';
 import golem06              from './puzzles/golem-06.json';
+import golem07              from './puzzles/golem-07.json';
 
 // ── Encyclopedia + Solar/Lunar ────────────────────────────────────────────────
 import encSl02              from './puzzles/enc-sl-02.json';
@@ -227,7 +228,7 @@ export const ALL_EXPANDED_PUZZLES: ExpandedPuzzle[] = [
   enc01, enc02, enc03, enc04, enc05,
   enc06, enc07, enc08, enc09, enc10,
   sl01, sl02, sl03, sl04, sl05, sl06, sl07,
-  expGolemTutorial01, golem02, golem03, golem04, golem05, golem06,
+  expGolemTutorial01, golem02, golem03, golem04, golem05, golem06, golem07,
   encSl02, encSl03, encSl04, encSl05, encSl06,
   golemEnc02, golemEnc03, golemEnc04, golemEnc05, golemEnc06,
   golemSl02, golemSl03, golemSl04, golemSl05, golemSl06,
@@ -315,7 +316,7 @@ export const EXPANDED_COLLECTIONS: ExpandedCollection[] = [
     puzzleIds: [
       'exp-golem-tutorial-01',
       'golem-02', 'golem-03', 'golem-04',
-      'golem-05', 'golem-06',
+      'golem-05', 'golem-06', 'golem-07',
     ],
     unlockedAfter: 'exp-tutorials',
   },

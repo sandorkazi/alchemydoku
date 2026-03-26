@@ -703,8 +703,8 @@ export function GolemPanel({ activeTool }: { activeTool: GridTool }) {
         ingHints[`${slotStr}-${part}`] = reaction === 'reacts' ? 'confirmed' : 'eliminated';
       }
     }
-    bottomHints[`chest-${puzzle.golem.chest.color}${puzzle.golem.chest.size}`] = 'confirmed';
-    bottomHints[`ears-${puzzle.golem.ears.color}${puzzle.golem.ears.size}`] = 'confirmed';
+    // Note: bottomHints are NOT pre-filled from puzzle.golem — the player must
+    // deduce the golem config from the clues, not receive it as hidden truth.
   }
 
   // Image is 760×400 → AR = 400/760 ≈ 0.526. Explicit height avoids distortion.
@@ -895,29 +895,25 @@ export function GolemPanel({ activeTool }: { activeTool: GridTool }) {
           <div key={part} className="flex gap-1 mt-1">
             <GolemRowHeader img={img} label={label} />
             {ALCH_COLS.map(col => {
-              const current = golemNotepad[part] ?? null;
-              const active = current?.color === col.color && current?.size === col.size;
               const orbSize = col.size === 'L' ? Math.round(CELL_W * 0.70) : Math.round(CELL_W * 0.25);
               const colKey = `${col.color}${col.size}`;
-              const qMark = notes[`g2-${part}-${colKey}`] === '?' ? 'possible' as const : null;
-              const effectiveMark = active ? 'reacts' : qMark;
+              const cellKey = `${part}-${colKey}`;
+              const mark = golemNotepad.bottomGrid?.[cellKey] ?? null;
               return (
                 <GolemCell
                   key={colKey}
-                  mark={effectiveMark}
+                  mark={mark}
                   img={img}
                   noteKey={`g2-${part}-${colKey}`}
                   orbColor={col.color}
                   orbSize={orbSize}
                   isBottomGrid={true}
-                  hint={bottomHints[`${part}-${colKey}`]}
-                  onMark={() => {
-                    if (activeTool === 'question') {
-                      dispatch({ type: 'SET_NOTE', key: `g2-${part}-${colKey}`, value: qMark ? '' : '?' });
-                    } else {
-                      dispatch({ type: 'SET_GOLEM_NOTEPAD', part, value: active ? null : col });
-                    }
-                  }}
+                  hint={bottomHints[cellKey]}
+                  onMark={() => dispatch({
+                    type: 'SET_GOLEM_BOTTOM_MARK',
+                    key: cellKey,
+                    mark: cycleIngMark(mark),
+                  })}
                 />
               );
             })}

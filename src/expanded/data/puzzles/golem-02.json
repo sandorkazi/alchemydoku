@@ -1,49 +1,52 @@
 {
   "id": "golem-02",
   "mode": "expanded",
-  "title": "The Subtle Distinction",
-  "description": "The golem has been tested with 2 ingredients. Deduce the reaction pattern and identify the target group.",
+  "title": "The Steric Demand",
+  "description": "The golem has been tested with 4 ingredients. Deduce the reaction pattern and identify the target group.",
   "difficulty": "easy",
   "golem": {
     "chest": {
-      "color": "G",
-      "size": "L"
+      "color": "B",
+      "size": "S"
     },
     "ears": {
-      "color": "B",
-      "size": "L"
+      "color": "G",
+      "size": "S"
     }
   },
   "clues": [
     {
       "kind": "golem_test",
-      "ingredient": 5,
+      "ingredient": 6,
       "chest_reacted": true,
       "ears_reacted": true
     },
     {
       "kind": "golem_test",
-      "ingredient": 6,
-      "chest_reacted": false,
-      "ears_reacted": true
+      "ingredient": 3,
+      "chest_reacted": true,
+      "ears_reacted": false
     },
     {
       "kind": "mixing",
       "ingredient1": 3,
-      "ingredient2": 5,
+      "ingredient2": 4,
       "result": {
         "color": "R",
-        "sign": "-"
+        "sign": "+"
       }
     },
     {
-      "kind": "mixing",
-      "ingredient1": 6,
-      "ingredient2": 7,
-      "result": {
-        "color": "G",
-        "sign": "+"
-      }
+      "kind": "golem_test",
+      "ingredient": 1,
+      "chest_reacted": true,
+      "ears_reacted": true
+    },
+    {
+      "kind": "golem_test",
+      "ingredient": 2,
+      "chest_reacted": false,
+      "ears_reacted": false
     }
   ],
   "questions": [
@@ -53,27 +56,27 @@
     }
   ],
   "solution": {
-    "1": 3,
-    "2": 6,
-    "3": 4,
-    "4": 2,
-    "5": 7,
-    "6": 1,
-    "7": 8,
-    "8": 5
+    "1": 5,
+    "2": 7,
+    "3": 3,
+    "4": 8,
+    "5": 2,
+    "6": 6,
+    "7": 1,
+    "8": 4
   },
   "hints": [
     {
       "level": 1,
-      "text": "The golem reacts to SIZE on a specific color channel.\nKnown tests:\n  ing5: chest=\u2713 ears=\u2713  \u2192  animators\n  ing6: chest=\u2717 ears=\u2713  \u2192  ears_only"
+      "text": "The golem reacts to SIZE on a specific color channel.\nKnown tests:\n  ing6: chest=\u2713 ears=\u2713  \u2192  animators\n  ing3: chest=\u2713 ears=\u2717  \u2192  chest_only\n  ing1: chest=\u2713 ears=\u2713  \u2192  animators\n  ing2: chest=\u2717 ears=\u2717  \u2192  non_reactive"
     },
     {
       "level": 2,
-      "text": "Chest reacts to G+L. Ears react to B+L. An animator needs BOTH. Cross-reference with untested ingredients."
+      "text": "Chest reacts to B+S. Ears react to G+S. Animation rule: Large reaction \u2192 '+', Small reaction \u2192 '\u2212'. So animation ingredients must have B\u2212 AND G\u2212. Cross-reference with the mixing clues to identify those ingredients."
     },
     {
       "level": 3,
-      "text": "The animators are: ingredients [5, 7]. Alch: ing5\u2192NNN, ing7\u2192PPP."
+      "text": "The animators are: ingredients [2, 3]. Alch: ing2\u2192NNN, ing3\u2192pNn."
     }
   ],
   "complexity": {
@@ -82,6 +85,6 @@
     "clue_score": 0,
     "question_score": 0,
     "world_score": 0,
-    "residual_worlds": 24
+    "residual_worlds": 12
   }
 }

@@ -1,8 +1,8 @@
 {
   "id": "mixed-exp-golem-23",
   "mode": "expanded",
-  "title": "The Stolen Recipe",
-  "description": "The golem has been tested with 1 ingredient. Deduce the reaction pattern and identify the target group.",
+  "title": "The Branching Point",
+  "description": "The golem has been tested with 3 ingredients. Deduce the reaction pattern and identify the target group.",
   "difficulty": "medium",
   "golem": {
     "chest": {
@@ -10,14 +10,20 @@
       "size": "L"
     },
     "ears": {
-      "color": "G",
+      "color": "B",
       "size": "S"
     }
   },
   "clues": [
     {
       "kind": "golem_test",
-      "ingredient": 3,
+      "ingredient": 6,
+      "chest_reacted": true,
+      "ears_reacted": true
+    },
+    {
+      "kind": "golem_test",
+      "ingredient": 1,
       "chest_reacted": false,
       "ears_reacted": false
     },
@@ -25,12 +31,11 @@
       "kind": "sell_result_among",
       "ingredients": [
         1,
-        3,
-        4,
+        2,
         5
       ],
       "claimedPotion": {
-        "color": "B",
+        "color": "G",
         "sign": "-"
       },
       "sellResult": "opposite"
@@ -38,60 +43,62 @@
     {
       "kind": "golem_reaction_among",
       "ingredients": [
-        1,
+        4,
         5,
         8
       ],
-      "reaction": "non_reactive",
+      "reaction": "ears_only",
       "count": 1
     },
     {
       "kind": "book_among",
       "ingredients": [
-        4,
         5,
-        6
+        6,
+        8
       ],
-      "result": "lunar",
+      "result": "solar",
       "count": 1
     },
     {
       "kind": "sell_among",
       "ingredients": [
-        2,
-        5,
-        7,
-        8
+        1,
+        3,
+        4
       ],
       "claimedPotion": {
-        "color": "G",
+        "color": "R",
         "sign": "-"
       },
       "result": "opposite",
-      "count": 5
-    },
-    {
-      "kind": "mixing_count_among",
-      "ingredients": [
-        3,
-        6,
-        7,
-        8
-      ],
-      "result": {
-        "color": "G",
-        "sign": "-"
-      },
-      "count": 4
+      "count": 3
     },
     {
       "kind": "golem_reaction_among",
       "ingredients": [
         1,
+        3,
         5,
         8
       ],
-      "reaction": "ears_only",
+      "reaction": "chest_only",
+      "count": 1
+    },
+    {
+      "kind": "golem_test",
+      "ingredient": 5,
+      "chest_reacted": false,
+      "ears_reacted": true
+    },
+    {
+      "kind": "golem_reaction_among",
+      "ingredients": [
+        5,
+        6,
+        7
+      ],
+      "reaction": "chest_only",
       "count": 1
     }
   ],
@@ -102,33 +109,33 @@
     }
   ],
   "solution": {
-    "1": 4,
-    "2": 6,
-    "3": 3,
-    "4": 1,
-    "5": 8,
-    "6": 7,
-    "7": 5,
-    "8": 2
+    "1": 2,
+    "2": 3,
+    "3": 8,
+    "4": 5,
+    "5": 4,
+    "6": 6,
+    "7": 7,
+    "8": 1
   },
   "hints": [
     {
       "level": 1,
-      "text": "The golem reacts to SIZE on a specific color channel.\nKnown tests:\n  ing3: chest=\u2717 ears=\u2717  \u2192  non_reactive"
+      "text": "The golem reacts to SIZE on a specific color channel.\nKnown tests:\n  ing6: chest=\u2713 ears=\u2713  \u2192  animators\n  ing1: chest=\u2717 ears=\u2717  \u2192  non_reactive\n  ing5: chest=\u2717 ears=\u2713  \u2192  ears_only"
     },
     {
       "level": 2,
-      "text": "Chest reacts to R+L. Ears react to G+S. An animator needs BOTH. Cross-reference with untested ingredients."
+      "text": "Chest reacts to R+L. Ears react to B+S. Animation rule: Large reaction \u2192 '+', Small reaction \u2192 '\u2212'. So animation ingredients must have R+ AND B\u2212. Cross-reference with the mixing clues to identify those ingredients."
     },
     {
       "level": 3,
-      "text": "The animators are: ingredients [2, 7]. Alch: ing2\u2192Ppn, ing7\u2192Nnp."
+      "text": "The animators are: ingredients [2, 6]. Alch: ing2\u2192pNn, ing6\u2192Ppn."
     }
   ],
   "complexity": {
-    "score": 70,
-    "raw_score": 50,
-    "clue_score": 40,
+    "score": 66,
+    "raw_score": 45,
+    "clue_score": 35,
     "question_score": 0,
     "world_score": 0,
     "residual_worlds": 1

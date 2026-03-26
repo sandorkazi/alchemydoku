@@ -5,7 +5,7 @@
  * No side effects, no context imports.
  */
 
-import { WORLD_DATA, SIZE_TABLE, MIX_TABLE, COLOR_INDEX, filterWorlds } from '../../logic/worldPack';
+import { WORLD_DATA, SIZE_TABLE, SIGN_TABLE, MIX_TABLE, COLOR_INDEX, filterWorlds } from '../../logic/worldPack';
 import { getPossibleResults } from '../../logic/deducer';
 import type { WorldSet, IngredientId, AlchemicalId, PotionResult, Color } from '../../types';
 import type {
@@ -37,7 +37,53 @@ export function golemReacts(
   return golemReacts0(alchId - 1, params, part);
 }
 
-/** Classify an alch0 into its reaction group. */
+// ─── Animation primitives (SIGN-based) ───────────────────────────────────────
+// Distinct from reaction (SIZE-based): Large reaction implies '+' sign, Small implies '-'.
+
+/** Animation sign value (1='+', 0='-') implied by a golem part's size. */
+function animationSignVal(params: GolemParams, part: 'chest' | 'ears'): number {
+  return params[part].size === 'L' ? 1 : 0;
+}
+
+/**
+ * Does alch0 qualify as an animation ingredient?
+ * An animation ingredient has the sign IMPLIED by the golem part size on both reaction colors.
+ * Large → '+' (+1), Small → '-' (0). Entirely distinct from SIZE-based reaction.
+ */
+function isAnimationIngredient0(alch0: number, params: GolemParams): boolean {
+  return (
+    SIGN_TABLE[alch0 * 3 + COLOR_INDEX[params.chest.color]] === animationSignVal(params, 'chest') &&
+    SIGN_TABLE[alch0 * 3 + COLOR_INDEX[params.ears.color]]  === animationSignVal(params, 'ears')
+  );
+}
+
+/**
+ * Returns every ingredient slot (1–8) that every remaining world agrees
+ * is an animation ingredient (SIGN-based).
+ * For any valid golem config, exactly 2 alchemicals satisfy both sign conditions.
+ */
+function getAnimationIngredients(worlds: WorldSet, params: GolemParams): IngredientId[] {
+  if (worlds.length === 0) return [];
+  const result: IngredientId[] = [];
+  for (let s = 0; s < 8; s++) {
+    if (!isAnimationIngredient0(WORLD_DATA[worlds[0] * 8 + s], params)) continue;
+    let allAgree = true;
+    for (let i = 1; i < worlds.length; i++) {
+      if (!isAnimationIngredient0(WORLD_DATA[worlds[i] * 8 + s], params)) { allAgree = false; break; }
+    }
+    if (allAgree) result.push((s + 1) as IngredientId);
+  }
+  return result;
+}
+
+// ─── SIZE-based reaction classification ───────────────────────────────────────
+
+/**
+ * Classify an alch0 into its SIZE-based reaction group.
+ * 'animators' here = reacts to BOTH chest and ears (SIZE match on each color).
+ * This is used for golem_reaction_among clues and as a reaction group label,
+ * NOT for the golem_group:'animators' question (which is SIGN-based).
+ */
 export function getReactionGroup0(
   alch0: number,
   params: GolemParams,
@@ -111,10 +157,11 @@ export function computeGolemGroup(
   q: GolemGroupQuestion,
 ): IngredientSetAnswer | null {
   if (worlds.length === 0) return null;
-  const ingredients = getGroupIngredients(worlds, params, q.group);
-  // For a well-constrained puzzle, animators/chest_only/ears_only/non_reactive
-  // should each have exactly 2 confirmed members; any_reactive = 6.
-  // Return null if underdetermined (0 confirmed but we have no forced answer).
+  // 'animators' = SIGN-based animation ingredients (Large→+, Small→−).
+  // All other groups = SIZE-based reaction classification.
+  const ingredients = q.group === 'animators'
+    ? getAnimationIngredients(worlds, params)
+    : getGroupIngredients(worlds, params, q.group);
   if (ingredients.length === 0) return null;
   return { kind: 'ingredient_set', ingredients };
 }
@@ -125,15 +172,14 @@ export function computeGolemAnimatePotion(
 ): PotionResult | null {
   if (worlds.length === 0) return null;
 
-  // For each world find the 2 animator slots and the potion they produce.
+  // For each world find the 2 animation ingredient slots (SIGN-based) and the potion they produce.
   // We only require all worlds to agree on the *potion*, not on the identity
-  // of the animators (which may still be ambiguous).
+  // of the animation ingredients (which may still be ambiguous).
   let firstCode = -1;
   for (let i = 0; i < worlds.length; i++) {
     const animSlots: number[] = [];
     for (let s = 0; s < 8; s++) {
-      if (golemReacts0(WORLD_DATA[worlds[i] * 8 + s], params, 'chest') &&
-          golemReacts0(WORLD_DATA[worlds[i] * 8 + s], params, 'ears')) {
+      if (isAnimationIngredient0(WORLD_DATA[worlds[i] * 8 + s], params)) {
         animSlots.push(s);
       }
     }

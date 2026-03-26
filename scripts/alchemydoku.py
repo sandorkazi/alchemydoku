@@ -99,6 +99,15 @@ def rgroup(alch: int, params: dict) -> str:
     if e:        return 'ears_only'
     return 'non_reactive'
 
+def anim_sign(params: dict, part: str) -> int:
+    """Animation sign implied by golem part size: L→+1 ('+'), S→-1 ('-')."""
+    return 1 if params[part]['size'] == 'L' else -1
+
+def is_animation_ingredient(alch: int, params: dict) -> bool:
+    """Is alch an animation ingredient? SIGN-based: must match sign implied by each part's size."""
+    return (ALCH_DATA[alch][params['chest']['color']][0] == anim_sign(params, 'chest')
+            and ALCH_DATA[alch][params['ears']['color']][0] == anim_sign(params, 'ears'))
+
 def compute_groups(sol: dict, params: dict) -> dict:
     return {s: rgroup(sol[s], params) for s in SLOTS}
 
@@ -121,8 +130,10 @@ def sample_valid_golem(sol: dict, rng: random.Random) -> dict:
 # WORLDS & CLUE FILTERS  (handles all clue kinds: base + expanded)
 # ══════════════════════════════════════════════════════════════════════════════
 
+_ALL_WORLDS: frozenset = frozenset(itertools.permutations(ALL_ALCH))
+
 def all_worlds() -> frozenset:
-    return frozenset(itertools.permutations(ALL_ALCH))
+    return _ALL_WORLDS
 
 def filter_clue(worlds: frozenset, clue: dict, golem: Optional[dict] = None) -> frozenset:
     k = clue['kind']
@@ -368,20 +379,27 @@ def answer(worlds: frozenset, q: dict, golem: Optional[dict] = None):
         if golem is None:
             return None
         grp = q['group']
-        slots = [s for s in SLOTS
-                 if all(rgroup(w[s - 1], golem) == grp for w in worlds)]
-        expected = 6 if grp == 'any_reactive' else 2
-        return sorted(slots) if len(slots) == expected else None
+        if grp == 'animators':
+            # SIGN-based: animation ingredient has sign implied by golem part size (L→+, S→−)
+            slots = [s for s in SLOTS
+                     if all(is_animation_ingredient(w[s - 1], golem) for w in worlds)]
+            return sorted(slots) if len(slots) == 2 else None
+        else:
+            # SIZE-based reaction group (chest_only, ears_only, non_reactive, any_reactive)
+            slots = [s for s in SLOTS
+                     if all(rgroup(w[s - 1], golem) == grp for w in worlds)]
+            expected = 6 if grp == 'any_reactive' else 2
+            return sorted(slots) if len(slots) == expected else None
 
     if k == 'golem_animate_potion':
         if golem is None:
             return None
-        # The question only asks what potion the animators produce — not which
-        # ingredients they are.  Require every world to have exactly 2 animators
+        # Animation ingredients are SIGN-based (Large→+, Small→−).
+        # Require every world to have exactly 2 animation ingredients
         # and all those pairs to produce the same potion.
         potions = set()
         for w in worlds:
-            anims = sorted(s for s in SLOTS if rgroup(w[s - 1], golem) == 'animators')
+            anims = sorted(s for s in SLOTS if is_animation_ingredient(w[s - 1], golem))
             if len(anims) != 2:
                 return None
             potions.add(MIX_TABLE[w[anims[0] - 1]][w[anims[1] - 1]])
@@ -486,6 +504,49 @@ def all_answered(worlds: frozenset, questions: list, golem: Optional[dict] = Non
         (ans := answer(worlds, q, golem)) is not None and ans != 'not_validated'
         for q in questions
     )
+
+def golem_config_deducible(clues: list, golem: dict, golem_qs: list) -> bool:
+    """Check that no alternative golem config is consistent with the clues AND gives
+    a different answer to golem_group/'animators' questions.
+
+    NOTE: golem_animate_potion is intentionally excluded from golem_qs. The animation
+    potion is a mathematical constant determined solely by the golem config (independent
+    of the alchemical assignment), so alt configs always give a deterministic but
+    different potion. Deducibility can never be satisfied for that question type.
+
+    Optimised: precompute worlds filtered by non-golem_test clues once, then apply
+    only golem_test clues with each alternative config (avoids 23x all_worlds() calls).
+    """
+    if not golem_qs:
+        return True
+    # Split: golem_test AND golem_reaction_among both depend on the golem config;
+    # all other clues are config-independent.
+    _GOLEM_DEP = frozenset({'golem_test', 'golem_reaction_among'})
+    golem_dep_clues = [c for c in clues if c['kind'] in _GOLEM_DEP]
+    other_clues     = [c for c in clues if c['kind'] not in _GOLEM_DEP]
+    # Base worlds: filtered by config-independent clues (computed once)
+    base_worlds = apply_all(all_worlds(), other_clues, None)
+    # Real worlds and answers
+    real_worlds  = apply_all(base_worlds, golem_dep_clues, golem)
+    real_answers = [answer(real_worlds, q, golem) for q in golem_qs]
+    for cc in COLORS:
+        for ec in COLORS:
+            if cc == ec:
+                continue
+            for cs in ('L', 'S'):
+                for es in ('L', 'S'):
+                    alt = {'chest': {'color': cc, 'size': cs},
+                           'ears':  {'color': ec, 'size': es}}
+                    if alt == golem:
+                        continue
+                    alt_worlds = apply_all(base_worlds, golem_dep_clues, alt)
+                    if not alt_worlds:
+                        continue
+                    for i, q in enumerate(golem_qs):
+                        alt_ans = answer(alt_worlds, q, alt)
+                        if alt_ans is not None and alt_ans != real_answers[i]:
+                            return False
+    return True
 
 # ══════════════════════════════════════════════════════════════════════════════
 # DEBUNK PLANNING HELPERS
@@ -1070,15 +1131,28 @@ def validate_puzzle(puz: dict) -> list:
                         and c.get('entries') == q.get('known')):
                     anchor_idx.add(i)
 
+    has_animate_q = any(q['kind'] == 'golem_animate_potion' for q in questions)
     redundant_idxs = []
     for i, c in enumerate(clues):
         if i in anchor_idx:
             continue
         reduced = clues[:i] + clues[i + 1:]
         w2 = apply_all(all_worlds(), reduced, golem)
-        if all_answered(w2, questions, golem):
-            redundant_idxs.append(i)
-    is_tutorial = puz.get('id', '').startswith('tutorial')
+        if has_animate_q:
+            # For golem_animate_potion, all_answered is always True (answer is config-determined).
+            # A clue is only redundant if removing it has NO effect on the world set.
+            if len(w2) == len(worlds):
+                redundant_idxs.append(i)
+        elif all_answered(w2, questions, golem):
+            # For golem_group questions, a clue is only redundant if removing it
+            # still satisfies deducibility (no alt config gives a different answer).
+            # Clues needed only for deducibility are not truly redundant.
+            golem_group_qs = [q for q in questions if q['kind'] == 'golem_group']
+            if golem_group_qs and not golem_config_deducible(reduced, golem, golem_group_qs):
+                pass  # Clue is required for deducibility — not redundant
+            else:
+                redundant_idxs.append(i)
+    is_tutorial = puz.get('difficulty', '') == 'tutorial'
     for i in redundant_idxs:
         c = clues[i]
         msg = f"clue {i} ({c['kind']}) is redundant"
@@ -1098,6 +1172,41 @@ def validate_puzzle(puz: dict) -> list:
                            if q['kind'] in ('golem_group', 'golem_animate_potion')), None)
                 if gq is None or answer(worlds, gq, golem) is None:
                     errs.append("WARNING: all golem tests in the same reaction group")
+
+        # Golem config deducibility: check that no alternative config is consistent
+        # with the clues AND gives a different animation ingredient set answer.
+        # Only golem_group is checked — golem_animate_potion is excluded because
+        # the animation potion is config-determined and deducibility can never be met.
+        golem_qs = [q for q in questions if q['kind'] == 'golem_group']
+        if golem_qs and not golem_config_deducible(clues, golem, golem_qs):
+            # Re-run to collect specific error messages
+            golem_test_clues = [c for c in clues if c['kind'] == 'golem_test']
+            other_clues      = [c for c in clues if c['kind'] != 'golem_test']
+            base_worlds      = apply_all(all_worlds(), other_clues, None)
+            real_worlds      = apply_all(base_worlds, golem_test_clues, golem)
+            real_answers     = [answer(real_worlds, q, golem) for q in golem_qs]
+            for cc in COLORS:
+                for ec in COLORS:
+                    if cc == ec:
+                        continue
+                    for cs in ('L', 'S'):
+                        for es in ('L', 'S'):
+                            alt = {'chest': {'color': cc, 'size': cs},
+                                   'ears':  {'color': ec, 'size': es}}
+                            if alt == golem:
+                                continue
+                            alt_worlds = apply_all(base_worlds, golem_test_clues, alt)
+                            if not alt_worlds:
+                                continue
+                            for i, q in enumerate(golem_qs):
+                                alt_ans = answer(alt_worlds, q, alt)
+                                if alt_ans is not None and alt_ans != real_answers[i]:
+                                    errs.append(
+                                        f"ERROR: alt golem config {{chest:{cc}{cs}, ears:{ec}{es}}} "
+                                        f"is consistent with clues but gives different answer "
+                                        f"for {q['kind']}: real={real_answers[i]}, alt={alt_ans}"
+                                    )
+                                    break  # first offending alt config per question only
 
     enc_asp = [c['aspect'] for c in clues if c['kind'] == 'encyclopedia']
     if len(enc_asp) != len(set(enc_asp)):
@@ -1133,15 +1242,16 @@ class Profile:
     mandatory_clues: list = field(default_factory=list)
 
 PROFILES = {
-    'tutorial_golem':    Profile('exp-tutorial-golem',    ['base', 'golem'],                      'golem_group',             'tutorial', 6,  True,  {'group': 'animators'}),
+    'tutorial_golem':    Profile('exp-golem-tutorial',    ['base', 'golem'],                      'golem_group',             'tutorial', 6,  True,  {'group': 'animators'}),
     'easy_enc':          Profile('exp-easy-enc',          ['base', 'encyclopedia'],               'encyclopedia_fourth',      'easy',     10, False),
     'easy_sl':           Profile('exp-easy-sl',           ['base', 'solar_lunar'],                'alchemical',               'easy',     7,  False),
-    'easy_golem':        Profile('exp-easy-golem',        ['base', 'golem'],                      'golem_group',              'easy',     8,  True,  {'group': 'animators'}),
+    'easy_golem':        Profile('golem',                 ['base', 'golem'],                      'golem_group',              'easy',     8,  True,  {'group': 'animators'}),
     'medium_enc_sl':     Profile('exp-medium-enc-sl',     ['base', 'encyclopedia', 'solar_lunar'], 'encyclopedia_fourth',     'medium',   12, False),
-    'medium_golem_enc':  Profile('exp-medium-golem-enc',  ['base', 'encyclopedia', 'golem'],       'golem_group',             'medium',   12, True,  {'group': 'animators'}),
-    'medium_golem_sl':   Profile('exp-medium-golem-sl',   ['base', 'golem', 'solar_lunar'],        'golem_animate_potion',    'medium',   10, True),
-    'hard_all':          Profile('exp-hard-all',          ['base', 'encyclopedia', 'golem', 'solar_lunar'], 'golem_group',   'hard',     15, True,  {'group': 'animators'}),
-    'hard_golem_mix':    Profile('exp-hard-golem-mix',    ['base', 'golem'],                       'golem_animate_potion',    'hard',     10, True),
+    'medium_golem_enc':  Profile('golem-enc',             ['base', 'encyclopedia', 'golem'],       'golem_group',             'medium',   12, True,  {'group': 'animators'}),
+    'medium_golem_sl':   Profile('golem-sl',              ['base', 'golem', 'solar_lunar'],        'golem_animate_potion',    'medium',   10, True),
+    'hard_all':          Profile('all',                   ['base', 'encyclopedia', 'golem', 'solar_lunar'], 'golem_group',   'hard',     15, True,  {'group': 'animators'}),
+    'hard_golem_mix':    Profile('golem-mix',             ['base', 'golem'],                       'golem_animate_potion',    'hard',     10, True),
+    'among_golem':       Profile('among-golem',           ['base', 'golem', 'sell', 'among'],      'golem_animate_potion',    'hard',     12, True),
     # Base-game new question profiles
     'q_neutral_partner': Profile('neutral-partner',       ['base'],                               'neutral-partner',          'medium',   8,  False),
     'q_ing_profile':     Profile('ing-profile',           ['base'],                               'ingredient-potion-profile','medium',   8,  False),
@@ -1594,8 +1704,35 @@ def construct(profile: Profile, rng: random.Random, verbose: bool = False):
     greedy = [(kd, pri, c2) for kd, pri, c2 in pool
               if kd not in ('golem_hint_color', 'golem_hint_size')]
 
+    # Only golem_group (animator set deduction) requires the deducibility check.
+    # golem_animate_potion is excluded: the animation potion is config-determined
+    # (independent of worlds), so alt configs always give different potions and
+    # deducibility can never be satisfied for that question type.
+    _golem_qs_for_deducibility = (
+        [q] if golem and q['kind'] == 'golem_group' else []
+    )
+    # Track the last deducibility pass result to avoid re-checking every iteration.
+    # We only re-check when the clue list changes (i.e., after adding a new clue).
+    _deducible_cache: list = [None]   # [bool | None]; None = stale
+
+    # Target world count for golem_animate_potion (answer is config-determined, not world-determined).
+    # We stop the greedy loop once the world set is small enough to be a useful puzzle.
+    _ANIMATE_TARGET_WORLDS = 12
+
+    def _is_done() -> bool:
+        if q['kind'] == 'golem_animate_potion':
+            # all_answered is always True for this type; use world-count as stopping criterion
+            return len(worlds) <= _ANIMATE_TARGET_WORLDS
+        if not all_answered(worlds, [q], golem):
+            return False
+        if not _golem_qs_for_deducibility:
+            return True
+        if _deducible_cache[0] is None:
+            _deducible_cache[0] = golem_config_deducible(clues, golem, _golem_qs_for_deducibility)
+        return _deducible_cache[0]
+
     for _ in range(profile.max_clues * 5):
-        if all_answered(worlds, [q], golem):
+        if _is_done():
             break
 
         # Early break for debunk profiles: stop once enough ingredients are known
@@ -1624,6 +1761,7 @@ def construct(profile: Profile, rng: random.Random, verbose: bool = False):
 
         clues.append(best_clue)
         worlds = filter_clue(worlds, best_clue, golem)
+        _deducible_cache[0] = None  # invalidate: clue list changed
         if verbose:
             print(f"  [greedy] {best_clue['kind']} → {len(worlds)} worlds")
 
@@ -1649,9 +1787,20 @@ def construct(profile: Profile, rng: random.Random, verbose: bool = False):
             'worlds': worlds,
         }
 
-    if not all_answered(worlds, [q], golem):
+    if q['kind'] == 'golem_animate_potion':
+        if len(worlds) > _ANIMATE_TARGET_WORLDS:
+            if verbose: print(f"  [greedy] worlds={len(worlds)} > {_ANIMATE_TARGET_WORLDS} (animate potion target)")
+            return None
+    elif not all_answered(worlds, [q], golem):
         if verbose: print("  [greedy] no unique answer achieved")
         return None
+
+    if _golem_qs_for_deducibility:
+        if _deducible_cache[0] is None:
+            _deducible_cache[0] = golem_config_deducible(clues, golem, _golem_qs_for_deducibility)
+        if not _deducible_cache[0]:
+            if verbose: print("  [deducibility] alt golem config gives different answer")
+            return None
 
     return {'sol': sol, '_sol_str': {str(k): v for k, v in sol.items()},
             'golem': golem, 'clues': clues, '_anchor': anchor,
@@ -1686,8 +1835,16 @@ def minimize(raw: dict, profile=None, verbose: bool = False) -> dict:
                          and len(trial_debunk['questions']) >= len(raw['_debunk_questions']))
                 if valid:
                     current_debunk = trial_debunk
+            elif q['kind'] == 'golem_animate_potion':
+                # For golem_animate_potion, all_answered is always True; only remove if
+                # the clue is truly zero-information (removing it doesn't change world count)
+                current_wc = len(apply_all(all_worlds(), clues, golem))
+                valid = len(w) == current_wc
             else:
                 valid = all_answered(w, [q], golem)
+                # golem_group (animator set) requires deducibility
+                if valid and golem and q['kind'] == 'golem_group':
+                    valid = golem_config_deducible(reduced, golem, [q])
             if valid:
                 if verbose: print(f"  [minimize] removed {clues[i]['kind']}")
                 clues   = reduced
@@ -2024,6 +2181,7 @@ def gen_hints(raw: dict) -> list:
         hints_display = [c for c in clues if c['kind'] in ('golem_hint_color', 'golem_hint_size')]
         extra = (' Research notes: ' + '; '.join(_dc(c) for c in hints_display) + '.'
                  if hints_display else '')
+        # Level 1: raw test results (reaction groups are SIZE-based)
         test_lines = [
             f"  ing{c['ingredient']}: chest={'✓' if c['chest_reacted'] else '✗'} "
             f"ears={'✓' if c['ears_reacted'] else '✗'}  →  {groups[c['ingredient']]}"
@@ -2033,11 +2191,17 @@ def gen_hints(raw: dict) -> list:
             f"The golem reacts to SIZE on a specific color channel.{extra}\n"
             "Known tests:\n" + "\n".join(test_lines)
         })
+        # Level 2: explain the deduced golem config and the SIGN-based animation mechanic
+        cs_sign = '+' if golem['chest']['size'] == 'L' else '−'
+        es_sign = '+' if golem['ears']['size'] == 'L' else '−'
         hints.append({'level': 2, 'text': (
             f"Chest reacts to {golem['chest']['color']}+{golem['chest']['size']}. "
             f"Ears react to {golem['ears']['color']}+{golem['ears']['size']}. "
-            f"An animator needs BOTH. Cross-reference with untested ingredients."
+            f"Animation rule: Large reaction → '+', Small reaction → '−'. "
+            f"So animation ingredients must have {golem['chest']['color']}{cs_sign} AND {golem['ears']['color']}{es_sign}. "
+            f"Cross-reference with the mixing clues to identify those ingredients."
         )})
+        # Level 3: give the direct answer
         if k == 'golem_group':
             ans  = answer(worlds, q, golem)
             info = [f"ing{s}→{ALCH_CODES[sol[s]]}" for s in (ans or [])]
@@ -2045,10 +2209,10 @@ def gen_hints(raw: dict) -> list:
                 f"The {q['group']} are: ingredients {ans}. Alch: {', '.join(info)}."
             })
         else:
-            anims = sorted(s for s, g in groups.items() if g == 'animators')
+            anims = sorted(s for s in SLOTS if is_animation_ingredient(sol[s], golem))
             a1, a2 = sol[anims[0]], sol[anims[1]]
             hints.append({'level': 3, 'text':
-                f"Animators: ingredients {anims} ({ALCH_CODES[a1]}, {ALCH_CODES[a2]}). "
+                f"Animation ingredients: ing{anims} ({ALCH_CODES[a1]}, {ALCH_CODES[a2]}). "
                 f"Mix: {fmt_r(MIX_TABLE[a1][a2])}."
             })
 

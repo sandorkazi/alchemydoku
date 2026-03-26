@@ -1,31 +1,95 @@
 {
   "id": "golem-enc-02",
   "mode": "expanded",
-  "title": "The Golem's Testimony",
+  "title": "The Proxy Reagent",
   "description": "The golem has been tested with 2 ingredients. Deduce the reaction pattern and identify the target group.",
   "difficulty": "easy",
   "golem": {
     "chest": {
-      "color": "G",
-      "size": "S"
+      "color": "B",
+      "size": "L"
     },
     "ears": {
-      "color": "R",
+      "color": "G",
       "size": "L"
     }
   },
   "clues": [
     {
       "kind": "golem_test",
-      "ingredient": 3,
+      "ingredient": 4,
       "chest_reacted": true,
       "ears_reacted": true
     },
     {
       "kind": "golem_test",
-      "ingredient": 5,
+      "ingredient": 3,
       "chest_reacted": true,
-      "ears_reacted": true
+      "ears_reacted": false
+    },
+    {
+      "kind": "encyclopedia",
+      "aspect": "R",
+      "entries": [
+        {
+          "ingredient": 4,
+          "sign": "+"
+        },
+        {
+          "ingredient": 6,
+          "sign": "+"
+        },
+        {
+          "ingredient": 7,
+          "sign": "+"
+        }
+      ]
+    },
+    {
+      "kind": "encyclopedia",
+      "aspect": "G",
+      "entries": [
+        {
+          "ingredient": 2,
+          "sign": "+"
+        },
+        {
+          "ingredient": 4,
+          "sign": "+"
+        },
+        {
+          "ingredient": 6,
+          "sign": "+"
+        }
+      ]
+    },
+    {
+      "kind": "golem_reaction_among",
+      "ingredients": [
+        2,
+        6,
+        8
+      ],
+      "reaction": "animators",
+      "count": 1
+    },
+    {
+      "kind": "encyclopedia",
+      "aspect": "B",
+      "entries": [
+        {
+          "ingredient": 1,
+          "sign": "+"
+        },
+        {
+          "ingredient": 2,
+          "sign": "+"
+        },
+        {
+          "ingredient": 5,
+          "sign": "+"
+        }
+      ]
     }
   ],
   "questions": [
@@ -35,35 +99,35 @@
     }
   ],
   "solution": {
-    "1": 1,
+    "1": 2,
     "2": 4,
-    "3": 5,
-    "4": 2,
-    "5": 6,
-    "6": 3,
-    "7": 7,
-    "8": 8
+    "3": 1,
+    "4": 8,
+    "5": 5,
+    "6": 6,
+    "7": 3,
+    "8": 7
   },
   "hints": [
     {
       "level": 1,
-      "text": "The golem reacts to SIZE on a specific color channel.\nKnown tests:\n  ing3: chest=\u2713 ears=\u2713  \u2192  animators\n  ing5: chest=\u2713 ears=\u2713  \u2192  animators"
+      "text": "The golem reacts to SIZE on a specific color channel.\nKnown tests:\n  ing4: chest=\u2713 ears=\u2713  \u2192  animators\n  ing3: chest=\u2713 ears=\u2717  \u2192  chest_only"
     },
     {
       "level": 2,
-      "text": "Chest reacts to G+S. Ears react to R+L. An animator needs BOTH. Cross-reference with untested ingredients."
+      "text": "Chest reacts to B+L. Ears react to G+L. Animation rule: Large reaction \u2192 '+', Small reaction \u2192 '\u2212'. So animation ingredients must have B+ AND G+. Cross-reference with the mixing clues to identify those ingredients."
     },
     {
       "level": 3,
-      "text": "The animators are: ingredients [3, 5]. Alch: ing3\u2192Nnp, ing5\u2192Ppn."
+      "text": "The animators are: ingredients [2, 4]. Alch: ing2\u2192nPp, ing4\u2192PPP."
     }
   ],
   "complexity": {
-    "score": 10,
-    "raw_score": 10,
-    "clue_score": 0,
+    "score": 31,
+    "raw_score": 15,
+    "clue_score": 5,
     "question_score": 0,
     "world_score": 0,
-    "residual_worlds": 1440
+    "residual_worlds": 2
   }
 }

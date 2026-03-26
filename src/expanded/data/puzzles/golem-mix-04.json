@@ -1,45 +1,45 @@
 {
   "id": "golem-mix-04",
   "mode": "expanded",
-  "title": "The Closing Record",
-  "description": "The golem has been tested with 4 ingredients. Identify the animators and determine what potion their mix would produce.",
+  "title": "The Handle",
+  "description": "The golem has been tested with 3 ingredients. Identify the animators and determine what potion their mix would produce.",
   "difficulty": "easy",
   "golem": {
     "chest": {
-      "color": "R",
-      "size": "L"
+      "color": "G",
+      "size": "S"
     },
     "ears": {
-      "color": "G",
+      "color": "R",
       "size": "L"
     }
   },
   "clues": [
     {
       "kind": "golem_test",
-      "ingredient": 4,
+      "ingredient": 8,
       "chest_reacted": true,
       "ears_reacted": true
     },
     {
       "kind": "golem_test",
-      "ingredient": 6,
-      "chest_reacted": true,
-      "ears_reacted": false
+      "ingredient": 2,
+      "chest_reacted": false,
+      "ears_reacted": true
     },
     {
       "kind": "mixing",
       "ingredient1": 2,
       "ingredient2": 4,
       "result": {
-        "color": "B",
+        "color": "G",
         "sign": "+"
       }
     },
     {
       "kind": "mixing",
-      "ingredient1": 3,
-      "ingredient2": 7,
+      "ingredient1": 5,
+      "ingredient2": 8,
       "result": {
         "color": "B",
         "sign": "+"
@@ -47,14 +47,8 @@
     },
     {
       "kind": "golem_test",
-      "ingredient": 1,
-      "chest_reacted": false,
-      "ears_reacted": true
-    },
-    {
-      "kind": "golem_test",
-      "ingredient": 5,
-      "chest_reacted": false,
+      "ingredient": 6,
+      "chest_reacted": true,
       "ears_reacted": false
     }
   ],
@@ -65,26 +59,26 @@
   ],
   "solution": {
     "1": 3,
-    "2": 4,
-    "3": 5,
-    "4": 8,
-    "5": 1,
-    "6": 6,
-    "7": 2,
-    "8": 7
+    "2": 8,
+    "3": 4,
+    "4": 6,
+    "5": 2,
+    "6": 1,
+    "7": 7,
+    "8": 5
   },
   "hints": [
     {
       "level": 1,
-      "text": "The golem reacts to SIZE on a specific color channel.\nKnown tests:\n  ing4: chest=\u2713 ears=\u2713  \u2192  animators\n  ing6: chest=\u2713 ears=\u2717  \u2192  chest_only\n  ing1: chest=\u2717 ears=\u2713  \u2192  ears_only\n  ing5: chest=\u2717 ears=\u2717  \u2192  non_reactive"
+      "text": "The golem reacts to SIZE on a specific color channel.\nKnown tests:\n  ing8: chest=\u2713 ears=\u2713  \u2192  animators\n  ing2: chest=\u2717 ears=\u2713  \u2192  ears_only\n  ing6: chest=\u2713 ears=\u2717  \u2192  chest_only"
     },
     {
       "level": 2,
-      "text": "Chest reacts to R+L. Ears react to G+L. An animator needs BOTH. Cross-reference with untested ingredients."
+      "text": "Chest reacts to G+S. Ears react to R+L. Animation rule: Large reaction \u2192 '+', Small reaction \u2192 '\u2212'. So animation ingredients must have G\u2212 AND R+. Cross-reference with the mixing clues to identify those ingredients."
     },
     {
       "level": 3,
-      "text": "Animators: ingredients [4, 8] (PPP, NNN). Mix: neutral."
+      "text": "Animation ingredients: ing[1, 5] (pNn, pnP). Mix: G-."
     }
   ],
   "complexity": {
@@ -93,6 +87,6 @@
     "clue_score": 0,
     "question_score": 0,
     "world_score": 0,
-    "residual_worlds": 4
+    "residual_worlds": 6
   }
 }

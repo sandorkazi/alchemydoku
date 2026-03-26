@@ -113,6 +113,7 @@ export type GolemNotepad = {
   chest: { color: Color; size: Size } | null;
   ears:  { color: Color; size: Size } | null;
   ingredientMarks: Record<number, { chest: GolemSlotMark; ears: GolemSlotMark }>;
+  bottomGrid?: Record<string, GolemSlotMark>;
 };
 
 function emptyGolemNotepad(): GolemNotepad { return { chest: null, ears: null, ingredientMarks: {} }; }
@@ -188,6 +189,7 @@ export type ExpandedAction =
   | { type: 'SET_SOLAR_LUNAR_MARK'; slot: number; mark: SolarLunarMark }
   | { type: 'SET_GOLEM_NOTEPAD'; part: 'chest' | 'ears'; value: { color: Color; size: Size } | null }
   | { type: 'SET_GOLEM_INGREDIENT_MARK'; slot: number; part: 'chest' | 'ears'; mark: GolemSlotMark }
+  | { type: 'SET_GOLEM_BOTTOM_MARK'; key: string; mark: GolemSlotMark }
   | { type: 'LOAD_PROGRESS'; gridState: GridState; notes: Record<string,string>; hintLevel: number; wrongAttempts: number; answers: (AnyAnswer | null)[]; solarLunarMarks: SolarLunarMarks; golemNotepad: GolemNotepad }
   | { type: 'ADD_DRAW_STROKE'; d: string }
   | { type: 'CLEAR_DRAW_STROKES' }
@@ -363,6 +365,19 @@ function reducer(state: ExpandedSolverState, action: ExpandedAction): ExpandedSo
             ...state.golemNotepad.ingredientMarks,
             [action.slot]: { ...prev, [action.part]: action.mark },
           },
+        },
+        undoStack,
+        redoStack: [],
+      };
+    }
+
+    case 'SET_GOLEM_BOTTOM_MARK': {
+      const undoStack = [snap(state), ...state.undoStack].slice(0, MAX_UNDO);
+      return {
+        ...state,
+        golemNotepad: {
+          ...state.golemNotepad,
+          bottomGrid: { ...state.golemNotepad.bottomGrid, [action.key]: action.mark },
         },
         undoStack,
         redoStack: [],

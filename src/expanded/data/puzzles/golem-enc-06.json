@@ -1,31 +1,55 @@
 {
   "id": "golem-enc-06",
   "mode": "expanded",
-  "title": "The Sentinel's Index",
-  "description": "The golem has been tested with 2 ingredients. Deduce the reaction pattern and identify the target group.",
+  "title": "The Indexed Volume",
+  "description": "The golem has been tested with 0 ingredients. Deduce the reaction pattern and identify the target group.",
   "difficulty": "easy",
   "golem": {
     "chest": {
-      "color": "R",
+      "color": "B",
       "size": "S"
     },
     "ears": {
-      "color": "B",
+      "color": "G",
       "size": "L"
     }
   },
   "clues": [
     {
-      "kind": "golem_test",
-      "ingredient": 1,
-      "chest_reacted": true,
-      "ears_reacted": true
+      "kind": "encyclopedia",
+      "aspect": "B",
+      "entries": [
+        {
+          "ingredient": 2,
+          "sign": "-"
+        },
+        {
+          "ingredient": 5,
+          "sign": "-"
+        },
+        {
+          "ingredient": 6,
+          "sign": "-"
+        }
+      ]
     },
     {
-      "kind": "golem_test",
-      "ingredient": 5,
-      "chest_reacted": true,
-      "ears_reacted": true
+      "kind": "encyclopedia",
+      "aspect": "G",
+      "entries": [
+        {
+          "ingredient": 5,
+          "sign": "+"
+        },
+        {
+          "ingredient": 6,
+          "sign": "+"
+        },
+        {
+          "ingredient": 7,
+          "sign": "+"
+        }
+      ]
     }
   ],
   "questions": [
@@ -35,27 +59,27 @@
     }
   ],
   "solution": {
-    "1": 1,
+    "1": 4,
     "2": 7,
-    "3": 6,
-    "4": 3,
-    "5": 2,
-    "6": 4,
+    "3": 5,
+    "4": 2,
+    "5": 1,
+    "6": 6,
     "7": 8,
-    "8": 5
+    "8": 3
   },
   "hints": [
     {
       "level": 1,
-      "text": "The golem reacts to SIZE on a specific color channel.\nKnown tests:\n  ing1: chest=\u2713 ears=\u2713  \u2192  animators\n  ing5: chest=\u2713 ears=\u2713  \u2192  animators"
+      "text": "The golem reacts to SIZE on a specific color channel.\nKnown tests:\n"
     },
     {
       "level": 2,
-      "text": "Chest reacts to R+S. Ears react to B+L. An animator needs BOTH. Cross-reference with untested ingredients."
+      "text": "Chest reacts to B+S. Ears react to G+L. Animation rule: Large reaction \u2192 '+', Small reaction \u2192 '\u2212'. So animation ingredients must have B\u2212 AND G+. Cross-reference with the mixing clues to identify those ingredients."
     },
     {
       "level": 3,
-      "text": "The animators are: ingredients [1, 5]. Alch: ing1\u2192npN, ing5\u2192pnP."
+      "text": "The animators are: ingredients [5, 6]. Alch: ing5\u2192npN, ing6\u2192Ppn."
     }
   ],
   "complexity": {
@@ -64,6 +88,6 @@
     "clue_score": 0,
     "question_score": 0,
     "world_score": 0,
-    "residual_worlds": 1440
+    "residual_worlds": 192
   }
 }
