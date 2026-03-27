@@ -19,8 +19,8 @@ import type { Color, Size } from '../../types';
 import { isSolar } from '../logic/solarLunar';
 import { getEliminatedCells } from '../../logic/deducer';
 import { AlchemicalDisplay } from '../../components/AlchemicalDisplay';
-import { AlchemicalImage, IngredientIcon, ElemImage, PotionImage } from '../../components/GameSprites';
-import type { AlchemicalId, IngredientId, CellState } from '../../types';
+import { AlchemicalImage, IngredientIcon, ElemImage, PotionImage, SignedElemImage } from '../../components/GameSprites';
+import type { AlchemicalId, IngredientId, CellState, Sign } from '../../types';
 import type { SolarLunarMark } from '../types';
 
 // Fixed visual column order by display-ingredient ID
@@ -880,35 +880,52 @@ export function GolemPanel({ activeTool }: { activeTool: GridTool }) {
       </div>
 
       {/* ── Bottom grid: alch property deduction ───────────────────────────── */}
-      <div>
-        {rows.map(({ part, img, label }) => (
-          <div key={part} className="flex gap-1 mt-1">
-            <GolemRowHeader img={img} label={label} />
-            {ALCH_COLS.map(col => {
-              const orbSize = col.size === 'L' ? Math.round(CELL_W * 0.70) : Math.round(CELL_W * 0.25);
-              const colKey = `${col.color}${col.size}`;
-              const cellKey = `${part}-${colKey}`;
-              const mark = golemNotepad.bottomGrid?.[cellKey] ?? null;
-              return (
-                <GolemCell
-                  key={colKey}
-                  mark={mark}
-                  img={img}
-                  noteKey={`g2-${part}-${colKey}`}
-                  orbColor={col.color}
-                  orbSize={orbSize}
-                  isBottomGrid={true}
-                  hint={bottomHints[cellKey]}
-                  onMark={() => dispatch({
-                    type: 'SET_GOLEM_BOTTOM_MARK',
-                    key: cellKey,
-                    mark: cycleIngMark(mark),
-                  })}
-                />
-              );
-            })}
-          </div>
-        ))}
+      <div style={{ position: 'relative' }}>
+        {/* Aspect sign decorators — peek out 2/3 below the grid, 1/3 behind */}
+        {ALCH_COLS.map((col, colIdx) => {
+          const sign: Sign = col.size === 'L' ? '+' : '-';
+          // Column centre: header(HDR_W) + (colIdx+1) gaps of 4px + colIdx full cells + half cell
+          const left = HDR_W + (colIdx + 1) * 4 + colIdx * CELL_W + CELL_W / 2 - 14;
+          return (
+            <div key={`sdec-${col.color}${col.size}`} style={{
+              position: 'absolute', bottom: -19, left,
+              zIndex: 0, opacity: 0.40, pointerEvents: 'none',
+            }}>
+              <SignedElemImage color={col.color} sign={sign} width={28} />
+            </div>
+          );
+        })}
+        {/* Grid rows sit above the decorators */}
+        <div style={{ position: 'relative', zIndex: 1 }}>
+          {rows.map(({ part, img, label }) => (
+            <div key={part} className="flex gap-1 mt-1">
+              <GolemRowHeader img={img} label={label} />
+              {ALCH_COLS.map(col => {
+                const orbSize = col.size === 'L' ? Math.round(CELL_W * 0.70) : Math.round(CELL_W * 0.25);
+                const colKey = `${col.color}${col.size}`;
+                const cellKey = `${part}-${colKey}`;
+                const mark = golemNotepad.bottomGrid?.[cellKey] ?? null;
+                return (
+                  <GolemCell
+                    key={colKey}
+                    mark={mark}
+                    img={img}
+                    noteKey={`g2-${part}-${colKey}`}
+                    orbColor={col.color}
+                    orbSize={orbSize}
+                    isBottomGrid={true}
+                    hint={bottomHints[cellKey]}
+                    onMark={() => dispatch({
+                      type: 'SET_GOLEM_BOTTOM_MARK',
+                      key: cellKey,
+                      mark: cycleIngMark(mark),
+                    })}
+                  />
+                );
+              })}
+            </div>
+          ))}
+        </div>
       </div>
 
     </div>
