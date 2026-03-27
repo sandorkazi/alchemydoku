@@ -880,7 +880,8 @@ export function GolemPanel({ activeTool }: { activeTool: GridTool }) {
       </div>
 
       {/* ── Bottom grid: alch property deduction ───────────────────────────── */}
-      <div style={{ position: 'relative' }}>
+      {/* paddingBottom reserves space for the peeking decorators — no overflow */}
+      <div style={{ position: 'relative', paddingBottom: 19 }}>
         {/* Aspect sign decorators — peek out 2/3 below the grid, 1/3 behind */}
         {ALCH_COLS.map((col, colIdx) => {
           const sign: Sign = col.size === 'L' ? '+' : '-';
@@ -888,7 +889,7 @@ export function GolemPanel({ activeTool }: { activeTool: GridTool }) {
           const left = HDR_W + (colIdx + 1) * 4 + colIdx * CELL_W + CELL_W / 2 - 14;
           return (
             <div key={`sdec-${col.color}${col.size}`} style={{
-              position: 'absolute', bottom: -19, left,
+              position: 'absolute', bottom: 0, left,
               zIndex: 0, opacity: 0.40, pointerEvents: 'none',
             }}>
               <SignedElemImage color={col.color} sign={sign} width={28} />
