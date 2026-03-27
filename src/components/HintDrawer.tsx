@@ -24,7 +24,7 @@ const COLOR_NAME: Record<Color, string> = { R: 'Red', G: 'Green', B: 'Blue' };
 
 function renderHint(text: string, displayMap: DisplayMap): React.ReactNode {
   // Order matters: longer / more specific patterns first
-  const TOKEN = /(ingredient\s+[1-8]|ing[1-8]|NNN|PPP|npN|pnP|pNn|nPp|Nnp|Ppn|[RGB][+\-\u2212])/gi;
+  const TOKEN = /([Ii]ngredient\s+[1-8]|ing[1-8]|NNN|PPP|npN|pnP|pNn|nPp|Nnp|Ppn|[RGB][+\-\u2212])/g;
   const parts = text.split(TOKEN);
 
   return (
@@ -71,7 +71,7 @@ function renderHint(text: string, displayMap: DisplayMap): React.ReactNode {
         }
 
         // ── Color + sign  e.g. R−  G+  B- ───────────────────────────────────
-        if (/^[RGB][+\-\u2212]$/i.test(part)) {
+        if (/^[RGB][+\-\u2212]$/.test(part)) {
           const color = part[0].toUpperCase() as Color;
           const sign  = (part[1] === '\u2212' ? '-' : part[1]) as Sign;
           const label = `${COLOR_NAME[color]}${sign === '+' ? '+' : '−'}`;
