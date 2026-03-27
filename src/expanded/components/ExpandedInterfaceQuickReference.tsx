@@ -46,7 +46,7 @@ function ExpandedInterfaceCards() {
             </div>
           </div>
         }
-        text="In the expanded grid, alchemical rows are colour-coded: Solar alchemicals (☀) have an amber left border and warm background; Lunar alchemicals (☽) have a blue left border. A ☀/☽ legend appears above the grid as a reminder."
+        text="In the expanded grid, alchemical rows are colour-coded: Solar alchemicals (☀) have an amber left border and warm background; Lunar alchemicals (☽) have a blue left border. A ☀/☽ legend appears above the grid as a reminder. Note: the bottom two rows (PPP Solar and NNN Lunar) are intentionally swapped compared to the base game — PPP appears just above NNN so the Solar/Lunar grouping is visually consistent."
       />
 
       {/* Solar/Lunar column buttons */}
@@ -71,7 +71,7 @@ function ExpandedInterfaceCards() {
             ))}
           </div>
         }
-        text="Each ingredient column in the expanded grid has a ☀ and ☽ button in its header. Use these to record whether you've determined an ingredient to be Solar or Lunar — the mark tool cycles through confirmed/eliminated/unknown, and corner indicators appear on the corresponding grid cells."
+        text="Each ingredient column in the expanded grid has a ☀ and ☽ button in its header. Use these to record whether you've determined an ingredient to be Solar or Lunar — clicking cycles through confirmed (✔) → eliminated (✗) → possible (?) → unknown, and corner indicators appear on the corresponding grid cells."
       />
 
       {/* Golem Panel */}

@@ -32,8 +32,8 @@ const TINT_COLORS = [
   '#3F6FB6', '#979c91', '#B23A2E', '#23293D',
 ];
 
-export type GridTool = 'mark' | 'question' | 'text' | 'draw';
-const TOOL_CURSOR: Record<GridTool, string> = { mark: 'crosshair', question: 'cell', text: 'text', draw: 'crosshair' };
+export type GridTool = 'mark' | 'text' | 'draw';
+const TOOL_CURSOR: Record<GridTool, string> = { mark: 'crosshair', text: 'text', draw: 'crosshair' };
 
 // ─── Shared marker style system ───────────────────────────────────────────────
 // Used by Cell, GolemCell, and SolarLunarButtons corner indicators
@@ -187,10 +187,10 @@ function CellTextEditor({ value, onChange, onDone }: {
 //
 // Icon colours: ☀ always orange-400, 🌙 always gray-300
 
-function nextSlMark(cur: CellState, tool: 'mark' | 'question'): CellState {
-  if (tool === 'question') return cur === 'possible' ? 'unknown' : 'possible';
+function nextSlMark(cur: CellState): CellState {
   if (cur === 'unknown')   return 'confirmed';
   if (cur === 'confirmed') return 'eliminated';
+  if (cur === 'eliminated') return 'possible';
   return 'unknown';
 }
 
@@ -207,16 +207,13 @@ function slBtnClass(state: CellState, polarity: 'solar' | 'lunar'): string {
     : 'bg-gray-50   border-gray-200  hover:bg-gray-100';
 }
 
-function SolarLunarButtons({ slotId, mark, activeTool, onToggle }: {
+function SolarLunarButtons({ slotId, mark, onToggle }: {
   slotId: number;
   mark: SolarLunarMark | null;
-  activeTool: GridTool;
   onToggle: (slot: number, next: SolarLunarMark) => void;
 }) {
   const solar: CellState = mark?.solar ?? 'unknown';
   const lunar: CellState = mark?.lunar ?? 'unknown';
-  // text tool behaves as mark for these buttons
-  const tool: 'mark' | 'question' = activeTool === 'question' ? 'question' : 'mark';
 
   return (
     <div className="flex gap-0.5 justify-center mt-0.5 w-full">
@@ -224,7 +221,7 @@ function SolarLunarButtons({ slotId, mark, activeTool, onToggle }: {
       <button
         title={`Solar: ${solar} (click to cycle)`}
         aria-pressed={solar !== 'unknown'}
-        onClick={() => onToggle(slotId, { solar: nextSlMark(solar, tool), lunar })}
+        onClick={() => onToggle(slotId, { solar: nextSlMark(solar), lunar })}
         className={`w-[22px] h-[15px] rounded text-[10px] flex items-center justify-center
           border transition-all focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-amber-400
           ${slBtnClass(solar, 'solar')}`}
@@ -235,7 +232,7 @@ function SolarLunarButtons({ slotId, mark, activeTool, onToggle }: {
       <button
         title={`Lunar: ${lunar} (click to cycle)`}
         aria-pressed={lunar !== 'unknown'}
-        onClick={() => onToggle(slotId, { solar, lunar: nextSlMark(lunar, tool) })}
+        onClick={() => onToggle(slotId, { solar, lunar: nextSlMark(lunar) })}
         className={`w-[22px] h-[15px] rounded text-[10px] flex items-center justify-center
           border transition-all focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-blue-300
           ${slBtnClass(lunar, 'lunar')}`}
@@ -359,7 +356,7 @@ export function ExpandedIngredientGrid({ onRandomize, activeTool, setActiveTool,
 
   // Keyboard: Space cycles tool · U = undo · R = redo
   useEffect(() => {
-    const TOOLS: GridTool[] = ['mark', 'question', 'text', 'draw'];
+    const TOOLS: GridTool[] = ['mark', 'text', 'draw'];
     const onKey = (e: KeyboardEvent) => {
       if (e.key === ' ' && !editingCell) {
         e.preventDefault();
@@ -393,7 +390,6 @@ export function ExpandedIngredientGrid({ onRandomize, activeTool, setActiveTool,
 
   const resolveEffectiveTool = (e: React.MouseEvent): GridTool => {
     if (e.shiftKey) return 'mark';
-    if (e.ctrlKey || e.metaKey) return 'question';
     return activeTool;
   };
 
@@ -420,22 +416,16 @@ export function ExpandedIngredientGrid({ onRandomize, activeTool, setActiveTool,
     const tool = resolveEffectiveTool(e);
     if (tool === 'text') { setEditingCell({ ing: slotId, alch: alchId }); return; }
     if (tool === 'mark') dispatch({ type: 'TOGGLE_CELL', ingredient: slotId, alchemical: alchId });
-    else if (tool === 'question') {
-      const cur = gridState[slotId]?.[alchId] ?? 'unknown';
-      const next: CellState = cur === 'possible' ? 'unknown' : 'possible';
-      dispatch({ type: 'SET_CELL', ingredient: slotId, alchemical: alchId, state: next });
-    }
-  }, [activeTool, gridState, dispatch]);
+  }, [activeTool, dispatch]);
 
   const handleSolarLunarToggle = useCallback((slot: number, mark: SolarLunarMark) => {
     dispatch({ type: 'SET_SOLAR_LUNAR_MARK', slot, mark });
   }, [dispatch]);
 
   const TOOL_DEFS: { id: GridTool; label: string; title: string }[] = [
-    { id: 'mark',     label: '✗✔',  title: 'Mark tool [Space] — cycle ✗ / ✔' },
-    { id: 'question', label: '?',    title: '? tool — toggle possible mark' },
-    { id: 'text',     label: 'abc',  title: 'Text tool — type up to 4 chars per cell' },
-    { id: 'draw',     label: '✏',   title: 'Draw tool [Space] — freehand pencil' },
+    { id: 'mark', label: '✗✔?', title: 'Mark tool [Space] — cycle ✗ / ✔ / ?' },
+    { id: 'text', label: 'abc', title: 'Text tool — type up to 4 chars per cell' },
+    { id: 'draw', label: '✏',  title: 'Draw tool [Space] — freehand pencil' },
   ];
 
   return (
@@ -512,14 +502,12 @@ export function ExpandedIngredientGrid({ onRandomize, activeTool, setActiveTool,
           <div aria-live="polite" aria-atomic="true"
             className={`absolute top-0 right-1 z-10 flex items-center gap-1 px-2 py-0.5 rounded-full
               text-[10px] font-bold select-none pointer-events-none transition-all
-              ${activeTool === 'mark'     ? 'bg-gray-800/70 text-white' : ''}
-              ${activeTool === 'question' ? 'bg-indigo-600/80 text-white' : ''}
-              ${activeTool === 'text'     ? 'bg-amber-500/80 text-white' : ''}
-              ${activeTool === 'draw'     ? 'bg-rose-500/80 text-white' : ''}`}>
-            {activeTool === 'mark'     && <><span>✗✔</span><span>mark</span></>}
-            {activeTool === 'question' && <><span>?</span><span>question</span></>}
-            {activeTool === 'text'     && <><span>abc</span><span>text</span></>}
-            {activeTool === 'draw'     && <><span>✏</span><span>draw</span></>}
+              ${activeTool === 'mark' ? 'bg-gray-800/70 text-white' : ''}
+              ${activeTool === 'text' ? 'bg-amber-500/80 text-white' : ''}
+              ${activeTool === 'draw' ? 'bg-rose-500/80 text-white' : ''}`}>
+            {activeTool === 'mark' && <><span>✗✔?</span><span>mark</span></>}
+            {activeTool === 'text' && <><span>abc</span><span>text</span></>}
+            {activeTool === 'draw' && <><span>✏</span><span>draw</span></>}
             <kbd className="ml-0.5 opacity-60 font-mono text-[9px] border border-current/40 rounded px-0.5">Space</kbd>
           </div>
 
@@ -560,7 +548,6 @@ export function ExpandedIngredientGrid({ onRandomize, activeTool, setActiveTool,
                       <SolarLunarButtons
                         slotId={slotId}
                         mark={slotMark}
-                        activeTool={activeTool}
                         onToggle={handleSolarLunarToggle}
                       />
                     </th>
@@ -643,8 +630,7 @@ export function ExpandedIngredientGrid({ onRandomize, activeTool, setActiveTool,
         </div>
 
         <p className="text-[10px] text-gray-400">
-          {activeTool === 'mark' && <>Tap to cycle: <span className="font-mono">· unknown</span>{' → '}<span className="font-mono font-bold text-red-500">✗ eliminated</span>{' → '}<span className="font-mono font-bold text-green-600">✔ confirmed</span><span className="ml-2 opacity-60">· Space to switch tool · U / R to undo/redo</span></>}
-          {activeTool === 'question' && <>Tap to toggle <span className="font-mono font-bold text-indigo-500">? possible</span> on/off<span className="ml-2 opacity-60">· Space to switch tool · U / R to undo/redo</span></>}
+          {activeTool === 'mark' && <>Tap to cycle: <span className="font-mono">· unknown</span>{' → '}<span className="font-mono font-bold text-red-500">✗ eliminated</span>{' → '}<span className="font-mono font-bold text-green-600">✔ confirmed</span>{' → '}<span className="font-mono font-bold text-indigo-500">? possible</span><span className="ml-2 opacity-60">· Space to switch tool · U / R to undo/redo</span></>}
           {activeTool === 'text' && <>Tap any cell to type a note (max 4 chars)<span className="ml-2 opacity-60">· Space to switch tool · U / R to undo/redo</span></>}
           {activeTool === 'draw' && <>Draw freehand lines on the grid<span className="ml-2 opacity-60">· Space to switch tool · U / R to undo/redo</span></>}
         </p>
@@ -841,8 +827,12 @@ export function GolemPanel({ activeTool }: { activeTool: GridTool }) {
   }
 
   function cycleIngMark(cur: GolemSlotMark): GolemSlotMark {
-    if (activeTool === 'mark')     return cur === null ? 'reacts' : cur === 'reacts' ? 'no-react' : null;
-    if (activeTool === 'question') return cur === 'possible' ? null : 'possible';
+    if (activeTool === 'mark') {
+      if (cur === null)       return 'reacts';
+      if (cur === 'reacts')   return 'no-react';
+      if (cur === 'no-react') return 'possible';
+      return null;
+    }
     return cur;  // text tool — no cycling on golem marks
   }
 
