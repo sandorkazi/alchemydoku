@@ -1164,7 +1164,8 @@ def validate_puzzle(puz: dict) -> list:
     if golem:
         tests = [c for c in clues if c['kind'] == 'golem_test']
         if len(tests) < 2:
-            errs.append("WARNING: fewer than 2 golem_test clues")
+            msg = "fewer than 2 golem_test clues"
+            errs.append("WARNING: " + msg if is_tutorial else "ERROR: " + msg)
         if tests:
             test_groups = {compute_groups(sol, golem)[c['ingredient']] for c in tests}
             if len(test_groups) < 2:
@@ -1725,6 +1726,10 @@ def construct(profile: Profile, rng: random.Random, verbose: bool = False):
             return len(worlds) <= _ANIMATE_TARGET_WORLDS
         if not all_answered(worlds, [q], golem):
             return False
+        # Golem puzzles must have at least 2 golem_test clues so the player has
+        # enough direct reaction evidence to reason about the config.
+        if golem and sum(1 for c in clues if c['kind'] == 'golem_test') < 2:
+            return False
         if not _golem_qs_for_deducibility:
             return True
         if _deducible_cache[0] is None:
@@ -1793,6 +1798,12 @@ def construct(profile: Profile, rng: random.Random, verbose: bool = False):
             return None
     elif not all_answered(worlds, [q], golem):
         if verbose: print("  [greedy] no unique answer achieved")
+        return None
+
+    # Golem puzzles must have at least 2 golem_test clues so the player has
+    # enough direct reaction evidence to reason about the config.
+    if golem and sum(1 for c in clues if c['kind'] == 'golem_test') < 2:
+        if verbose: print("  [min-tests] fewer than 2 golem_test clues — rejecting")
         return None
 
     if _golem_qs_for_deducibility:

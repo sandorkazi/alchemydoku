@@ -1,25 +1,49 @@
 {
   "id": "golem-enc-04",
   "mode": "expanded",
-  "title": "The Concordance Class",
-  "description": "The golem has been tested with 1 ingredient. Deduce the reaction pattern and identify the target group.",
+  "title": "The Canonical Form",
+  "description": "The golem has been tested with 3 ingredients. Deduce the reaction pattern and identify the target group.",
   "difficulty": "easy",
   "golem": {
     "chest": {
       "color": "G",
-      "size": "L"
+      "size": "S"
     },
     "ears": {
       "color": "B",
-      "size": "L"
+      "size": "S"
     }
   },
   "clues": [
     {
       "kind": "golem_test",
-      "ingredient": 7,
-      "chest_reacted": false,
+      "ingredient": 3,
+      "chest_reacted": true,
       "ears_reacted": true
+    },
+    {
+      "kind": "golem_test",
+      "ingredient": 6,
+      "chest_reacted": true,
+      "ears_reacted": false
+    },
+    {
+      "kind": "encyclopedia",
+      "aspect": "B",
+      "entries": [
+        {
+          "ingredient": 1,
+          "sign": "+"
+        },
+        {
+          "ingredient": 3,
+          "sign": "+"
+        },
+        {
+          "ingredient": 8,
+          "sign": "+"
+        }
+      ]
     },
     {
       "kind": "encyclopedia",
@@ -27,35 +51,23 @@
       "entries": [
         {
           "ingredient": 1,
-          "sign": "-"
+          "sign": "+"
         },
         {
-          "ingredient": 3,
-          "sign": "-"
+          "ingredient": 4,
+          "sign": "+"
         },
         {
           "ingredient": 5,
-          "sign": "-"
+          "sign": "+"
         }
       ]
     },
     {
-      "kind": "encyclopedia",
-      "aspect": "B",
-      "entries": [
-        {
-          "ingredient": 5,
-          "sign": "-"
-        },
-        {
-          "ingredient": 6,
-          "sign": "-"
-        },
-        {
-          "ingredient": 8,
-          "sign": "-"
-        }
-      ]
+      "kind": "golem_test",
+      "ingredient": 4,
+      "chest_reacted": true,
+      "ears_reacted": true
     }
   ],
   "questions": [
@@ -65,27 +77,27 @@
     }
   ],
   "solution": {
-    "1": 5,
-    "2": 8,
-    "3": 2,
-    "4": 4,
-    "5": 7,
-    "6": 6,
-    "7": 1,
-    "8": 3
+    "1": 4,
+    "2": 3,
+    "3": 5,
+    "4": 6,
+    "5": 8,
+    "6": 1,
+    "7": 7,
+    "8": 2
   },
   "hints": [
     {
       "level": 1,
-      "text": "The golem reacts to SIZE on a specific color channel.\nKnown tests:\n  ing7: chest=\u2717 ears=\u2713  \u2192  ears_only"
+      "text": "The golem reacts to SIZE on a specific color channel.\nKnown tests:\n  ing3: chest=\u2713 ears=\u2713  \u2192  animators\n  ing6: chest=\u2713 ears=\u2717  \u2192  chest_only\n  ing4: chest=\u2713 ears=\u2713  \u2192  animators"
     },
     {
       "level": 2,
-      "text": "Chest reacts to G+L. Ears react to B+L. Animation rule: Large reaction \u2192 '+', Small reaction \u2192 '\u2212'. So animation ingredients must have G+ AND B+. Cross-reference with the mixing clues to identify those ingredients."
+      "text": "Chest reacts to G+S. Ears react to B+S. Animation rule: Large reaction \u2192 '+', Small reaction \u2192 '\u2212'. So animation ingredients must have G\u2212 AND B\u2212. Cross-reference with the mixing clues to identify those ingredients."
     },
     {
       "level": 3,
-      "text": "The animators are: ingredients [2, 4]. Alch: ing2\u2192PPP, ing4\u2192nPp."
+      "text": "The animators are: ingredients [2, 7]. Alch: ing2\u2192pNn, ing7\u2192NNN."
     }
   ],
   "complexity": {
@@ -94,6 +106,6 @@
     "clue_score": 0,
     "question_score": 0,
     "world_score": 0,
-    "residual_worlds": 32
+    "residual_worlds": 8
   }
 }

@@ -1,52 +1,59 @@
 {
   "id": "golem-02",
   "mode": "expanded",
-  "title": "The Steric Demand",
-  "description": "The golem has been tested with 4 ingredients. Deduce the reaction pattern and identify the target group.",
+  "title": "The Isomer",
+  "description": "The golem has been tested with 2 ingredients. Deduce the reaction pattern and identify the target group.",
   "difficulty": "easy",
   "golem": {
     "chest": {
-      "color": "B",
-      "size": "S"
+      "color": "G",
+      "size": "L"
     },
     "ears": {
-      "color": "G",
-      "size": "S"
+      "color": "B",
+      "size": "L"
     }
   },
   "clues": [
     {
       "kind": "golem_test",
-      "ingredient": 6,
+      "ingredient": 7,
       "chest_reacted": true,
       "ears_reacted": true
     },
     {
       "kind": "golem_test",
-      "ingredient": 3,
-      "chest_reacted": true,
+      "ingredient": 8,
+      "chest_reacted": false,
       "ears_reacted": false
     },
     {
       "kind": "mixing",
-      "ingredient1": 3,
-      "ingredient2": 4,
+      "ingredient1": 6,
+      "ingredient2": 7,
       "result": {
-        "color": "R",
-        "sign": "+"
+        "color": "B",
+        "sign": "-"
       }
     },
     {
-      "kind": "golem_test",
-      "ingredient": 1,
-      "chest_reacted": true,
-      "ears_reacted": true
+      "kind": "mixing",
+      "ingredient1": 4,
+      "ingredient2": 6,
+      "result": {
+        "type": "neutral"
+      }
     },
     {
-      "kind": "golem_test",
-      "ingredient": 2,
-      "chest_reacted": false,
-      "ears_reacted": false
+      "kind": "golem_reaction_among",
+      "ingredients": [
+        1,
+        3,
+        5,
+        7
+      ],
+      "reaction": "animators",
+      "count": 1
     }
   ],
   "questions": [
@@ -56,33 +63,33 @@
     }
   ],
   "solution": {
-    "1": 5,
-    "2": 7,
-    "3": 3,
-    "4": 8,
-    "5": 2,
-    "6": 6,
-    "7": 1,
-    "8": 4
+    "1": 1,
+    "2": 8,
+    "3": 2,
+    "4": 4,
+    "5": 6,
+    "6": 3,
+    "7": 7,
+    "8": 5
   },
   "hints": [
     {
       "level": 1,
-      "text": "The golem reacts to SIZE on a specific color channel.\nKnown tests:\n  ing6: chest=\u2713 ears=\u2713  \u2192  animators\n  ing3: chest=\u2713 ears=\u2717  \u2192  chest_only\n  ing1: chest=\u2713 ears=\u2713  \u2192  animators\n  ing2: chest=\u2717 ears=\u2717  \u2192  non_reactive"
+      "text": "The golem reacts to SIZE on a specific color channel.\nKnown tests:\n  ing7: chest=\u2713 ears=\u2713  \u2192  animators\n  ing8: chest=\u2717 ears=\u2717  \u2192  non_reactive"
     },
     {
       "level": 2,
-      "text": "Chest reacts to B+S. Ears react to G+S. Animation rule: Large reaction \u2192 '+', Small reaction \u2192 '\u2212'. So animation ingredients must have B\u2212 AND G\u2212. Cross-reference with the mixing clues to identify those ingredients."
+      "text": "Chest reacts to G+L. Ears react to B+L. Animation rule: Large reaction \u2192 '+', Small reaction \u2192 '\u2212'. So animation ingredients must have G+ AND B+. Cross-reference with the mixing clues to identify those ingredients."
     },
     {
       "level": 3,
-      "text": "The animators are: ingredients [2, 3]. Alch: ing2\u2192NNN, ing3\u2192pNn."
+      "text": "The animators are: ingredients [2, 4]. Alch: ing2\u2192PPP, ing4\u2192nPp."
     }
   ],
   "complexity": {
-    "score": 10,
-    "raw_score": 10,
-    "clue_score": 0,
+    "score": 31,
+    "raw_score": 15,
+    "clue_score": 5,
     "question_score": 0,
     "world_score": 0,
     "residual_worlds": 12

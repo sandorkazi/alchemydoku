@@ -4,7 +4,7 @@
   "kind": "debunk",
   "title": "The Borrowed Ingredient",
   "description": "Mixed evidence surrounds several suspicious publications. Use master debunking to expose the lies.",
-  "difficulty": "hard",
+  "difficulty": "extreme",
   "golem": {
     "chest": {
       "color": "R",
@@ -111,11 +111,11 @@
   },
   "hints": [],
   "complexity": {
-    "score": 80,
-    "raw_score": 65,
+    "score": 86,
+    "raw_score": 75,
     "clue_score": 30,
-    "question_score": 10,
-    "world_score": 15,
+    "question_score": 15,
+    "world_score": 20,
     "residual_worlds": 4
   },
   "publications": [

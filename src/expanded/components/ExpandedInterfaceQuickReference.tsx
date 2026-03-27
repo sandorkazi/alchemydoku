@@ -7,10 +7,10 @@
  * the Golem Panel.
  */
 
-import { AlchemicalImage, IngredientIcon, ElemImage } from '../../components/GameSprites';
+import { AlchemicalImage, IngredientIcon, ElemImage, SignedElemImage } from '../../components/GameSprites';
 import { RuleCard } from '../../components/RulesQuickReference';
 import { BaseInterfaceCards } from '../../components/InterfaceQuickReference';
-import type { AlchemicalId } from '../../types';
+import type { AlchemicalId, Color, Sign } from '../../types';
 
 // ─── Expanded interface cards ─────────────────────────────────────────────────
 
@@ -92,22 +92,34 @@ function ExpandedInterfaceCards() {
                 </span>
               ))}
             </div>
-            {/* Bottom mini-grid: aspect deduction */}
-            <div className="flex items-center gap-1 text-[9px] text-violet-500 font-semibold">
-              <img src="/alchemydoku/images/golem_ears_icon.png" alt="ears"
-                   style={{ width: 16, height: 16, borderRadius: '50%' }} />
-              {(['R','G','B'] as const).map(c => (
-                <span key={c} className="flex gap-0.5">
-                  <span className={`w-[18px] h-[18px] rounded-sm border flex items-center justify-center
-                    ${c === 'R' ? 'border-green-300 bg-green-50 text-green-600 text-[10px] font-bold' : 'border-gray-200 bg-white'}`}>
-                    {c === 'R' ? '✔' : <ElemImage color={c} size="L" width={12} />}
+            {/* Bottom mini-grid: aspect deduction + sign decorators */}
+            <div style={{ position: 'relative', paddingBottom: 16 }}>
+              <div className="flex items-center gap-1 text-[9px] text-violet-500 font-semibold">
+                <img src="/alchemydoku/images/golem_ears_icon.png" alt="ears"
+                     style={{ width: 16, height: 16, borderRadius: '50%' }} />
+                {(['R','G','B'] as const).map(c => (
+                  <span key={c} className="flex gap-0.5">
+                    <span className={`w-[18px] h-[18px] rounded-sm border flex items-center justify-center
+                      ${c === 'R' ? 'border-green-300 bg-green-50 text-green-600 text-[10px] font-bold' : 'border-gray-200 bg-white'}`}>
+                      {c === 'R' ? '✔' : <ElemImage color={c} size="L" width={12} />}
+                    </span>
                   </span>
-                </span>
+                ))}
+              </div>
+              {/* Aspect sign decorators peeking below the grid */}
+              {([['R','+'],['R','-'],['G','+'],['G','-'],['B','+'],['B','-']] as [Color,Sign][]).map(([col, sgn], i) => (
+                <div key={`${col}${sgn}`} style={{
+                  position: 'absolute', bottom: 0,
+                  left: 20 + i * 22,
+                  opacity: 0.45, pointerEvents: 'none',
+                }}>
+                  <SignedElemImage color={col} sign={sgn} width={18} />
+                </div>
               ))}
             </div>
           </div>
         }
-        text="On golem puzzles, a 🧿 Golem sub-panel appears inside the ingredient grid section. The top grid tracks which ingredients react to each golem body part; the bottom grid lets you mark which color aspect (Large) triggers each part — combining both determines the exact sensitivity."
+        text="On golem puzzles, a 🧿 Golem sub-panel appears inside the ingredient grid section. The top grid tracks which ingredients react to each golem body part; the bottom grid lets you mark which color aspect (Large/+  or Small/−) triggers each part — combining both determines the exact sensitivity. Aspect sign indicators (B+, B−, G+, G−, R+, R−) peek out below the bottom grid as a reminder of the column meanings."
       />
     </>
   );

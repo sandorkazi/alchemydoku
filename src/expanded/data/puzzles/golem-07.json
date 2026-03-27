@@ -1,12 +1,12 @@
 {
   "id": "golem-07",
   "mode": "expanded",
-  "title": "The Rate-Limiting Step",
-  "description": "The golem has been tested with 2 ingredients. Deduce the reaction pattern and identify the target group.",
+  "title": "The Torsional Strain",
+  "description": "The golem has been tested with 3 ingredients. Deduce the reaction pattern and identify the target group.",
   "difficulty": "easy",
   "golem": {
     "chest": {
-      "color": "B",
+      "color": "G",
       "size": "S"
     },
     "ears": {
@@ -17,13 +17,13 @@
   "clues": [
     {
       "kind": "golem_test",
-      "ingredient": 6,
+      "ingredient": 3,
       "chest_reacted": true,
       "ears_reacted": true
     },
     {
       "kind": "golem_test",
-      "ingredient": 5,
+      "ingredient": 6,
       "chest_reacted": false,
       "ears_reacted": false
     },
@@ -32,18 +32,33 @@
       "ingredient1": 6,
       "ingredient2": 7,
       "result": {
-        "color": "R",
+        "color": "G",
         "sign": "+"
       }
     },
     {
       "kind": "mixing",
-      "ingredient1": 3,
-      "ingredient2": 8,
+      "ingredient1": 1,
+      "ingredient2": 3,
       "result": {
-        "color": "G",
-        "sign": "+"
+        "type": "neutral"
       }
+    },
+    {
+      "kind": "golem_reaction_among",
+      "ingredients": [
+        3,
+        4,
+        6
+      ],
+      "reaction": "chest_only",
+      "count": 1
+    },
+    {
+      "kind": "golem_test",
+      "ingredient": 5,
+      "chest_reacted": false,
+      "ears_reacted": false
     }
   ],
   "questions": [
@@ -53,35 +68,35 @@
     }
   ],
   "solution": {
-    "1": 5,
-    "2": 8,
-    "3": 1,
-    "4": 7,
-    "5": 2,
-    "6": 6,
-    "7": 3,
-    "8": 4
+    "1": 6,
+    "2": 7,
+    "3": 5,
+    "4": 2,
+    "5": 3,
+    "6": 4,
+    "7": 1,
+    "8": 8
   },
   "hints": [
     {
       "level": 1,
-      "text": "The golem reacts to SIZE on a specific color channel.\nKnown tests:\n  ing6: chest=\u2713 ears=\u2713  \u2192  animators\n  ing5: chest=\u2717 ears=\u2717  \u2192  non_reactive"
+      "text": "The golem reacts to SIZE on a specific color channel.\nKnown tests:\n  ing3: chest=\u2713 ears=\u2713  \u2192  animators\n  ing6: chest=\u2717 ears=\u2717  \u2192  non_reactive\n  ing5: chest=\u2717 ears=\u2717  \u2192  non_reactive"
     },
     {
       "level": 2,
-      "text": "Chest reacts to B+S. Ears react to R+L. Animation rule: Large reaction \u2192 '+', Small reaction \u2192 '\u2212'. So animation ingredients must have B\u2212 AND R+. Cross-reference with the mixing clues to identify those ingredients."
+      "text": "Chest reacts to G+S. Ears react to R+L. Animation rule: Large reaction \u2192 '+', Small reaction \u2192 '\u2212'. So animation ingredients must have G\u2212 AND R+. Cross-reference with the mixing clues to identify those ingredients."
     },
     {
       "level": 3,
-      "text": "The animators are: ingredients [6, 7]. Alch: ing6\u2192Ppn, ing7\u2192pNn."
+      "text": "The animators are: ingredients [4, 5]. Alch: ing4\u2192pnP, ing5\u2192pNn."
     }
   ],
   "complexity": {
-    "score": 10,
-    "raw_score": 10,
-    "clue_score": 0,
+    "score": 31,
+    "raw_score": 15,
+    "clue_score": 5,
     "question_score": 0,
     "world_score": 0,
-    "residual_worlds": 24
+    "residual_worlds": 4
   }
 }

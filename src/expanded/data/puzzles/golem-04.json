@@ -1,13 +1,13 @@
 {
   "id": "golem-04",
   "mode": "expanded",
-  "title": "The Counterexample",
+  "title": "The Four-Ball Genus",
   "description": "The golem has been tested with 2 ingredients. Deduce the reaction pattern and identify the target group.",
   "difficulty": "easy",
   "golem": {
     "chest": {
-      "color": "R",
-      "size": "S"
+      "color": "G",
+      "size": "L"
     },
     "ears": {
       "color": "B",
@@ -17,43 +17,32 @@
   "clues": [
     {
       "kind": "golem_test",
-      "ingredient": 4,
+      "ingredient": 6,
       "chest_reacted": true,
       "ears_reacted": true
     },
     {
       "kind": "golem_test",
-      "ingredient": 6,
+      "ingredient": 2,
       "chest_reacted": false,
       "ears_reacted": false
     },
     {
       "kind": "mixing",
-      "ingredient1": 2,
-      "ingredient2": 3,
+      "ingredient1": 5,
+      "ingredient2": 6,
       "result": {
-        "type": "neutral"
+        "color": "B",
+        "sign": "+"
       }
     },
     {
       "kind": "mixing",
-      "ingredient1": 6,
-      "ingredient2": 7,
+      "ingredient1": 1,
+      "ingredient2": 5,
       "result": {
-        "color": "G",
-        "sign": "-"
+        "type": "neutral"
       }
-    },
-    {
-      "kind": "golem_reaction_among",
-      "ingredients": [
-        2,
-        3,
-        5,
-        6
-      ],
-      "reaction": "chest_only",
-      "count": 1
     }
   ],
   "questions": [
@@ -63,35 +52,35 @@
     }
   ],
   "solution": {
-    "1": 2,
-    "2": 8,
-    "3": 7,
-    "4": 1,
+    "1": 3,
+    "2": 5,
+    "3": 6,
+    "4": 2,
     "5": 4,
-    "6": 5,
-    "7": 3,
-    "8": 6
+    "6": 8,
+    "7": 7,
+    "8": 1
   },
   "hints": [
     {
       "level": 1,
-      "text": "The golem reacts to SIZE on a specific color channel.\nKnown tests:\n  ing4: chest=\u2713 ears=\u2713  \u2192  animators\n  ing6: chest=\u2717 ears=\u2717  \u2192  non_reactive"
+      "text": "The golem reacts to SIZE on a specific color channel.\nKnown tests:\n  ing6: chest=\u2713 ears=\u2713  \u2192  animators\n  ing2: chest=\u2717 ears=\u2717  \u2192  non_reactive"
     },
     {
       "level": 2,
-      "text": "Chest reacts to R+S. Ears react to B+L. Animation rule: Large reaction \u2192 '+', Small reaction \u2192 '\u2212'. So animation ingredients must have R\u2212 AND B+. Cross-reference with the mixing clues to identify those ingredients."
+      "text": "Chest reacts to G+L. Ears react to B+L. Animation rule: Large reaction \u2192 '+', Small reaction \u2192 '\u2212'. So animation ingredients must have G+ AND B+. Cross-reference with the mixing clues to identify those ingredients."
     },
     {
       "level": 3,
-      "text": "The animators are: ingredients [5, 6]. Alch: ing5\u2192nPp, ing6\u2192Nnp."
+      "text": "The animators are: ingredients [5, 6]. Alch: ing5\u2192nPp, ing6\u2192PPP."
     }
   ],
   "complexity": {
-    "score": 31,
-    "raw_score": 15,
-    "clue_score": 5,
+    "score": 10,
+    "raw_score": 10,
+    "clue_score": 0,
     "question_score": 0,
     "world_score": 0,
-    "residual_worlds": 8
+    "residual_worlds": 48
   }
 }
