@@ -20,9 +20,11 @@ golem?: {
 
 The chest and ears always react to **different colors**. Sizes may coincide.
 
-The golem params are **hidden from the solver** — they appear in the puzzle JSON for
-answer computation but are never shown directly in the UI. Players must deduce them
-from test results and hint clues.
+The golem params are **hidden from the solver**. In **legacy-style** puzzles they
+appear in the JSON as metadata for answer computation. In **joint-golem** puzzles
+(the new style) the `golem` field is **omitted entirely** from the JSON — the config
+is fully unknown and must be deduced from clues. Players must deduce the config from
+test results and hint clues in both styles.
 
 ---
 
@@ -36,28 +38,37 @@ golemReacts(alch, params, 'chest')
   → SIZE_TABLE[alch0 * 3 + COLOR_INDEX[params.chest.color]] === (params.chest.size === 'L' ? 1 : 0)
 ```
 
-### Reaction groups
+### Reaction groups (SIZE-based)
 
-Every ingredient belongs to exactly one group given the current world-set and golem params:
+Every ingredient belongs to exactly one SIZE-based reaction group given the current
+world-set and golem params:
 
-| Group          | Chest | Ears | Count (typical) |
-|----------------|-------|------|-----------------|
-| `animators`    | ✓     | ✓    | exactly 2       |
-| `chest_only`   | ✓     | ✗    | exactly 2       |
-| `ears_only`    | ✗     | ✓    | exactly 2       |
-| `non_reactive` | ✗     | ✗    | exactly 2       |
+| Group            | Chest | Ears | Count (typical) |
+|------------------|-------|------|-----------------|
+| `both_reactive`  | ✓     | ✓    | exactly 2       |
+| `chest_only`     | ✓     | ✗    | exactly 2       |
+| `ears_only`      | ✗     | ✓    | exactly 2       |
+| `non_reactive`   | ✗     | ✗    | exactly 2       |
 
-`any_reactive` = union of `animators`, `chest_only`, `ears_only`.
+`any_reactive` = union of `both_reactive`, `chest_only`, `ears_only`.
 
 The group counts follow from the alchemical structure: exactly 4 alchemicals have
-the chest-size on the chest-color (split 2 animators + 2 chest_only), and exactly
-4 have the ears-size on the ears-color (split 2 animators + 2 ears_only).
+the chest-size on the chest-color (split 2 both_reactive + 2 chest_only), and exactly
+4 have the ears-size on the ears-color (split 2 both_reactive + 2 ears_only).
 
-### Animation condition
+### Animation condition (SIGN-based)
 
-An alchemical **animates the golem** if it belongs to the `animators` group.
-There are always exactly **2 such alchemicals**. The puzzle is to identify
-which 2 ingredients map to them.
+Distinct from the SIZE-based reaction. An ingredient **ANIMATES the golem** if its
+alchemical has the sign *implied* by each golem part's size on the corresponding color:
+  Large (L) → `+`,  Small (S) → `−`
+
+Example: golem `{ chest: G/L, ears: B/S }`
+  → animation requires `G+` AND `B−`
+  → exactly 2 alchemicals satisfy both conditions
+
+The `golem_group:'animators'` question asks for these **SIGN-based animation ingredients**,
+NOT the SIZE-based `both_reactive` group. An ingredient in `both_reactive` is NOT
+necessarily an animator — it only means both golem parts reacted to its SIZE.
 
 ---
 
@@ -69,20 +80,23 @@ which 2 ingredients map to them.
 {
   kind: 'golem_test';
   ingredient: IngredientId;
-  chest_reacted: boolean;
-  ears_reacted: boolean;
+  chest_reacted: boolean | null;   // null = not observed (partial test)
+  ears_reacted:  boolean | null;   // null = not observed
 }
 ```
 
 Records the result of feeding one ingredient to the golem. Both flags can be
-true (animator), one true (chest_only or ears_only), or both false (non_reactive).
+true (both_reactive), one true (chest_only or ears_only), or both false (non_reactive).
+A `null` value means that part was not observed (partial test) — its constraint
+is skipped during world filtering.
 
 **World filter:** Keep worlds where:
 - `golemReacts(alch, params, 'chest') === chest_reacted`
 - `golemReacts(alch, params, 'ears') === ears_reacted`
 
-Requires `golem` params from puzzle context — `applyAnyClues` accepts an optional
-`ctx: { golem?: GolemParams }` argument.
+In **legacy-style** puzzles (with `puzzle.golem`), requires golem params from context.
+In **joint-golem** puzzles, `applyCluesWithGolemState` applies this to all 24 configs
+simultaneously, eliminating configs inconsistent with the observed reaction.
 
 **Display:** Ingredient icon + ☁️ Chest badge (green=reacted, grey=no) +
 👂 Ears badge (green=reacted, grey=no). Labelled "Golem Test".
@@ -122,9 +136,30 @@ assignments. (Q-C confirmed: golem params are puzzle metadata, not world variabl
 Reveals that the chest (or ears) reacts to a **Large** or **Small** aspect,
 without revealing the color.
 
-**World filter:** None — display only.
+**World filter:** None — display only. In joint-golem mode, eliminates configs
+where the given part's size doesn't match.
 
 **Display:** "Chest / Ears reacts to a [Large/Small] aspect." Labelled "Golem Research".
+
+---
+
+### 3d. Golem Animation (`kind: 'golem_animation'`)
+
+```ts
+{
+  kind: 'golem_animation';
+  ingredient: IngredientId;
+  is_animator: boolean;
+}
+```
+
+Records whether an ingredient's alchemical satisfies the **SIGN-based** animation
+condition (Large → `+`, Small → `−` on each part's color) for the true config.
+
+**Filter (joint-golem):** For each surviving config, keep worlds where
+`isAnimationIngredient(alch, config) === is_animator`.
+
+**Display:** Ingredient icon + animated/not-animated badge. Labelled "Golem Animation".
 
 ---
 
@@ -144,6 +179,11 @@ All golem questions assume golem params are hidden; the player must deduce them.
 
 **Computation:** For each ingredient slot, check if every remaining world places
 it in the requested group. Return all such slots.
+
+**Note on `'animators'`:** The `animators` group here refers to the **SIGN-based
+animation condition** (see "Animation condition" in Section 2), NOT the SIZE-based
+`both_reactive` reaction group. An ingredient in `both_reactive` (reacts to both
+parts) is not necessarily an animator — it may lack the correct SIGN.
 
 ---
 
@@ -195,13 +235,87 @@ as trivial. The puzzle validator should flag this.
 
 ---
 
+### 4e. `golem_reaction_component` — What is the full golem configuration?
+
+```ts
+{ kind: 'golem_reaction_component' }
+// Answer: GolemConfigAnswer — unique config if exactly 1 survives
+```
+
+**Computation (joint-golem):** Returns the unique surviving config, or `null` if
+more than one config is still consistent with all clues.
+
+---
+
+### 4f. `golem_reaction_both_alch` — Which 2 alchemicals react to BOTH parts?
+
+```ts
+{ kind: 'golem_reaction_both_alch' }
+// Answer: AlchemicalSetAnswer — sorted AlchemicalId[], length 2
+```
+
+**Computation:** All surviving configs must agree on the same 2 SIZE-based
+`both_reactive` alchemicals. Returns `null` if configs disagree.
+
+---
+
+### 4g. `golem_reaction_both_ing` — Which 2 ingredient slots react to BOTH parts?
+
+```ts
+{ kind: 'golem_reaction_both_ing' }
+// Answer: IngredientSetAnswer — sorted IngredientId[], length 2
+```
+
+**Computation:** Slot `s` is definite iff in EVERY surviving (config, world) pair,
+the alchemical at slot `s` is `both_reactive` for that config. Returns exactly 2
+such slots, or `null`.
+
+---
+
+### 4h. `golem_animation_alch` — Which 2 alchemicals animate the golem (SIGN-based)?
+
+```ts
+{ kind: 'golem_animation_alch' }
+// Answer: AlchemicalSetAnswer — sorted AlchemicalId[], length 2
+```
+
+**Computation:** All surviving configs must agree on the same 2 SIGN-based animator
+alchemicals. Returns `null` if configs disagree.
+
+---
+
+### 4i. `golem_animation_ing` — Which 2 ingredient slots animate the golem?
+
+```ts
+{ kind: 'golem_animation_ing' }
+// Answer: IngredientSetAnswer — sorted IngredientId[], length 2
+```
+
+**Computation:** Slot `s` is definite iff in EVERY surviving (config, world) pair,
+the alchemical at slot `s` satisfies the SIGN-based animation condition for that
+config. Returns exactly 2 such slots, or `null`.
+
+---
+
 ## 5. Answer Types
 
 ```ts
-// New:
+// Legacy (used by golem_group):
 type IngredientSetAnswer = {
   kind: 'ingredient_set';
   ingredients: IngredientId[];  // always sorted ascending
+};
+
+// New (joint-golem):
+type GolemConfigAnswer = {
+  kind: 'golem_config';
+  chest: { color: Color; size: Size };
+  ears:  { color: Color; size: Size };
+};
+
+type AlchemicalSetAnswer = {
+  kind: 'alchemical_set';
+  alchemicals: AlchemicalId[];  // always sorted ascending, length 2
 };
 
 // Reused from base:
@@ -249,6 +363,11 @@ added to `ExpandedSolverState`. Persisted inside `exp-solver-${id}` alongside gr
 
 ## 7. Puzzle JSON Format (Golem)
 
+### Legacy style (fixed config — `puzzle.golem` present)
+
+Used by hand-crafted tutorial puzzles. The `golem` field is included as metadata
+for display and validation. TypeScript uses it to constrain golem_test filtering.
+
 ```jsonc
 {
   "id": "exp-golem-tutorial-01",
@@ -269,6 +388,31 @@ added to `ExpandedSolverState`. Persisted inside `exp-solver-${id}` alongside gr
     { "kind": "golem_group", "group": "animators" }
   ],
   "solution": { "1": 6, "2": 4, "3": 8, ... },
+  "hints": [...]
+}
+```
+
+### Joint-golem style (config unknown — `puzzle.golem` absent)
+
+Used by generated puzzles. The `golem` field is **omitted**. TypeScript's
+`needsJointGolemReasoning` detects golem clues without a fixed config and uses
+`GolemSolverState` (24 configs × world indices) for joint reasoning.
+
+```jsonc
+{
+  "id": "golem-02",
+  "mode": "expanded",
+  "title": "...",
+  "difficulty": "easy",
+  "clues": [
+    { "kind": "mixing", "ingredient1": 1, "ingredient2": 4, "result": { "color": "R", "sign": "-" } },
+    { "kind": "golem_test", "ingredient": 1, "chest_reacted": true, "ears_reacted": false },
+    { "kind": "golem_animation", "ingredient": 3, "is_animator": true }
+  ],
+  "questions": [
+    { "kind": "golem_animation_ing" }
+  ],
+  "solution": { "1": 8, ... },
   "hints": [...]
 }
 ```

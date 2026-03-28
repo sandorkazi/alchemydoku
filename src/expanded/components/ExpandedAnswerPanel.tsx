@@ -12,10 +12,11 @@ import { useState } from 'react';
 import { PotionImage, AlchemicalImage, ElemImage, CorrectIcon, IncorrectIcon, IngredientIcon, SignedElemImage } from '../../components/GameSprites';
 import { PotionPicker, AlchemicalPicker, AspectPicker, PossiblePotionsPicker, LOGICAL_POTIONS, potionKey } from '../../components/AnswerPickers';
 import { useExpandedSolver, useExpandedIngredient, computeAllExpandedAnswers } from '../contexts/ExpandedSolverContext';
-import type { PotionResult, AlchemicalId, Color, IngredientId } from '../../types';
+import type { PotionResult, AlchemicalId, Color, Size, IngredientId } from '../../types';
 import type {
   AnyQuestion, AnyAnswer,
   AspectColorAnswer, SolarLunarAnswer, IngredientSetAnswer,
+  GolemConfigAnswer, AlchemicalSetAnswer,
 } from '../types';
 import { ExpandedDebunkAnswerPanel } from './ExpandedDebunkAnswerPanel';
 
@@ -198,6 +199,31 @@ function QuestionHeader({ q }: { q: AnyQuestion }) {
       <span className="text-xs font-semibold"><span className="text-orange-400">☀ Solar</span> or <span className="text-slate-400">☽ Lunar</span>?</span>
     </span>
   );
+  if (q.kind === 'golem_reaction_component') return (
+    <span className="text-xs font-semibold text-violet-600">
+      🧿 What is the golem configuration? (chest + ears: color &amp; size)
+    </span>
+  );
+  if (q.kind === 'golem_reaction_both_alch') return (
+    <span className="text-xs font-semibold text-violet-600">
+      🧿 Which 2 alchemicals react to BOTH golem parts?
+    </span>
+  );
+  if (q.kind === 'golem_reaction_both_ing') return (
+    <span className="text-xs font-semibold text-violet-600">
+      🧿 Which 2 ingredients react to BOTH golem parts?
+    </span>
+  );
+  if (q.kind === 'golem_animation_alch') return (
+    <span className="text-xs font-semibold text-violet-600">
+      🧿 Which 2 alchemicals animate the golem?
+    </span>
+  );
+  if (q.kind === 'golem_animation_ing') return (
+    <span className="text-xs font-semibold text-violet-600">
+      🧿 Which 2 ingredients animate the golem?
+    </span>
+  );
 
   return null;
 }
@@ -238,6 +264,28 @@ function RevealedAnswer({ q, answer }: { q: AnyQuestion; answer: AnyAnswer }) {
     if (a.kind === 'hedge-color') {
       const dc = (answer as { kind: string; color: Color }).color;
       return <span className="inline-flex items-center gap-1.5"><ElemImage color={dc} size="L" width={36} /></span>;
+    }
+    if (a.kind === 'golem_config') {
+      const gc = answer as GolemConfigAnswer;
+      const sizeLabel: Record<Size, string> = { L: 'Large', S: 'Small' };
+      return (
+        <span className="inline-flex flex-col gap-0.5 text-xs font-semibold text-violet-700">
+          <span className="inline-flex items-center gap-1">
+            <span className="text-violet-500">Chest:</span>
+            <ElemImage color={gc.chest.color} size={gc.chest.size} width={20} />
+            <span>{sizeLabel[gc.chest.size]}</span>
+          </span>
+          <span className="inline-flex items-center gap-1">
+            <span className="text-violet-500">Ears:</span>
+            <ElemImage color={gc.ears.color} size={gc.ears.size} width={20} />
+            <span>{sizeLabel[gc.ears.size]}</span>
+          </span>
+        </span>
+      );
+    }
+    if (a.kind === 'alchemical_set') {
+      const ids = (answer as AlchemicalSetAnswer).alchemicals;
+      return <span className="inline-flex gap-2">{ids.map(id => <AlchemicalImage key={id} id={id as AlchemicalId} width={36} />)}</span>;
     }
     if (a.kind === 'possible-potions') {
       const pots = (answer as { potions: string[] }).potions.map(k =>
@@ -511,6 +559,86 @@ function QuestionRow({ q, index, total, value, onChange, correctAnswer, showSolu
               onSelect={v => onChange({ kind:'solar_lunar_answer', result:v } satisfies SolarLunarAnswer)}
             />
           )}
+          {/* New golem joint-config pickers */}
+          {(q.kind==='golem_reaction_both_ing' || q.kind==='golem_animation_ing') && (() => {
+            const cur = new Set<number>((value as IngredientSetAnswer|null)?.ingredients ?? []);
+            const toggle = (id: number) => {
+              const next = new Set(cur);
+              if (next.has(id)) next.delete(id); else next.add(id);
+              const sorted = [...next].sort((a,b)=>a-b) as IngredientId[];
+              onChange(sorted.length===0 ? null : { kind:'ingredient_set', ingredients:sorted } satisfies IngredientSetAnswer);
+            };
+            return (
+              <div className="space-y-1">
+                <p className="text-[10px] text-gray-400 italic">Select exactly 2 ingredients</p>
+                <IngredientSetPicker selected={cur} onToggle={toggle} />
+              </div>
+            );
+          })()}
+          {(q.kind==='golem_reaction_both_alch' || q.kind==='golem_animation_alch') && (() => {
+            const cur = new Set<number>((value as AlchemicalSetAnswer|null)?.alchemicals ?? []);
+            return (
+              <div className="space-y-1">
+                <p className="text-[10px] text-gray-400 italic">Select exactly 2 alchemicals</p>
+                <div className="flex flex-wrap gap-1.5" role="group">
+                  {([1,2,3,4,5,6,7,8] as AlchemicalId[]).map(id => {
+                    const active = cur.has(id);
+                    return (
+                      <button key={id} aria-pressed={active}
+                        onClick={() => {
+                          const next = new Set(cur);
+                          if (next.has(id)) next.delete(id); else next.add(id);
+                          const sorted = [...next].sort((a,b)=>a-b) as AlchemicalId[];
+                          onChange(sorted.length===0 ? null : { kind:'alchemical_set', alchemicals:sorted } satisfies AlchemicalSetAnswer);
+                        }}
+                        className={`flex flex-col items-center gap-0.5 px-2 pt-1.5 pb-1 rounded-xl border-2 transition-all
+                          press-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-indigo-400
+                          ${active?'border-indigo-500 bg-indigo-50 shadow-md scale-105':'border-transparent bg-gray-100 hover:bg-gray-200 hover:border-gray-300'}`}>
+                        <AlchemicalImage id={id} width={32} />
+                        <span className={`text-[9px] font-bold h-2.5 ${active?'text-indigo-600':'text-transparent'}`}>✓</span>
+                      </button>
+                    );
+                  })}
+                </div>
+              </div>
+            );
+          })()}
+          {q.kind==='golem_reaction_component' && (() => {
+            const cur = value as GolemConfigAnswer | null;
+            const isSelected = (part: 'chest'|'ears', col: Color, sz: Size) =>
+              cur?.kind === 'golem_config' && cur[part].color === col && cur[part].size === sz;
+            const select = (part: 'chest'|'ears', col: Color, sz: Size) => {
+              const prev = cur ?? { kind: 'golem_config' as const, chest: { color: 'R' as Color, size: 'L' as Size }, ears: { color: 'G' as Color, size: 'S' as Size } };
+              const next: GolemConfigAnswer = { ...prev, [part]: { color: col, size: sz } };
+              // validate chest.color !== ears.color
+              if (next.chest.color !== next.ears.color) onChange(next);
+              else onChange({ ...next, [part]: { color: col, size: sz } });
+            };
+            return (
+              <div className="space-y-2">
+                {(['chest','ears'] as const).map(part => (
+                  <div key={part} className="space-y-1">
+                    <p className="text-[10px] font-semibold text-violet-600 uppercase">{part}</p>
+                    <div className="flex flex-wrap gap-1">
+                      {(['R','G','B'] as Color[]).map(col => (['L','S'] as Size[]).map(sz => {
+                        const active = isSelected(part, col, sz);
+                        return (
+                          <button key={`${col}${sz}`} aria-pressed={active}
+                            onClick={() => select(part, col, sz)}
+                            className={`flex items-center gap-0.5 px-2 py-1 rounded-lg border-2 text-xs font-semibold transition-all
+                              press-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-indigo-400
+                              ${active?'border-indigo-500 bg-indigo-50 shadow-md':'border-transparent bg-gray-100 hover:bg-gray-200 hover:border-gray-300'}`}>
+                            <ElemImage color={col} size={sz} width={18} />
+                            <span>{sz === 'L' ? 'L' : 'S'}</span>
+                          </button>
+                        );
+                      }))}
+                    </div>
+                  </div>
+                ))}
+              </div>
+            );
+          })()}
           {/* Golem pickers — ingredient multi-select */}
           {(q.kind==='golem_group' || q.kind==='golem_mix_potion') && (() => {
             const cur = new Set<number>((value as IngredientSetAnswer|null)?.ingredients ?? []);

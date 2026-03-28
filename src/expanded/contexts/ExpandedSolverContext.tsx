@@ -14,10 +14,8 @@
 import {
   createContext, useContext, useReducer, useEffect, useMemo, type ReactNode,
 } from 'react';
-import { generateAllWorlds } from '../../logic/worldSet';
-import { applyAnyClues } from '../logic/worldSetExpanded';
 import { isSolar } from '../logic/solarLunar';
-import { checkExpandedAnswers, computeAllExpandedAnswers } from '../puzzles/schemaExpanded';
+import { checkExpandedAnswers, computeAllExpandedAnswers, getExpandedPuzzleWorlds } from '../puzzles/schemaExpanded';
 import { validateExpandedMinStepsAnswer, validateExpandedApprenticePlanAnswer, validateExpandedConflictOnlyAnswer } from '../logic/debunkExpanded';
 import { WORLD_DATA } from '../../logic/worldPack';
 import { makeDisplayMap, loadDisplayMap, saveDisplayMap, emptyGrid, mergeIntoUnifiedStore } from '../../utils/solverStorage';
@@ -458,7 +456,7 @@ type ContextValue = { state: ExpandedSolverState; dispatch: React.Dispatch<Expan
 const ExpandedSolverContext = createContext<ContextValue | null>(null);
 
 export function ExpandedSolverProvider({ puzzle, children }: { puzzle: ExpandedPuzzle; children: ReactNode }) {
-  const worlds = useMemo(() => applyAnyClues(generateAllWorlds(), puzzle.clues), [puzzle]);
+  const worlds = useMemo(() => getExpandedPuzzleWorlds(puzzle), [puzzle]);
 
   const displayMap = useMemo(() => {
     const saved = loadDisplayMap(`exp-display-map-${puzzle.id}`);

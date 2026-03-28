@@ -127,10 +127,311 @@ def sample_valid_golem(sol: dict, rng: random.Random) -> dict:
     raise RuntimeError("Could not find valid golem params after 2000 attempts")
 
 # ══════════════════════════════════════════════════════════════════════════════
+# JOINT GOLEM SIM  (config unknown — 24 configs × world-sets)
+# ══════════════════════════════════════════════════════════════════════════════
+
+# All 24 valid golem configs: chest.color != ears.color
+GOLEM_CONFIGS: list = [
+    {'chest': {'color': cc, 'size': cs}, 'ears': {'color': ec, 'size': es}}
+    for cc in COLORS for cs in ['L', 'S']
+    for ec in COLORS if ec != cc
+    for es in ['L', 'S']
+]
+
+# Per-config precomputed reactive/animator sets (built after ALCH_DATA is available)
+_GC_CHEST_REACTIVE: list = [
+    frozenset(a for a in ALL_ALCH if greacts(a, cfg, 'chest'))
+    for cfg in GOLEM_CONFIGS
+]
+_GC_EARS_REACTIVE: list = [
+    frozenset(a for a in ALL_ALCH if greacts(a, cfg, 'ears'))
+    for cfg in GOLEM_CONFIGS
+]
+_GC_ANIMATORS: list = [
+    frozenset(a for a in ALL_ALCH if is_animation_ingredient(a, cfg))
+    for cfg in GOLEM_CONFIGS
+]
+_ALL_ALCH_SET: frozenset = frozenset(ALL_ALCH)
+
+def _init_golem_sim() -> dict:
+    """Returns dict: config_idx → int bitmask (all 40320 worlds set)."""
+    return {i: _ALL_WORLDS_BM for i in range(len(GOLEM_CONFIGS))}
+
+def _filter_golem_test_sim(sim: dict, ingredient: int, chest_reacted, ears_reacted) -> dict:
+    """Filter by golem_test. Uses precomputed per-config bitmasks (fast bigint AND)."""
+    si = ingredient - 1
+    result = {}
+    for ci, mask in sim.items():
+        if chest_reacted is True:
+            mask = mask & _GC_CHEST_BM[ci][si]
+        elif chest_reacted is False:
+            mask = mask & (_ALL_WORLDS_BM ^ _GC_CHEST_BM[ci][si])
+        if ears_reacted is True:
+            mask = mask & _GC_EARS_BM[ci][si]
+        elif ears_reacted is False:
+            mask = mask & (_ALL_WORLDS_BM ^ _GC_EARS_BM[ci][si])
+        if mask:
+            result[ci] = mask
+    return result
+
+def _filter_golem_animation_sim(sim: dict, ingredient: int, is_animator: bool) -> dict:
+    """Filter by golem_animation. Uses precomputed per-config animator bitmasks."""
+    si = ingredient - 1
+    result = {}
+    for ci, mask in sim.items():
+        valid_bm = _GC_ANIM_BM[ci][si] if is_animator else (_ALL_WORLDS_BM ^ _GC_ANIM_BM[ci][si])
+        kept = mask & valid_bm
+        if kept:
+            result[ci] = kept
+    return result
+
+def _filter_golem_hint_color_sim(sim: dict, part: str, color: str) -> dict:
+    return {ci: m for ci, m in sim.items() if GOLEM_CONFIGS[ci][part]['color'] == color}
+
+def _filter_golem_hint_size_sim(sim: dict, part: str, size: str) -> dict:
+    return {ci: m for ci, m in sim.items() if GOLEM_CONFIGS[ci][part]['size'] == size}
+
+def _apply_base_clue_sim(sim: dict, clue: dict) -> dict:
+    """Apply a non-golem clue: compute bitmask once (cached), then AND per config."""
+    bm = _get_base_filter_bm(clue)
+    result = {}
+    for ci, mask in sim.items():
+        kept = mask & bm
+        if kept:
+            result[ci] = kept
+    return result
+
+def _apply_clue_sim(sim: dict, clue: dict) -> dict:
+    """Apply any clue to a GolemSim. Routes golem clues to specialised filters."""
+    k = clue['kind']
+    if k == 'golem_test':
+        return _filter_golem_test_sim(sim, clue['ingredient'], clue['chest_reacted'], clue['ears_reacted'])
+    if k == 'golem_animation':
+        return _filter_golem_animation_sim(sim, clue['ingredient'], clue['is_animator'])
+    if k == 'golem_hint_color':
+        return _filter_golem_hint_color_sim(sim, clue['part'], clue['color'])
+    if k == 'golem_hint_size':
+        return _filter_golem_hint_size_sim(sim, clue['part'], clue['size'])
+    return _apply_base_clue_sim(sim, clue)
+
+def _apply_all_sim(sim: dict, clues: list) -> dict:
+    for c in clues:
+        sim = _apply_clue_sim(sim, c)
+    return sim
+
+def _sim_worlds(sim: dict) -> frozenset:
+    """Union of all config world bitmasks → flat frozenset."""
+    if not sim:
+        return frozenset()
+    union_bm = 0
+    for mask in sim.values():
+        union_bm |= mask
+    return _bm_to_frozenset(union_bm)
+
+# ── GolemSim answer functions ─────────────────────────────────────────────────
+
+def _answer_golem_reaction_component(sim: dict) -> Optional[dict]:
+    """Returns unique surviving config or None."""
+    if len(sim) == 1:
+        ci = next(iter(sim))
+        return GOLEM_CONFIGS[ci]
+    return None
+
+def _answer_golem_reaction_both_alch(sim: dict) -> Optional[list]:
+    """Returns the 2 SIZE-based both_reactive alchemicals if all surviving configs agree."""
+    ref = None
+    for ci in sim:
+        both = tuple(sorted(_GC_CHEST_REACTIVE[ci] & _GC_EARS_REACTIVE[ci]))
+        if ref is None:
+            ref = both
+        elif both != ref:
+            return None
+    return list(ref) if ref is not None else None
+
+def _answer_golem_reaction_both_ing(sim: dict, sol: dict) -> Optional[list]:
+    """Slot s is 'definitely both_reactive' iff in ALL (ci, world) pairs the alch is both_reactive."""
+    if not sim or not any(sim.values()):
+        return None
+    definite = []
+    for s in SLOTS:
+        si = s - 1
+        is_def = True
+        for ci, mask in sim.items():
+            if not mask:
+                continue
+            # _GC_NOT_BOTH_BM[ci][si] = worlds where slot s has a non-both-reactive alch
+            if mask & _GC_NOT_BOTH_BM[ci][si]:
+                is_def = False
+                break
+        if is_def:
+            definite.append(s)
+    return definite if len(definite) == 2 else None
+
+def _answer_golem_animation_alch(sim: dict) -> Optional[list]:
+    """Returns the 2 SIGN-based animator alchemicals if all surviving configs agree."""
+    ref = None
+    for ci in sim:
+        anim = tuple(sorted(_GC_ANIMATORS[ci]))
+        if ref is None:
+            ref = anim
+        elif anim != ref:
+            return None
+    return list(ref) if ref is not None else None
+
+def _answer_golem_animation_ing(sim: dict) -> Optional[list]:
+    """Slot s is 'definitely an animator' iff in ALL (ci, world) pairs the alch is an animator."""
+    if not sim or not any(sim.values()):
+        return None
+    definite = []
+    for s in SLOTS:
+        si = s - 1
+        is_def = True
+        for ci, mask in sim.items():
+            if not mask:
+                continue
+            if mask & _GC_NOT_ANIM_BM[ci][si]:
+                is_def = False
+                break
+        if is_def:
+            definite.append(s)
+    return definite if len(definite) == 2 else None
+
+def _answer_sim(sim: dict, q: dict, sol: dict) -> Optional[object]:
+    """Compute answer for a joint-golem question given GolemSim."""
+    k = q['kind']
+    if k == 'golem_reaction_component':
+        return _answer_golem_reaction_component(sim)
+    if k == 'golem_reaction_both_alch':
+        return _answer_golem_reaction_both_alch(sim)
+    if k == 'golem_reaction_both_ing':
+        return _answer_golem_reaction_both_ing(sim, sol)
+    if k == 'golem_animation_alch':
+        return _answer_golem_animation_alch(sim)
+    if k == 'golem_animation_ing':
+        return _answer_golem_animation_ing(sim)
+    return None
+
+_JOINT_GOLEM_QUESTION_KINDS = frozenset({
+    'golem_reaction_component', 'golem_reaction_both_alch', 'golem_reaction_both_ing',
+    'golem_animation_alch', 'golem_animation_ing',
+})
+
+def _mix_result_determined_sim(sim: dict, s1: int, s2: int) -> bool:
+    """True if all (config, world) pairs agree on the same mix result for slots s1, s2."""
+    ref = None
+    for mask in sim.values():
+        bm = mask
+        idx = 0
+        while bm:
+            if bm & 1:
+                w = _WORLDS_LIST[idx]
+                r = MIX_TABLE[w[s1 - 1]][w[s2 - 1]]
+                if ref is None:
+                    ref = r
+                elif r != ref:
+                    return False
+            bm >>= 1
+            idx += 1
+    return ref is not None
+
+# ══════════════════════════════════════════════════════════════════════════════
 # WORLDS & CLUE FILTERS  (handles all clue kinds: base + expanded)
 # ══════════════════════════════════════════════════════════════════════════════
 
 _ALL_WORLDS: frozenset = frozenset(itertools.permutations(ALL_ALCH))
+
+# ── Bitmask infrastructure for fast GolemSim ────────────────────────────────
+# Each world is mapped to a unique index 0..40319.  A world set is a Python
+# big-int with bit i set iff world i is in the set.  Bitwise AND is ~600×
+# faster than frozenset intersection for sets of this size.
+
+_WORLDS_LIST: list = sorted(_ALL_WORLDS)          # deterministic order
+_WORLD_TO_IDX: dict = {w: i for i, w in enumerate(_WORLDS_LIST)}
+
+def _build_saw_bm():
+    """_SAW_BM[si][ai] = bitmask of worlds where slot si+1 has alch ai+1."""
+    bm = [[0] * 8 for _ in range(8)]
+    for wi, w in enumerate(_WORLDS_LIST):
+        for si in range(8):
+            bm[si][w[si] - 1] |= 1 << wi
+    return bm
+
+_SAW_BM: list = _build_saw_bm()          # [slot-1][alch-1] → int bitmask
+_ALL_WORLDS_BM: int = (1 << len(_WORLDS_LIST)) - 1   # all 40320 bits set
+
+def _alch_set_to_bm(slot: int, alch_set) -> int:
+    """Bitmask of worlds where world[slot-1] ∈ alch_set. slot is 1-indexed."""
+    bm = 0
+    for a in alch_set:
+        bm |= _SAW_BM[slot - 1][a - 1]
+    return bm
+
+# Precompute per-config bitmasks for reactive/animator alch at each slot
+# _GC_CHEST_BM[ci][slot-1] = bitmask of worlds where slot has chest-reactive alch for config ci
+_GC_CHEST_BM: list = [
+    [_alch_set_to_bm(s + 1, _GC_CHEST_REACTIVE[ci]) for s in range(8)]
+    for ci in range(len(GOLEM_CONFIGS))
+]
+_GC_EARS_BM: list = [
+    [_alch_set_to_bm(s + 1, _GC_EARS_REACTIVE[ci]) for s in range(8)]
+    for ci in range(len(GOLEM_CONFIGS))
+]
+_GC_ANIM_BM: list = [
+    [_alch_set_to_bm(s + 1, _GC_ANIMATORS[ci]) for s in range(8)]
+    for ci in range(len(GOLEM_CONFIGS))
+]
+_GC_NOT_BOTH_BM: list = [
+    [_ALL_WORLDS_BM ^ (_GC_CHEST_BM[ci][s] & _GC_EARS_BM[ci][s]) for s in range(8)]
+    for ci in range(len(GOLEM_CONFIGS))
+]
+_GC_NOT_ANIM_BM: list = [
+    [_ALL_WORLDS_BM ^ _GC_ANIM_BM[ci][s] for s in range(8)]
+    for ci in range(len(GOLEM_CONFIGS))
+]
+
+def _bm_popcount(mask: int) -> int:
+    return mask.bit_count()
+
+def _frozenset_to_bm(fs: frozenset) -> int:
+    bm = 0
+    for w in fs:
+        bm |= 1 << _WORLD_TO_IDX[w]
+    return bm
+
+def _bm_to_frozenset(bm: int) -> frozenset:
+    result = set()
+    idx = 0
+    while bm:
+        if bm & 1:
+            result.add(_WORLDS_LIST[idx])
+        bm >>= 1
+        idx += 1
+    return frozenset(result)
+
+# Per-clue base-filter bitmask cache (memoised by clue identity)
+_BASE_FILTER_BM_CACHE: dict = {}
+
+def _get_base_filter_bm(clue: dict) -> int:
+    """Compute (and cache) the world bitmask for a non-golem clue applied to all worlds."""
+    key = json.dumps(clue, sort_keys=True)
+    if key not in _BASE_FILTER_BM_CACHE:
+        fs = filter_clue(_ALL_WORLDS, clue, None)
+        _BASE_FILTER_BM_CACHE[key] = _frozenset_to_bm(fs)
+    return _BASE_FILTER_BM_CACHE[key]
+
+# Per (slot 1-8, alch 1-8) → frozenset of worlds (kept for filter_clue compat)
+_SAW: list  # [slot-1][alch-1] → frozenset
+def _build_saw():
+    buckets = [[set() for _ in range(8)] for _ in range(8)]
+    for w in _ALL_WORLDS:
+        for si in range(8):
+            buckets[si][w[si] - 1].add(w)
+    return [[frozenset(b) for b in row] for row in buckets]
+_SAW = _build_saw()
+
+def _worlds_for_alch_set(slot: int, alch_set) -> frozenset:
+    """Union of worlds where world[slot-1] ∈ alch_set. slot is 1-indexed."""
+    return frozenset().union(*(_SAW[slot - 1][a - 1] for a in alch_set))
 
 def all_worlds() -> frozenset:
     return _ALL_WORLDS
@@ -222,9 +523,18 @@ def filter_clue(worlds: frozenset, clue: dict, golem: Optional[dict] = None) -> 
         if golem is None:
             return worlds
         si = clue['ingredient'] - 1
+        cr = clue.get('chest_reacted')
+        er = clue.get('ears_reacted')
         return frozenset(w for w in worlds
-                         if greacts(w[si], golem, 'chest') == clue['chest_reacted']
-                         and greacts(w[si], golem, 'ears') == clue['ears_reacted'])
+                         if (cr is None or greacts(w[si], golem, 'chest') == cr)
+                         and (er is None or greacts(w[si], golem, 'ears') == er))
+    if k == 'golem_animation':
+        # SIGN-based animation clue: filter worlds where ingredient matches is_animator
+        if golem is None:
+            return worlds
+        si = clue['ingredient'] - 1
+        is_anim = clue['is_animator']
+        return frozenset(w for w in worlds if is_animation_ingredient(w[si], golem) == is_anim)
 
     if k == 'sell_among':
         slots = [i - 1 for i in clue['ingredients']]
@@ -1110,13 +1420,31 @@ def validate_puzzle(puz: dict) -> list:
         if not groups_valid(groups):
             errs.append(f"ERROR: golem groups not (2,2,2,2): {Counter(groups.values())}")
 
-    worlds = apply_all(all_worlds(), clues, golem)
+    # Check whether this puzzle uses joint-golem reasoning (no fixed config, has golem clues)
+    _has_joint_golem_clues = any(
+        c['kind'] in ('golem_test', 'golem_animation', 'golem_hint_color', 'golem_hint_size')
+        for c in clues
+    )
+    _is_joint_golem = _has_joint_golem_clues and not golem
+
+    if _is_joint_golem:
+        # Joint-golem: use GolemSim
+        sim = _apply_all_sim(_init_golem_sim(), clues)
+        worlds = _sim_worlds(sim)
+    else:
+        worlds = apply_all(all_worlds(), clues, golem)
     sol_t  = tuple(sol[s] for s in SLOTS)
     if sol_t not in worlds:
         errs.append("ERROR: solution world eliminated by clues")
 
     for i, q in enumerate(questions):
-        ans = answer(worlds, q, golem)
+        if q['kind'] in _JOINT_GOLEM_QUESTION_KINDS:
+            if not _is_joint_golem:
+                errs.append(f"ERROR: question {i} ({q['kind']}) requires joint-golem puzzle (no puzzle.golem)")
+                continue
+            ans = _answer_sim(sim, q, sol)
+        else:
+            ans = answer(worlds, q, golem)
         if ans is None:
             errs.append(f"ERROR: question {i} ({q['kind']}) has no unique answer "
                         f"in {len(worlds)} residual worlds")
@@ -1137,6 +1465,15 @@ def validate_puzzle(puz: dict) -> list:
         if i in anchor_idx:
             continue
         reduced = clues[:i] + clues[i + 1:]
+        if _is_joint_golem:
+            # Joint-golem redundancy: use GolemSim
+            if sum(1 for rc in reduced if rc['kind'] == 'golem_test') < 2:
+                continue  # Can't remove — would violate min-test requirement
+            sim2 = _apply_all_sim(_init_golem_sim(), reduced)
+            if all(_answer_sim(sim2, q, sol) is not None for q in questions
+                   if q['kind'] in _JOINT_GOLEM_QUESTION_KINDS):
+                redundant_idxs.append(i)
+            continue
         w2 = apply_all(all_worlds(), reduced, golem)
         if has_animate_q:
             # For golem_animate_potion, all_answered is always True (answer is config-determined).
@@ -1241,6 +1578,7 @@ class Profile:
     has_golem:       bool
     question_params: dict = field(default_factory=dict)
     mandatory_clues: list = field(default_factory=list)
+    joint_golem:     bool = False  # True = config unknown; use GolemSim approach
 
 PROFILES = {
     'tutorial_golem':    Profile('exp-golem-tutorial',    ['base', 'golem'],                      'golem_group',             'tutorial', 6,  True,  {'group': 'animators'}),
@@ -1253,6 +1591,11 @@ PROFILES = {
     'hard_all':          Profile('all',                   ['base', 'encyclopedia', 'golem', 'solar_lunar'], 'golem_group',   'hard',     15, True,  {'group': 'animators'}),
     'hard_golem_mix':    Profile('golem-mix',             ['base', 'golem'],                       'golem_animate_potion',    'hard',     10, True),
     'among_golem':       Profile('among-golem',           ['base', 'golem', 'sell', 'among'],      'golem_animate_potion',    'hard',     12, True),
+    # Joint-golem (config unknown) profiles
+    'easy_golem_v2':          Profile('golem',       ['base', 'golem'],   'golem_animation_ing',       'easy',   8,  False, joint_golem=True),
+    'medium_golem_reaction':  Profile('golem',       ['base', 'golem'],   'golem_reaction_component',  'medium', 10, False, joint_golem=True),
+    'medium_golem_animation': Profile('golem',       ['base', 'golem'],   'golem_animation_ing',       'medium', 10, False, joint_golem=True),
+    'hard_golem_mixed':       Profile('golem',       ['base', 'golem'],   'golem_animation_ing',       'hard',   12, False, joint_golem=True),
     # Base-game new question profiles
     'q_neutral_partner': Profile('neutral-partner',       ['base'],                               'neutral-partner',          'medium',   8,  False),
     'q_ing_profile':     Profile('ing-profile',           ['base'],                               'ingredient-potion-profile','medium',   8,  False),
@@ -1524,6 +1867,26 @@ def candidate_pool(mechanics: list, sol: dict, golem: Optional[dict],
                             'reaction': reaction,
                             'count': 1,
                         }))
+    if 'golem' in mechanics and golem and golem.get('_joint'):
+        # Joint-golem (config unknown): supplement full tests with partial tests + animation clues.
+        # true_config is in golem (marked _joint=True). Clue values come from the true config.
+        # Additional partial (single-part) tests:
+        for s in SLOTS:
+            cr = greacts(sol[s], golem, 'chest')
+            er = greacts(sol[s], golem, 'ears')
+            pool.append(('golem_test', 12, {
+                'kind': 'golem_test', 'ingredient': s,
+                'chest_reacted': cr, 'ears_reacted': None,
+            }))
+            pool.append(('golem_test', 12, {
+                'kind': 'golem_test', 'ingredient': s,
+                'chest_reacted': None, 'ears_reacted': er,
+            }))
+            # Animation clue (SIGN-based)
+            is_anim = is_animation_ingredient(sol[s], golem)
+            pool.append(('golem_animation', 12, {
+                'kind': 'golem_animation', 'ingredient': s, 'is_animator': is_anim,
+            }))
     return pool
 
 # ── Question + anchor builder ─────────────────────────────────────────────────
@@ -1623,6 +1986,18 @@ def build_question_anchor(profile: Profile, sol: dict, golem: Optional[dict],
         # Placeholder; actual question list is built by _plan_debunk in construct()
         return {'kind': k}, None, set()
 
+    # New joint-golem question kinds
+    if k == 'golem_reaction_component':
+        return {'kind': 'golem_reaction_component'}, None, set()
+    if k == 'golem_reaction_both_alch':
+        return {'kind': 'golem_reaction_both_alch'}, None, set()
+    if k == 'golem_reaction_both_ing':
+        return {'kind': 'golem_reaction_both_ing'}, None, set()
+    if k == 'golem_animation_alch':
+        return {'kind': 'golem_animation_alch'}, None, set()
+    if k == 'golem_animation_ing':
+        return {'kind': 'golem_animation_ing'}, None, set()
+
     return None, None, set()
 
 # ── Construction ──────────────────────────────────────────────────────────────
@@ -1630,7 +2005,98 @@ def build_question_anchor(profile: Profile, sol: dict, golem: Optional[dict],
 def _ceq(a, b): return json.dumps(a, sort_keys=True) == json.dumps(b, sort_keys=True)
 def _in(c, clues): return any(_ceq(c, x) for x in clues)
 
+def _sim_size(sim: dict) -> int:
+    """Total (config, world) pairs in GolemSim (sum of bitmask popcounts)."""
+    return sum(m.bit_count() for m in sim.values())
+
+def construct_joint_golem(profile: Profile, rng: random.Random, verbose: bool = False):
+    """Construction for joint-golem profiles (config unknown).
+    Uses GolemSim (dict of config_idx → frozenset of worlds) as simulation state.
+    The true config is sampled but stored only as metadata (puzzle.golem).
+    """
+    order = list(ALL_ALCH)
+    rng.shuffle(order)
+    sol = {s: a for s, a in zip(SLOTS, order)}
+
+    # Sample the true config (this is what determines clue truth values, but is hidden from player)
+    true_config = sample_valid_golem(sol, rng)
+    # Mark it for candidate_pool so it generates animation + partial test clues too
+    golem_tagged = dict(true_config, _joint=True)
+
+    q, anchor, blocked_enc = build_question_anchor(profile, sol, true_config, rng)
+    if q is None:
+        return None
+
+    clues: list = []
+    sim = _init_golem_sim()  # all 24 configs × all worlds
+
+    if anchor:
+        clues.append(anchor)
+        sim = _apply_clue_sim(sim, anchor)
+        if verbose:
+            print(f"  anchor: {anchor['kind']} → {len(sim)} configs")
+
+    pool = candidate_pool(profile.mechanics, sol, golem_tagged, blocked_enc)
+
+    greedy = [(kd, pri, c2) for kd, pri, c2 in pool
+              if kd not in ('golem_hint_color', 'golem_hint_size')]
+
+    def _is_done() -> bool:
+        return _answer_sim(sim, q, sol) is not None
+
+    for _ in range(profile.max_clues * 5):
+        if _is_done():
+            break
+
+        best_score = -float('inf')
+        best_clue  = None
+        sample_pool = greedy if len(greedy) <= 100 else rng.sample(greedy, 100)
+
+        for _, pri, c2 in sample_pool:
+            if _in(c2, clues):
+                continue
+            new_sim = _apply_clue_sim(sim, c2)
+            elim = _sim_size(sim) - _sim_size(new_sim)
+            if elim <= 0:
+                continue
+            if elim + pri > best_score:
+                best_score = elim + pri
+                best_clue  = c2
+
+        if best_clue is None:
+            if verbose: print("  [greedy] stuck")
+            return None
+
+        clues.append(best_clue)
+        sim = _apply_clue_sim(sim, best_clue)
+        if verbose:
+            print(f"  [greedy] {best_clue['kind']} → {len(sim)} configs × {_sim_size(sim)} pairs")
+
+        if len(clues) > profile.max_clues:
+            if verbose: print("  [greedy] exceeded max_clues")
+            return None
+
+    if not _is_done():
+        if verbose: print("  [greedy] no unique answer achieved")
+        return None
+
+    # Require at least 2 golem_test clues for playability
+    if sum(1 for c in clues if c['kind'] == 'golem_test') < 2:
+        if verbose: print("  [min-tests] fewer than 2 golem_test clues — rejecting")
+        return None
+
+    worlds = _sim_worlds(sim)
+    return {
+        'sol': sol, '_sol_str': {str(k): v for k, v in sol.items()},
+        'golem': true_config,  # metadata only — not used for filtering
+        'clues': clues, '_anchor': anchor, '_mandatory': [],
+        'q': q, 'worlds': worlds, '_joint_golem': True,
+    }
+
 def construct(profile: Profile, rng: random.Random, verbose: bool = False):
+    if profile.joint_golem:
+        return construct_joint_golem(profile, rng, verbose)
+
     order = list(ALL_ALCH)
     rng.shuffle(order)
     sol = {s: a for s, a in zip(SLOTS, order)}
@@ -1827,6 +2293,8 @@ def minimize(raw: dict, profile=None, verbose: bool = False) -> dict:
     anchor    = raw.get('_anchor')
     mandatory = raw.get('_mandatory', [])
     rng_fixed = random.Random(42)
+    is_joint  = raw.get('_joint_golem', False)
+    sol       = raw.get('sol')
     # Track latest debunk plan so it stays consistent with the clue set
     current_debunk = None
 
@@ -1839,23 +2307,31 @@ def minimize(raw: dict, profile=None, verbose: bool = False) -> dict:
             if any(_ceq(clues[i], m) for m in mandatory):
                 continue
             reduced = clues[:i] + clues[i + 1:]
-            w = apply_all(all_worlds(), reduced, golem)
-            if raw.get('_debunk_questions') and profile is not None:
-                trial_debunk = _plan_debunk(profile, raw['sol'], w, rng_fixed)
-                valid = (trial_debunk is not None
-                         and len(trial_debunk['questions']) >= len(raw['_debunk_questions']))
-                if valid:
-                    current_debunk = trial_debunk
-            elif q['kind'] == 'golem_animate_potion':
-                # For golem_animate_potion, all_answered is always True; only remove if
-                # the clue is truly zero-information (removing it doesn't change world count)
-                current_wc = len(apply_all(all_worlds(), clues, golem))
-                valid = len(w) == current_wc
+            if is_joint:
+                # Joint-golem: use GolemSim for validity check
+                sim = _apply_all_sim(_init_golem_sim(), reduced)
+                # Require ≥2 golem_test clues
+                if sum(1 for c in reduced if c['kind'] == 'golem_test') < 2:
+                    continue
+                valid = _answer_sim(sim, q, sol) is not None
             else:
-                valid = all_answered(w, [q], golem)
-                # golem_group (animator set) requires deducibility
-                if valid and golem and q['kind'] == 'golem_group':
-                    valid = golem_config_deducible(reduced, golem, [q])
+                w = apply_all(all_worlds(), reduced, golem)
+                if raw.get('_debunk_questions') and profile is not None:
+                    trial_debunk = _plan_debunk(profile, raw['sol'], w, rng_fixed)
+                    valid = (trial_debunk is not None
+                             and len(trial_debunk['questions']) >= len(raw['_debunk_questions']))
+                    if valid:
+                        current_debunk = trial_debunk
+                elif q['kind'] == 'golem_animate_potion':
+                    # For golem_animate_potion, all_answered is always True; only remove if
+                    # the clue is truly zero-information (removing it doesn't change world count)
+                    current_wc = len(apply_all(all_worlds(), clues, golem))
+                    valid = len(w) == current_wc
+                else:
+                    valid = all_answered(w, [q], golem)
+                    # golem_group (animator set) requires deducibility
+                    if valid and golem and q['kind'] == 'golem_group':
+                        valid = golem_config_deducible(reduced, golem, [q])
             if valid:
                 if verbose: print(f"  [minimize] removed {clues[i]['kind']}")
                 clues   = reduced
@@ -1864,7 +2340,10 @@ def minimize(raw: dict, profile=None, verbose: bool = False) -> dict:
 
     raw = dict(raw)
     raw['clues']  = clues
-    raw['worlds'] = apply_all(all_worlds(), clues, golem)
+    if is_joint:
+        raw['worlds'] = _sim_worlds(_apply_all_sim(_init_golem_sim(), clues))
+    else:
+        raw['worlds'] = apply_all(all_worlds(), clues, golem)
     # Update debunk plan if minimization changed it
     if current_debunk is not None:
         raw['_debunk_questions']    = current_debunk['questions']
@@ -2193,9 +2672,11 @@ def gen_hints(raw: dict) -> list:
         extra = (' Research notes: ' + '; '.join(_dc(c) for c in hints_display) + '.'
                  if hints_display else '')
         # Level 1: raw test results (reaction groups are SIZE-based)
+        def _react_str(v):
+            return '?' if v is None else ('✓' if v else '✗')
         test_lines = [
-            f"  ing{c['ingredient']}: chest={'✓' if c['chest_reacted'] else '✗'} "
-            f"ears={'✓' if c['ears_reacted'] else '✗'}  →  {groups[c['ingredient']]}"
+            f"  ing{c['ingredient']}: chest={_react_str(c.get('chest_reacted'))} "
+            f"ears={_react_str(c.get('ears_reacted'))}  →  {groups[c['ingredient']]}"
             for c in tests
         ]
         hints.append({'level': 1, 'text':
@@ -2446,6 +2927,22 @@ def gen_hints(raw: dict) -> list:
         )
         hints = [{'level': 1, 'text': h1}, {'level': 2, 'text': h2}, {'level': 3, 'text': h3}]
 
+    elif k in _JOINT_GOLEM_QUESTION_KINDS:
+        # Joint golem questions: use GolemSim for hint generation
+        sim = _apply_all_sim(_init_golem_sim(), clues)
+        ans = _answer_sim(sim, q, sol)
+        if ans is not None:
+            hints.append({'level': 1, 'text': (
+                'Reason about all possible golem configurations jointly with ingredient assignments. '
+                'Each golem_test clue eliminates configs × worlds that are inconsistent with the result.'
+            )})
+            hints.append({'level': 2, 'text': (
+                f"After all clues: {len(sim)} config(s) remain. "
+                f"True config: chest={golem['chest']['color']}{golem['chest']['size']}, "
+                f"ears={golem['ears']['color']}{golem['ears']['size']}."
+            )})
+            hints.append({'level': 3, 'text': f'Answer: {ans}'})
+
     else:
         ans = answer(worlds, q, golem)
         if ans == 'not_validated':
@@ -2636,7 +3133,9 @@ def assemble(raw: dict, profile: Profile, num: int, rng: random.Random,
         'clues': raw['clues'], 'questions': [raw['q']], 'golem': raw['golem'],
     })
     is_base = is_base_profile(profile)
-    golem_sec = {'golem': raw['golem']} if raw['golem'] else {}
+    # Joint-golem puzzles omit 'golem' from JSON (config is unknown to the player).
+    # Old-style golem puzzles include it (config is fixed / given).
+    golem_sec = {'golem': raw['golem']} if raw['golem'] and not raw.get('_joint_golem') else {}
     desc = DESCS.get(profile.question_kind, "Use the clues to answer the question.")
     if profile.question_kind in ('golem_group', 'golem_animate_potion'):
         nt   = sum(1 for c in raw['clues'] if c['kind'] == 'golem_test')

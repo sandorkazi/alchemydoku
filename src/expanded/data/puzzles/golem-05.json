@@ -1,79 +1,92 @@
 {
   "id": "golem-05",
   "mode": "expanded",
-  "title": "The Firm Deduction",
-  "description": "The golem has been tested with 2 ingredients. Deduce the reaction pattern and identify the target group.",
+  "title": "The Sensitive Dependence",
+  "description": "Use the clues to answer the question.",
   "difficulty": "easy",
-  "golem": {
-    "chest": {
-      "color": "B",
-      "size": "S"
-    },
-    "ears": {
-      "color": "R",
-      "size": "L"
-    }
-  },
   "clues": [
     {
-      "kind": "golem_test",
-      "ingredient": 4,
-      "chest_reacted": true,
-      "ears_reacted": true
-    },
-    {
-      "kind": "golem_test",
-      "ingredient": 5,
-      "chest_reacted": false,
-      "ears_reacted": false
+      "kind": "mixing",
+      "ingredient1": 1,
+      "ingredient2": 2,
+      "result": {
+        "color": "R",
+        "sign": "-"
+      }
     },
     {
       "kind": "mixing",
       "ingredient1": 4,
-      "ingredient2": 8,
+      "ingredient2": 7,
       "result": {
-        "color": "R",
+        "color": "G",
         "sign": "+"
       }
     },
     {
       "kind": "mixing",
       "ingredient1": 1,
-      "ingredient2": 3,
+      "ingredient2": 6,
       "result": {
         "color": "G",
         "sign": "+"
+      }
+    },
+    {
+      "kind": "golem_test",
+      "ingredient": 8,
+      "chest_reacted": true,
+      "ears_reacted": true
+    },
+    {
+      "kind": "golem_test",
+      "ingredient": 3,
+      "chest_reacted": true,
+      "ears_reacted": false
+    },
+    {
+      "kind": "golem_test",
+      "ingredient": 1,
+      "chest_reacted": false,
+      "ears_reacted": true
+    },
+    {
+      "kind": "mixing",
+      "ingredient1": 3,
+      "ingredient2": 5,
+      "result": {
+        "color": "B",
+        "sign": "-"
       }
     }
   ],
   "questions": [
     {
-      "kind": "golem_group",
-      "group": "animators"
+      "kind": "golem_reaction_component"
     }
   ],
   "solution": {
-    "1": 8,
-    "2": 4,
-    "3": 1,
-    "4": 6,
-    "5": 2,
-    "6": 7,
-    "7": 5,
-    "8": 3
+    "1": 4,
+    "2": 5,
+    "3": 7,
+    "4": 8,
+    "5": 3,
+    "6": 6,
+    "7": 1,
+    "8": 2
   },
   "hints": [
     {
       "level": 1,
-      "text": "The golem reacts to SIZE on a specific color channel.\nKnown tests:\n  ing4: chest=\u2713 ears=\u2713  \u2192  animators\n  ing5: chest=\u2717 ears=\u2717  \u2192  non_reactive"
+      "text": "Reason about all possible golem configurations jointly with ingredient assignments. Each golem_test clue eliminates configs \u00d7 worlds that are inconsistent with the result."
     },
     {
       "level": 2,
-      "text": "Chest reacts to B+S. Ears react to R+L. Animation rule: Large reaction \u2192 '+', Small reaction \u2192 '\u2212'. So animation ingredients must have B\u2212 AND R+. Cross-reference with the mixing clues to identify those ingredients."
+      "text": "After all clues: 1 config(s) remain. True config: chest=BL, ears=RS."
     },
     {
       "level": 3,
-      "text": "The animators are: ingredients [4, 8]. Alch: ing4\u2192Ppn, ing8\u2192pNn."
+      "text": "Answer: {'chest': {'color': 'B', 'size': 'L'}, 'ears': {'color': 'R', 'size': 'S'}}"
     }
   ],
   "complexity": {
@@ -82,6 +95,6 @@
     "clue_score": 0,
     "question_score": 0,
     "world_score": 0,
-    "residual_worlds": 24
+    "residual_worlds": 4
   }
 }

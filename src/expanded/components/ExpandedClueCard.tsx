@@ -15,7 +15,7 @@ import type {
   AnyClue, EncyclopediaClue, EncyclopediaUncertainClue,
   DebunkApprenticeClue, DebunkMasterClue,
   BookClue, EncyclopediaEntry,
-  GolemTestClue, GolemHintColorClue, GolemHintSizeClue, GolemReactionAmongClue, GolemReactionGroup,
+  GolemTestClue, GolemAnimationClue, GolemHintColorClue, GolemHintSizeClue, GolemReactionAmongClue, GolemReactionGroup,
 } from '../types';
 import type { Color, MixingAmongClue, SellAmongClue, MixingCountAmongClue, SellResultAmongClue, SellResult } from '../../types';
 
@@ -394,7 +394,8 @@ function ExpandedBaseClueCard({ clue, clueIndex = 0 }: { clue: AnyClue; clueInde
 // ─── Golem clue cards ────────────────────────────────────────────────────────
 
 function GolemTestCard({ clue }: { clue: GolemTestClue }) {
-  function Badge({ reacted, part }: { reacted: boolean; part: 'chest' | 'ears' }) {
+  function Badge({ reacted, part }: { reacted: boolean | null; part: 'chest' | 'ears' }) {
+    if (reacted === null) return null; // not observed — skip
     return (
       <span className={`inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-xs font-semibold
         ${reacted
@@ -413,6 +414,19 @@ function GolemTestCard({ clue }: { clue: GolemTestClue }) {
           <Badge reacted={clue.chest_reacted} part="chest" />
           <Badge reacted={clue.ears_reacted}  part="ears"  />
         </div>
+      </div>
+    </Card>
+  );
+}
+
+function GolemAnimationCard({ clue }: { clue: GolemAnimationClue }) {
+  return (
+    <Card icon="🧿" label="Golem Animation" accent="blue">
+      <div className="flex items-center gap-2 flex-wrap text-xs">
+        <Ing slotId={clue.ingredient} />
+        <span className={`font-semibold ${clue.is_animator ? 'text-green-700' : 'text-gray-500'}`}>
+          {clue.is_animator ? '✓ animates the golem' : '✗ does not animate the golem'}
+        </span>
       </div>
     </Card>
   );
@@ -483,6 +497,7 @@ export function ExpandedClueCard({ clue, clueIndex }: { clue: AnyClue; clueIndex
     case 'debunk_apprentice':      return <DebunkApprenticeCard clue={clue} />;
     case 'debunk_master':          return <DebunkMasterCard clue={clue} />;
     case 'golem_test':             return <GolemTestCard clue={clue} />;
+    case 'golem_animation':        return <GolemAnimationCard clue={clue} />;
     case 'golem_hint_color':       return <GolemHintColorCard clue={clue} />;
     case 'golem_hint_size':           return <GolemHintSizeCard          clue={clue} />;
     case 'golem_reaction_among':      return <GolemReactionAmongCard       clue={clue} clueIndex={clueIndex} />;
