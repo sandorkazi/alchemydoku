@@ -3091,6 +3091,18 @@ TITLES = [
     "The Slice Genus", "The Four-Ball Genus", "The Concordance Class",
 ]
 
+
+def _title_too_similar(candidate: str, used: set, threshold: float = 0.8) -> bool:
+    """Return True if candidate shares ≥ threshold Jaccard word overlap with any used title."""
+    words_c = set(candidate.lower().split())
+    for u in used:
+        words_u = set(u.lower().split())
+        if words_c and words_u:
+            if len(words_c & words_u) / len(words_c | words_u) >= threshold:
+                return True
+    return False
+
+
 DESCS = {
     'encyclopedia_fourth':       "A partial encyclopedia article lists three ingredients on the same aspect. Use the supporting clues to identify the fourth.",
     'encyclopedia_which_aspect': "Four ingredient–sign pairs form a valid encyclopedia article. All the clue types are in play — deduce which aspect colour they share.",
@@ -3112,6 +3124,88 @@ DESCS = {
 
 EXP_PUZZLE_DIR = Path(__file__).parent.parent / 'src' / 'expanded' / 'data' / 'puzzles'
 BASE_PUZZLE_DIR = Path(__file__).parent.parent / 'src' / 'data' / 'puzzles'
+
+# Mapping from expanded puzzle id_prefix → EXPANDED_COLLECTIONS id in puzzlesIndex.ts.
+# Only prefixes whose puzzles belong to a clearly defined auto-managed collection are listed.
+_EXP_PREFIX_COLLECTION: dict[str, str] = {
+    'golem':            'exp-golem',
+    'enc':              'exp-easy-enc',
+    'sl':               'exp-easy-sl',
+    'enc-sl':           'exp-medium-enc-sl',
+    'combo-exp':        'combo-exp',
+    'mixed-exp-debunk': 'mixed-exp-debunk',
+    'mixed-exp-mix':    'mixed-clues-exp',
+    'mixed-exp':        'entropy-book',
+}
+
+
+def _to_camel_case(s: str) -> str:
+    """Convert a hyphenated puzzle id/prefix to camelCase import var name.
+    'golem-02' → 'golem02', 'mixed-exp-mix-02' → 'mixedExpMix02'
+    """
+    parts = s.split('-')
+    out = parts[0]
+    for p in parts[1:]:
+        if p and p[0].isdigit():
+            out += p
+        elif p:
+            out += p[0].upper() + p[1:]
+    return out
+
+
+def _register_base_puzzle(puzzle_id: str) -> None:
+    """Insert puzzle_id import and reference into src/data/puzzles/index.ts."""
+    index_path = BASE_PUZZLE_DIR / 'index.ts'
+    content = index_path.read_text('utf-8')
+    var = puzzle_id.replace('-', '_')
+    new_import = f"import {var} from './{puzzle_id}.json';\n"
+    anchor = "import collectionsData from './collections.json';"
+    if anchor not in content:
+        print(f"  [register] WARNING: anchor not found in {index_path.name}")
+        return
+    content = content.replace(anchor, new_import + anchor)
+    content = content.replace('] as unknown as Puzzle[];', f', {var}] as unknown as Puzzle[];')
+    index_path.write_text(content, 'utf-8')
+    print(f"  [register] added {puzzle_id} to {index_path.name}")
+
+
+def _register_expanded_puzzle(puzzle_id: str, prefix: str, num: int) -> None:
+    """Insert puzzle_id import and reference into src/expanded/data/puzzlesIndex.ts."""
+    index_path = EXP_PUZZLE_DIR.parent / 'puzzlesIndex.ts'
+    content = index_path.read_text('utf-8')
+    var = _to_camel_case(puzzle_id)
+
+    # ── Import line ──────────────────────────────────────────────────────────
+    prev_id = f"{prefix}-{num - 1:02d}"
+    prev_file_anchor = f"from './puzzles/{prev_id}.json';"
+    new_import = f"import {var:<20} from './puzzles/{puzzle_id}.json';"
+    if prev_file_anchor in content:
+        content = content.replace(prev_file_anchor, prev_file_anchor + '\n' + new_import)
+    else:
+        # No previous standard-numbered puzzle; insert before 'import type'
+        content = content.replace('\nimport type ', '\n' + new_import + '\n\nimport type ')
+
+    # ── ALL_EXPANDED_PUZZLES array entry ─────────────────────────────────────
+    prev_var = _to_camel_case(prev_id)
+    if prev_var + ',' in content:
+        # Replace first occurrence: prev_var in the array (imports don't have trailing comma)
+        content = content.replace(prev_var + ',', prev_var + f', {var},', 1)
+    else:
+        # Fallback: append before closing ] of ALL_EXPANDED_PUZZLES
+        content = content.replace(
+            '] as unknown as ExpandedPuzzle[];',
+            f'  {var},\n] as unknown as ExpandedPuzzle[];'
+        )
+
+    # ── Collection puzzleIds ─────────────────────────────────────────────────
+    collection_id = _EXP_PREFIX_COLLECTION.get(prefix)
+    if collection_id is not None:
+        prev_pid_entry = f"'{prev_id}',"
+        if prev_pid_entry in content:
+            content = content.replace(prev_pid_entry, f"'{prev_id}', '{puzzle_id}',", 1)
+
+    index_path.write_text(content, 'utf-8')
+    print(f"  [register] added {puzzle_id} to {index_path.name}")
 
 
 def _next_num(prefix: str, out_dir: Path) -> int:
@@ -3145,7 +3239,9 @@ def assemble(raw: dict, profile: Profile, num: int, rng: random.Random,
     if not is_base and difficulty != 'tutorial':
         pip = score_to_pip(sc['score'])
         difficulty = difficulty_for({'clues': raw['clues'], 'mode': 'expanded'}, pip)
-    available = [t for t in TITLES if used_titles is None or t not in used_titles]
+    available = [t for t in TITLES
+                 if used_titles is None
+                 or (t not in used_titles and not _title_too_similar(t, used_titles))]
     title = rng.choice(available) if available else rng.choice(TITLES)
     puz = {
         'id':          f"{profile.id_prefix}-{num:02d}",
@@ -3241,6 +3337,10 @@ def cmd_generate(args):
         puz['id'] = f"{profile.id_prefix}-{num:02d}"
         used_titles.add(puz['title'])
         (out_dir / f"{puz['id']}.json").write_text(json.dumps(puz, indent=2))
+        if is_base_profile(profile):
+            _register_base_puzzle(puz['id'])
+        else:
+            _register_expanded_puzzle(puz['id'], profile.id_prefix, num)
 
         warns = [e for e in errs if e.startswith('WARNING')]
         print(f"  ✓  {puz['id']}  clues={len(raw['clues'])}  "
