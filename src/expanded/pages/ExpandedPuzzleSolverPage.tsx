@@ -16,6 +16,7 @@ import { ExpandedHintDrawer } from '../components/ExpandedHintDrawer';
 import { PuzzleToolbar } from '../../components/PuzzleToolbar';
 import { downloadBothFiles, uploadExpandedProgress } from '../../utils/saveProgress';
 import { applyPermalink } from '../../utils/permalink';
+import { BuildStamp } from '../../components/BuildStamp';
 import type { ExpandedPuzzle } from '../types';
 
 // ─── Mobile clue drawer ───────────────────────────────────────────────────────
@@ -207,6 +208,7 @@ function SolverInner({ onBack, onNext, isTutorial = false }: {
         </div>
       </div>
 
+      <BuildStamp />
     </div>
   );
 }

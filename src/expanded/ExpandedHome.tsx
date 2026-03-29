@@ -18,6 +18,7 @@ import { WhatsNewBanner } from '../components/WhatsNewBanner';
 import { getCurrentReleaseEntry } from '../utils/releaseNotes';
 import { SettingsModal } from '../components/SettingsModal';
 import { clearBaseProgress } from '../utils/saveProgress';
+import { BuildStamp } from '../components/BuildStamp';
 import type { Settings } from '../utils/settings';
 import { isPuzzleNonCompliant } from '../compliance';
 
@@ -340,9 +341,6 @@ export function ExpandedHome({ onModeChange, initialPuzzleId, showReleaseNotes, 
               </button>
             ))}
           </div>
-          <span className="text-xs text-gray-400 shrink-0" title={__BUILD_TIME__}>
-            {new Date(__BUILD_TIME__).toLocaleString(undefined, { month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit' })}
-          </span>
           <button
             onClick={() => setSettingsOpen(true)}
             className="shrink-0 w-9 h-9 flex items-center justify-center rounded-xl border border-gray-200 bg-white
@@ -393,6 +391,8 @@ export function ExpandedHome({ onModeChange, initialPuzzleId, showReleaseNotes, 
         <p className="text-xs text-gray-400">
           {totalDone} / {ALL_EXPANDED_PUZZLES.length} puzzles solved
         </p>
+
+        <BuildStamp />
 
         {/* Settings modal */}
         {settingsOpen && (

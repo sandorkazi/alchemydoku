@@ -22,6 +22,7 @@ import { shouldShowReleaseNotes, markReleaseNotesSeen, getCurrentReleaseEntry } 
 import { WhatsNewBanner } from './components/WhatsNewBanner';
 import { loadSettings, saveSettings, type Settings } from './utils/settings';
 import { clearExpandedProgress } from './utils/saveProgress';
+import { BuildStamp } from './components/BuildStamp';
 import { isPuzzleNonCompliant } from './compliance';
 
 type Collection = {
@@ -528,9 +529,6 @@ function AppInner() {
         <div className="flex items-center justify-between gap-2">
           <ModeSwitcher mode="base" onChange={handleModeChange} />
           <div className="flex items-center gap-1.5 shrink-0">
-            <span className="text-xs text-gray-400" title={__BUILD_TIME__}>
-              {new Date(__BUILD_TIME__).toLocaleString(undefined, { month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit' })}
-            </span>
             <button
               onClick={() => setSettingsOpen(true)}
               title="Settings"
@@ -628,6 +626,8 @@ function AppInner() {
             {completed.size} / {ALL_PUZZLES.length} puzzles solved
           </p>
         </div>
+
+        <BuildStamp />
 
       </div>
 
