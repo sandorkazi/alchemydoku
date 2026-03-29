@@ -22,6 +22,7 @@ import { shouldShowReleaseNotes, markReleaseNotesSeen, getCurrentReleaseEntry } 
 import { WhatsNewBanner } from './components/WhatsNewBanner';
 import { loadSettings, saveSettings, type Settings } from './utils/settings';
 import { clearExpandedProgress } from './utils/saveProgress';
+import { BuildStamp } from './components/BuildStamp';
 import { isPuzzleNonCompliant } from './compliance';
 
 type Collection = {
@@ -625,6 +626,8 @@ function AppInner() {
             {completed.size} / {ALL_PUZZLES.length} puzzles solved
           </p>
         </div>
+
+        <BuildStamp />
 
       </div>
 

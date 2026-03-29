@@ -18,6 +18,7 @@ import { WhatsNewBanner } from '../components/WhatsNewBanner';
 import { getCurrentReleaseEntry } from '../utils/releaseNotes';
 import { SettingsModal } from '../components/SettingsModal';
 import { clearBaseProgress } from '../utils/saveProgress';
+import { BuildStamp } from '../components/BuildStamp';
 import type { Settings } from '../utils/settings';
 import { isPuzzleNonCompliant } from '../compliance';
 
@@ -390,6 +391,8 @@ export function ExpandedHome({ onModeChange, initialPuzzleId, showReleaseNotes, 
         <p className="text-xs text-gray-400">
           {totalDone} / {ALL_EXPANDED_PUZZLES.length} puzzles solved
         </p>
+
+        <BuildStamp />
 
         {/* Settings modal */}
         {settingsOpen && (

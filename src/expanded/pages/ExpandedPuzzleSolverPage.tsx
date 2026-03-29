@@ -16,6 +16,7 @@ import { ExpandedHintDrawer } from '../components/ExpandedHintDrawer';
 import { PuzzleToolbar } from '../../components/PuzzleToolbar';
 import { downloadBothFiles, uploadExpandedProgress } from '../../utils/saveProgress';
 import { applyPermalink } from '../../utils/permalink';
+import { BuildStamp } from '../../components/BuildStamp';
 import type { ExpandedPuzzle } from '../types';
 
 // ─── Mobile clue drawer ───────────────────────────────────────────────────────
@@ -45,7 +46,9 @@ function MobileClueDrawer({ puzzle }: { puzzle: ExpandedPuzzle }) {
 
 function IngredientGridSection() {
   const { state, dispatch } = useExpandedSolver();
-  const hasGolem = !!state.puzzle.golem;
+  const hasGolem = !!state.puzzle.golem
+    || state.puzzle.clues.some(c => c.kind.startsWith('golem_'))
+    || state.puzzle.questions.some(q => q.kind.startsWith('golem_'));
   const [open, setOpen] = useState(hasGolem);
   const [golemOpen, setGolemOpen] = useState(hasGolem);
   const [activeTool, setActiveTool] = useState<import('../components/ExpandedIngredientGrid').GridTool>('mark');
@@ -207,6 +210,7 @@ function SolverInner({ onBack, onNext, isTutorial = false }: {
         </div>
       </div>
 
+      <BuildStamp />
     </div>
   );
 }

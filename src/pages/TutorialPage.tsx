@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { useTutorial, type TutorialId } from '../contexts/TutorialContext';
 import { PuzzleSolverPage } from './PuzzleSolverPage';
 import { PUZZLE_MAP } from '../data/puzzles/index';
+import { BuildStamp } from '../components/BuildStamp';
 import type { TutorialStep } from '../contexts/TutorialContext';
 
 // ─── Explain card ─────────────────────────────────────────────────────────────
@@ -17,8 +18,8 @@ function ExplainCard({
 }) {
   const lines = step.body.split('\n').filter(l => l.trim() !== '');
   return (
-    <div className="min-h-screen bg-gray-50 flex items-start justify-center pt-12 px-4 pb-10 animate-fadein">
-      <div className="w-full max-w-lg space-y-6">
+    <div className="min-h-screen bg-gray-50 flex flex-col items-center pt-12 px-4 pb-4 animate-fadein">
+      <div className="w-full max-w-lg space-y-6 flex-1">
         <div className="bg-white rounded-2xl border shadow-sm p-6 sm:p-8 space-y-5">
           <div className="text-center space-y-2">
             <div className="text-5xl" aria-hidden="true">{step.emoji ?? '📖'}</div>
@@ -37,6 +38,7 @@ function ExplainCard({
           </button>
         </div>
       </div>
+      <BuildStamp />
     </div>
   );
 }

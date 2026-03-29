@@ -4,6 +4,9 @@ import path from 'path';
 
 export default defineConfig({
   base: process.env.VITE_BASE_PATH ?? '/alchemydoku/',
+  define: {
+    __BUILD_TIME__: JSON.stringify(new Date().toISOString()),
+  },
   plugins: [react()],
   resolve: {
     alias: { '@': path.resolve(__dirname, './src') },

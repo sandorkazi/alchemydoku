@@ -656,7 +656,10 @@ export function GolemPanel({ activeTool }: { activeTool: GridTool }) {
   const { puzzle, golemNotepad, autoDeduction } = state;
   const getIngredient = useExpandedIngredient();
 
-  if (!puzzle.golem) return null;
+  const hasGolemContent = !!puzzle.golem
+    || puzzle.clues.some(c => c.kind.startsWith('golem_'))
+    || puzzle.questions.some(q => q.kind.startsWith('golem_'));
+  if (!hasGolemContent) return null;
 
   // Ingredient columns in same display order as main grid (with same tints)
   const displayToSlot: Record<number, IngredientId> = {};

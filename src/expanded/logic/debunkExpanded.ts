@@ -283,11 +283,13 @@ export function validateExpandedMinStepsAnswer(
   refLen: number,
 ): boolean {
   if (steps.length !== refLen) return false;
-  const totalTargets = publications.length + articles.length;
+  // Only definitively-false publications are required targets — same as the base validator.
+  const falsePubs = publications.filter(p => isPublicationDefinitelyFalse(worlds, p));
+  const totalTargets = falsePubs.length + articles.length;
   if (totalTargets === 0) return steps.length === 0;
 
   const activePubs = new Map<IngredientId, AlchemicalId>(
-    publications.map(p => [p.ingredient, p.claimedAlchemical])
+    falsePubs.map(p => [p.ingredient, p.claimedAlchemical])
   );
   const activeArts = new Map<string, DebunkArticle>(
     articles.map(a => [a.id, a])
