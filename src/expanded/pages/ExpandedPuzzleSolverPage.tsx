@@ -46,7 +46,9 @@ function MobileClueDrawer({ puzzle }: { puzzle: ExpandedPuzzle }) {
 
 function IngredientGridSection() {
   const { state, dispatch } = useExpandedSolver();
-  const hasGolem = !!state.puzzle.golem;
+  const hasGolem = !!state.puzzle.golem
+    || state.puzzle.clues.some(c => c.kind.startsWith('golem_'))
+    || state.puzzle.questions.some(q => q.kind.startsWith('golem_'));
   const [open, setOpen] = useState(hasGolem);
   const [golemOpen, setGolemOpen] = useState(hasGolem);
   const [activeTool, setActiveTool] = useState<import('../components/ExpandedIngredientGrid').GridTool>('mark');
