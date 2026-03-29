@@ -24,6 +24,7 @@ import { loadSettings, saveSettings, type Settings } from './utils/settings';
 import { clearExpandedProgress } from './utils/saveProgress';
 import { BuildStamp } from './components/BuildStamp';
 import { isPuzzleNonCompliant } from './compliance';
+import { SaveSetupBanner } from './components/SaveSetupBanner';
 
 type Collection = {
   id: string;
@@ -557,6 +558,9 @@ function AppInner() {
             Train your deduction skills with interactive alchemy puzzles.
           </p>
         </div>
+
+        {/* First-visit sync setup — shown until user chooses a save method */}
+        <SaveSetupBanner />
 
         {/* Quick references — each toggled independently in settings */}
         {settings.showRulesRef && (

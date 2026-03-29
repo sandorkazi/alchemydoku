@@ -1,6 +1,7 @@
-import { useState, type ReactNode } from 'react';
+import { useState, useRef, type ReactNode } from 'react';
 import { type Settings } from '../utils/settings';
 import { useDrive } from '../contexts/DriveContext';
+import { downloadSaveFile, uploadSaveFile } from '../utils/saveFileTransfer';
 
 type ResetTarget = 'base' | 'expanded' | 'all';
 
@@ -111,9 +112,23 @@ export function SettingsModal({
 
   const [confirmReset, setConfirmReset] = useState<ResetTarget | null>(null);
   const [resetDone, setResetDone] = useState<ResetTarget | null>(null);
+  const [saveFileMsg, setSaveFileMsg] = useState<{ ok: boolean; text: string } | null>(null);
+  const uploadRef = useRef<HTMLInputElement>(null);
 
   function set(patch: Partial<Settings>) {
     onSettingsChange({ ...settings, ...patch });
+  }
+
+  async function handleUploadSaveFile(e: React.ChangeEvent<HTMLInputElement>) {
+    const file = e.target.files?.[0];
+    if (!file) return;
+    if (uploadRef.current) uploadRef.current.value = '';
+    try {
+      await uploadSaveFile(file);
+      setSaveFileMsg({ ok: true, text: 'Save file restored successfully.' });
+    } catch (err) {
+      setSaveFileMsg({ ok: false, text: err instanceof Error ? err.message : 'Failed to load save file.' });
+    }
   }
 
   function handleReset(target: ResetTarget) {
@@ -194,6 +209,40 @@ export function SettingsModal({
               value={settings.showPuzzleOnly}
               onChange={v => set({ showPuzzleOnly: v })}
             />
+          </div>
+
+          {/* Save file section */}
+          <p className="text-[10px] uppercase tracking-widest text-gray-400 font-semibold mt-5 mb-2">
+            Save File
+          </p>
+          <div className="flex flex-col gap-2">
+            <button
+              onClick={() => { setSaveFileMsg(null); downloadSaveFile(); }}
+              className="w-full text-left px-3 py-2.5 rounded-xl border border-gray-200 text-sm text-gray-700
+                hover:border-amber-200 hover:bg-amber-50 hover:text-amber-700 transition-colors
+                focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-amber-400"
+            >
+              📥 Download save file
+            </button>
+            <label
+              className="w-full text-left px-3 py-2.5 rounded-xl border border-gray-200 text-sm text-gray-700
+                hover:border-amber-200 hover:bg-amber-50 hover:text-amber-700 transition-colors cursor-pointer
+                focus-within:ring-2 focus-within:ring-amber-400"
+            >
+              📤 Upload save file
+              <input
+                ref={uploadRef}
+                type="file"
+                accept=".json,application/json"
+                className="sr-only"
+                onChange={handleUploadSaveFile}
+              />
+            </label>
+            {saveFileMsg && (
+              <p className={`text-xs px-1 ${saveFileMsg.ok ? 'text-green-600' : 'text-red-500'}`}>
+                {saveFileMsg.ok ? '✓ ' : '✗ '}{saveFileMsg.text}
+              </p>
+            )}
           </div>
 
           {/* Reset section */}

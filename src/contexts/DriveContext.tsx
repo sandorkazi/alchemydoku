@@ -8,6 +8,7 @@ import {
   migrateStorage, saveUserToStorage, loadUserFromStorage,
   type DriveUser, type DriveMode,
 } from '../services/googleDrive';
+import { loadSyncPref, saveSyncPref } from '../utils/syncPreference';
 
 // ─── Drive mode localStorage ──────────────────────────────────────────────────
 
@@ -90,10 +91,21 @@ export function DriveProvider({ children }: { children: ReactNode }) {
     }
 
     const savedUser = loadUserFromStorage();
-    if (savedUser) setAuthStatus('loading');
+    let syncPref = loadSyncPref();
+
+    // Migration: if a user was already signed in before the sync-preference
+    // feature existed, retroactively record their preference as 'google' so
+    // auto-reconnect continues to work without showing the setup banner.
+    if (syncPref === null && savedUser) {
+      saveSyncPref('google');
+      syncPref = 'google';
+    }
+
+    // Only attempt auto-reconnect when the user has explicitly chosen Google sync.
+    if (savedUser && syncPref === 'google') setAuthStatus('loading');
 
     initAuth().then(async () => {
-      if (!savedUser) { setAuthStatus('signed-out'); return; }
+      if (!savedUser || syncPref !== 'google') { setAuthStatus('signed-out'); return; }
       // Attempt token restore — first from sessionStorage (same-tab reload),
       // then via silent GIS request (works when Google session is still warm).
       try {
@@ -134,6 +146,7 @@ export function DriveProvider({ children }: { children: ReactNode }) {
       setUser(profile);
       setSavedUser(profile);
       saveUserToStorage(profile);
+      saveSyncPref('google');
       setAuthStatus('signed-in');
 
       // Download cloud save and merge into localStorage

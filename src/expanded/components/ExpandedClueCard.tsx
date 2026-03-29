@@ -396,7 +396,7 @@ function ExpandedBaseClueCard({ clue, clueIndex = 0 }: { clue: AnyClue; clueInde
 function GolemTestCard({ clue }: { clue: GolemTestClue }) {
   function Badge({ reacted, part }: { reacted: boolean | null; part: 'chest' | 'ears' }) {
     if (reacted === null) return (
-      <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-xs font-semibold bg-amber-50 text-amber-600 border border-amber-200">
+      <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-xs font-semibold bg-blue-50 text-blue-600 border border-blue-200">
         <GolemPartIcon part={part} size={18} />
         ?
       </span>
@@ -405,7 +405,7 @@ function GolemTestCard({ clue }: { clue: GolemTestClue }) {
       <span className={`inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-xs font-semibold
         ${reacted
           ? 'bg-green-100 text-green-700 border border-green-300'
-          : 'bg-gray-100 text-gray-400 border border-gray-200'}`}>
+          : 'bg-red-50 text-red-500 border border-red-200'}`}>
         <GolemPartIcon part={part} size={18} />
         {reacted ? '✓' : '✗'}
       </span>
