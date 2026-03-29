@@ -192,6 +192,7 @@ export function clueGroupLabel(g: ClueGroup): string {
     case 'sell_result_among':      return '💰 Ambiguous Sale';
     case 'sell_among':             return '💰 Counted Sale';
     case 'book':                   return '📖 Book Token';
+    case 'book_among':             return '📖 Book Token (Among)';
     case 'encyclopedia':           return '📜 Verified Publication';
     case 'encyclopedia_uncertain': return '📄 Uncertain Article';
     case 'debunk_apprentice':      return '🔍 Debunk — Apprentice';
