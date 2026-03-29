@@ -271,14 +271,14 @@ function RevealedAnswer({ q, answer }: { q: AnyQuestion; answer: AnyAnswer }) {
       return (
         <span className="inline-flex flex-col gap-0.5 text-xs font-semibold text-violet-700">
           <span className="inline-flex items-center gap-1">
-            <span className="text-violet-500">Chest:</span>
-            <ElemImage color={gc.chest.color} size={gc.chest.size} width={20} />
-            <span>{sizeLabel[gc.chest.size]}</span>
-          </span>
-          <span className="inline-flex items-center gap-1">
             <span className="text-violet-500">Ears:</span>
             <ElemImage color={gc.ears.color} size={gc.ears.size} width={20} />
             <span>{sizeLabel[gc.ears.size]}</span>
+          </span>
+          <span className="inline-flex items-center gap-1">
+            <span className="text-violet-500">Chest:</span>
+            <ElemImage color={gc.chest.color} size={gc.chest.size} width={20} />
+            <span>{sizeLabel[gc.chest.size]}</span>
           </span>
         </span>
       );
@@ -408,6 +408,65 @@ function SolarLunarPicker({ selected, onSelect }: {
           <span className={`text-2xl leading-none font-bold ${val==='solar'?'text-orange-400':'text-slate-400'}`}>{val==='solar'?'☀':'☽'}</span>
           <span className={`text-xs font-semibold ${val==='solar'?'text-amber-600':'text-slate-500'}`}>{val==='solar'?'Solar':'Lunar'}</span>
         </button>
+      ))}
+    </div>
+  );
+}
+
+// ─── Golem config picker ──────────────────────────────────────────────────────
+
+/** Tracks each part's selection independently so selecting one part doesn't
+ *  auto-populate the other. Only emits a full answer when both are chosen and
+ *  their colors differ. */
+function GolemConfigPicker({ value, onChange }: {
+  value: GolemConfigAnswer | null;
+  onChange: (a: GolemConfigAnswer | null) => void;
+}) {
+  const [partial, setPartial] = useState<{
+    ears?: { color: Color; size: Size };
+    chest?: { color: Color; size: Size };
+  }>(() =>
+    value?.kind === 'golem_config'
+      ? { ears: value.ears, chest: value.chest }
+      : {}
+  );
+
+  const select = (part: 'ears' | 'chest', col: Color, sz: Size) => {
+    const newPartial = { ...partial, [part]: { color: col, size: sz } };
+    setPartial(newPartial);
+    if (newPartial.ears && newPartial.chest && newPartial.ears.color !== newPartial.chest.color) {
+      onChange({ kind: 'golem_config', chest: newPartial.chest, ears: newPartial.ears });
+    } else {
+      onChange(null);
+    }
+  };
+
+  const isSelected = (part: 'ears' | 'chest', col: Color, sz: Size) => {
+    const p = partial[part];
+    return p?.color === col && p?.size === sz;
+  };
+
+  return (
+    <div className="space-y-2">
+      {(['ears', 'chest'] as const).map(part => (
+        <div key={part} className="space-y-1">
+          <p className="text-[10px] font-semibold text-violet-600 uppercase">{part}</p>
+          <div className="flex flex-wrap gap-1">
+            {(['R','G','B'] as Color[]).map(col => (['L','S'] as Size[]).map(sz => {
+              const active = isSelected(part, col, sz);
+              return (
+                <button key={`${col}${sz}`} aria-pressed={active}
+                  onClick={() => select(part, col, sz)}
+                  className={`flex items-center gap-0.5 px-2 py-1 rounded-lg border-2 text-xs font-semibold transition-all
+                    press-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-indigo-400
+                    ${active ? 'border-indigo-500 bg-indigo-50 shadow-md' : 'border-transparent bg-gray-100 hover:bg-gray-200 hover:border-gray-300'}`}>
+                  <ElemImage color={col} size={sz} width={18} />
+                  <span>{sz === 'L' ? 'L' : 'S'}</span>
+                </button>
+              );
+            }))}
+          </div>
+        </div>
       ))}
     </div>
   );
@@ -603,42 +662,9 @@ function QuestionRow({ q, index, total, value, onChange, correctAnswer, showSolu
               </div>
             );
           })()}
-          {q.kind==='golem_reaction_component' && (() => {
-            const cur = value as GolemConfigAnswer | null;
-            const isSelected = (part: 'chest'|'ears', col: Color, sz: Size) =>
-              cur?.kind === 'golem_config' && cur[part].color === col && cur[part].size === sz;
-            const select = (part: 'chest'|'ears', col: Color, sz: Size) => {
-              const prev = cur ?? { kind: 'golem_config' as const, chest: { color: 'R' as Color, size: 'L' as Size }, ears: { color: 'G' as Color, size: 'S' as Size } };
-              const next: GolemConfigAnswer = { ...prev, [part]: { color: col, size: sz } };
-              // validate chest.color !== ears.color
-              if (next.chest.color !== next.ears.color) onChange(next);
-              else onChange({ ...next, [part]: { color: col, size: sz } });
-            };
-            return (
-              <div className="space-y-2">
-                {(['chest','ears'] as const).map(part => (
-                  <div key={part} className="space-y-1">
-                    <p className="text-[10px] font-semibold text-violet-600 uppercase">{part}</p>
-                    <div className="flex flex-wrap gap-1">
-                      {(['R','G','B'] as Color[]).map(col => (['L','S'] as Size[]).map(sz => {
-                        const active = isSelected(part, col, sz);
-                        return (
-                          <button key={`${col}${sz}`} aria-pressed={active}
-                            onClick={() => select(part, col, sz)}
-                            className={`flex items-center gap-0.5 px-2 py-1 rounded-lg border-2 text-xs font-semibold transition-all
-                              press-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-indigo-400
-                              ${active?'border-indigo-500 bg-indigo-50 shadow-md':'border-transparent bg-gray-100 hover:bg-gray-200 hover:border-gray-300'}`}>
-                            <ElemImage color={col} size={sz} width={18} />
-                            <span>{sz === 'L' ? 'L' : 'S'}</span>
-                          </button>
-                        );
-                      }))}
-                    </div>
-                  </div>
-                ))}
-              </div>
-            );
-          })()}
+          {q.kind==='golem_reaction_component' && (
+            <GolemConfigPicker value={value as GolemConfigAnswer | null} onChange={onChange} />
+          )}
           {/* Golem pickers — ingredient multi-select */}
           {(q.kind==='golem_group' || q.kind==='golem_mix_potion') && (() => {
             const cur = new Set<number>((value as IngredientSetAnswer|null)?.ingredients ?? []);

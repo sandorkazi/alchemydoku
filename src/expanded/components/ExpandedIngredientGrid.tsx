@@ -673,12 +673,12 @@ export function GolemPanel({ activeTool }: { activeTool: GridTool }) {
     tint:   TINT_COLORS[i],
   }));
 
-  // Pre-fill clue reactions per slot
+  // Pre-fill clue reactions per slot (null = reaction unknown for that part)
   const clueMap: Record<number, { chest: GolemSlotMark; ears: GolemSlotMark }> = {};
   (puzzle.clues.filter(c => c.kind === 'golem_test') as import('../types').GolemTestClue[]).forEach(c => {
     clueMap[c.ingredient] = {
-      chest: c.chest_reacted ? 'reacts' : 'no-react',
-      ears:  c.ears_reacted  ? 'reacts' : 'no-react',
+      chest: c.chest_reacted === null ? null : (c.chest_reacted ? 'reacts' : 'no-react'),
+      ears:  c.ears_reacted  === null ? null : (c.ears_reacted  ? 'reacts' : 'no-react'),
     };
   });
 
@@ -689,7 +689,9 @@ export function GolemPanel({ activeTool }: { activeTool: GridTool }) {
     for (const [slotStr, reactions] of Object.entries(clueMap)) {
       for (const part of ['chest', 'ears'] as const) {
         const reaction = reactions[part];
-        ingHints[`${slotStr}-${part}`] = reaction === 'reacts' ? 'confirmed' : 'eliminated';
+        if (reaction !== null) {
+          ingHints[`${slotStr}-${part}`] = reaction === 'reacts' ? 'confirmed' : 'eliminated';
+        }
       }
     }
     // Note: bottomHints are NOT pre-filled from puzzle.golem — the player must
@@ -857,7 +859,7 @@ export function GolemPanel({ activeTool }: { activeTool: GridTool }) {
           <div key={part} className="flex gap-1 mt-1">
             <GolemRowHeader img={img} label={label} />
             {ingColumns.map(({ slotId, tint }) => {
-              const isClue = clueMap[slotId]?.[part] !== undefined;
+              const isClue = clueMap[slotId]?.[part] != null;
               const mark = golemNotepad.ingredientMarks?.[slotId]?.[part] ?? null;
               return (
                 <div key={slotId}>
