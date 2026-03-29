@@ -1,79 +1,95 @@
 {
   "id": "golem-03",
   "mode": "expanded",
-  "title": "The Branching Point",
-  "description": "The golem has been tested with 2 ingredients. Deduce the reaction pattern and identify the target group.",
+  "title": "The Assignment Problem",
+  "description": "Use the clues to answer the question.",
   "difficulty": "easy",
-  "golem": {
-    "chest": {
-      "color": "G",
-      "size": "S"
-    },
-    "ears": {
-      "color": "R",
-      "size": "S"
-    }
-  },
   "clues": [
     {
+      "kind": "mixing",
+      "ingredient1": 1,
+      "ingredient2": 4,
+      "result": {
+        "color": "R",
+        "sign": "-"
+      }
+    },
+    {
+      "kind": "mixing",
+      "ingredient1": 5,
+      "ingredient2": 6,
+      "result": {
+        "color": "B",
+        "sign": "-"
+      }
+    },
+    {
+      "kind": "mixing",
+      "ingredient1": 7,
+      "ingredient2": 8,
+      "result": {
+        "color": "G",
+        "sign": "-"
+      }
+    },
+    {
+      "kind": "mixing",
+      "ingredient1": 4,
+      "ingredient2": 8,
+      "result": {
+        "color": "R",
+        "sign": "-"
+      }
+    },
+    {
+      "kind": "mixing",
+      "ingredient1": 5,
+      "ingredient2": 7,
+      "result": {
+        "color": "G",
+        "sign": "-"
+      }
+    },
+    {
       "kind": "golem_test",
-      "ingredient": 8,
+      "ingredient": 1,
       "chest_reacted": true,
       "ears_reacted": true
     },
     {
       "kind": "golem_test",
-      "ingredient": 2,
+      "ingredient": 3,
       "chest_reacted": false,
       "ears_reacted": false
-    },
-    {
-      "kind": "mixing",
-      "ingredient1": 2,
-      "ingredient2": 4,
-      "result": {
-        "color": "G",
-        "sign": "+"
-      }
-    },
-    {
-      "kind": "mixing",
-      "ingredient1": 6,
-      "ingredient2": 7,
-      "result": {
-        "color": "R",
-        "sign": "+"
-      }
     }
   ],
   "questions": [
     {
-      "kind": "golem_group",
-      "group": "animators"
+      "kind": "golem_animation_ing"
     }
   ],
   "solution": {
-    "1": 4,
-    "2": 8,
-    "3": 7,
-    "4": 1,
-    "5": 5,
-    "6": 3,
-    "7": 6,
-    "8": 2
+    "1": 5,
+    "2": 6,
+    "3": 8,
+    "4": 4,
+    "5": 3,
+    "6": 1,
+    "7": 2,
+    "8": 7
   },
   "hints": [
     {
       "level": 1,
-      "text": "The golem reacts to SIZE on a specific color channel.\nKnown tests:\n  ing8: chest=\u2713 ears=\u2713  \u2192  animators\n  ing2: chest=\u2717 ears=\u2717  \u2192  non_reactive"
+      "text": "Reason about all possible golem configurations jointly with ingredient assignments. Each golem_test clue eliminates configs \u00d7 worlds that are inconsistent with the result."
     },
     {
       "level": 2,
-      "text": "Chest reacts to G+S. Ears react to R+S. An animator needs BOTH. Cross-reference with untested ingredients."
+      "text": "After all clues: 2 config(s) remain. True config: chest=BS, ears=GS."
     },
     {
       "level": 3,
-      "text": "The animators are: ingredients [4, 8]. Alch: ing4\u2192npN, ing8\u2192pnP."
+      "text": "Answer: [5, 8]"
     }
   ],
   "complexity": {
@@ -82,6 +98,6 @@
     "clue_score": 0,
     "question_score": 0,
     "world_score": 0,
-    "residual_worlds": 12
+    "residual_worlds": 1
   }
 }

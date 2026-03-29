@@ -1,6 +1,6 @@
 import { describe, it, expect } from 'vitest';
 import { ALL_EXPANDED_PUZZLES } from '../../src/expanded/data/puzzlesIndex';
-import { getExpandedPuzzleWorlds, computeExpandedAnswer } from '../../src/expanded/puzzles/schemaExpanded';
+import { getExpandedPuzzleWorlds, computeExpandedAnswer, getExpandedPuzzleGolemState } from '../../src/expanded/puzzles/schemaExpanded';
 import { validateMasterPlanAnswer, validateApprenticePlanAnswer, validateConflictOnlyAnswer } from '../../src/logic/debunk';
 import type { AnyQuestion } from '../../src/expanded/types';
 import type { Publication } from '../../src/types';
@@ -11,6 +11,7 @@ const SKIP_KINDS = new Set<AnyQuestion['kind']>([
   'debunk_apprentice_plan',
   'debunk_conflict_only',
 ]);
+
 
 describe('expanded debunk reference answers', () => {
   for (const puzzle of ALL_EXPANDED_PUZZLES) {
@@ -56,6 +57,7 @@ describe('expanded debunk reference answers', () => {
 describe('expanded puzzle integrity', () => {
   for (const puzzle of ALL_EXPANDED_PUZZLES) {
     it(puzzle.id, () => {
+      const golemState = getExpandedPuzzleGolemState(puzzle);
       const worlds = getExpandedPuzzleWorlds(puzzle);
 
       expect(worlds.length, 'clues must be consistent (no contradiction)').toBeGreaterThan(0);
@@ -63,12 +65,38 @@ describe('expanded puzzle integrity', () => {
       for (let i = 0; i < puzzle.questions.length; i++) {
         const q = puzzle.questions[i];
         if (SKIP_KINDS.has(q.kind)) continue;
-        const answer = computeExpandedAnswer(worlds, q, puzzle);
+        const answer = computeExpandedAnswer(worlds, q, puzzle, golemState ?? undefined);
         expect(
           answer,
           `question[${i}] (${q.kind}) must be uniquely answerable from the clues`,
         ).not.toBeNull();
       }
+    });
+  }
+});
+
+describe('golem solver state integrity', () => {
+  // Only puzzles WITHOUT a fixed puzzle.golem config use joint reasoning.
+  const jointGolemPuzzles = ALL_EXPANDED_PUZZLES.filter(p =>
+    !p.golem &&
+    p.clues.some(c =>
+      c.kind === 'golem_test' || c.kind === 'golem_animation' ||
+      c.kind === 'golem_hint_color' || c.kind === 'golem_hint_size',
+    ),
+  );
+
+  if (jointGolemPuzzles.length === 0) {
+    it('no joint-golem puzzles registered yet', () => {
+      // This test will pass once joint-golem puzzles are generated.
+    });
+  }
+
+  for (const puzzle of jointGolemPuzzles) {
+    it(`${puzzle.id} — golem state has ≥1 surviving config`, () => {
+      const golemState = getExpandedPuzzleGolemState(puzzle);
+      expect(golemState, 'getExpandedPuzzleGolemState must return non-null for joint-golem puzzles').not.toBeNull();
+      const survivingConfigs = golemState!.filter(w => w !== null).length;
+      expect(survivingConfigs, 'at least 1 config must survive after filtering').toBeGreaterThan(0);
     });
   }
 });

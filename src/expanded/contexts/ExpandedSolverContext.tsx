@@ -14,10 +14,8 @@
 import {
   createContext, useContext, useReducer, useEffect, useMemo, type ReactNode,
 } from 'react';
-import { generateAllWorlds } from '../../logic/worldSet';
-import { applyAnyClues } from '../logic/worldSetExpanded';
 import { isSolar } from '../logic/solarLunar';
-import { checkExpandedAnswers, computeAllExpandedAnswers } from '../puzzles/schemaExpanded';
+import { checkExpandedAnswers, computeAllExpandedAnswers, getExpandedPuzzleWorlds } from '../puzzles/schemaExpanded';
 import { validateExpandedMinStepsAnswer, validateExpandedApprenticePlanAnswer, validateExpandedConflictOnlyAnswer } from '../logic/debunkExpanded';
 import { WORLD_DATA } from '../../logic/worldPack';
 import { makeDisplayMap, loadDisplayMap, saveDisplayMap, emptyGrid, mergeIntoUnifiedStore } from '../../utils/solverStorage';
@@ -113,6 +111,7 @@ export type GolemNotepad = {
   chest: { color: Color; size: Size } | null;
   ears:  { color: Color; size: Size } | null;
   ingredientMarks: Record<number, { chest: GolemSlotMark; ears: GolemSlotMark }>;
+  bottomGrid?: Record<string, GolemSlotMark>;
 };
 
 function emptyGolemNotepad(): GolemNotepad { return { chest: null, ears: null, ingredientMarks: {} }; }
@@ -188,6 +187,7 @@ export type ExpandedAction =
   | { type: 'SET_SOLAR_LUNAR_MARK'; slot: number; mark: SolarLunarMark }
   | { type: 'SET_GOLEM_NOTEPAD'; part: 'chest' | 'ears'; value: { color: Color; size: Size } | null }
   | { type: 'SET_GOLEM_INGREDIENT_MARK'; slot: number; part: 'chest' | 'ears'; mark: GolemSlotMark }
+  | { type: 'SET_GOLEM_BOTTOM_MARK'; key: string; mark: GolemSlotMark }
   | { type: 'LOAD_PROGRESS'; gridState: GridState; notes: Record<string,string>; hintLevel: number; wrongAttempts: number; answers: (AnyAnswer | null)[]; solarLunarMarks: SolarLunarMarks; golemNotepad: GolemNotepad }
   | { type: 'ADD_DRAW_STROKE'; d: string }
   | { type: 'CLEAR_DRAW_STROKES' }
@@ -229,7 +229,7 @@ function reducer(state: ExpandedSolverState, action: ExpandedAction): ExpandedSo
 
     case 'TOGGLE_CELL': {
       const { ingredient, alchemical } = action;
-      const cycle: CellState[] = ['unknown', 'eliminated', 'confirmed'];
+      const cycle: CellState[] = ['unknown', 'eliminated', 'confirmed', 'possible'];
       const current = state.gridState[ingredient][alchemical];
       const next = cycle[(cycle.indexOf(current) + 1) % cycle.length];
       const undoStack = [snap(state), ...state.undoStack].slice(0, MAX_UNDO);
@@ -369,6 +369,19 @@ function reducer(state: ExpandedSolverState, action: ExpandedAction): ExpandedSo
       };
     }
 
+    case 'SET_GOLEM_BOTTOM_MARK': {
+      const undoStack = [snap(state), ...state.undoStack].slice(0, MAX_UNDO);
+      return {
+        ...state,
+        golemNotepad: {
+          ...state.golemNotepad,
+          bottomGrid: { ...state.golemNotepad.bottomGrid, [action.key]: action.mark },
+        },
+        undoStack,
+        redoStack: [],
+      };
+    }
+
     case 'LOAD_PROGRESS': {
       const loaded = applyAutoDeduction({
         ...state,
@@ -443,7 +456,7 @@ type ContextValue = { state: ExpandedSolverState; dispatch: React.Dispatch<Expan
 const ExpandedSolverContext = createContext<ContextValue | null>(null);
 
 export function ExpandedSolverProvider({ puzzle, children }: { puzzle: ExpandedPuzzle; children: ReactNode }) {
-  const worlds = useMemo(() => applyAnyClues(generateAllWorlds(), puzzle.clues), [puzzle]);
+  const worlds = useMemo(() => getExpandedPuzzleWorlds(puzzle), [puzzle]);
 
   const displayMap = useMemo(() => {
     const saved = loadDisplayMap(`exp-display-map-${puzzle.id}`);

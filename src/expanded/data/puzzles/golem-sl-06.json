@@ -1,13 +1,13 @@
 {
   "id": "golem-sl-06",
   "mode": "expanded",
-  "title": "The Living Clay",
+  "title": "The Bonding Pair",
   "description": "The golem has been tested with 2 ingredients. Identify the animators and determine what potion their mix would produce.",
   "difficulty": "easy",
   "golem": {
     "chest": {
-      "color": "R",
-      "size": "S"
+      "color": "G",
+      "size": "L"
     },
     "ears": {
       "color": "B",
@@ -17,15 +17,44 @@
   "clues": [
     {
       "kind": "golem_test",
-      "ingredient": 7,
+      "ingredient": 2,
       "chest_reacted": true,
       "ears_reacted": true
     },
     {
       "kind": "golem_test",
-      "ingredient": 8,
-      "chest_reacted": true,
+      "ingredient": 5,
+      "chest_reacted": false,
       "ears_reacted": true
+    },
+    {
+      "kind": "mixing",
+      "ingredient1": 1,
+      "ingredient2": 5,
+      "result": {
+        "color": "R",
+        "sign": "-"
+      }
+    },
+    {
+      "kind": "mixing",
+      "ingredient1": 7,
+      "ingredient2": 8,
+      "result": {
+        "color": "G",
+        "sign": "-"
+      }
+    },
+    {
+      "kind": "book_among",
+      "ingredients": [
+        2,
+        4,
+        6,
+        7
+      ],
+      "result": "lunar",
+      "count": 1
     }
   ],
   "questions": [
@@ -34,35 +63,35 @@
     }
   ],
   "solution": {
-    "1": 6,
+    "1": 7,
     "2": 8,
-    "3": 4,
-    "4": 3,
-    "5": 7,
+    "3": 6,
+    "4": 4,
+    "5": 1,
     "6": 5,
-    "7": 2,
-    "8": 1
+    "7": 3,
+    "8": 2
   },
   "hints": [
     {
       "level": 1,
-      "text": "The golem reacts to SIZE on a specific color channel.\nKnown tests:\n  ing7: chest=\u2713 ears=\u2713  \u2192  animators\n  ing8: chest=\u2713 ears=\u2713  \u2192  animators"
+      "text": "The golem reacts to SIZE on a specific color channel.\nKnown tests:\n  ing2: chest=\u2713 ears=\u2713  \u2192  animators\n  ing5: chest=\u2717 ears=\u2713  \u2192  ears_only"
     },
     {
       "level": 2,
-      "text": "Chest reacts to R+S. Ears react to B+L. An animator needs BOTH. Cross-reference with untested ingredients."
+      "text": "Chest reacts to G+L. Ears react to B+L. Animation rule: Large reaction \u2192 '+', Small reaction \u2192 '\u2212'. So animation ingredients must have G+ AND B+. Cross-reference with the mixing clues to identify those ingredients."
     },
     {
       "level": 3,
-      "text": "Animators: ingredients [7, 8] (pnP, npN). Mix: neutral."
+      "text": "Animation ingredients: ing[2, 4] (PPP, nPp). Mix: B+."
     }
   ],
   "complexity": {
-    "score": 10,
-    "raw_score": 10,
-    "clue_score": 0,
+    "score": 31,
+    "raw_score": 15,
+    "clue_score": 5,
     "question_score": 0,
     "world_score": 0,
-    "residual_worlds": 1440
+    "residual_worlds": 4
   }
 }

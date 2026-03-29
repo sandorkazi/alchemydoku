@@ -105,7 +105,7 @@ function reducer(state: SolverState, action: Action): SolverState {
     case 'TOGGLE_CELL': {
       const { ingredient, alchemical } = action;
       const current = state.gridState[ingredient][alchemical];
-      const cycle: CellState[] = ['unknown', 'eliminated', 'confirmed'];
+      const cycle: CellState[] = ['unknown', 'eliminated', 'confirmed', 'possible'];
       const next = cycle[(cycle.indexOf(current) + 1) % cycle.length];
       const undoStack = [snap(state), ...state.undoStack].slice(0, MAX_UNDO);
       return {

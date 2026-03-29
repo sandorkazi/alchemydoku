@@ -1,30 +1,54 @@
 {
   "id": "all-05",
   "mode": "expanded",
-  "title": "The Clay Testimony",
-  "description": "The golem has been tested with 2 ingredients. Deduce the reaction pattern and identify the target group.",
+  "title": "The Surviving Fragment",
+  "description": "The golem has been tested with 3 ingredients. Deduce the reaction pattern and identify the target group.",
   "difficulty": "easy",
   "golem": {
     "chest": {
-      "color": "R",
-      "size": "L"
+      "color": "G",
+      "size": "S"
     },
     "ears": {
-      "color": "G",
-      "size": "L"
+      "color": "R",
+      "size": "S"
     }
   },
   "clues": [
     {
       "kind": "golem_test",
-      "ingredient": 5,
+      "ingredient": 1,
       "chest_reacted": true,
       "ears_reacted": true
     },
     {
       "kind": "golem_test",
-      "ingredient": 1,
-      "chest_reacted": true,
+      "ingredient": 4,
+      "chest_reacted": false,
+      "ears_reacted": true
+    },
+    {
+      "kind": "encyclopedia",
+      "aspect": "R",
+      "entries": [
+        {
+          "ingredient": 1,
+          "sign": "-"
+        },
+        {
+          "ingredient": 2,
+          "sign": "-"
+        },
+        {
+          "ingredient": 7,
+          "sign": "-"
+        }
+      ]
+    },
+    {
+      "kind": "golem_test",
+      "ingredient": 8,
+      "chest_reacted": false,
       "ears_reacted": true
     }
   ],
@@ -35,27 +59,27 @@
     }
   ],
   "solution": {
-    "1": 8,
-    "2": 1,
-    "3": 4,
-    "4": 6,
-    "5": 7,
-    "6": 3,
-    "7": 2,
-    "8": 5
+    "1": 1,
+    "2": 7,
+    "3": 6,
+    "4": 3,
+    "5": 8,
+    "6": 2,
+    "7": 5,
+    "8": 4
   },
   "hints": [
     {
       "level": 1,
-      "text": "The golem reacts to SIZE on a specific color channel.\nKnown tests:\n  ing5: chest=\u2713 ears=\u2713  \u2192  animators\n  ing1: chest=\u2713 ears=\u2713  \u2192  animators"
+      "text": "The golem reacts to SIZE on a specific color channel.\nKnown tests:\n  ing1: chest=\u2713 ears=\u2713  \u2192  animators\n  ing4: chest=\u2717 ears=\u2713  \u2192  ears_only\n  ing8: chest=\u2717 ears=\u2713  \u2192  ears_only"
     },
     {
       "level": 2,
-      "text": "Chest reacts to R+L. Ears react to G+L. An animator needs BOTH. Cross-reference with untested ingredients."
+      "text": "Chest reacts to G+S. Ears react to R+S. Animation rule: Large reaction \u2192 '+', Small reaction \u2192 '\u2212'. So animation ingredients must have G\u2212 AND R\u2212. Cross-reference with the mixing clues to identify those ingredients."
     },
     {
       "level": 3,
-      "text": "The animators are: ingredients [1, 5]. Alch: ing1\u2192PPP, ing5\u2192NNN."
+      "text": "The animators are: ingredients [2, 7]. Alch: ing2\u2192NNN, ing7\u2192Nnp."
     }
   ],
   "complexity": {
@@ -64,6 +88,6 @@
     "clue_score": 0,
     "question_score": 0,
     "world_score": 0,
-    "residual_worlds": 1440
+    "residual_worlds": 24
   }
 }

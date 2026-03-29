@@ -1,38 +1,50 @@
 {
   "id": "golem-enc-05",
   "mode": "expanded",
-  "title": "The Scholar's Stone",
-  "description": "The golem has been tested with 3 ingredients. Deduce the reaction pattern and identify the target group.",
+  "title": "The Polymorphic Form",
+  "description": "The golem has been tested with 2 ingredients. Deduce the reaction pattern and identify the target group.",
   "difficulty": "easy",
   "golem": {
     "chest": {
       "color": "B",
-      "size": "S"
+      "size": "L"
     },
     "ears": {
-      "color": "G",
+      "color": "R",
       "size": "L"
     }
   },
   "clues": [
     {
       "kind": "golem_test",
-      "ingredient": 3,
+      "ingredient": 8,
       "chest_reacted": true,
       "ears_reacted": true
     },
     {
-      "kind": "golem_test",
-      "ingredient": 7,
-      "chest_reacted": false,
-      "ears_reacted": false
+      "kind": "encyclopedia",
+      "aspect": "B",
+      "entries": [
+        {
+          "ingredient": 3,
+          "sign": "-"
+        },
+        {
+          "ingredient": 4,
+          "sign": "-"
+        },
+        {
+          "ingredient": 6,
+          "sign": "-"
+        }
+      ]
     },
     {
       "kind": "encyclopedia",
       "aspect": "R",
       "entries": [
         {
-          "ingredient": 1,
+          "ingredient": 2,
           "sign": "+"
         },
         {
@@ -40,34 +52,16 @@
           "sign": "+"
         },
         {
-          "ingredient": 5,
+          "ingredient": 6,
           "sign": "+"
         }
       ]
     },
     {
-      "kind": "encyclopedia",
-      "aspect": "B",
-      "entries": [
-        {
-          "ingredient": 4,
-          "sign": "-"
-        },
-        {
-          "ingredient": 5,
-          "sign": "-"
-        },
-        {
-          "ingredient": 8,
-          "sign": "-"
-        }
-      ]
-    },
-    {
       "kind": "golem_test",
-      "ingredient": 2,
+      "ingredient": 4,
       "chest_reacted": true,
-      "ears_reacted": false
+      "ears_reacted": true
     }
   ],
   "questions": [
@@ -77,27 +71,27 @@
     }
   ],
   "solution": {
-    "1": 8,
-    "2": 5,
-    "3": 3,
+    "1": 1,
+    "2": 2,
+    "3": 6,
     "4": 7,
-    "5": 6,
-    "6": 4,
-    "7": 2,
-    "8": 1
+    "5": 4,
+    "6": 3,
+    "7": 5,
+    "8": 8
   },
   "hints": [
     {
       "level": 1,
-      "text": "The golem reacts to SIZE on a specific color channel.\nKnown tests:\n  ing3: chest=\u2713 ears=\u2713  \u2192  animators\n  ing7: chest=\u2717 ears=\u2717  \u2192  non_reactive\n  ing2: chest=\u2713 ears=\u2717  \u2192  chest_only"
+      "text": "The golem reacts to SIZE on a specific color channel.\nKnown tests:\n  ing8: chest=\u2713 ears=\u2713  \u2192  animators\n  ing4: chest=\u2713 ears=\u2713  \u2192  animators"
     },
     {
       "level": 2,
-      "text": "Chest reacts to B+S. Ears react to G+L. An animator needs BOTH. Cross-reference with untested ingredients."
+      "text": "Chest reacts to B+L. Ears react to R+L. Animation rule: Large reaction \u2192 '+', Small reaction \u2192 '\u2212'. So animation ingredients must have B+ AND R+. Cross-reference with the mixing clues to identify those ingredients."
     },
     {
       "level": 3,
-      "text": "The animators are: ingredients [3, 6]. Alch: ing3\u2192pNn, ing6\u2192nPp."
+      "text": "The animators are: ingredients [2, 8]. Alch: ing2\u2192pnP, ing8\u2192PPP."
     }
   ],
   "complexity": {
@@ -106,6 +100,6 @@
     "clue_score": 0,
     "question_score": 0,
     "world_score": 0,
-    "residual_worlds": 2
+    "residual_worlds": 12
   }
 }

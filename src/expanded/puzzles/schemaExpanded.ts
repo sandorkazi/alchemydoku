@@ -7,10 +7,13 @@
 
 import { generateAllWorlds } from '../../logic/worldSet';
 import { computeAnswerFromWorlds as baseComputeAnswer, answersEqual as baseAnswersEqual } from '../../puzzles/schema';
-import { applyAnyClues } from '../logic/worldSetExpanded';
+import { applyAnyClues, applyCluesWithGolemState, buildInitialGolemState } from '../logic/worldSetExpanded';
 import {
   computeGolemGroup, computeGolemAnimatePotion,
   computeGolemMixPotion, computeGolemPossiblePotions,
+  computeGolemReactionComponent, computeGolemReactionBothAlch, computeGolemReactionBothIng,
+  computeGolemAnimationAlch, computeGolemAnimationIng,
+  golemSolverToWorldSet,
 } from '../logic/golem';
 import { isSolar, getMostInformativeBook } from '../logic/solarLunar';
 import { WORLD_DATA, SIGN_TABLE, COLOR_INDEX } from '../../logic/worldPack';
@@ -21,6 +24,7 @@ import type {
   AspectColorAnswer, SolarLunarAnswer, IngredientSetAnswer,
   EncyclopediaFourthQuestion, EncyclopediaWhichAspectQuestion, SolarLunarQuestion,
   GolemGroupQuestion, GolemMixPotionQuestion, GolemPossiblePotionsQuestion,
+  GolemSolverState,
 } from '../types';
 
 // ─── Helpers ──────────────────────────────────────────────────────────────────
@@ -99,17 +103,75 @@ function computeSolarLunar(worlds: WorldSet, q: SolarLunarQuestion): AnyAnswer |
 
 // ─── Public API ───────────────────────────────────────────────────────────────
 
+/**
+ * Returns true if the puzzle requires JOINT world × config reasoning.
+ * This is the case when golem clues are present but no fixed `puzzle.golem` config.
+ * Puzzles with a fixed `puzzle.golem` use the legacy single-config path instead.
+ */
+function needsJointGolemReasoning(puzzle: ExpandedPuzzle): boolean {
+  if (puzzle.golem) return false; // fixed config: use legacy path
+  return puzzle.clues.some(c =>
+    c.kind === 'golem_test' ||
+    c.kind === 'golem_animation' ||
+    c.kind === 'golem_hint_color' ||
+    c.kind === 'golem_hint_size',
+  );
+}
+
+/**
+ * Computes the joint GolemSolverState for a puzzle (all 24 configs × world indices).
+ * Returns null if the puzzle has a fixed config (uses legacy path) or no golem clues.
+ */
+export function getExpandedPuzzleGolemState(puzzle: ExpandedPuzzle): GolemSolverState | null {
+  if (!needsJointGolemReasoning(puzzle)) return null;
+  const allWorlds = generateAllWorlds();
+  const initial = buildInitialGolemState(allWorlds);
+  return applyCluesWithGolemState(puzzle.clues, initial);
+}
+
 export function getExpandedPuzzleWorlds(puzzle: ExpandedPuzzle): WorldSet {
+  if (needsJointGolemReasoning(puzzle)) {
+    // New-style golem puzzles: joint config × world reasoning
+    const golemState = getExpandedPuzzleGolemState(puzzle);
+    if (golemState) return golemSolverToWorldSet(golemState);
+  }
+  // Legacy path: fixed config or no golem clues
   return applyAnyClues(generateAllWorlds(), puzzle.clues, { golem: puzzle.golem });
 }
 
-export function computeExpandedAnswer(worlds: WorldSet, question: AnyQuestion, puzzle?: ExpandedPuzzle): AnyAnswer | null {
+export function computeExpandedAnswer(
+  worlds: WorldSet,
+  question: AnyQuestion,
+  puzzle?: ExpandedPuzzle,
+  golemState?: GolemSolverState,
+): AnyAnswer | null {
   switch (question.kind) {
     case 'encyclopedia_fourth':       return computeEncyclopediaFourth(worlds, question);
     case 'encyclopedia_which_aspect': return computeEncyclopediaWhichAspect(worlds, question);
     case 'solar_lunar':               return computeSolarLunar(worlds, question);
     case 'most_informative_book':     return computeMostInformativeBook(worlds);
-    // Golem questions — require golem params
+
+    // New joint-config golem questions — require GolemSolverState
+    case 'golem_reaction_component':
+    case 'golem_reaction_both_alch':
+    case 'golem_reaction_both_ing':
+    case 'golem_animation_alch':
+    case 'golem_animation_ing': {
+      const gs = golemState ?? (puzzle ? getExpandedPuzzleGolemState(puzzle) : null);
+      if (!gs) return null;
+      if (question.kind === 'golem_reaction_component')
+        return computeGolemReactionComponent(gs) as AnyAnswer | null;
+      if (question.kind === 'golem_reaction_both_alch')
+        return computeGolemReactionBothAlch(gs) as AnyAnswer | null;
+      if (question.kind === 'golem_reaction_both_ing')
+        return computeGolemReactionBothIng(gs) as AnyAnswer | null;
+      if (question.kind === 'golem_animation_alch')
+        return computeGolemAnimationAlch(gs) as AnyAnswer | null;
+      // golem_animation_ing
+      return computeGolemAnimationIng(gs) as AnyAnswer | null;
+    }
+
+    // Legacy golem questions — require known GolemParams
     case 'golem_group':
     case 'golem_animate_potion':
     case 'golem_mix_potion':
@@ -132,10 +194,11 @@ export function computeExpandedAnswer(worlds: WorldSet, question: AnyQuestion, p
 }
 
 export function computeAllExpandedAnswers(puzzle: ExpandedPuzzle): AnyAnswer[] | null {
+  const golemState = needsJointGolemReasoning(puzzle) ? getExpandedPuzzleGolemState(puzzle) : null;
   const worlds = getExpandedPuzzleWorlds(puzzle);
   const answers: AnyAnswer[] = [];
   for (const q of puzzle.questions) {
-    const a = computeExpandedAnswer(worlds, q, puzzle);
+    const a = computeExpandedAnswer(worlds, q, puzzle, golemState ?? undefined);
     if (a === null) return null;
     answers.push(a);
   }
@@ -155,6 +218,18 @@ export function expandedAnswersEqual(a: AnyAnswer, b: AnyAnswer): boolean {
       const ib = (b as IngredientSetAnswer).ingredients;
       if (ia.length !== ib.length) return false;
       return ia.every((v, i) => v === ib[i]);
+    }
+    if (a.kind === 'golem_config' && b.kind === 'golem_config') {
+      const ga = a as import('../types').GolemConfigAnswer;
+      const gb = b as import('../types').GolemConfigAnswer;
+      return ga.chest.color === gb.chest.color && ga.chest.size === gb.chest.size
+          && ga.ears.color  === gb.ears.color  && ga.ears.size  === gb.ears.size;
+    }
+    if (a.kind === 'alchemical_set' && b.kind === 'alchemical_set') {
+      const aa = (a as import('../types').AlchemicalSetAnswer).alchemicals;
+      const ab = (b as import('../types').AlchemicalSetAnswer).alchemicals;
+      if (aa.length !== ab.length) return false;
+      return aa.every((v, i) => v === ab[i]);
     }
   }
   return baseAnswersEqual(a as PuzzleAnswer, b as PuzzleAnswer);
@@ -224,6 +299,16 @@ export function expandedQuestionText(
         ? `${base} when mixed with ${ingredientName(question.partner)}?`
         : `${base} among themselves?`;
     }
+    case 'golem_reaction_component':
+      return 'What is the golem configuration (which color+size each part reacts to)?';
+    case 'golem_reaction_both_alch':
+      return 'Which 2 alchemicals react to BOTH golem parts (SIZE-based both_reactive)?';
+    case 'golem_reaction_both_ing':
+      return 'Which 2 ingredients react to BOTH golem parts (SIZE-based both_reactive)?';
+    case 'golem_animation_alch':
+      return 'Which 2 alchemicals animate the golem (SIGN-based)?';
+    case 'golem_animation_ing':
+      return 'Which 2 ingredients animate the golem (SIGN-based)?';
     default: {
       const q = question as { kind: string; ingredient?: number; ingredient1?: number; ingredient2?: number; color?: string; sign?: string };
       if (q.kind === 'mixing-result')    return `What potion from ${ingredientName(q.ingredient1!)} + ${ingredientName(q.ingredient2!)}?`;

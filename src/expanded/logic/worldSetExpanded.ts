@@ -6,17 +6,23 @@
  */
 
 import { filterByClue, applyClues } from '../../logic/worldSet';
-import { WORLD_DATA, SIGN_TABLE, COLOR_INDEX, filterWorlds } from '../../logic/worldPack';
+import { WORLD_DATA, SIGN_TABLE, COLOR_INDEX, FULL_INDICES, filterWorlds } from '../../logic/worldPack';
 import { deduceMixingResult } from '../../logic/deducer';
 import { isSolar } from './solarLunar';
-import { filterByGolemTest, getReactionGroup0 } from './golem';
+import {
+  filterByGolemTest, getReactionGroup0,
+  filterGolemSolverByTest, filterGolemSolverByAnimation,
+  filterGolemSolverByHintColor, filterGolemSolverByHintSize,
+  applyWorldFilterToGolemState, initGolemSolverState,
+} from './golem';
 import type { WorldSet } from '../../types';
 import type { AlchemicalId } from '../../types';
 import type {
   AnyClue, ExpandedClue,
   BookClue, BookAmongClue, EncyclopediaClue, EncyclopediaUncertainClue,
   DebunkApprenticeClue, DebunkMasterClue,
-  GolemTestClue, GolemParams, GolemReactionAmongClue,
+  GolemTestClue, GolemAnimationClue, GolemParams, GolemReactionAmongClue,
+  GolemSolverState,
 } from '../types';
 
 // ─── Individual expanded filters ─────────────────────────────────────────────
@@ -128,6 +134,7 @@ function isExpandedClue(clue: AnyClue): clue is ExpandedClue {
     || clue.kind === 'debunk_apprentice'
     || clue.kind === 'debunk_master'
     || clue.kind === 'golem_test'
+    || clue.kind === 'golem_animation'
     || clue.kind === 'golem_hint_color'
     || clue.kind === 'golem_hint_size'
     || clue.kind === 'golem_reaction_among';
@@ -146,8 +153,9 @@ export function filterByAnyClue(worlds: WorldSet, clue: AnyClue, ctx: ClueContex
     case 'encyclopedia_uncertain': return filterByEncyclopediaUncertain(worlds, clue);
     case 'debunk_apprentice':      return filterByDebunkApprentice(worlds, clue);
     case 'debunk_master':          return filterByDebunkMaster(worlds, clue);
-    case 'golem_hint_color':       return worlds; // display only
-    case 'golem_hint_size':        return worlds; // display only
+    case 'golem_hint_color':       return worlds; // display only (handled by GolemSolverState)
+    case 'golem_hint_size':        return worlds; // display only (handled by GolemSolverState)
+    case 'golem_animation':        return worlds; // handled by GolemSolverState; skip in flat mode
     case 'golem_reaction_among': {
       if (!ctx.golem) return worlds;
       return filterByGolemReactionAmong(worlds, clue as GolemReactionAmongClue, ctx.golem);
@@ -162,6 +170,59 @@ export function filterByAnyClue(worlds: WorldSet, clue: AnyClue, ctx: ClueContex
 
 export function applyAnyClues(worlds: WorldSet, clues: AnyClue[], ctx: ClueContext = {}): WorldSet {
   return clues.reduce<WorldSet>((ws, clue) => filterByAnyClue(ws, clue, ctx), worlds);
+}
+
+// ─── GolemSolverState integration ────────────────────────────────────────────
+
+/**
+ * Apply all clues to a GolemSolverState.
+ * - golem_test → filterGolemSolverByTest (joint config+world filtering)
+ * - golem_animation → filterGolemSolverByAnimation (joint)
+ * - golem_hint_color → filterGolemSolverByHintColor (config-only)
+ * - golem_hint_size → filterGolemSolverByHintSize (config-only)
+ * - all other clues → applyWorldFilterToGolemState (world-only, config-independent)
+ */
+export function applyCluesWithGolemState(
+  clues: AnyClue[],
+  initialState: GolemSolverState,
+): GolemSolverState {
+  let state = initialState;
+  for (const clue of clues) {
+    switch (clue.kind) {
+      case 'golem_test': {
+        const t = clue as GolemTestClue;
+        state = filterGolemSolverByTest(state, t.ingredient, t.chest_reacted, t.ears_reacted);
+        break;
+      }
+      case 'golem_animation': {
+        const a = clue as GolemAnimationClue;
+        state = filterGolemSolverByAnimation(state, a.ingredient, a.is_animator);
+        break;
+      }
+      case 'golem_hint_color':
+        state = filterGolemSolverByHintColor(state, clue.part, clue.color);
+        break;
+      case 'golem_hint_size':
+        state = filterGolemSolverByHintSize(state, clue.part, clue.size);
+        break;
+      default: {
+        // Filter once on the full world set, then use a lookup to avoid nested
+        // filterWorlds calls that would corrupt the shared _scratch buffer.
+        const filtered = filterByAnyClue(FULL_INDICES, clue, {});
+        const keep = new Uint8Array(40320);
+        for (let i = 0; i < filtered.length; i++) keep[filtered[i]] = 1;
+        state = applyWorldFilterToGolemState(state, w => keep[w] === 1);
+      }
+    }
+  }
+  return state;
+}
+
+/**
+ * Build initial GolemSolverState for a puzzle (uses full world set, no fixed config).
+ */
+export function buildInitialGolemState(baseWorlds: Uint16Array): GolemSolverState {
+  return initGolemSolverState(baseWorlds);
 }
 
 // Re-export base helpers so callers only need this module

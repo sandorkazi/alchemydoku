@@ -5,7 +5,7 @@
  */
 
 import type {
-  IngredientId, Color, Sign, Size, CellState,
+  IngredientId, AlchemicalId, Color, Sign, Size, CellState,
   Clue as BaseClue, QuestionTarget as BaseQuestion,
   PotionResult,
 } from '../types';
@@ -126,14 +126,28 @@ export type GolemReactionGroup =
 
 /**
  * Result of testing one ingredient on the golem.
- * Both flags false = non_reactive; both true = animator.
- * World filter: uses puzzle-level GolemParams via applyAnyClues context.
+ * null = not observed for that part (partial test).
+ * Both non-null: full test. One null: partial test.
+ * World filter: filters on each non-null part independently.
+ * Config filter: eliminates configs inconsistent with observed reactions.
  */
 export type GolemTestClue = {
   kind: 'golem_test';
   ingredient: IngredientId;
-  chest_reacted: boolean;
-  ears_reacted: boolean;
+  chest_reacted: boolean | null;   // null = not observed (partial test)
+  ears_reacted:  boolean | null;   // null = not observed
+};
+
+/**
+ * SIGN-based animation clue: does this ingredient animate the golem?
+ * Animation rule: Large → '+', Small → '−' on each part's color.
+ * The ingredient must match BOTH parts' implied signs.
+ * Does NOT require knowing which config is correct — filters across all configs.
+ */
+export type GolemAnimationClue = {
+  kind: 'golem_animation';
+  ingredient: IngredientId;
+  is_animator: boolean;
 };
 
 /**
@@ -177,6 +191,7 @@ export type ExpandedClue =
   | DebunkApprenticeClue
   | DebunkMasterClue
   | GolemTestClue
+  | GolemAnimationClue
   | GolemHintColorClue
   | GolemHintSizeClue
   | GolemReactionAmongClue;
@@ -253,6 +268,48 @@ export type GolemPossiblePotionsQuestion = {
   partner?: IngredientId;
 };
 
+// ─── New joint-world×config golem question types ─────────────────────────────
+
+/**
+ * Which golem config (chest+ears) is consistent with all clues?
+ * Answer: GolemConfigAnswer — unique config surviving after all clue filtering.
+ */
+export type GolemReactionComponentQuestion = {
+  kind: 'golem_reaction_component';
+};
+
+/**
+ * Which 2 alchemicals are SIZE-based both_reactive (react to BOTH chest and ears)?
+ * Answer: AlchemicalSetAnswer — 2 alchemicals agreed by all surviving (config, world) pairs.
+ */
+export type GolemReactionBothAlchQuestion = {
+  kind: 'golem_reaction_both_alch';
+};
+
+/**
+ * Which 2 ingredient slots are SIZE-based both_reactive in ALL surviving (config, world) pairs?
+ * Answer: IngredientSetAnswer — exactly 2 slots confirmed both_reactive.
+ */
+export type GolemReactionBothIngQuestion = {
+  kind: 'golem_reaction_both_ing';
+};
+
+/**
+ * Which 2 alchemicals are SIGN-based animators in ALL surviving (config, world) pairs?
+ * Answer: AlchemicalSetAnswer — 2 alchemicals agreed by all surviving configs.
+ */
+export type GolemAnimationAlchQuestion = {
+  kind: 'golem_animation_alch';
+};
+
+/**
+ * Which 2 ingredient slots are SIGN-based animators in ALL surviving (config, world) pairs?
+ * Answer: IngredientSetAnswer — exactly 2 slots confirmed animators.
+ */
+export type GolemAnimationIngQuestion = {
+  kind: 'golem_animation_ing';
+};
+
 export type ExpandedQuestion =
   | EncyclopediaFourthQuestion
   | EncyclopediaWhichAspectQuestion
@@ -261,7 +318,12 @@ export type ExpandedQuestion =
   | GolemGroupQuestion
   | GolemAnimatePotionQuestion
   | GolemMixPotionQuestion
-  | GolemPossiblePotionsQuestion;
+  | GolemPossiblePotionsQuestion
+  | GolemReactionComponentQuestion
+  | GolemReactionBothAlchQuestion
+  | GolemReactionBothIngQuestion
+  | GolemAnimationAlchQuestion
+  | GolemAnimationIngQuestion;
 
 export type AnyQuestion = BaseQuestion | ExpandedQuestion;
 
@@ -285,7 +347,25 @@ export type SolarLunarAnswer = {
   result: SolarLunar;
 };
 
-export type ExpandedAnswer = AspectColorAnswer | SolarLunarAnswer | IngredientSetAnswer;
+/** Golem configuration (chest + ears) — for golem_reaction_component. */
+export type GolemConfigAnswer = {
+  kind: 'golem_config';
+  chest: { color: Color; size: Size };
+  ears:  { color: Color; size: Size };
+};
+
+/** Sorted pair of alchemical IDs — for golem_reaction_both_alch, golem_animation_alch. */
+export type AlchemicalSetAnswer = {
+  kind: 'alchemical_set';
+  alchemicals: AlchemicalId[];  // always sorted ascending, length 2
+};
+
+export type ExpandedAnswer =
+  | AspectColorAnswer
+  | SolarLunarAnswer
+  | IngredientSetAnswer
+  | GolemConfigAnswer
+  | AlchemicalSetAnswer;
 
 /**
  * Any answer: base PuzzleAnswer or an expanded answer.
@@ -293,6 +373,15 @@ export type ExpandedAnswer = AspectColorAnswer | SolarLunarAnswer | IngredientSe
  * alchemical answers; question kind distinguishes them in context.
  */
 export type AnyAnswer = PuzzleAnswer | ExpandedAnswer;
+
+// ─── GolemSolverState ─────────────────────────────────────────────────────────
+
+/**
+ * Joint world × config state for golem puzzles.
+ * For each of 24 valid golem configs, stores the set of consistent world indices.
+ * null entry = config eliminated. Length always = ALL_GOLEM_CONFIGS.length (24).
+ */
+export type GolemSolverState = ReadonlyArray<Uint16Array | null>;
 
 // ─── Expanded puzzle ──────────────────────────────────────────────────────────
 

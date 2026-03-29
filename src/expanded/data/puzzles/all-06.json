@@ -1,13 +1,13 @@
 {
   "id": "all-06",
   "mode": "expanded",
-  "title": "The Iron Sequence",
-  "description": "The golem has been tested with 4 ingredients. Deduce the reaction pattern and identify the target group.",
+  "title": "The Inhibited Chain",
+  "description": "The golem has been tested with 2 ingredients. Deduce the reaction pattern and identify the target group.",
   "difficulty": "easy",
   "golem": {
     "chest": {
-      "color": "G",
-      "size": "L"
+      "color": "B",
+      "size": "S"
     },
     "ears": {
       "color": "R",
@@ -17,63 +17,55 @@
   "clues": [
     {
       "kind": "golem_test",
-      "ingredient": 7,
+      "ingredient": 3,
       "chest_reacted": true,
       "ears_reacted": true
-    },
-    {
-      "kind": "golem_test",
-      "ingredient": 6,
-      "chest_reacted": false,
-      "ears_reacted": true
-    },
-    {
-      "kind": "encyclopedia",
-      "aspect": "R",
-      "entries": [
-        {
-          "ingredient": 1,
-          "sign": "+"
-        },
-        {
-          "ingredient": 2,
-          "sign": "+"
-        },
-        {
-          "ingredient": 6,
-          "sign": "+"
-        }
-      ]
-    },
-    {
-      "kind": "encyclopedia",
-      "aspect": "G",
-      "entries": [
-        {
-          "ingredient": 4,
-          "sign": "+"
-        },
-        {
-          "ingredient": 5,
-          "sign": "+"
-        },
-        {
-          "ingredient": 8,
-          "sign": "+"
-        }
-      ]
-    },
-    {
-      "kind": "golem_test",
-      "ingredient": 4,
-      "chest_reacted": false,
-      "ears_reacted": false
     },
     {
       "kind": "golem_test",
       "ingredient": 5,
       "chest_reacted": true,
       "ears_reacted": false
+    },
+    {
+      "kind": "encyclopedia",
+      "aspect": "G",
+      "entries": [
+        {
+          "ingredient": 1,
+          "sign": "+"
+        },
+        {
+          "ingredient": 3,
+          "sign": "+"
+        },
+        {
+          "ingredient": 4,
+          "sign": "+"
+        }
+      ]
+    },
+    {
+      "kind": "book_among",
+      "ingredients": [
+        2,
+        3,
+        4,
+        7
+      ],
+      "result": "lunar",
+      "count": 1
+    },
+    {
+      "kind": "golem_reaction_among",
+      "ingredients": [
+        1,
+        4,
+        6,
+        8
+      ],
+      "reaction": "non_reactive",
+      "count": 1
     }
   ],
   "questions": [
@@ -83,35 +75,35 @@
     }
   ],
   "solution": {
-    "1": 2,
-    "2": 3,
-    "3": 5,
-    "4": 1,
-    "5": 4,
-    "6": 6,
-    "7": 7,
-    "8": 8
+    "1": 4,
+    "2": 5,
+    "3": 6,
+    "4": 8,
+    "5": 3,
+    "6": 7,
+    "7": 1,
+    "8": 2
   },
   "hints": [
     {
       "level": 1,
-      "text": "The golem reacts to SIZE on a specific color channel.\nKnown tests:\n  ing7: chest=\u2713 ears=\u2713  \u2192  animators\n  ing6: chest=\u2717 ears=\u2713  \u2192  ears_only\n  ing4: chest=\u2717 ears=\u2717  \u2192  non_reactive\n  ing5: chest=\u2713 ears=\u2717  \u2192  chest_only"
+      "text": "The golem reacts to SIZE on a specific color channel.\nKnown tests:\n  ing3: chest=\u2713 ears=\u2713  \u2192  animators\n  ing5: chest=\u2713 ears=\u2717  \u2192  chest_only"
     },
     {
       "level": 2,
-      "text": "Chest reacts to G+L. Ears react to R+L. An animator needs BOTH. Cross-reference with untested ingredients."
+      "text": "Chest reacts to B+S. Ears react to R+L. Animation rule: Large reaction \u2192 '+', Small reaction \u2192 '\u2212'. So animation ingredients must have B\u2212 AND R+. Cross-reference with the mixing clues to identify those ingredients."
     },
     {
       "level": 3,
-      "text": "The animators are: ingredients [7, 8]. Alch: ing7\u2192NNN, ing8\u2192PPP."
+      "text": "The animators are: ingredients [3, 5]. Alch: ing3\u2192Ppn, ing5\u2192pNn."
     }
   ],
   "complexity": {
-    "score": 10,
-    "raw_score": 10,
-    "clue_score": 0,
+    "score": 40,
+    "raw_score": 20,
+    "clue_score": 10,
     "question_score": 0,
     "world_score": 0,
-    "residual_worlds": 2
+    "residual_worlds": 4
   }
 }

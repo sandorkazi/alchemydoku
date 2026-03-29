@@ -19,15 +19,14 @@ const TINT_COLORS = [
 
 // ─── Tool types ───────────────────────────────────────────────────────────────
 
-type GridTool = 'mark' | 'question' | 'text' | 'draw';
-const TOOL_CYCLE: GridTool[] = ['mark', 'question', 'text', 'draw'];
+type GridTool = 'mark' | 'text' | 'draw';
+const TOOL_CYCLE: GridTool[] = ['mark', 'text', 'draw'];
 
 // Per-tool cursor CSS values — shown on the grid wrapper
 const TOOL_CURSOR: Record<GridTool, string> = {
-  mark:     'crosshair',
-  question: 'cell',
-  text:     'text',
-  draw:     'crosshair',
+  mark:  'crosshair',
+  text:  'text',
+  draw:  'crosshair',
 };
 
 // ─── Marker glyphs ────────────────────────────────────────────────────────────
@@ -315,10 +314,9 @@ export function IngredientGrid({ onRandomize }: { onRandomize?: () => void }) {
   const noteKey = (ing: IngredientId, alch: AlchemicalId) => `${ing}-${alch}`;
 
   // ── Resolve effective tool from modifier keys ──────────────────────────────
-  // Shift held → mark tool; Ctrl/⌘ held → question tool; otherwise active tool
+  // Shift held → mark tool; otherwise active tool
   const resolveEffectiveTool = (e: React.MouseEvent): GridTool => {
     if (e.shiftKey) return 'mark';
-    if (e.ctrlKey || e.metaKey) return 'question';
     return activeTool;
   };
 
@@ -337,19 +335,14 @@ export function IngredientGrid({ onRandomize }: { onRandomize?: () => void }) {
     }
     if (tool === 'mark') {
       dispatch({ type: 'TOGGLE_CELL', ingredient: slotId, alchemical: alchId });
-    } else if (tool === 'question') {
-      const cur = gridState[slotId]?.[alchId] ?? 'unknown';
-      const next: CellState = cur === 'possible' ? 'unknown' : 'possible';
-      dispatch({ type: 'SET_CELL', ingredient: slotId, alchemical: alchId, state: next });
     }
-  }, [activeTool, gridState, dispatch]);
+  }, [activeTool, dispatch]);
 
   // ── Tool bar definitions ───────────────────────────────────────────────────
   const TOOL_DEFS: { id: GridTool; label: string; title: string }[] = [
-    { id: 'mark',     label: '✗✔',  title: 'Mark tool [Space] — cycle ✗ / ✔ · Shift+click forces this tool' },
-    { id: 'question', label: '?',    title: '? tool [Space] — toggle possible mark' },
-    { id: 'text',     label: 'abc',  title: 'Text tool [Space] — type up to 3 letters per cell' },
-    { id: 'draw',     label: '✏',   title: 'Draw tool [Space] — freehand pencil' },
+    { id: 'mark',  label: '✗✔?', title: 'Mark tool [Space] — cycle ✗ / ✔ / ? · Shift+click forces this tool' },
+    { id: 'text',  label: 'abc', title: 'Text tool [Space] — type up to 3 letters per cell' },
+    { id: 'draw',  label: '✏',  title: 'Draw tool [Space] — freehand pencil' },
   ];
 
   return (
@@ -442,16 +435,14 @@ export function IngredientGrid({ onRandomize }: { onRandomize?: () => void }) {
             aria-atomic="true"
             className={`absolute top-0 right-1 z-10 flex items-center gap-1 px-2 py-0.5 rounded-full
               text-[10px] font-bold select-none pointer-events-none transition-all
-              ${activeTool === 'mark'     ? 'bg-gray-800/70 text-white' : ''}
-              ${activeTool === 'question' ? 'bg-indigo-600/80 text-white' : ''}
-              ${activeTool === 'text'     ? 'bg-amber-500/80 text-white' : ''}
-              ${activeTool === 'draw'     ? 'bg-rose-500/80 text-white' : ''}
+              ${activeTool === 'mark' ? 'bg-gray-800/70 text-white' : ''}
+              ${activeTool === 'text' ? 'bg-amber-500/80 text-white' : ''}
+              ${activeTool === 'draw' ? 'bg-rose-500/80 text-white' : ''}
             `}
           >
-            {activeTool === 'mark'     && <><span>✗✔</span><span>mark</span></>}
-            {activeTool === 'question' && <><span>?</span><span>question</span></>}
-            {activeTool === 'text'     && <><span>abc</span><span>text</span></>}
-            {activeTool === 'draw'     && <><span>✏</span><span>draw</span></>}
+            {activeTool === 'mark' && <><span>✗✔?</span><span>mark</span></>}
+            {activeTool === 'text' && <><span>abc</span><span>text</span></>}
+            {activeTool === 'draw' && <><span>✏</span><span>draw</span></>}
             <kbd className="ml-0.5 opacity-60 font-mono text-[9px] border border-current/40 rounded px-0.5">Space</kbd>
           </div>
           {/* ── Neutral-pair decorators + table wrapper ──────────────────── */}
@@ -561,12 +552,9 @@ export function IngredientGrid({ onRandomize }: { onRandomize?: () => void }) {
             Tap to cycle:{' '}
             <span className="font-mono">· unknown</span>{' → '}
             <span className="font-mono font-bold text-red-500">✗ eliminated</span>{' → '}
-            <span className="font-mono font-bold text-green-600">✔ confirmed</span>
+            <span className="font-mono font-bold text-green-600">✔ confirmed</span>{' → '}
+            <span className="font-mono font-bold text-indigo-500">? possible</span>
             <span className="ml-2 opacity-60">· Space to switch tool · U / R to undo/redo</span>
-          </>}
-          {activeTool === 'question' && <>
-            Tap to toggle <span className="font-mono font-bold text-indigo-500">? possible</span> on/off
-            <span className="ml-2 opacity-60">· Space to switch tool · Shift+click for mark · U / R to undo/redo</span>
           </>}
           {activeTool === 'text' && <>
             Tap any cell to type a note (max 3 chars)

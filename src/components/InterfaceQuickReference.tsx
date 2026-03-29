@@ -53,11 +53,11 @@ export function BaseInterfaceCards() {
         visual={
           <div className="flex items-center gap-2">
             <div className="flex gap-1">
-              {(['✗✔', '?', 'abc', '✏'] as const).map((t, i) => (
+              {(['✗✔?', 'abc', '✏'] as const).map((t, i) => (
                 <span key={t} className={`px-2 py-1 rounded text-xs font-bold border
                   ${i === 0
                     ? 'bg-blue-100 border-blue-400 text-blue-700'
-                    : i === 3
+                    : i === 2
                     ? 'bg-rose-100 border-rose-400 text-rose-700'
                     : 'bg-gray-100 border-gray-300 text-gray-600'}`}>
                   {t}
@@ -67,7 +67,7 @@ export function BaseInterfaceCards() {
             <span className="text-[10px] text-blue-400">Space to cycle</span>
           </div>
         }
-        text="Four tools: ✗✔ cycles a cell through eliminated → confirmed → clear; ? marks an uncertain note; abc lets you write up to 3 characters as a custom label; ✏ lets you sketch freehand lines on the grid as a scratchpad. Press Space to cycle between tools."
+        text="Three tools: ✗✔? cycles a cell through eliminated (✗) → confirmed (✔) → possible (?) → clear; abc lets you write up to 3 characters as a custom label; ✏ lets you sketch freehand lines on the grid as a scratchpad. Press Space to cycle between tools."
       />
 
       {/* Visual Hints */}
@@ -166,8 +166,6 @@ export function BaseInterfaceCards() {
             <div className="flex items-center gap-1.5 flex-wrap">
               <span className="px-1.5 py-0.5 rounded bg-gray-100 text-[9px] font-mono text-gray-600">⇧ click</span>
               <span className="text-[9px] text-gray-400">mark tool</span>
-              <span className="px-1.5 py-0.5 rounded bg-gray-100 text-[9px] font-mono text-gray-600">⌃ click</span>
-              <span className="text-[9px] text-gray-400">? tool</span>
               <span className="px-1.5 py-0.5 rounded bg-gray-100 text-[9px] font-mono text-gray-600">U</span>
               <span className="text-[9px] text-gray-400">undo</span>
               <span className="px-1.5 py-0.5 rounded bg-gray-100 text-[9px] font-mono text-gray-600">R</span>
@@ -175,7 +173,7 @@ export function BaseInterfaceCards() {
             </div>
           </div>
         }
-        text="Inside the ingredient grid: ✕ Clear wipes all cell marks and notes; ✕ Drawing (appears when you have strokes) clears only the freehand sketches; 🔀 reshuffles which ingredient icon appears in each column (the underlying slot assignments stay the same). Keyboard modifiers: Shift+click always uses the ✗✔ mark tool, Ctrl/⌘+click always uses the ? tool. Keyboard shortcuts (when no text field is focused): U undoes the last grid change, R redoes it."
+        text="Inside the ingredient grid: ✕ Clear wipes all cell marks and notes; ✕ Drawing (appears when you have strokes) clears only the freehand sketches; 🔀 reshuffles which ingredient icon appears in each column (the underlying slot assignments stay the same). Keyboard modifiers: Shift+click always uses the ✗✔? mark tool. Keyboard shortcuts (when no text field is focused): U undoes the last grid change, R redoes it."
       />
 
       {/* Collapsible clues */}

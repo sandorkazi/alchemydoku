@@ -133,11 +133,11 @@
   },
   "hints": [],
   "complexity": {
-    "score": 86,
-    "raw_score": 75,
+    "score": 92,
+    "raw_score": 85,
     "clue_score": 40,
-    "question_score": 10,
-    "world_score": 15,
+    "question_score": 15,
+    "world_score": 20,
     "residual_worlds": 5
   },
   "publications": [

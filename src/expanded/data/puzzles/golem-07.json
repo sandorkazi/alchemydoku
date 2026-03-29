@@ -1,23 +1,14 @@
 {
-  "id": "golem-02",
+  "id": "golem-07",
   "mode": "expanded",
-  "title": "The Butterfly Effect",
+  "title": "The Mixing Time",
   "description": "Use the clues to answer the question.",
   "difficulty": "easy",
   "clues": [
     {
       "kind": "mixing",
-      "ingredient1": 6,
-      "ingredient2": 8,
-      "result": {
-        "color": "G",
-        "sign": "+"
-      }
-    },
-    {
-      "kind": "mixing",
-      "ingredient1": 5,
-      "ingredient2": 7,
+      "ingredient1": 1,
+      "ingredient2": 2,
       "result": {
         "color": "R",
         "sign": "-"
@@ -26,59 +17,63 @@
     {
       "kind": "mixing",
       "ingredient1": 4,
+      "ingredient2": 7,
+      "result": {
+        "color": "G",
+        "sign": "+"
+      }
+    },
+    {
+      "kind": "mixing",
+      "ingredient1": 1,
       "ingredient2": 6,
       "result": {
-        "color": "R",
-        "sign": "-"
+        "color": "G",
+        "sign": "+"
       }
     },
     {
       "kind": "golem_test",
-      "ingredient": 5,
-      "chest_reacted": false,
+      "ingredient": 8,
+      "chest_reacted": true,
+      "ears_reacted": true
+    },
+    {
+      "kind": "golem_test",
+      "ingredient": 3,
+      "chest_reacted": true,
       "ears_reacted": false
+    },
+    {
+      "kind": "golem_test",
+      "ingredient": 1,
+      "chest_reacted": false,
+      "ears_reacted": true
     },
     {
       "kind": "mixing",
       "ingredient1": 3,
       "ingredient2": 5,
       "result": {
-        "color": "G",
+        "color": "B",
         "sign": "-"
       }
-    },
-    {
-      "kind": "golem_test",
-      "ingredient": 1,
-      "chest_reacted": true,
-      "ears_reacted": false
-    },
-    {
-      "kind": "golem_animation",
-      "ingredient": 5,
-      "is_animator": false
-    },
-    {
-      "kind": "golem_test",
-      "ingredient": 3,
-      "chest_reacted": true,
-      "ears_reacted": null
     }
   ],
   "questions": [
     {
-      "kind": "golem_animation_ing"
+      "kind": "golem_reaction_component"
     }
   ],
   "solution": {
-    "1": 8,
-    "2": 2,
-    "3": 3,
-    "4": 7,
-    "5": 5,
-    "6": 4,
+    "1": 4,
+    "2": 5,
+    "3": 7,
+    "4": 8,
+    "5": 3,
+    "6": 6,
     "7": 1,
-    "8": 6
+    "8": 2
   },
   "hints": [
     {
@@ -87,11 +82,11 @@
     },
     {
       "level": 2,
-      "text": "After all clues: 2 config(s) remain. True config: chest=GL, ears=RS."
+      "text": "After all clues: 1 config(s) remain. True config: chest=BL, ears=RS."
     },
     {
       "level": 3,
-      "text": "Answer: [6, 7]"
+      "text": "Answer: {'chest': {'color': 'B', 'size': 'L'}, 'ears': {'color': 'R', 'size': 'S'}}"
     }
   ],
   "complexity": {
@@ -100,6 +95,6 @@
     "clue_score": 0,
     "question_score": 0,
     "world_score": 0,
-    "residual_worlds": 1
+    "residual_worlds": 4
   }
 }

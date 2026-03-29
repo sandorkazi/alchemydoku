@@ -1,42 +1,41 @@
 {
   "id": "mixed-exp-golem-17",
   "mode": "expanded",
-  "title": "Twilight Evidence",
+  "title": "The Second Glance",
   "description": "The golem has been tested with 2 ingredients. Deduce the reaction pattern and identify the target group.",
   "difficulty": "medium",
   "golem": {
     "chest": {
-      "color": "G",
+      "color": "R",
       "size": "L"
     },
     "ears": {
-      "color": "R",
-      "size": "S"
+      "color": "B",
+      "size": "L"
     }
   },
   "clues": [
     {
       "kind": "golem_test",
-      "ingredient": 4,
+      "ingredient": 8,
       "chest_reacted": true,
       "ears_reacted": true
     },
     {
       "kind": "golem_test",
-      "ingredient": 8,
+      "ingredient": 4,
       "chest_reacted": false,
-      "ears_reacted": false
+      "ears_reacted": true
     },
     {
       "kind": "sell_result_among",
       "ingredients": [
         2,
         4,
-        6,
-        7
+        8
       ],
       "claimedPotion": {
-        "color": "B",
+        "color": "R",
         "sign": "+"
       },
       "sellResult": "opposite"
@@ -44,53 +43,55 @@
     {
       "kind": "golem_reaction_among",
       "ingredients": [
+        1,
         2,
-        5,
-        6,
         7
       ],
-      "reaction": "non_reactive",
+      "reaction": "animators",
       "count": 1
     },
     {
       "kind": "book_among",
       "ingredients": [
-        5,
-        6,
-        7
+        2,
+        3,
+        5
       ],
-      "result": "solar",
+      "result": "lunar",
       "count": 1
     },
     {
-      "kind": "sell_among",
+      "kind": "mixing_count_among",
       "ingredients": [
         2,
-        6,
-        7,
-        8
+        3,
+        7
       ],
-      "claimedPotion": {
+      "result": {
         "color": "R",
         "sign": "-"
       },
-      "result": "opposite",
-      "count": 5
+      "count": 2
     },
     {
-      "kind": "sell_among",
+      "kind": "golem_reaction_among",
       "ingredients": [
-        3,
+        2,
         4,
-        5,
-        6
+        5
       ],
-      "claimedPotion": {
-        "color": "R",
-        "sign": "+"
-      },
-      "result": "opposite",
-      "count": 6
+      "reaction": "chest_only",
+      "count": 1
+    },
+    {
+      "kind": "golem_reaction_among",
+      "ingredients": [
+        2,
+        5,
+        7
+      ],
+      "reaction": "ears_only",
+      "count": 1
     }
   ],
   "questions": [
@@ -100,27 +101,27 @@
     }
   ],
   "solution": {
-    "1": 4,
-    "2": 8,
-    "3": 1,
-    "4": 3,
-    "5": 7,
-    "6": 5,
-    "7": 2,
-    "8": 6
+    "1": 8,
+    "2": 1,
+    "3": 5,
+    "4": 2,
+    "5": 6,
+    "6": 3,
+    "7": 4,
+    "8": 7
   },
   "hints": [
     {
       "level": 1,
-      "text": "The golem reacts to SIZE on a specific color channel.\nKnown tests:\n  ing4: chest=\u2713 ears=\u2713  \u2192  animators\n  ing8: chest=\u2717 ears=\u2717  \u2192  non_reactive"
+      "text": "The golem reacts to SIZE on a specific color channel.\nKnown tests:\n  ing8: chest=\u2713 ears=\u2713  \u2192  animators\n  ing4: chest=\u2717 ears=\u2713  \u2192  ears_only"
     },
     {
       "level": 2,
-      "text": "Chest reacts to G+L. Ears react to R+S. An animator needs BOTH. Cross-reference with untested ingredients."
+      "text": "Chest reacts to R+L. Ears react to B+L. Animation rule: Large reaction \u2192 '+', Small reaction \u2192 '\u2212'. So animation ingredients must have R+ AND B+. Cross-reference with the mixing clues to identify those ingredients."
     },
     {
       "level": 3,
-      "text": "The animators are: ingredients [1, 4]. Alch: ing1\u2192nPp, ing4\u2192pNn."
+      "text": "The animators are: ingredients [1, 4]. Alch: ing1\u2192PPP, ing4\u2192pnP."
     }
   ],
   "complexity": {
@@ -129,6 +130,6 @@
     "clue_score": 35,
     "question_score": 0,
     "world_score": 0,
-    "residual_worlds": 1
+    "residual_worlds": 2
   }
 }

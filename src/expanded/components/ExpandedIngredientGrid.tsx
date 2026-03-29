@@ -19,8 +19,8 @@ import type { Color, Size } from '../../types';
 import { isSolar } from '../logic/solarLunar';
 import { getEliminatedCells } from '../../logic/deducer';
 import { AlchemicalDisplay } from '../../components/AlchemicalDisplay';
-import { AlchemicalImage, IngredientIcon, ElemImage, PotionImage } from '../../components/GameSprites';
-import type { AlchemicalId, IngredientId, CellState } from '../../types';
+import { AlchemicalImage, IngredientIcon, ElemImage, PotionImage, SignedElemImage } from '../../components/GameSprites';
+import type { AlchemicalId, IngredientId, CellState, Sign } from '../../types';
 import type { SolarLunarMark } from '../types';
 
 // Fixed visual column order by display-ingredient ID
@@ -32,8 +32,8 @@ const TINT_COLORS = [
   '#3F6FB6', '#979c91', '#B23A2E', '#23293D',
 ];
 
-export type GridTool = 'mark' | 'question' | 'text' | 'draw';
-const TOOL_CURSOR: Record<GridTool, string> = { mark: 'crosshair', question: 'cell', text: 'text', draw: 'crosshair' };
+export type GridTool = 'mark' | 'text' | 'draw';
+const TOOL_CURSOR: Record<GridTool, string> = { mark: 'crosshair', text: 'text', draw: 'crosshair' };
 
 // ─── Shared marker style system ───────────────────────────────────────────────
 // Used by Cell, GolemCell, and SolarLunarButtons corner indicators
@@ -187,10 +187,10 @@ function CellTextEditor({ value, onChange, onDone }: {
 //
 // Icon colours: ☀ always orange-400, 🌙 always gray-300
 
-function nextSlMark(cur: CellState, tool: 'mark' | 'question'): CellState {
-  if (tool === 'question') return cur === 'possible' ? 'unknown' : 'possible';
+function nextSlMark(cur: CellState): CellState {
   if (cur === 'unknown')   return 'confirmed';
   if (cur === 'confirmed') return 'eliminated';
+  if (cur === 'eliminated') return 'possible';
   return 'unknown';
 }
 
@@ -207,16 +207,13 @@ function slBtnClass(state: CellState, polarity: 'solar' | 'lunar'): string {
     : 'bg-gray-50   border-gray-200  hover:bg-gray-100';
 }
 
-function SolarLunarButtons({ slotId, mark, activeTool, onToggle }: {
+function SolarLunarButtons({ slotId, mark, onToggle }: {
   slotId: number;
   mark: SolarLunarMark | null;
-  activeTool: GridTool;
   onToggle: (slot: number, next: SolarLunarMark) => void;
 }) {
   const solar: CellState = mark?.solar ?? 'unknown';
   const lunar: CellState = mark?.lunar ?? 'unknown';
-  // text tool behaves as mark for these buttons
-  const tool: 'mark' | 'question' = activeTool === 'question' ? 'question' : 'mark';
 
   return (
     <div className="flex gap-0.5 justify-center mt-0.5 w-full">
@@ -224,7 +221,7 @@ function SolarLunarButtons({ slotId, mark, activeTool, onToggle }: {
       <button
         title={`Solar: ${solar} (click to cycle)`}
         aria-pressed={solar !== 'unknown'}
-        onClick={() => onToggle(slotId, { solar: nextSlMark(solar, tool), lunar })}
+        onClick={() => onToggle(slotId, { solar: nextSlMark(solar), lunar })}
         className={`w-[22px] h-[15px] rounded text-[10px] flex items-center justify-center
           border transition-all focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-amber-400
           ${slBtnClass(solar, 'solar')}`}
@@ -235,7 +232,7 @@ function SolarLunarButtons({ slotId, mark, activeTool, onToggle }: {
       <button
         title={`Lunar: ${lunar} (click to cycle)`}
         aria-pressed={lunar !== 'unknown'}
-        onClick={() => onToggle(slotId, { solar, lunar: nextSlMark(lunar, tool) })}
+        onClick={() => onToggle(slotId, { solar, lunar: nextSlMark(lunar) })}
         className={`w-[22px] h-[15px] rounded text-[10px] flex items-center justify-center
           border transition-all focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-blue-300
           ${slBtnClass(lunar, 'lunar')}`}
@@ -359,7 +356,7 @@ export function ExpandedIngredientGrid({ onRandomize, activeTool, setActiveTool,
 
   // Keyboard: Space cycles tool · U = undo · R = redo
   useEffect(() => {
-    const TOOLS: GridTool[] = ['mark', 'question', 'text', 'draw'];
+    const TOOLS: GridTool[] = ['mark', 'text', 'draw'];
     const onKey = (e: KeyboardEvent) => {
       if (e.key === ' ' && !editingCell) {
         e.preventDefault();
@@ -393,7 +390,6 @@ export function ExpandedIngredientGrid({ onRandomize, activeTool, setActiveTool,
 
   const resolveEffectiveTool = (e: React.MouseEvent): GridTool => {
     if (e.shiftKey) return 'mark';
-    if (e.ctrlKey || e.metaKey) return 'question';
     return activeTool;
   };
 
@@ -420,22 +416,16 @@ export function ExpandedIngredientGrid({ onRandomize, activeTool, setActiveTool,
     const tool = resolveEffectiveTool(e);
     if (tool === 'text') { setEditingCell({ ing: slotId, alch: alchId }); return; }
     if (tool === 'mark') dispatch({ type: 'TOGGLE_CELL', ingredient: slotId, alchemical: alchId });
-    else if (tool === 'question') {
-      const cur = gridState[slotId]?.[alchId] ?? 'unknown';
-      const next: CellState = cur === 'possible' ? 'unknown' : 'possible';
-      dispatch({ type: 'SET_CELL', ingredient: slotId, alchemical: alchId, state: next });
-    }
-  }, [activeTool, gridState, dispatch]);
+  }, [activeTool, dispatch]);
 
   const handleSolarLunarToggle = useCallback((slot: number, mark: SolarLunarMark) => {
     dispatch({ type: 'SET_SOLAR_LUNAR_MARK', slot, mark });
   }, [dispatch]);
 
   const TOOL_DEFS: { id: GridTool; label: string; title: string }[] = [
-    { id: 'mark',     label: '✗✔',  title: 'Mark tool [Space] — cycle ✗ / ✔' },
-    { id: 'question', label: '?',    title: '? tool — toggle possible mark' },
-    { id: 'text',     label: 'abc',  title: 'Text tool — type up to 4 chars per cell' },
-    { id: 'draw',     label: '✏',   title: 'Draw tool [Space] — freehand pencil' },
+    { id: 'mark', label: '✗✔?', title: 'Mark tool [Space] — cycle ✗ / ✔ / ?' },
+    { id: 'text', label: 'abc', title: 'Text tool — type up to 4 chars per cell' },
+    { id: 'draw', label: '✏',  title: 'Draw tool [Space] — freehand pencil' },
   ];
 
   return (
@@ -512,14 +502,12 @@ export function ExpandedIngredientGrid({ onRandomize, activeTool, setActiveTool,
           <div aria-live="polite" aria-atomic="true"
             className={`absolute top-0 right-1 z-10 flex items-center gap-1 px-2 py-0.5 rounded-full
               text-[10px] font-bold select-none pointer-events-none transition-all
-              ${activeTool === 'mark'     ? 'bg-gray-800/70 text-white' : ''}
-              ${activeTool === 'question' ? 'bg-indigo-600/80 text-white' : ''}
-              ${activeTool === 'text'     ? 'bg-amber-500/80 text-white' : ''}
-              ${activeTool === 'draw'     ? 'bg-rose-500/80 text-white' : ''}`}>
-            {activeTool === 'mark'     && <><span>✗✔</span><span>mark</span></>}
-            {activeTool === 'question' && <><span>?</span><span>question</span></>}
-            {activeTool === 'text'     && <><span>abc</span><span>text</span></>}
-            {activeTool === 'draw'     && <><span>✏</span><span>draw</span></>}
+              ${activeTool === 'mark' ? 'bg-gray-800/70 text-white' : ''}
+              ${activeTool === 'text' ? 'bg-amber-500/80 text-white' : ''}
+              ${activeTool === 'draw' ? 'bg-rose-500/80 text-white' : ''}`}>
+            {activeTool === 'mark' && <><span>✗✔?</span><span>mark</span></>}
+            {activeTool === 'text' && <><span>abc</span><span>text</span></>}
+            {activeTool === 'draw' && <><span>✏</span><span>draw</span></>}
             <kbd className="ml-0.5 opacity-60 font-mono text-[9px] border border-current/40 rounded px-0.5">Space</kbd>
           </div>
 
@@ -560,7 +548,6 @@ export function ExpandedIngredientGrid({ onRandomize, activeTool, setActiveTool,
                       <SolarLunarButtons
                         slotId={slotId}
                         mark={slotMark}
-                        activeTool={activeTool}
                         onToggle={handleSolarLunarToggle}
                       />
                     </th>
@@ -643,8 +630,7 @@ export function ExpandedIngredientGrid({ onRandomize, activeTool, setActiveTool,
         </div>
 
         <p className="text-[10px] text-gray-400">
-          {activeTool === 'mark' && <>Tap to cycle: <span className="font-mono">· unknown</span>{' → '}<span className="font-mono font-bold text-red-500">✗ eliminated</span>{' → '}<span className="font-mono font-bold text-green-600">✔ confirmed</span><span className="ml-2 opacity-60">· Space to switch tool · U / R to undo/redo</span></>}
-          {activeTool === 'question' && <>Tap to toggle <span className="font-mono font-bold text-indigo-500">? possible</span> on/off<span className="ml-2 opacity-60">· Space to switch tool · U / R to undo/redo</span></>}
+          {activeTool === 'mark' && <>Tap to cycle: <span className="font-mono">· unknown</span>{' → '}<span className="font-mono font-bold text-red-500">✗ eliminated</span>{' → '}<span className="font-mono font-bold text-green-600">✔ confirmed</span>{' → '}<span className="font-mono font-bold text-indigo-500">? possible</span><span className="ml-2 opacity-60">· Space to switch tool · U / R to undo/redo</span></>}
           {activeTool === 'text' && <>Tap any cell to type a note (max 4 chars)<span className="ml-2 opacity-60">· Space to switch tool · U / R to undo/redo</span></>}
           {activeTool === 'draw' && <>Draw freehand lines on the grid<span className="ml-2 opacity-60">· Space to switch tool · U / R to undo/redo</span></>}
         </p>
@@ -703,8 +689,8 @@ export function GolemPanel({ activeTool }: { activeTool: GridTool }) {
         ingHints[`${slotStr}-${part}`] = reaction === 'reacts' ? 'confirmed' : 'eliminated';
       }
     }
-    bottomHints[`chest-${puzzle.golem.chest.color}${puzzle.golem.chest.size}`] = 'confirmed';
-    bottomHints[`ears-${puzzle.golem.ears.color}${puzzle.golem.ears.size}`] = 'confirmed';
+    // Note: bottomHints are NOT pre-filled from puzzle.golem — the player must
+    // deduce the golem config from the clues, not receive it as hidden truth.
   }
 
   // Image is 760×400 → AR = 400/760 ≈ 0.526. Explicit height avoids distortion.
@@ -841,8 +827,12 @@ export function GolemPanel({ activeTool }: { activeTool: GridTool }) {
   }
 
   function cycleIngMark(cur: GolemSlotMark): GolemSlotMark {
-    if (activeTool === 'mark')     return cur === null ? 'reacts' : cur === 'reacts' ? 'no-react' : null;
-    if (activeTool === 'question') return cur === 'possible' ? null : 'possible';
+    if (activeTool === 'mark') {
+      if (cur === null)       return 'reacts';
+      if (cur === 'reacts')   return 'no-react';
+      if (cur === 'no-react') return 'possible';
+      return null;
+    }
     return cur;  // text tool — no cycling on golem marks
   }
 
@@ -890,39 +880,53 @@ export function GolemPanel({ activeTool }: { activeTool: GridTool }) {
       </div>
 
       {/* ── Bottom grid: alch property deduction ───────────────────────────── */}
-      <div>
-        {rows.map(({ part, img, label }) => (
-          <div key={part} className="flex gap-1 mt-1">
-            <GolemRowHeader img={img} label={label} />
-            {ALCH_COLS.map(col => {
-              const current = golemNotepad[part] ?? null;
-              const active = current?.color === col.color && current?.size === col.size;
-              const orbSize = col.size === 'L' ? Math.round(CELL_W * 0.70) : Math.round(CELL_W * 0.25);
-              const colKey = `${col.color}${col.size}`;
-              const qMark = notes[`g2-${part}-${colKey}`] === '?' ? 'possible' as const : null;
-              const effectiveMark = active ? 'reacts' : qMark;
-              return (
-                <GolemCell
-                  key={colKey}
-                  mark={effectiveMark}
-                  img={img}
-                  noteKey={`g2-${part}-${colKey}`}
-                  orbColor={col.color}
-                  orbSize={orbSize}
-                  isBottomGrid={true}
-                  hint={bottomHints[`${part}-${colKey}`]}
-                  onMark={() => {
-                    if (activeTool === 'question') {
-                      dispatch({ type: 'SET_NOTE', key: `g2-${part}-${colKey}`, value: qMark ? '' : '?' });
-                    } else {
-                      dispatch({ type: 'SET_GOLEM_NOTEPAD', part, value: active ? null : col });
-                    }
-                  }}
-                />
-              );
-            })}
-          </div>
-        ))}
+      {/* paddingBottom reserves space for the peeking decorators — no overflow */}
+      <div style={{ position: 'relative', paddingBottom: 19 }}>
+        {/* Aspect sign decorators — peek out 2/3 below the grid, 1/3 behind */}
+        {ALCH_COLS.map((col, colIdx) => {
+          const sign: Sign = col.size === 'L' ? '+' : '-';
+          // Column centre: header(HDR_W) + (colIdx+1) gaps of 4px + colIdx full cells + half cell
+          const left = HDR_W + (colIdx + 1) * 4 + colIdx * CELL_W + CELL_W / 2 - 14;
+          return (
+            <div key={`sdec-${col.color}${col.size}`} style={{
+              position: 'absolute', bottom: 0, left,
+              zIndex: 0, opacity: 0.40, pointerEvents: 'none',
+            }}>
+              <SignedElemImage color={col.color} sign={sign} width={28} />
+            </div>
+          );
+        })}
+        {/* Grid rows sit above the decorators */}
+        <div style={{ position: 'relative', zIndex: 1 }}>
+          {rows.map(({ part, img, label }) => (
+            <div key={part} className="flex gap-1 mt-1">
+              <GolemRowHeader img={img} label={label} />
+              {ALCH_COLS.map(col => {
+                const orbSize = col.size === 'L' ? Math.round(CELL_W * 0.70) : Math.round(CELL_W * 0.25);
+                const colKey = `${col.color}${col.size}`;
+                const cellKey = `${part}-${colKey}`;
+                const mark = golemNotepad.bottomGrid?.[cellKey] ?? null;
+                return (
+                  <GolemCell
+                    key={colKey}
+                    mark={mark}
+                    img={img}
+                    noteKey={`g2-${part}-${colKey}`}
+                    orbColor={col.color}
+                    orbSize={orbSize}
+                    isBottomGrid={true}
+                    hint={bottomHints[cellKey]}
+                    onMark={() => dispatch({
+                      type: 'SET_GOLEM_BOTTOM_MARK',
+                      key: cellKey,
+                      mark: cycleIngMark(mark),
+                    })}
+                  />
+                );
+              })}
+            </div>
+          ))}
+        </div>
       </div>
 
     </div>
