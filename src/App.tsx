@@ -528,6 +528,9 @@ function AppInner() {
         <div className="flex items-center justify-between gap-2">
           <ModeSwitcher mode="base" onChange={handleModeChange} />
           <div className="flex items-center gap-1.5 shrink-0">
+            <span className="text-xs text-gray-400" title={__BUILD_TIME__}>
+              {new Date(__BUILD_TIME__).toLocaleString(undefined, { month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit' })}
+            </span>
             <button
               onClick={() => setSettingsOpen(true)}
               title="Settings"
