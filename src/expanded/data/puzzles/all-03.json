@@ -1,0 +1,111 @@
+{
+  "id": "all-03",
+  "mode": "expanded",
+  "title": "The Feedback Loop",
+  "description": "The golem has been tested with 3 ingredients. Deduce the reaction pattern and identify the target group.",
+  "difficulty": "easy",
+  "golem": {
+    "chest": {
+      "color": "B",
+      "size": "L"
+    },
+    "ears": {
+      "color": "G",
+      "size": "L"
+    }
+  },
+  "clues": [
+    {
+      "kind": "golem_test",
+      "ingredient": 6,
+      "chest_reacted": true,
+      "ears_reacted": true
+    },
+    {
+      "kind": "golem_test",
+      "ingredient": 2,
+      "chest_reacted": false,
+      "ears_reacted": false
+    },
+    {
+      "kind": "encyclopedia",
+      "aspect": "G",
+      "entries": [
+        {
+          "ingredient": 2,
+          "sign": "+"
+        },
+        {
+          "ingredient": 4,
+          "sign": "+"
+        },
+        {
+          "ingredient": 7,
+          "sign": "+"
+        }
+      ]
+    },
+    {
+      "kind": "encyclopedia",
+      "aspect": "B",
+      "entries": [
+        {
+          "ingredient": 5,
+          "sign": "-"
+        },
+        {
+          "ingredient": 6,
+          "sign": "-"
+        },
+        {
+          "ingredient": 8,
+          "sign": "-"
+        }
+      ]
+    },
+    {
+      "kind": "golem_test",
+      "ingredient": 4,
+      "chest_reacted": true,
+      "ears_reacted": true
+    }
+  ],
+  "questions": [
+    {
+      "kind": "golem_group",
+      "group": "animators"
+    }
+  ],
+  "solution": {
+    "1": 2,
+    "2": 6,
+    "3": 5,
+    "4": 8,
+    "5": 1,
+    "6": 7,
+    "7": 4,
+    "8": 3
+  },
+  "hints": [
+    {
+      "level": 1,
+      "text": "The golem reacts to SIZE on a specific color channel.\nKnown tests:\n  ing6: chest=\u2713 ears=\u2713  \u2192  animators\n  ing2: chest=\u2717 ears=\u2717  \u2192  non_reactive\n  ing4: chest=\u2713 ears=\u2713  \u2192  animators"
+    },
+    {
+      "level": 2,
+      "text": "Chest reacts to B+L. Ears react to G+L. Animation rule: Large reaction \u2192 '+', Small reaction \u2192 '\u2212'. So animation ingredients must have B+ AND G+. Cross-reference with the mixing clues to identify those ingredients."
+    },
+    {
+      "level": 3,
+      "text": "The animators are: ingredients [4, 7]. Alch: ing4\u2192PPP, ing7\u2192nPp."
+    }
+  ],
+  "complexity": {
+    "score": 10,
+    "raw_score": 10,
+    "clue_score": 0,
+    "question_score": 0,
+    "world_score": 0,
+    "residual_worlds": 4
+  }
+}

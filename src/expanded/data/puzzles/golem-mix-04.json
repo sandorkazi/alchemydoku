@@ -1,0 +1,89 @@
+{
+  "id": "golem-mix-04",
+  "mode": "expanded",
+  "title": "The Calcination Log",
+  "description": "The golem has been tested with 4 ingredients. Identify the animators and determine what potion their mix would produce.",
+  "difficulty": "easy",
+  "golem": {
+    "chest": {
+      "color": "R",
+      "size": "L"
+    },
+    "ears": {
+      "color": "B",
+      "size": "S"
+    }
+  },
+  "clues": [
+    {
+      "kind": "golem_test",
+      "ingredient": 2,
+      "chest_reacted": true,
+      "ears_reacted": true
+    },
+    {
+      "kind": "golem_test",
+      "ingredient": 7,
+      "chest_reacted": false,
+      "ears_reacted": false
+    },
+    {
+      "kind": "mixing",
+      "ingredient1": 7,
+      "ingredient2": 8,
+      "result": {
+        "color": "R",
+        "sign": "-"
+      }
+    },
+    {
+      "kind": "golem_test",
+      "ingredient": 1,
+      "chest_reacted": true,
+      "ears_reacted": true
+    },
+    {
+      "kind": "golem_test",
+      "ingredient": 4,
+      "chest_reacted": false,
+      "ears_reacted": false
+    }
+  ],
+  "questions": [
+    {
+      "kind": "golem_animate_potion"
+    }
+  ],
+  "solution": {
+    "1": 5,
+    "2": 6,
+    "3": 4,
+    "4": 2,
+    "5": 8,
+    "6": 3,
+    "7": 1,
+    "8": 7
+  },
+  "hints": [
+    {
+      "level": 1,
+      "text": "The golem reacts to SIZE on a specific color channel.\nKnown tests:\n  ing2: chest=\u2713 ears=\u2713  \u2192  animators\n  ing7: chest=\u2717 ears=\u2717  \u2192  non_reactive\n  ing1: chest=\u2713 ears=\u2713  \u2192  animators\n  ing4: chest=\u2717 ears=\u2717  \u2192  non_reactive"
+    },
+    {
+      "level": 2,
+      "text": "Chest reacts to R+L. Ears react to B+S. Animation rule: Large reaction \u2192 '+', Small reaction \u2192 '\u2212'. So animation ingredients must have R+ AND B\u2212. Cross-reference with the mixing clues to identify those ingredients."
+    },
+    {
+      "level": 3,
+      "text": "Animation ingredients: ing[2, 6] (Ppn, pNn). Mix: R+."
+    }
+  ],
+  "complexity": {
+    "score": 10,
+    "raw_score": 10,
+    "clue_score": 0,
+    "question_score": 0,
+    "world_score": 0,
+    "residual_worlds": 12
+  }
+}

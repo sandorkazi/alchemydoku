@@ -3128,14 +3128,21 @@ BASE_PUZZLE_DIR = Path(__file__).parent.parent / 'src' / 'data' / 'puzzles'
 # Mapping from expanded puzzle id_prefix → EXPANDED_COLLECTIONS id in puzzlesIndex.ts.
 # Only prefixes whose puzzles belong to a clearly defined auto-managed collection are listed.
 _EXP_PREFIX_COLLECTION: dict[str, str] = {
-    'golem':            'exp-golem',
-    'enc':              'exp-easy-enc',
-    'sl':               'exp-easy-sl',
-    'enc-sl':           'exp-medium-enc-sl',
-    'combo-exp':        'combo-exp',
-    'mixed-exp-debunk': 'mixed-exp-debunk',
-    'mixed-exp-mix':    'mixed-clues-exp',
-    'mixed-exp':        'entropy-book',
+    'golem':              'exp-golem',
+    'enc':                'exp-easy-enc',
+    'sl':                 'exp-easy-sl',
+    'enc-sl':             'exp-medium-enc-sl',
+    'golem-enc':          'exp-medium-golem-enc',
+    'golem-sl':           'exp-medium-golem-sl',
+    'all':                'exp-hard-all',
+    'golem-mix':          'exp-hard-golem-mix',
+    'among-golem':        'exp-hard-among',
+    'combo-exp':          'combo-exp',
+    'combo-exp-med-all':  'combo-exp',
+    'mixed-exp-debunk':   'mixed-exp-debunk',
+    'mixed-exp-mix':      'mixed-clues-exp',
+    'mixed-exp-golem':    'mixed-clues-exp',
+    'mixed-exp':          'entropy-book',
 }
 
 

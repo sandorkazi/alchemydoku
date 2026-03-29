@@ -1,0 +1,139 @@
+{
+  "id": "mixed-exp-golem-06",
+  "mode": "expanded",
+  "title": "The Pre-Equilibrium",
+  "description": "The golem has been tested with 2 ingredients. Deduce the reaction pattern and identify the target group.",
+  "difficulty": "medium",
+  "golem": {
+    "chest": {
+      "color": "B",
+      "size": "S"
+    },
+    "ears": {
+      "color": "G",
+      "size": "S"
+    }
+  },
+  "clues": [
+    {
+      "kind": "golem_test",
+      "ingredient": 7,
+      "chest_reacted": true,
+      "ears_reacted": true
+    },
+    {
+      "kind": "golem_test",
+      "ingredient": 1,
+      "chest_reacted": false,
+      "ears_reacted": false
+    },
+    {
+      "kind": "sell_result_among",
+      "ingredients": [
+        2,
+        3,
+        5,
+        8
+      ],
+      "claimedPotion": {
+        "color": "B",
+        "sign": "+"
+      },
+      "sellResult": "opposite"
+    },
+    {
+      "kind": "golem_reaction_among",
+      "ingredients": [
+        1,
+        2,
+        6
+      ],
+      "reaction": "animators",
+      "count": 1
+    },
+    {
+      "kind": "book_among",
+      "ingredients": [
+        1,
+        2,
+        3
+      ],
+      "result": "lunar",
+      "count": 1
+    },
+    {
+      "kind": "sell_among",
+      "ingredients": [
+        3,
+        4,
+        6
+      ],
+      "claimedPotion": {
+        "color": "B",
+        "sign": "-"
+      },
+      "result": "sign_ok",
+      "count": 3
+    },
+    {
+      "kind": "golem_reaction_among",
+      "ingredients": [
+        3,
+        4,
+        6,
+        7
+      ],
+      "reaction": "ears_only",
+      "count": 1
+    },
+    {
+      "kind": "book_among",
+      "ingredients": [
+        1,
+        2,
+        4,
+        5
+      ],
+      "result": "lunar",
+      "count": 1
+    }
+  ],
+  "questions": [
+    {
+      "kind": "golem_group",
+      "group": "animators"
+    }
+  ],
+  "solution": {
+    "1": 8,
+    "2": 3,
+    "3": 7,
+    "4": 1,
+    "5": 2,
+    "6": 5,
+    "7": 6,
+    "8": 4
+  },
+  "hints": [
+    {
+      "level": 1,
+      "text": "The golem reacts to SIZE on a specific color channel.\nKnown tests:\n  ing7: chest=\u2713 ears=\u2713  \u2192  animators\n  ing1: chest=\u2717 ears=\u2717  \u2192  non_reactive"
+    },
+    {
+      "level": 2,
+      "text": "Chest reacts to B+S. Ears react to G+S. Animation rule: Large reaction \u2192 '+', Small reaction \u2192 '\u2212'. So animation ingredients must have B\u2212 AND G\u2212. Cross-reference with the mixing clues to identify those ingredients."
+    },
+    {
+      "level": 3,
+      "text": "The animators are: ingredients [2, 3]. Alch: ing2\u2192pNn, ing3\u2192NNN."
+    }
+  ],
+  "complexity": {
+    "score": 66,
+    "raw_score": 45,
+    "clue_score": 35,
+    "question_score": 0,
+    "world_score": 0,
+    "residual_worlds": 2
+  }
+}

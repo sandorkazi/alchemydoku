@@ -1,0 +1,143 @@
+{
+  "id": "mixed-exp-golem-26",
+  "mode": "expanded",
+  "title": "The Death Blossom",
+  "description": "The golem has been tested with 2 ingredients. Deduce the reaction pattern and identify the target group.",
+  "difficulty": "medium",
+  "golem": {
+    "chest": {
+      "color": "B",
+      "size": "L"
+    },
+    "ears": {
+      "color": "G",
+      "size": "S"
+    }
+  },
+  "clues": [
+    {
+      "kind": "golem_test",
+      "ingredient": 4,
+      "chest_reacted": true,
+      "ears_reacted": true
+    },
+    {
+      "kind": "golem_test",
+      "ingredient": 2,
+      "chest_reacted": true,
+      "ears_reacted": false
+    },
+    {
+      "kind": "sell_result_among",
+      "ingredients": [
+        1,
+        2,
+        5,
+        7
+      ],
+      "claimedPotion": {
+        "color": "B",
+        "sign": "+"
+      },
+      "sellResult": "opposite"
+    },
+    {
+      "kind": "golem_reaction_among",
+      "ingredients": [
+        1,
+        4,
+        5
+      ],
+      "reaction": "animators",
+      "count": 1
+    },
+    {
+      "kind": "book_among",
+      "ingredients": [
+        1,
+        2,
+        6,
+        8
+      ],
+      "result": "lunar",
+      "count": 1
+    },
+    {
+      "kind": "sell_among",
+      "ingredients": [
+        1,
+        5,
+        6
+      ],
+      "claimedPotion": {
+        "color": "B",
+        "sign": "-"
+      },
+      "result": "sign_ok",
+      "count": 3
+    },
+    {
+      "kind": "sell_among",
+      "ingredients": [
+        2,
+        3,
+        5,
+        8
+      ],
+      "claimedPotion": {
+        "color": "R",
+        "sign": "+"
+      },
+      "result": "sign_ok",
+      "count": 5
+    },
+    {
+      "kind": "golem_reaction_among",
+      "ingredients": [
+        1,
+        4,
+        5
+      ],
+      "reaction": "ears_only",
+      "count": 1
+    }
+  ],
+  "questions": [
+    {
+      "kind": "golem_group",
+      "group": "animators"
+    }
+  ],
+  "solution": {
+    "1": 5,
+    "2": 8,
+    "3": 6,
+    "4": 2,
+    "5": 4,
+    "6": 7,
+    "7": 3,
+    "8": 1
+  },
+  "hints": [
+    {
+      "level": 1,
+      "text": "The golem reacts to SIZE on a specific color channel.\nKnown tests:\n  ing4: chest=\u2713 ears=\u2713  \u2192  animators\n  ing2: chest=\u2713 ears=\u2717  \u2192  chest_only"
+    },
+    {
+      "level": 2,
+      "text": "Chest reacts to B+L. Ears react to G+S. Animation rule: Large reaction \u2192 '+', Small reaction \u2192 '\u2212'. So animation ingredients must have B+ AND G\u2212. Cross-reference with the mixing clues to identify those ingredients."
+    },
+    {
+      "level": 3,
+      "text": "The animators are: ingredients [1, 4]. Alch: ing1\u2192Nnp, ing4\u2192pnP."
+    }
+  ],
+  "complexity": {
+    "score": 70,
+    "raw_score": 50,
+    "clue_score": 40,
+    "question_score": 0,
+    "world_score": 0,
+    "residual_worlds": 1
+  }
+}

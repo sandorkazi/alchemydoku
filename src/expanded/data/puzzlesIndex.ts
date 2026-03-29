@@ -159,6 +159,64 @@ import mixedExpDebunk49      from './puzzles/mixed-exp-debunk-49.json';
 import mixedExpDebunk50      from './puzzles/mixed-exp-debunk-50.json';
 import mixedExpDebunk51      from './puzzles/mixed-exp-debunk-51.json';
 
+import golemEnc02           from './puzzles/golem-enc-02.json';
+import golemEnc03           from './puzzles/golem-enc-03.json';
+import golemEnc04           from './puzzles/golem-enc-04.json';
+import golemEnc05           from './puzzles/golem-enc-05.json';
+import golemEnc06           from './puzzles/golem-enc-06.json';
+
+import golemSl02            from './puzzles/golem-sl-02.json';
+import golemSl03            from './puzzles/golem-sl-03.json';
+import golemSl04            from './puzzles/golem-sl-04.json';
+import golemSl05            from './puzzles/golem-sl-05.json';
+import golemSl06            from './puzzles/golem-sl-06.json';
+
+import all02                from './puzzles/all-02.json';
+import all03                from './puzzles/all-03.json';
+import all04                from './puzzles/all-04.json';
+import all05                from './puzzles/all-05.json';
+import all06                from './puzzles/all-06.json';
+
+import golemMix02           from './puzzles/golem-mix-02.json';
+import golemMix03           from './puzzles/golem-mix-03.json';
+import golemMix04           from './puzzles/golem-mix-04.json';
+import golemMix05           from './puzzles/golem-mix-05.json';
+import golemMix06           from './puzzles/golem-mix-06.json';
+
+import amongGolem02         from './puzzles/among-golem-02.json';
+import amongGolem03         from './puzzles/among-golem-03.json';
+
+import comboExpMedAll02     from './puzzles/combo-exp-med-all-02.json';
+import comboExpMedAll03     from './puzzles/combo-exp-med-all-03.json';
+import comboExpMedAll04     from './puzzles/combo-exp-med-all-04.json';
+import comboExpMedAll05     from './puzzles/combo-exp-med-all-05.json';
+
+import mixedExpGolem02      from './puzzles/mixed-exp-golem-02.json';
+import mixedExpGolem03      from './puzzles/mixed-exp-golem-03.json';
+import mixedExpGolem04      from './puzzles/mixed-exp-golem-04.json';
+import mixedExpGolem05      from './puzzles/mixed-exp-golem-05.json';
+import mixedExpGolem06      from './puzzles/mixed-exp-golem-06.json';
+import mixedExpGolem07      from './puzzles/mixed-exp-golem-07.json';
+import mixedExpGolem08      from './puzzles/mixed-exp-golem-08.json';
+import mixedExpGolem09      from './puzzles/mixed-exp-golem-09.json';
+import mixedExpGolem10      from './puzzles/mixed-exp-golem-10.json';
+import mixedExpGolem11      from './puzzles/mixed-exp-golem-11.json';
+import mixedExpGolem12      from './puzzles/mixed-exp-golem-12.json';
+import mixedExpGolem13      from './puzzles/mixed-exp-golem-13.json';
+import mixedExpGolem14      from './puzzles/mixed-exp-golem-14.json';
+import mixedExpGolem15      from './puzzles/mixed-exp-golem-15.json';
+import mixedExpGolem16      from './puzzles/mixed-exp-golem-16.json';
+import mixedExpGolem17      from './puzzles/mixed-exp-golem-17.json';
+import mixedExpGolem18      from './puzzles/mixed-exp-golem-18.json';
+import mixedExpGolem19      from './puzzles/mixed-exp-golem-19.json';
+import mixedExpGolem20      from './puzzles/mixed-exp-golem-20.json';
+import mixedExpGolem21      from './puzzles/mixed-exp-golem-21.json';
+import mixedExpGolem22      from './puzzles/mixed-exp-golem-22.json';
+import mixedExpGolem23      from './puzzles/mixed-exp-golem-23.json';
+import mixedExpGolem24      from './puzzles/mixed-exp-golem-24.json';
+import mixedExpGolem25      from './puzzles/mixed-exp-golem-25.json';
+import mixedExpGolem26      from './puzzles/mixed-exp-golem-26.json';
+
 import type { ExpandedPuzzle } from '../types';
 
 export const ALL_EXPANDED_PUZZLES: ExpandedPuzzle[] = [
@@ -190,6 +248,13 @@ export const ALL_EXPANDED_PUZZLES: ExpandedPuzzle[] = [
   mixedExpDebunk37, mixedExpDebunk38, mixedExpDebunk39, mixedExpDebunk40, mixedExpDebunk41,
   mixedExpDebunk42, mixedExpDebunk43, mixedExpDebunk44, mixedExpDebunk45, mixedExpDebunk46,
   mixedExpDebunk47, mixedExpDebunk48, mixedExpDebunk49, mixedExpDebunk50, mixedExpDebunk51,
+  golemEnc02, golemEnc03, golemEnc04, golemEnc05, golemEnc06,
+  golemSl02, golemSl03, golemSl04, golemSl05, golemSl06,
+  all02, all03, all04, all05, all06,
+  golemMix02, golemMix03, golemMix04, golemMix05, golemMix06,
+  amongGolem02, amongGolem03,
+  comboExpMedAll02, comboExpMedAll03, comboExpMedAll04, comboExpMedAll05,
+  mixedExpGolem02, mixedExpGolem03, mixedExpGolem04, mixedExpGolem05, mixedExpGolem06, mixedExpGolem07, mixedExpGolem08, mixedExpGolem09, mixedExpGolem10, mixedExpGolem11, mixedExpGolem12, mixedExpGolem13, mixedExpGolem14, mixedExpGolem15, mixedExpGolem16, mixedExpGolem17, mixedExpGolem18, mixedExpGolem19, mixedExpGolem20, mixedExpGolem21, mixedExpGolem22, mixedExpGolem23, mixedExpGolem24, mixedExpGolem25, mixedExpGolem26,
 ] as unknown as ExpandedPuzzle[];
 
 export const EXPANDED_PUZZLE_MAP: Record<string, ExpandedPuzzle> =
@@ -267,15 +332,67 @@ export const EXPANDED_COLLECTIONS: ExpandedCollection[] = [
     boardGameCompliant: false,
   },
   {
+    id: 'exp-medium-golem-enc',
+    title: 'Golem & Encyclopedia',
+    description: 'Golem reactions and published articles constrain each other. Cross-reference to find the animators.',
+    difficulty: 'medium',
+    puzzleIds: [
+      'golem-enc-02', 'golem-enc-03', 'golem-enc-04', 'golem-enc-05', 'golem-enc-06',
+    ],
+    unlockedAfter: 'exp-golem',
+  },
+  {
+    id: 'exp-medium-golem-sl',
+    title: 'Golem & Field Tests',
+    description: 'Combine golem reactions with Solar/Lunar readings to deduce the animate potion.',
+    difficulty: 'medium',
+    puzzleIds: [
+      'golem-sl-02', 'golem-sl-03', 'golem-sl-04', 'golem-sl-05', 'golem-sl-06',
+    ],
+    unlockedAfter: 'exp-golem',
+  },
+  {
+    id: 'exp-hard-all',
+    title: 'The Hard Cases',
+    description: 'All expanded mechanics in play — golem tests, encyclopedia entries, Solar/Lunar. No single clue type is sufficient.',
+    difficulty: 'hard',
+    puzzleIds: [
+      'all-02', 'all-03', 'all-04', 'all-05', 'all-06',
+    ],
+    unlockedAfter: 'exp-medium-golem-enc',
+  },
+  {
+    id: 'exp-hard-golem-mix',
+    title: 'Animating the Golem',
+    description: 'You must deduce not just the reaction pattern but the exact potion needed — using only golem tests and mixing results.',
+    difficulty: 'hard',
+    puzzleIds: [
+      'golem-mix-02', 'golem-mix-03', 'golem-mix-04', 'golem-mix-05', 'golem-mix-06',
+    ],
+    unlockedAfter: 'exp-medium-golem-sl',
+  },
+  {
+    id: 'exp-hard-among',
+    title: 'Whispers & Reactions',
+    description: 'You overheard partial results — reactions from unnamed ingredients, sell outcomes without knowing whose potion it was. Piece it together.',
+    difficulty: 'hard',
+    puzzleIds: [
+      'among-golem-02', 'among-golem-03',
+    ],
+    unlockedAfter: 'exp-hard-all',
+    boardGameCompliant: false,
+  },
+  {
     id: 'combo-exp',
     title: 'Grand Synthesis',
-    description: 'All expanded mechanics at once — encyclopedia articles and Solar/Lunar classifications. The hardest deductions require every tool.',
+    description: 'All expanded mechanics at once — encyclopedia articles, Solar/Lunar classifications, and golem reactions. The hardest deductions require every tool.',
     difficulty: 'hard',
     puzzleIds: [
       'combo-exp-02', 'combo-exp-03', 'combo-exp-04', 'combo-exp-05', 'combo-exp-06',
       'combo-exp-sl-02', 'combo-exp-sl-03', 'combo-exp-sl-04', 'combo-exp-sl-05',
       'combo-exp-wha-02', 'combo-exp-wha-03', 'combo-exp-wha-04', 'combo-exp-wha-05',
       'combo-exp-xsl-02', 'combo-exp-xsl-03', 'combo-exp-xsl-04', 'combo-exp-xsl-05',
+      'combo-exp-med-all-02', 'combo-exp-med-all-03', 'combo-exp-med-all-04', 'combo-exp-med-all-05',
     ],
     unlockedAfter: 'exp-debunk',
   },
@@ -309,7 +426,7 @@ export const EXPANDED_COLLECTIONS: ExpandedCollection[] = [
   {
     id: 'mixed-clues-exp',
     title: 'Mixed Clues',
-    description: 'Ambiguous sell results and uncertain solar/lunar observations — all pointing to 3 or 4 possible ingredients. Questions range from potion mixing to possible-potions sets.',
+    description: 'Ambiguous sell results, overheard golem reactions, and uncertain solar/lunar observations — all pointing to 3 or 4 possible ingredients. Questions range from potion mixing to golem reaction groups.',
     difficulty: 'hard',
     puzzleIds: [
       'mixed-exp-mix-02', 'mixed-exp-mix-03', 'mixed-exp-mix-04', 'mixed-exp-mix-05', 'mixed-exp-mix-06',
@@ -317,6 +434,11 @@ export const EXPANDED_COLLECTIONS: ExpandedCollection[] = [
       'mixed-exp-mix-12', 'mixed-exp-mix-13', 'mixed-exp-mix-14', 'mixed-exp-mix-15', 'mixed-exp-mix-16',
       'mixed-exp-mix-17', 'mixed-exp-mix-18', 'mixed-exp-mix-19', 'mixed-exp-mix-20', 'mixed-exp-mix-21',
       'mixed-exp-mix-22', 'mixed-exp-mix-23', 'mixed-exp-mix-24', 'mixed-exp-mix-25', 'mixed-exp-mix-26',
+      'mixed-exp-golem-02', 'mixed-exp-golem-03', 'mixed-exp-golem-04', 'mixed-exp-golem-05', 'mixed-exp-golem-06',
+      'mixed-exp-golem-07', 'mixed-exp-golem-08', 'mixed-exp-golem-09', 'mixed-exp-golem-10', 'mixed-exp-golem-11',
+      'mixed-exp-golem-12', 'mixed-exp-golem-13', 'mixed-exp-golem-14', 'mixed-exp-golem-15', 'mixed-exp-golem-16',
+      'mixed-exp-golem-17', 'mixed-exp-golem-18', 'mixed-exp-golem-19', 'mixed-exp-golem-20', 'mixed-exp-golem-21',
+      'mixed-exp-golem-22', 'mixed-exp-golem-23', 'mixed-exp-golem-24', 'mixed-exp-golem-25', 'mixed-exp-golem-26',
     ],
     unlockedAfter: 'combo-exp',
     boardGameCompliant: false,
