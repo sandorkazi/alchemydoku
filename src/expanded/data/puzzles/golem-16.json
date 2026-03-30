@@ -1,0 +1,90 @@
+{
+  "id": "golem-16",
+  "mode": "expanded",
+  "title": "The Lone Pair",
+  "description": "Use the clues to answer the question.",
+  "difficulty": "easy",
+  "clues": [
+    {
+      "kind": "mixing",
+      "ingredient1": 1,
+      "ingredient2": 2,
+      "result": {
+        "color": "B",
+        "sign": "-"
+      }
+    },
+    {
+      "kind": "mixing",
+      "ingredient1": 4,
+      "ingredient2": 5,
+      "result": {
+        "color": "B",
+        "sign": "-"
+      }
+    },
+    {
+      "kind": "mixing",
+      "ingredient1": 2,
+      "ingredient2": 8,
+      "result": {
+        "color": "R",
+        "sign": "-"
+      }
+    },
+    {
+      "kind": "golem_test",
+      "ingredient": 3,
+      "chest_reacted": false,
+      "ears_reacted": true
+    },
+    {
+      "kind": "golem_test",
+      "ingredient": 7,
+      "chest_reacted": false,
+      "ears_reacted": false
+    },
+    {
+      "kind": "golem_animation",
+      "ingredient": 7,
+      "is_animator": true
+    }
+  ],
+  "questions": [
+    {
+      "kind": "golem_reaction_component"
+    }
+  ],
+  "solution": {
+    "1": 6,
+    "2": 7,
+    "3": 8,
+    "4": 3,
+    "5": 1,
+    "6": 2,
+    "7": 5,
+    "8": 4
+  },
+  "hints": [
+    {
+      "level": 1,
+      "text": "Reason about all possible golem configurations jointly with ingredient assignments. Each golem_test clue eliminates configs \u00d7 worlds that are inconsistent with the result."
+    },
+    {
+      "level": 2,
+      "text": "After all clues: 1 config(s) remain. True config: chest=RS, ears=BL."
+    },
+    {
+      "level": 3,
+      "text": "Answer: {'chest': {'color': 'R', 'size': 'S'}, 'ears': {'color': 'B', 'size': 'L'}}"
+    }
+  ],
+  "complexity": {
+    "score": 10,
+    "raw_score": 10,
+    "clue_score": 0,
+    "question_score": 0,
+    "world_score": 0,
+    "residual_worlds": 48
+  }
+}

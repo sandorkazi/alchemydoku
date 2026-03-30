@@ -1,56 +1,29 @@
 {
   "id": "mixed-exp-mix-12",
   "mode": "expanded",
-  "title": "The Partial Eclipse",
+  "title": "The Polymorphic Form",
   "description": "Mixing, selling, and debunking records all point toward a single pair. Deduce what potion they produce.",
-  "difficulty": "hard",
-  "golem": {
-    "chest": {
-      "color": "R",
-      "size": "L"
-    },
-    "ears": {
-      "color": "B",
-      "size": "L"
-    }
-  },
+  "difficulty": "extreme",
   "clues": [
-    {
-      "kind": "golem_test",
-      "ingredient": 3,
-      "chest_reacted": false,
-      "ears_reacted": true
-    },
     {
       "kind": "sell_result_among",
       "ingredients": [
-        1,
-        3,
+        2,
         4,
-        7
+        6
       ],
       "claimedPotion": {
-        "color": "B",
+        "color": "G",
         "sign": "+"
       },
       "sellResult": "opposite"
     },
     {
-      "kind": "golem_reaction_among",
-      "ingredients": [
-        1,
-        3,
-        8
-      ],
-      "reaction": "animators",
-      "count": 1
-    },
-    {
       "kind": "book_among",
       "ingredients": [
-        1,
         2,
-        3,
+        6,
+        7,
         8
       ],
       "result": "solar",
@@ -60,75 +33,108 @@
       "kind": "sell_among",
       "ingredients": [
         1,
-        2,
-        4,
-        6
+        3,
+        6,
+        7
       ],
       "claimedPotion": {
-        "color": "R",
+        "color": "G",
+        "sign": "-"
+      },
+      "result": "opposite",
+      "count": 5
+    },
+    {
+      "kind": "sell_among",
+      "ingredients": [
+        3,
+        5,
+        8
+      ],
+      "claimedPotion": {
+        "color": "G",
         "sign": "+"
       },
-      "result": "neutral",
+      "result": "total_match",
       "count": 2
     },
     {
       "kind": "sell_among",
       "ingredients": [
-        2,
-        6,
+        1,
+        4,
         8
       ],
       "claimedPotion": {
         "color": "B",
         "sign": "-"
       },
-      "result": "sign_ok",
-      "count": 2
+      "result": "opposite",
+      "count": 1
     },
     {
-      "kind": "golem_test",
-      "ingredient": 2,
-      "chest_reacted": true,
-      "ears_reacted": false
+      "kind": "book_among",
+      "ingredients": [
+        2,
+        7,
+        8
+      ],
+      "result": "solar",
+      "count": 1
+    },
+    {
+      "kind": "sell_among",
+      "ingredients": [
+        2,
+        5,
+        6,
+        7
+      ],
+      "claimedPotion": {
+        "color": "G",
+        "sign": "-"
+      },
+      "result": "total_match",
+      "count": 2
     }
   ],
   "questions": [
     {
       "kind": "mixing-result",
       "ingredient1": 6,
-      "ingredient2": 7
+      "ingredient2": 8
     }
   ],
   "solution": {
-    "1": 4,
-    "2": 5,
-    "3": 2,
-    "4": 6,
-    "5": 8,
-    "6": 3,
-    "7": 1,
-    "8": 7
+    "1": 6,
+    "2": 7,
+    "3": 8,
+    "4": 5,
+    "5": 1,
+    "6": 2,
+    "7": 3,
+    "8": 4
   },
   "hints": [
     {
       "level": 1,
-      "text": "To find the result of mixing ing6 and ing7, apply the mixing rule: scan colours R\u2192G\u2192B in order. The first colour where both ingredients share the same sign determines the result potion. If all three colours have opposing signs, the result is neutral."
+      "text": "To find the result of mixing ing6 and ing8, apply the mixing rule: scan colours R\u2192G\u2192B in order. The first colour where both ingredients share the same sign determines the result potion. If all three colours have opposing signs, the result is neutral."
     },
     {
       "level": 2,
-      "text": "Step through each colour:\n  R: ing6=R+ (ing6 has R+), ing7=R- (ing7 has R-)\n      \u2192 opposite signs \u2192 skip.\n  G: ing6=G- (ing6 has G-), ing7=G+ (ing7 has G+)\n      \u2192 opposite signs \u2192 skip.\n  B: ing6=B- (ing6 has B-), ing7=B- (ing7 has B-)\n      \u2192 SAME sign - \u2192 B- resolves."
+      "text": "Step through each colour:\n  R: ing6=R+ (ing6 has R+), ing8=R- (ing8 has R-)\n      \u2192 opposite signs \u2192 skip.\n  G: ing6=G- (ing6 has G-), ing8=G+ (ing8 has G+)\n      \u2192 opposite signs \u2192 skip.\n  B: ing6=B+ (ing6 has B+), ing8=B+ (ing8 has B+)\n      \u2192 SAME sign + \u2192 B+ resolves."
     },
     {
       "level": 3,
-      "text": "ing6=pNn, ing7=npN. Mix result: B-."
+      "text": "ing6=pnP, ing8=nPp. Mix result: B+."
     }
   ],
   "complexity": {
-    "score": 77,
-    "raw_score": 60,
-    "clue_score": 35,
+    "score": 86,
+    "raw_score": 75,
+    "clue_score": 50,
     "question_score": 0,
     "world_score": 15,
-    "residual_worlds": 2
+    "residual_worlds": 1
   }
 }

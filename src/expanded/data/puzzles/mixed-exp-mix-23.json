@@ -1,62 +1,29 @@
 {
   "id": "mixed-exp-mix-23",
   "mode": "expanded",
-  "title": "The Quiet Confirmation",
+  "title": "The Urgent Annotation",
   "description": "Mixing, selling, and debunking records all point toward a single pair. Deduce what potion they produce.",
   "difficulty": "hard",
-  "golem": {
-    "chest": {
-      "color": "R",
-      "size": "S"
-    },
-    "ears": {
-      "color": "B",
-      "size": "S"
-    }
-  },
   "clues": [
-    {
-      "kind": "golem_test",
-      "ingredient": 1,
-      "chest_reacted": true,
-      "ears_reacted": true
-    },
-    {
-      "kind": "golem_test",
-      "ingredient": 5,
-      "chest_reacted": false,
-      "ears_reacted": false
-    },
     {
       "kind": "sell_result_among",
       "ingredients": [
-        1,
-        5,
-        7,
-        8
+        2,
+        4,
+        7
       ],
       "claimedPotion": {
-        "color": "R",
+        "color": "G",
         "sign": "-"
       },
       "sellResult": "opposite"
     },
     {
-      "kind": "golem_reaction_among",
-      "ingredients": [
-        4,
-        5,
-        6
-      ],
-      "reaction": "chest_only",
-      "count": 1
-    },
-    {
       "kind": "book_among",
       "ingredients": [
-        3,
-        4,
-        7
+        1,
+        2,
+        3
       ],
       "result": "lunar",
       "count": 1
@@ -64,76 +31,75 @@
     {
       "kind": "mixing_count_among",
       "ingredients": [
-        1,
-        6,
-        8
+        3,
+        5,
+        7
       ],
       "result": {
-        "color": "G",
+        "color": "B",
         "sign": "-"
       },
       "count": 2
     },
     {
-      "kind": "golem_reaction_among",
+      "kind": "mixing_count_among",
       "ingredients": [
         1,
-        2,
-        3
-      ],
-      "reaction": "animators",
-      "count": 1
-    },
-    {
-      "kind": "golem_reaction_among",
-      "ingredients": [
-        2,
         3,
-        5
+        4,
+        8
       ],
-      "reaction": "chest_only",
-      "count": 1
+      "result": {
+        "color": "G",
+        "sign": "+"
+      },
+      "count": 4
     },
     {
-      "kind": "golem_reaction_among",
+      "kind": "sell_among",
       "ingredients": [
-        2,
+        3,
+        4,
         5,
         7
       ],
-      "reaction": "animators",
-      "count": 1
+      "claimedPotion": {
+        "color": "G",
+        "sign": "+"
+      },
+      "result": "sign_ok",
+      "count": 2
     }
   ],
   "questions": [
     {
       "kind": "mixing-result",
       "ingredient1": 2,
-      "ingredient2": 5
+      "ingredient2": 3
     }
   ],
   "solution": {
-    "1": 3,
-    "2": 6,
-    "3": 1,
-    "4": 5,
-    "5": 8,
+    "1": 1,
+    "2": 5,
+    "3": 6,
+    "4": 8,
+    "5": 7,
     "6": 2,
-    "7": 4,
-    "8": 7
+    "7": 3,
+    "8": 4
   },
   "hints": [
     {
       "level": 1,
-      "text": "To find the result of mixing ing2 and ing5, apply the mixing rule: scan colours R\u2192G\u2192B in order. The first colour where both ingredients share the same sign determines the result potion. If all three colours have opposing signs, the result is neutral."
+      "text": "To find the result of mixing ing2 and ing3, apply the mixing rule: scan colours R\u2192G\u2192B in order. The first colour where both ingredients share the same sign determines the result potion. If all three colours have opposing signs, the result is neutral."
     },
     {
       "level": 2,
-      "text": "Step through each colour:\n  R: ing2=R+ (ing2 has R+), ing5=R+ (ing5 has R+)\n      \u2192 SAME sign + \u2192 R+ resolves."
+      "text": "Step through each colour:\n  R: ing2=R- (ing2 has R-), ing3=R+ (ing3 has R+)\n      \u2192 opposite signs \u2192 skip.\n  G: ing2=G- (ing2 has G-), ing3=G+ (ing3 has G+)\n      \u2192 opposite signs \u2192 skip.\n  B: ing2=B+ (ing2 has B+), ing3=B- (ing3 has B-)\n      \u2192 opposite signs \u2192 skip.\n  All colours opposite \u2192 neutral."
     },
     {
       "level": 3,
-      "text": "ing2=Ppn, ing5=PPP. Mix result: G+."
+      "text": "ing2=Nnp, ing3=Ppn. Mix result: neutral."
     }
   ],
   "complexity": {
@@ -142,6 +108,6 @@
     "clue_score": 40,
     "question_score": 0,
     "world_score": 15,
-    "residual_worlds": 1
+    "residual_worlds": 2
   }
 }

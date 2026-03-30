@@ -1,0 +1,112 @@
+{
+  "id": "golem-18",
+  "mode": "expanded",
+  "title": "The Philosopher's Fragment",
+  "description": "Use the clues to answer the question.",
+  "difficulty": "easy",
+  "clues": [
+    {
+      "kind": "mixing",
+      "ingredient1": 3,
+      "ingredient2": 7,
+      "result": {
+        "color": "R",
+        "sign": "-"
+      }
+    },
+    {
+      "kind": "mixing",
+      "ingredient1": 2,
+      "ingredient2": 6,
+      "result": {
+        "color": "R",
+        "sign": "-"
+      }
+    },
+    {
+      "kind": "mixing",
+      "ingredient1": 1,
+      "ingredient2": 5,
+      "result": {
+        "color": "G",
+        "sign": "+"
+      }
+    },
+    {
+      "kind": "golem_test",
+      "ingredient": 6,
+      "chest_reacted": false,
+      "ears_reacted": false
+    },
+    {
+      "kind": "mixing",
+      "ingredient1": 5,
+      "ingredient2": 7,
+      "result": {
+        "color": "B",
+        "sign": "+"
+      }
+    },
+    {
+      "kind": "golem_test",
+      "ingredient": 8,
+      "chest_reacted": false,
+      "ears_reacted": true
+    },
+    {
+      "kind": "golem_test",
+      "ingredient": 4,
+      "chest_reacted": false,
+      "ears_reacted": false
+    },
+    {
+      "kind": "golem_test",
+      "ingredient": 7,
+      "chest_reacted": null,
+      "ears_reacted": false
+    },
+    {
+      "kind": "aspect",
+      "ingredient": 8,
+      "color": "B",
+      "sign": "+"
+    }
+  ],
+  "questions": [
+    {
+      "kind": "golem_reaction_component"
+    }
+  ],
+  "solution": {
+    "1": 6,
+    "2": 7,
+    "3": 1,
+    "4": 3,
+    "5": 8,
+    "6": 4,
+    "7": 5,
+    "8": 2
+  },
+  "hints": [
+    {
+      "level": 1,
+      "text": "Reason about all possible golem configurations jointly with ingredient assignments. Each golem_test clue eliminates configs \u00d7 worlds that are inconsistent with the result."
+    },
+    {
+      "level": 2,
+      "text": "After all clues: 1 config(s) remain. True config: chest=RL, ears=BL."
+    },
+    {
+      "level": 3,
+      "text": "Answer: {'chest': {'color': 'R', 'size': 'L'}, 'ears': {'color': 'B', 'size': 'L'}}"
+    }
+  ],
+  "complexity": {
+    "score": 10,
+    "raw_score": 10,
+    "clue_score": 0,
+    "question_score": 0,
+    "world_score": 0,
+    "residual_worlds": 8
+  }
+}

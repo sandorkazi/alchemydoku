@@ -1,67 +1,33 @@
 {
   "id": "mixed-exp-04",
   "mode": "expanded",
-  "title": "Reactions from Afar",
+  "title": "The Turnover Number",
   "description": "Use the clues to decide which ingredient reveals the most information when consulted in the Royal Society book.",
   "difficulty": "easy",
-  "golem": {
-    "chest": {
-      "color": "R",
-      "size": "S"
-    },
-    "ears": {
-      "color": "B",
-      "size": "S"
-    }
-  },
   "clues": [
     {
       "kind": "sell_result_among",
       "ingredients": [
+        1,
         2,
-        3,
-        8
+        4,
+        7
       ],
       "claimedPotion": {
-        "color": "R",
-        "sign": "-"
+        "color": "G",
+        "sign": "+"
       },
       "sellResult": "opposite"
     },
     {
-      "kind": "golem_reaction_among",
-      "ingredients": [
-        3,
-        6,
-        8
-      ],
-      "reaction": "chest_only",
-      "count": 1
-    },
-    {
       "kind": "book_among",
       "ingredients": [
-        3,
-        5,
+        1,
+        2,
         7
       ],
       "result": "lunar",
       "count": 1
-    },
-    {
-      "kind": "sell_among",
-      "ingredients": [
-        1,
-        2,
-        6,
-        7
-      ],
-      "claimedPotion": {
-        "color": "B",
-        "sign": "+"
-      },
-      "result": "sign_ok",
-      "count": 3
     }
   ],
   "questions": [
@@ -70,35 +36,35 @@
     }
   ],
   "solution": {
-    "1": 6,
-    "2": 4,
-    "3": 8,
-    "4": 5,
+    "1": 3,
+    "2": 1,
+    "3": 5,
+    "4": 6,
     "5": 7,
-    "6": 3,
-    "7": 1,
-    "8": 2
+    "6": 4,
+    "7": 2,
+    "8": 8
   },
   "hints": [
     {
       "level": 1,
-      "text": "Consulting the Royal Society book about an ingredient tells you whether its alchemical is Solar or Lunar. The most informative ingredient is the one whose answer has maximum Shannon entropy \u2014 closest to a 50/50 split across the 933 remaining worlds."
+      "text": "The Royal Society book reveals whether an ingredient's alchemical is Solar or Lunar. Consulting a confirmed ingredient gives no new information. The most useful choice is the ingredient whose Solar/Lunar nature is most uncertain \u2014 the one most evenly split between the two possibilities."
     },
     {
       "level": 2,
-      "text": "Top 5 ingredients by entropy:\n  ing6: solar=419/933 (45%)  H=0.993\n  ing1: solar=413/933 (44%)  H=0.990\n  ing2: solar=404/933 (43%)  H=0.987\n  ing3: solar=566/933 (61%)  H=0.967\n  ing4: solar=323/933 (35%)  H=0.931"
+      "text": "Still uncertain (Solar / Lunar candidates both possible):\n  ing4: 6912 Solar / 9504 Lunar alchemicals still consistent \u2190 most balanced\n  ing3: 6480 Solar / 9936 Lunar alchemicals still consistent\n  ing5: 6480 Solar / 9936 Lunar alchemicals still consistent\n  ing6: 6480 Solar / 9936 Lunar alchemicals still consistent\n  ing8: 6480 Solar / 9936 Lunar alchemicals still consistent\n  ing1: 10944 Solar / 5472 Lunar alchemicals still consistent\n  ing2: 10944 Solar / 5472 Lunar alchemicals still consistent\n  ing7: 10944 Solar / 5472 Lunar alchemicals still consistent"
     },
     {
       "level": 3,
-      "text": "Most informative ingredient to consult: ing6 (entropy 0.993)."
+      "text": "Most informative ingredient to consult: ing4."
     }
   ],
   "complexity": {
-    "score": 57,
-    "raw_score": 35,
-    "clue_score": 25,
+    "score": 40,
+    "raw_score": 20,
+    "clue_score": 10,
     "question_score": 0,
     "world_score": 0,
-    "residual_worlds": 933
+    "residual_worlds": 16416
   }
 }

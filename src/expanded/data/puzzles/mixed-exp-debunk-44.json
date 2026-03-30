@@ -2,97 +2,69 @@
   "id": "mixed-exp-debunk-44",
   "mode": "expanded",
   "kind": "debunk",
-  "title": "The Confiscated Notes",
+  "title": "The Termination Event",
   "description": "Mixed evidence surrounds several suspicious publications. Use master debunking to expose the lies.",
   "difficulty": "extreme",
-  "golem": {
-    "chest": {
-      "color": "R",
-      "size": "L"
-    },
-    "ears": {
-      "color": "B",
-      "size": "L"
-    }
-  },
   "clues": [
-    {
-      "kind": "golem_test",
-      "ingredient": 5,
-      "chest_reacted": true,
-      "ears_reacted": true
-    },
-    {
-      "kind": "golem_test",
-      "ingredient": 4,
-      "chest_reacted": false,
-      "ears_reacted": true
-    },
     {
       "kind": "sell_result_among",
       "ingredients": [
-        4,
-        6,
-        7
+        1,
+        2,
+        5,
+        6
       ],
       "claimedPotion": {
         "color": "R",
-        "sign": "-"
+        "sign": "+"
       },
       "sellResult": "opposite"
     },
     {
-      "kind": "golem_reaction_among",
+      "kind": "book_among",
       "ingredients": [
-        2,
         3,
+        4,
         5,
         7
       ],
-      "reaction": "animators",
-      "count": 1
-    },
-    {
-      "kind": "book_among",
-      "ingredients": [
-        2,
-        4,
-        7
-      ],
-      "result": "solar",
+      "result": "lunar",
       "count": 1
     },
     {
       "kind": "sell_among",
       "ingredients": [
         1,
-        5,
-        7,
-        8
+        3,
+        4,
+        6
       ],
       "claimedPotion": {
-        "color": "R",
+        "color": "G",
         "sign": "+"
       },
       "result": "opposite",
-      "count": 5
+      "count": 6
     },
     {
-      "kind": "golem_reaction_among",
+      "kind": "mixing_count_among",
       "ingredients": [
         2,
-        4,
-        7,
+        3,
+        5,
         8
       ],
-      "reaction": "ears_only",
-      "count": 1
+      "result": {
+        "color": "B",
+        "sign": "+"
+      },
+      "count": 4
     },
     {
       "kind": "book_among",
       "ingredients": [
-        4,
-        6,
+        1,
+        5,
         7
       ],
       "result": "solar",
@@ -105,14 +77,14 @@
     }
   ],
   "solution": {
-    "1": 1,
-    "2": 3,
-    "3": 4,
-    "4": 2,
-    "5": 7,
-    "6": 8,
+    "1": 7,
+    "2": 2,
+    "3": 5,
+    "4": 3,
+    "5": 8,
+    "6": 1,
     "7": 6,
-    "8": 5
+    "8": 4
   },
   "hints": [],
   "complexity": {
@@ -121,28 +93,28 @@
     "clue_score": 35,
     "question_score": 10,
     "world_score": 15,
-    "residual_worlds": 3
+    "residual_worlds": 4
   },
   "publications": [
     {
       "ingredient": 1,
-      "claimedAlchemical": 3
+      "claimedAlchemical": 8
     },
-    null,
     null,
     {
-      "ingredient": 4,
-      "claimedAlchemical": 7
+      "ingredient": 3,
+      "claimedAlchemical": 8
     },
+    null,
     {
       "ingredient": 5,
-      "claimedAlchemical": 1
-    },
-    {
-      "ingredient": 6,
-      "claimedAlchemical": 2
+      "claimedAlchemical": 6
     },
     null,
+    {
+      "ingredient": 7,
+      "claimedAlchemical": 7
+    },
     null
   ],
   "debunk_answers": {
@@ -150,17 +122,17 @@
       {
         "kind": "master",
         "ingredient1": 1,
-        "ingredient2": 6
+        "ingredient2": 3
       },
       {
         "kind": "master",
-        "ingredient1": 4,
+        "ingredient1": 3,
         "ingredient2": 5
       },
       {
         "kind": "master",
-        "ingredient1": 4,
-        "ingredient2": 6
+        "ingredient1": 5,
+        "ingredient2": 7
       }
     ]
   },
@@ -170,47 +142,25 @@
       "aspect": "G",
       "entries": [
         {
-          "ingredient": 1,
-          "sign": "-"
-        },
-        {
-          "ingredient": 2,
-          "sign": "-"
-        },
-        {
-          "ingredient": 5,
-          "sign": "+"
-        },
-        {
-          "ingredient": 6,
-          "sign": "+"
-        }
-      ]
-    },
-    {
-      "id": "art-R-2",
-      "aspect": "R",
-      "entries": [
-        {
           "ingredient": 3,
           "sign": "+"
         },
         {
-          "ingredient": 4,
+          "ingredient": 5,
           "sign": "+"
         },
         {
-          "ingredient": 5,
+          "ingredient": 6,
           "sign": "-"
         },
         {
-          "ingredient": 6,
+          "ingredient": 8,
           "sign": "-"
         }
       ]
     },
     {
-      "id": "art-B-3",
+      "id": "art-B-2",
       "aspect": "B",
       "entries": [
         {
@@ -218,16 +168,38 @@
           "sign": "+"
         },
         {
-          "ingredient": 3,
+          "ingredient": 2,
           "sign": "-"
         },
         {
-          "ingredient": 7,
-          "sign": "-"
+          "ingredient": 6,
+          "sign": "+"
         },
         {
           "ingredient": 8,
+          "sign": "-"
+        }
+      ]
+    },
+    {
+      "id": "art-R-3",
+      "aspect": "R",
+      "entries": [
+        {
+          "ingredient": 1,
           "sign": "+"
+        },
+        {
+          "ingredient": 3,
+          "sign": "+"
+        },
+        {
+          "ingredient": 4,
+          "sign": "-"
+        },
+        {
+          "ingredient": 5,
+          "sign": "-"
         }
       ]
     }

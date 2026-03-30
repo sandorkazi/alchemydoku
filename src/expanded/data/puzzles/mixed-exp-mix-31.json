@@ -1,0 +1,102 @@
+{
+  "id": "mixed-exp-mix-31",
+  "mode": "expanded",
+  "title": "The Borrowed Theory",
+  "description": "Mixing, selling, and debunking records all point toward a single pair. Deduce what potion they produce.",
+  "difficulty": "hard",
+  "clues": [
+    {
+      "kind": "sell_result_among",
+      "ingredients": [
+        1,
+        2,
+        6,
+        7
+      ],
+      "claimedPotion": {
+        "color": "R",
+        "sign": "-"
+      },
+      "sellResult": "opposite"
+    },
+    {
+      "kind": "book_among",
+      "ingredients": [
+        1,
+        2,
+        3,
+        4
+      ],
+      "result": "lunar",
+      "count": 1
+    },
+    {
+      "kind": "sell_among",
+      "ingredients": [
+        3,
+        4,
+        7,
+        8
+      ],
+      "claimedPotion": {
+        "color": "B",
+        "sign": "+"
+      },
+      "result": "sign_ok",
+      "count": 5
+    },
+    {
+      "kind": "sell_among",
+      "ingredients": [
+        5,
+        6,
+        7
+      ],
+      "claimedPotion": {
+        "color": "R",
+        "sign": "+"
+      },
+      "result": "opposite",
+      "count": 3
+    }
+  ],
+  "questions": [
+    {
+      "kind": "mixing-result",
+      "ingredient1": 2,
+      "ingredient2": 8
+    }
+  ],
+  "solution": {
+    "1": 5,
+    "2": 4,
+    "3": 3,
+    "4": 8,
+    "5": 7,
+    "6": 1,
+    "7": 6,
+    "8": 2
+  },
+  "hints": [
+    {
+      "level": 1,
+      "text": "To find the result of mixing ing2 and ing8, apply the mixing rule: scan colours R\u2192G\u2192B in order. The first colour where both ingredients share the same sign determines the result potion. If all three colours have opposing signs, the result is neutral."
+    },
+    {
+      "level": 2,
+      "text": "Step through each colour:\n  R: ing2=R- (ing2 has R-), ing8=R+ (ing8 has R+)\n      \u2192 opposite signs \u2192 skip.\n  G: ing2=G+ (ing2 G?: (sign undetermined)), ing8=G- (ing8 has G-)\n      \u2192 opposite signs \u2192 skip.\n  B: ing2=B+ (ing2 has B+), ing8=B+ (ing8 has B+)\n      \u2192 SAME sign + \u2192 B+ resolves."
+    },
+    {
+      "level": 3,
+      "text": "ing2=nPp, ing8=pnP. Mix result: B+."
+    }
+  ],
+  "complexity": {
+    "score": 77,
+    "raw_score": 60,
+    "clue_score": 30,
+    "question_score": 0,
+    "world_score": 20,
+    "residual_worlds": 8
+  }
+}

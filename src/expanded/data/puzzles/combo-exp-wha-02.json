@@ -1,50 +1,10 @@
 {
   "id": "combo-exp-wha-02",
   "mode": "expanded",
-  "title": "The Hidden Variable",
+  "title": "The Alexander Polynomial",
   "description": "Four ingredient\u2013sign pairs form a valid encyclopedia article. All the clue types are in play \u2014 deduce which aspect colour they share.",
   "difficulty": "easy",
-  "golem": {
-    "chest": {
-      "color": "R",
-      "size": "L"
-    },
-    "ears": {
-      "color": "B",
-      "size": "L"
-    }
-  },
   "clues": [
-    {
-      "kind": "golem_test",
-      "ingredient": 4,
-      "chest_reacted": true,
-      "ears_reacted": true
-    },
-    {
-      "kind": "golem_test",
-      "ingredient": 2,
-      "chest_reacted": true,
-      "ears_reacted": false
-    },
-    {
-      "kind": "encyclopedia",
-      "aspect": "R",
-      "entries": [
-        {
-          "ingredient": 2,
-          "sign": "+"
-        },
-        {
-          "ingredient": 5,
-          "sign": "+"
-        },
-        {
-          "ingredient": 6,
-          "sign": "+"
-        }
-      ]
-    },
     {
       "kind": "encyclopedia",
       "aspect": "B",
@@ -54,20 +14,56 @@
           "sign": "-"
         },
         {
+          "ingredient": 6,
+          "sign": "-"
+        },
+        {
+          "ingredient": 7,
+          "sign": "-"
+        }
+      ]
+    },
+    {
+      "kind": "encyclopedia",
+      "aspect": "G",
+      "entries": [
+        {
           "ingredient": 4,
           "sign": "-"
         },
         {
           "ingredient": 6,
           "sign": "-"
+        },
+        {
+          "ingredient": 7,
+          "sign": "-"
         }
       ]
     },
     {
-      "kind": "golem_test",
-      "ingredient": 3,
-      "chest_reacted": false,
-      "ears_reacted": false
+      "kind": "mixing",
+      "ingredient1": 2,
+      "ingredient2": 5,
+      "result": {
+        "type": "neutral"
+      }
+    },
+    {
+      "kind": "book_among",
+      "ingredients": [
+        1,
+        2,
+        4,
+        8
+      ],
+      "result": "solar",
+      "count": 1
+    },
+    {
+      "kind": "book",
+      "ingredient": 4,
+      "result": "solar"
     }
   ],
   "questions": [
@@ -75,38 +71,38 @@
       "kind": "encyclopedia_which_aspect",
       "entries": [
         {
+          "ingredient": 1,
+          "sign": "+"
+        },
+        {
           "ingredient": 2,
           "sign": "+"
         },
         {
-          "ingredient": 3,
-          "sign": "+"
-        },
-        {
-          "ingredient": 4,
+          "ingredient": 5,
           "sign": "-"
         },
         {
-          "ingredient": 6,
+          "ingredient": 8,
           "sign": "-"
         }
       ]
     }
   ],
   "solution": {
-    "1": 1,
-    "2": 6,
-    "3": 4,
-    "4": 7,
-    "5": 2,
+    "1": 6,
+    "2": 2,
+    "3": 8,
+    "4": 5,
+    "5": 1,
     "6": 3,
-    "7": 8,
-    "8": 5
+    "7": 7,
+    "8": 4
   },
   "hints": [
     {
       "level": 1,
-      "text": "For each colour R/G/B, check whether all four ingredient\u2013sign pairs (ingredient 2 +, ingredient 3 +, ingredient 4 -, ingredient 6 -) hold across the remaining worlds."
+      "text": "For each colour R/G/B, check whether all four ingredient\u2013sign pairs (ingredient 1 +, ingredient 2 +, ingredient 5 -, ingredient 8 -) hold across the remaining worlds."
     },
     {
       "level": 2,
@@ -114,15 +110,15 @@
     },
     {
       "level": 3,
-      "text": "The answer is G (Green): every remaining world maps all four entries onto the Green aspect."
+      "text": "The answer is R (Red): every remaining world maps all four entries onto the Red aspect."
     }
   ],
   "complexity": {
-    "score": 40,
-    "raw_score": 20,
-    "clue_score": 0,
+    "score": 57,
+    "raw_score": 35,
+    "clue_score": 5,
     "question_score": 5,
-    "world_score": 5,
-    "residual_worlds": 4
+    "world_score": 15,
+    "residual_worlds": 2
   }
 }

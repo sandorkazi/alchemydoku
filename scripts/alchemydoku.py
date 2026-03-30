@@ -1614,18 +1614,11 @@ PROFILES = {
         mandatory_clues=[{'kind': 'sell_result_among', 'sellResult': 'opposite'},
                          {'kind': 'sell_result_among', 'sellResult': 'sign_ok'},
                          {'kind': 'mixing_among'}]),
-    'mixed_exp':  Profile('mixed-exp',  ['base', 'sell', 'among', 'solar_lunar', 'golem'], 'most_informative_book', 'hard', 14, True,
+    'mixed_exp':  Profile('mixed-exp',  ['base', 'sell', 'among', 'solar_lunar'], 'most_informative_book', 'hard', 14, False,
         mandatory_clues=[{'kind': 'sell_result_among', 'sellResult': 'opposite'},
-                         {'kind': 'golem_reaction_among', 'count': 1},
                          {'kind': 'book_among', 'count': 1}]),
-    'mixed_exp_mix':   Profile('mixed-exp-mix',   ['base', 'sell', 'among', 'solar_lunar', 'golem'], 'mixing-result',        'hard', 14, True,
+    'mixed_exp_mix':   Profile('mixed-exp-mix',   ['base', 'sell', 'among', 'solar_lunar'], 'mixing-result',        'hard', 14, False,
         mandatory_clues=[{'kind': 'sell_result_among', 'sellResult': 'opposite'},
-                         {'kind': 'golem_reaction_among', 'count': 1},
-                         {'kind': 'book_among', 'count': 1}]),
-    'mixed_exp_golem': Profile('mixed-exp-golem', ['base', 'sell', 'among', 'solar_lunar', 'golem'], 'golem_group', 'hard', 14, True,
-        {'group': 'animators'},
-        mandatory_clues=[{'kind': 'sell_result_among', 'sellResult': 'opposite'},
-                         {'kind': 'golem_reaction_among', 'count': 1},
                          {'kind': 'book_among', 'count': 1}]),
     # Mixed-clue debunk profiles — realistic (board-game compliant)
     'mixed_debunk_r': Profile(
@@ -1652,21 +1645,20 @@ PROFILES = {
     ),
     'mixed_exp_debunk': Profile(
         'mixed-exp-debunk',
-        ['base', 'sell', 'among', 'solar_lunar', 'golem'],
+        ['base', 'sell', 'among', 'solar_lunar'],
         'debunk_min_steps',
-        'expert', 16, True,
+        'expert', 16, False,
         mandatory_clues=[
             {'kind': 'sell_result_among', 'sellResult': 'opposite'},
-            {'kind': 'golem_reaction_among', 'count': 1},
             {'kind': 'book_among', 'count': 1},
         ]
     ),
     # Expanded combination profiles (Grand Synthesis)
     'combo_exp_easy':     Profile('combo-exp-easy',       ['base', 'encyclopedia', 'solar_lunar'],             'encyclopedia_fourth',      'easy',   12, False),
     'combo_exp_med_sl':   Profile('combo-exp-med-sl',     ['base', 'encyclopedia', 'solar_lunar'],             'solar_lunar',              'medium', 13, False),
-    'combo_exp_med_all':  Profile('combo-exp-med-all',    ['base', 'encyclopedia', 'solar_lunar', 'golem'],    'encyclopedia_fourth',      'medium', 14, True),
-    'combo_exp_hard_wha': Profile('combo-exp-wha',         ['base', 'encyclopedia', 'solar_lunar', 'golem'],    'encyclopedia_which_aspect','hard',   16, True),
-    'combo_exp_hard_sl':  Profile('combo-exp-hard-sl',    ['base', 'encyclopedia', 'solar_lunar', 'golem'],    'solar_lunar',              'hard',   15, True),
+    'combo_exp_med_all':  Profile('combo-exp-med-all',    ['base', 'encyclopedia', 'solar_lunar'],             'encyclopedia_fourth',      'medium', 14, False),
+    'combo_exp_hard_wha': Profile('combo-exp-wha',         ['base', 'encyclopedia', 'solar_lunar'],             'encyclopedia_which_aspect','hard',   16, False),
+    'combo_exp_hard_sl':  Profile('combo-exp-xsl',         ['base', 'encyclopedia', 'solar_lunar'],             'solar_lunar',              'hard',   15, False),
 }
 
 # ── Clue pool ─────────────────────────────────────────────────────────────────
@@ -3132,16 +3124,12 @@ _EXP_PREFIX_COLLECTION: dict[str, str] = {
     'enc':                'exp-easy-enc',
     'sl':                 'exp-easy-sl',
     'enc-sl':             'exp-medium-enc-sl',
-    'golem-enc':          'exp-medium-golem-enc',
-    'golem-sl':           'exp-medium-golem-sl',
-    'all':                'exp-hard-all',
-    'golem-mix':          'exp-hard-golem-mix',
-    'among-golem':        'exp-hard-among',
     'combo-exp':          'combo-exp',
     'combo-exp-med-all':  'combo-exp',
+    'combo-exp-wha':      'combo-exp',
+    'combo-exp-xsl':      'combo-exp',
     'mixed-exp-debunk':   'mixed-exp-debunk',
     'mixed-exp-mix':      'mixed-clues-exp',
-    'mixed-exp-golem':    'mixed-clues-exp',
     'mixed-exp':          'entropy-book',
 }
 

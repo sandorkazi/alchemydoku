@@ -1,131 +1,129 @@
 {
   "id": "mixed-exp-mix-19",
   "mode": "expanded",
-  "title": "The Waning Lead",
+  "title": "The Annotated Margin",
   "description": "Mixing, selling, and debunking records all point toward a single pair. Deduce what potion they produce.",
-  "difficulty": "hard",
-  "golem": {
-    "chest": {
-      "color": "B",
-      "size": "S"
-    },
-    "ears": {
-      "color": "R",
-      "size": "S"
-    }
-  },
+  "difficulty": "extreme",
   "clues": [
-    {
-      "kind": "golem_test",
-      "ingredient": 2,
-      "chest_reacted": true,
-      "ears_reacted": true
-    },
-    {
-      "kind": "golem_test",
-      "ingredient": 1,
-      "chest_reacted": true,
-      "ears_reacted": false
-    },
     {
       "kind": "sell_result_among",
       "ingredients": [
         3,
+        4,
         5,
-        7,
-        8
+        7
       ],
       "claimedPotion": {
         "color": "B",
-        "sign": "-"
+        "sign": "+"
       },
       "sellResult": "opposite"
-    },
-    {
-      "kind": "golem_reaction_among",
-      "ingredients": [
-        1,
-        2,
-        4,
-        5
-      ],
-      "reaction": "non_reactive",
-      "count": 1
     },
     {
       "kind": "book_among",
       "ingredients": [
         1,
-        3,
-        8
+        2,
+        3
       ],
       "result": "solar",
       "count": 1
+    },
+    {
+      "kind": "mixing_count_among",
+      "ingredients": [
+        3,
+        6,
+        7
+      ],
+      "result": {
+        "color": "B",
+        "sign": "-"
+      },
+      "count": 2
     },
     {
       "kind": "sell_among",
       "ingredients": [
         1,
         2,
+        4,
+        7
+      ],
+      "claimedPotion": {
+        "color": "G",
+        "sign": "-"
+      },
+      "result": "opposite",
+      "count": 5
+    },
+    {
+      "kind": "sell_among",
+      "ingredients": [
+        2,
         6,
         8
       ],
       "claimedPotion": {
-        "color": "B",
-        "sign": "+"
-      },
-      "result": "sign_ok",
-      "count": 4
-    },
-    {
-      "kind": "sell",
-      "ingredient1": 3,
-      "ingredient2": 8,
-      "claimedResult": {
-        "type": "potion",
         "color": "R",
         "sign": "-"
       },
-      "sellResult": "sign_ok"
+      "result": "total_match",
+      "count": 2
+    },
+    {
+      "kind": "sell_among",
+      "ingredients": [
+        2,
+        4,
+        5,
+        6
+      ],
+      "claimedPotion": {
+        "color": "B",
+        "sign": "-"
+      },
+      "result": "opposite",
+      "count": 2
     }
   ],
   "questions": [
     {
       "kind": "mixing-result",
       "ingredient1": 1,
-      "ingredient2": 3
+      "ingredient2": 2
     }
   ],
   "solution": {
-    "1": 6,
+    "1": 8,
     "2": 4,
-    "3": 3,
-    "4": 7,
-    "5": 1,
-    "6": 8,
-    "7": 5,
-    "8": 2
+    "3": 7,
+    "4": 3,
+    "5": 2,
+    "6": 1,
+    "7": 6,
+    "8": 5
   },
   "hints": [
     {
       "level": 1,
-      "text": "To find the result of mixing ing1 and ing3, apply the mixing rule: scan colours R\u2192G\u2192B in order. The first colour where both ingredients share the same sign determines the result potion. If all three colours have opposing signs, the result is neutral."
+      "text": "To find the result of mixing ing1 and ing2, apply the mixing rule: scan colours R\u2192G\u2192B in order. The first colour where both ingredients share the same sign determines the result potion. If all three colours have opposing signs, the result is neutral."
     },
     {
       "level": 2,
-      "text": "Step through each colour:\n  R: ing1=R+ (ing1 has R+), ing3=R+ (ing3 has R+)\n      \u2192 SAME sign + \u2192 R+ resolves."
+      "text": "Step through each colour:\n  R: ing1=R+ (ing1 has R+), ing2=R- (ing2 has R-)\n      \u2192 opposite signs \u2192 skip.\n  G: ing1=G+ (ing1 has G+), ing2=G+ (ing2 has G+)\n      \u2192 SAME sign + \u2192 G+ resolves."
     },
     {
       "level": 3,
-      "text": "ing1=Ppn, ing3=pNn. Mix result: R+."
+      "text": "ing1=PPP, ing2=nPp. Mix result: B+."
     }
   ],
   "complexity": {
-    "score": 75,
-    "raw_score": 57,
-    "clue_score": 27,
+    "score": 86,
+    "raw_score": 75,
+    "clue_score": 50,
     "question_score": 0,
-    "world_score": 20,
-    "residual_worlds": 6
+    "world_score": 15,
+    "residual_worlds": 1
   }
 }

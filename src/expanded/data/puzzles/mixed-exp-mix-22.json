@@ -1,63 +1,29 @@
 {
   "id": "mixed-exp-mix-22",
   "mode": "expanded",
-  "title": "An Unresolved Citation",
+  "title": "The Burned Copy",
   "description": "Mixing, selling, and debunking records all point toward a single pair. Deduce what potion they produce.",
   "difficulty": "hard",
-  "golem": {
-    "chest": {
-      "color": "B",
-      "size": "L"
-    },
-    "ears": {
-      "color": "G",
-      "size": "L"
-    }
-  },
   "clues": [
-    {
-      "kind": "golem_test",
-      "ingredient": 7,
-      "chest_reacted": true,
-      "ears_reacted": true
-    },
-    {
-      "kind": "golem_test",
-      "ingredient": 6,
-      "chest_reacted": false,
-      "ears_reacted": true
-    },
     {
       "kind": "sell_result_among",
       "ingredients": [
         3,
-        4,
         5,
-        6
+        7
       ],
       "claimedPotion": {
-        "color": "B",
-        "sign": "-"
+        "color": "G",
+        "sign": "+"
       },
       "sellResult": "opposite"
     },
     {
-      "kind": "golem_reaction_among",
-      "ingredients": [
-        3,
-        4,
-        8
-      ],
-      "reaction": "chest_only",
-      "count": 1
-    },
-    {
       "kind": "book_among",
       "ingredients": [
-        1,
-        4,
-        5,
-        6
+        2,
+        6,
+        8
       ],
       "result": "lunar",
       "count": 1
@@ -65,75 +31,72 @@
     {
       "kind": "sell_among",
       "ingredients": [
-        3,
         4,
+        5,
         6,
         7
       ],
       "claimedPotion": {
-        "color": "B",
-        "sign": "+"
+        "color": "R",
+        "sign": "-"
       },
       "result": "sign_ok",
-      "count": 3
+      "count": 5
     },
     {
-      "kind": "golem_test",
-      "ingredient": 1,
-      "chest_reacted": true,
-      "ears_reacted": false
-    },
-    {
-      "kind": "golem_reaction_among",
+      "kind": "mixing_count_among",
       "ingredients": [
-        1,
+        2,
         3,
-        4
+        7
       ],
-      "reaction": "animators",
-      "count": 1
+      "result": {
+        "color": "R",
+        "sign": "-"
+      },
+      "count": 2
     },
     {
-      "kind": "golem_reaction_among",
+      "kind": "book_among",
       "ingredients": [
         1,
         2,
-        7,
+        5,
         8
       ],
-      "reaction": "non_reactive",
+      "result": "solar",
       "count": 1
     }
   ],
   "questions": [
     {
       "kind": "mixing-result",
-      "ingredient1": 1,
-      "ingredient2": 5
+      "ingredient1": 2,
+      "ingredient2": 8
     }
   ],
   "solution": {
-    "1": 1,
-    "2": 5,
-    "3": 6,
-    "4": 8,
-    "5": 4,
+    "1": 6,
+    "2": 4,
+    "3": 1,
+    "4": 2,
+    "5": 7,
     "6": 3,
-    "7": 7,
-    "8": 2
+    "7": 5,
+    "8": 8
   },
   "hints": [
     {
       "level": 1,
-      "text": "To find the result of mixing ing1 and ing5, apply the mixing rule: scan colours R\u2192G\u2192B in order. The first colour where both ingredients share the same sign determines the result potion. If all three colours have opposing signs, the result is neutral."
+      "text": "To find the result of mixing ing2 and ing8, apply the mixing rule: scan colours R\u2192G\u2192B in order. The first colour where both ingredients share the same sign determines the result potion. If all three colours have opposing signs, the result is neutral."
     },
     {
       "level": 2,
-      "text": "Step through each colour:\n  R: ing1=R- (ing1 has R-), ing5=R- (ing5 has R-)\n      \u2192 SAME sign - \u2192 R- resolves."
+      "text": "Step through each colour:\n  R: ing2=R- (ing2 has R-), ing8=R+ (ing8 has R+)\n      \u2192 opposite signs \u2192 skip.\n  G: ing2=G+ (ing2 has G+), ing8=G+ (ing8 has G+)\n      \u2192 SAME sign + \u2192 G+ resolves."
     },
     {
       "level": 3,
-      "text": "ing1=npN, ing5=nPp. Mix result: G+."
+      "text": "ing2=nPp, ing8=PPP. Mix result: B+."
     }
   ],
   "complexity": {
@@ -142,6 +105,6 @@
     "clue_score": 35,
     "question_score": 0,
     "world_score": 15,
-    "residual_worlds": 1
+    "residual_worlds": 4
   }
 }

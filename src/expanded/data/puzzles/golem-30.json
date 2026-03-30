@@ -1,0 +1,90 @@
+{
+  "id": "golem-30",
+  "mode": "expanded",
+  "title": "The Genus Count",
+  "description": "Use the clues to answer the question.",
+  "difficulty": "easy",
+  "clues": [
+    {
+      "kind": "mixing",
+      "ingredient1": 7,
+      "ingredient2": 8,
+      "result": {
+        "color": "B",
+        "sign": "+"
+      }
+    },
+    {
+      "kind": "mixing",
+      "ingredient1": 1,
+      "ingredient2": 2,
+      "result": {
+        "color": "B",
+        "sign": "+"
+      }
+    },
+    {
+      "kind": "mixing",
+      "ingredient1": 4,
+      "ingredient2": 8,
+      "result": {
+        "color": "R",
+        "sign": "+"
+      }
+    },
+    {
+      "kind": "golem_test",
+      "ingredient": 8,
+      "chest_reacted": false,
+      "ears_reacted": true
+    },
+    {
+      "kind": "golem_test",
+      "ingredient": 6,
+      "chest_reacted": true,
+      "ears_reacted": true
+    },
+    {
+      "kind": "golem_animation",
+      "ingredient": 6,
+      "is_animator": true
+    }
+  ],
+  "questions": [
+    {
+      "kind": "golem_animation_ing"
+    }
+  ],
+  "solution": {
+    "1": 2,
+    "2": 5,
+    "3": 7,
+    "4": 3,
+    "5": 1,
+    "6": 6,
+    "7": 4,
+    "8": 8
+  },
+  "hints": [
+    {
+      "level": 1,
+      "text": "Reason about all possible golem configurations jointly with ingredient assignments. Each golem_test clue eliminates configs \u00d7 worlds that are inconsistent with the result."
+    },
+    {
+      "level": 2,
+      "text": "After all clues: 1 config(s) remain. True config: chest=BS, ears=RL."
+    },
+    {
+      "level": 3,
+      "text": "Answer: [4, 6]"
+    }
+  ],
+  "complexity": {
+    "score": 10,
+    "raw_score": 10,
+    "clue_score": 0,
+    "question_score": 0,
+    "world_score": 0,
+    "residual_worlds": 48
+  }
+}

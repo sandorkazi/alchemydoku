@@ -1,0 +1,68 @@
+{
+  "id": "golem-19",
+  "mode": "expanded",
+  "title": "The Hidden Single",
+  "description": "Use the clues to answer the question.",
+  "difficulty": "easy",
+  "clues": [
+    {
+      "kind": "golem_test",
+      "ingredient": 2,
+      "chest_reacted": false,
+      "ears_reacted": true
+    },
+    {
+      "kind": "golem_animation",
+      "ingredient": 5,
+      "is_animator": true
+    },
+    {
+      "kind": "golem_test",
+      "ingredient": 7,
+      "chest_reacted": true,
+      "ears_reacted": false
+    },
+    {
+      "kind": "golem_animation",
+      "ingredient": 7,
+      "is_animator": true
+    }
+  ],
+  "questions": [
+    {
+      "kind": "golem_animation_ing"
+    }
+  ],
+  "solution": {
+    "1": 1,
+    "2": 3,
+    "3": 7,
+    "4": 4,
+    "5": 8,
+    "6": 5,
+    "7": 6,
+    "8": 2
+  },
+  "hints": [
+    {
+      "level": 1,
+      "text": "Reason about all possible golem configurations jointly with ingredient assignments. Each golem_test clue eliminates configs \u00d7 worlds that are inconsistent with the result."
+    },
+    {
+      "level": 2,
+      "text": "After all clues: 12 config(s) remain. True config: chest=RL, ears=GL."
+    },
+    {
+      "level": 3,
+      "text": "Answer: [5, 7]"
+    }
+  ],
+  "complexity": {
+    "score": 10,
+    "raw_score": 10,
+    "clue_score": 0,
+    "question_score": 0,
+    "world_score": 0,
+    "residual_worlds": 40320
+  }
+}
