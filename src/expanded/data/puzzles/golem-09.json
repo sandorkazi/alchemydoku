@@ -1,0 +1,90 @@
+{
+  "id": "golem-09",
+  "mode": "expanded",
+  "title": "The Optimal Trade-off",
+  "description": "Use the clues to answer the question.",
+  "difficulty": "easy",
+  "clues": [
+    {
+      "kind": "mixing",
+      "ingredient1": 3,
+      "ingredient2": 8,
+      "result": {
+        "color": "G",
+        "sign": "+"
+      }
+    },
+    {
+      "kind": "mixing",
+      "ingredient1": 2,
+      "ingredient2": 8,
+      "result": {
+        "color": "R",
+        "sign": "+"
+      }
+    },
+    {
+      "kind": "mixing",
+      "ingredient1": 6,
+      "ingredient2": 7,
+      "result": {
+        "color": "G",
+        "sign": "+"
+      }
+    },
+    {
+      "kind": "golem_test",
+      "ingredient": 4,
+      "chest_reacted": false,
+      "ears_reacted": true
+    },
+    {
+      "kind": "golem_test",
+      "ingredient": 8,
+      "chest_reacted": true,
+      "ears_reacted": true
+    },
+    {
+      "kind": "golem_animation",
+      "ingredient": 6,
+      "is_animator": true
+    }
+  ],
+  "questions": [
+    {
+      "kind": "golem_animation_ing"
+    }
+  ],
+  "solution": {
+    "1": 3,
+    "2": 2,
+    "3": 1,
+    "4": 5,
+    "5": 7,
+    "6": 6,
+    "7": 4,
+    "8": 8
+  },
+  "hints": [
+    {
+      "level": 1,
+      "text": "Reason about all possible golem configurations jointly with ingredient assignments. Each golem_test clue eliminates configs \u00d7 worlds that are inconsistent with the result."
+    },
+    {
+      "level": 2,
+      "text": "After all clues: 4 config(s) remain. True config: chest=GL, ears=RL."
+    },
+    {
+      "level": 3,
+      "text": "Answer: [6, 8]"
+    }
+  ],
+  "complexity": {
+    "score": 10,
+    "raw_score": 10,
+    "clue_score": 0,
+    "question_score": 0,
+    "world_score": 0,
+    "residual_worlds": 96
+  }
+}

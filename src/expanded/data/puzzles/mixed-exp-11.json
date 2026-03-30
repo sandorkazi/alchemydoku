@@ -1,33 +1,17 @@
 {
   "id": "mixed-exp-11",
   "mode": "expanded",
-  "title": "Night-Side Evidence",
+  "title": "The Sublimation Point",
   "description": "Use the clues to decide which ingredient reveals the most information when consulted in the Royal Society book.",
   "difficulty": "easy",
-  "golem": {
-    "chest": {
-      "color": "B",
-      "size": "S"
-    },
-    "ears": {
-      "color": "G",
-      "size": "S"
-    }
-  },
   "clues": [
-    {
-      "kind": "golem_test",
-      "ingredient": 5,
-      "chest_reacted": true,
-      "ears_reacted": true
-    },
     {
       "kind": "sell_result_among",
       "ingredients": [
         2,
-        5,
+        4,
         6,
-        7
+        8
       ],
       "claimedPotion": {
         "color": "B",
@@ -36,26 +20,27 @@
       "sellResult": "opposite"
     },
     {
-      "kind": "golem_reaction_among",
+      "kind": "book_among",
       "ingredients": [
-        1,
         2,
-        5,
-        7
+        3,
+        8
       ],
-      "reaction": "non_reactive",
+      "result": "lunar",
       "count": 1
     },
     {
-      "kind": "book_among",
+      "kind": "mixing_count_among",
       "ingredients": [
-        3,
-        4,
+        1,
         5,
-        7
+        8
       ],
-      "result": "solar",
-      "count": 1
+      "result": {
+        "color": "B",
+        "sign": "+"
+      },
+      "count": 2
     }
   ],
   "questions": [
@@ -64,35 +49,35 @@
     }
   ],
   "solution": {
-    "1": 2,
+    "1": 4,
     "2": 3,
     "3": 1,
-    "4": 4,
-    "5": 6,
+    "4": 6,
+    "5": 8,
     "6": 5,
     "7": 7,
-    "8": 8
+    "8": 2
   },
   "hints": [
     {
       "level": 1,
-      "text": "Consulting the Royal Society book about an ingredient tells you whether its alchemical is Solar or Lunar. The most informative ingredient is the one whose answer has maximum Shannon entropy \u2014 closest to a 50/50 split across the 1236 remaining worlds."
+      "text": "The Royal Society book reveals whether an ingredient's alchemical is Solar or Lunar. Consulting a confirmed ingredient gives no new information. The most useful choice is the ingredient whose Solar/Lunar nature is most uncertain \u2014 the one most evenly split between the two possibilities."
     },
     {
       "level": 2,
-      "text": "Top 5 ingredients by entropy:\n  ing7: solar=352/1236 (28%)  H=0.862\n  ing8: solar=908/1236 (73%)  H=0.835\n  ing6: solar=912/1236 (74%)  H=0.830\n  ing4: solar=300/1236 (24%)  H=0.800\n  ing3: solar=300/1236 (24%)  H=0.800"
+      "text": "Still uncertain (Solar / Lunar candidates both possible):\n  ing7: 444 Solar / 636 Lunar alchemicals still consistent \u2190 most balanced\n  ing1: 434 Solar / 646 Lunar alchemicals still consistent\n  ing5: 434 Solar / 646 Lunar alchemicals still consistent\n  ing4: 424 Solar / 656 Lunar alchemicals still consistent\n  ing6: 424 Solar / 656 Lunar alchemicals still consistent\n  ing2: 692 Solar / 388 Lunar alchemicals still consistent\n  ing3: 700 Solar / 380 Lunar alchemicals still consistent\n  ing8: 768 Solar / 312 Lunar alchemicals still consistent"
     },
     {
       "level": 3,
-      "text": "Most informative ingredient to consult: ing7 (entropy 0.862)."
+      "text": "Most informative ingredient to consult: ing7."
     }
   ],
   "complexity": {
-    "score": 47,
-    "raw_score": 25,
-    "clue_score": 15,
+    "score": 52,
+    "raw_score": 30,
+    "clue_score": 20,
     "question_score": 0,
     "world_score": 0,
-    "residual_worlds": 1236
+    "residual_worlds": 1080
   }
 }

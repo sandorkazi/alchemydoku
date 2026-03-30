@@ -1,0 +1,111 @@
+{
+  "id": "mixed-exp-mix-34",
+  "mode": "expanded",
+  "title": "The Surface Tension",
+  "description": "Mixing, selling, and debunking records all point toward a single pair. Deduce what potion they produce.",
+  "difficulty": "hard",
+  "clues": [
+    {
+      "kind": "sell_result_among",
+      "ingredients": [
+        3,
+        5,
+        7
+      ],
+      "claimedPotion": {
+        "color": "B",
+        "sign": "-"
+      },
+      "sellResult": "opposite"
+    },
+    {
+      "kind": "book_among",
+      "ingredients": [
+        4,
+        5,
+        8
+      ],
+      "result": "lunar",
+      "count": 1
+    },
+    {
+      "kind": "sell_among",
+      "ingredients": [
+        2,
+        3,
+        6,
+        7
+      ],
+      "claimedPotion": {
+        "color": "G",
+        "sign": "+"
+      },
+      "result": "total_match",
+      "count": 4
+    },
+    {
+      "kind": "sell_among",
+      "ingredients": [
+        2,
+        3,
+        4,
+        5
+      ],
+      "claimedPotion": {
+        "color": "R",
+        "sign": "+"
+      },
+      "result": "sign_ok",
+      "count": 4
+    },
+    {
+      "kind": "book_among",
+      "ingredients": [
+        1,
+        3,
+        5
+      ],
+      "result": "lunar",
+      "count": 1
+    }
+  ],
+  "questions": [
+    {
+      "kind": "mixing-result",
+      "ingredient1": 3,
+      "ingredient2": 5
+    }
+  ],
+  "solution": {
+    "1": 7,
+    "2": 4,
+    "3": 8,
+    "4": 2,
+    "5": 5,
+    "6": 1,
+    "7": 6,
+    "8": 3
+  },
+  "hints": [
+    {
+      "level": 1,
+      "text": "To find the result of mixing ing3 and ing5, apply the mixing rule: scan colours R\u2192G\u2192B in order. The first colour where both ingredients share the same sign determines the result potion. If all three colours have opposing signs, the result is neutral."
+    },
+    {
+      "level": 2,
+      "text": "Step through each colour:\n  R: ing3=R+ (ing3 has R+), ing5=R- (ing5 has R-)\n      \u2192 opposite signs \u2192 skip.\n  G: ing3=G+ (ing3 has G+), ing5=G- (ing5 has G-)\n      \u2192 opposite signs \u2192 skip.\n  B: ing3=B+ (ing3 has B+), ing5=B+ (ing5 has B+)\n      \u2192 SAME sign + \u2192 B+ resolves."
+    },
+    {
+      "level": 3,
+      "text": "ing3=PPP, ing5=Nnp. Mix result: B+."
+    }
+  ],
+  "complexity": {
+    "score": 77,
+    "raw_score": 60,
+    "clue_score": 35,
+    "question_score": 0,
+    "world_score": 15,
+    "residual_worlds": 2
+  }
+}

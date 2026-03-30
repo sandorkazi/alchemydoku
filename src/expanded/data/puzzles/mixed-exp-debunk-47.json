@@ -2,37 +2,15 @@
   "id": "mixed-exp-debunk-47",
   "mode": "expanded",
   "kind": "debunk",
-  "title": "The Obfuscated Truth",
+  "title": "The Infrared Absorption",
   "description": "Mixed evidence surrounds several suspicious publications. Use master debunking to expose the lies.",
   "difficulty": "extreme",
-  "golem": {
-    "chest": {
-      "color": "R",
-      "size": "L"
-    },
-    "ears": {
-      "color": "G",
-      "size": "L"
-    }
-  },
   "clues": [
-    {
-      "kind": "golem_test",
-      "ingredient": 3,
-      "chest_reacted": true,
-      "ears_reacted": true
-    },
-    {
-      "kind": "golem_test",
-      "ingredient": 4,
-      "chest_reacted": false,
-      "ears_reacted": true
-    },
     {
       "kind": "sell_result_among",
       "ingredients": [
         1,
-        3,
+        2,
         6,
         8
       ],
@@ -43,129 +21,122 @@
       "sellResult": "opposite"
     },
     {
-      "kind": "golem_reaction_among",
-      "ingredients": [
-        4,
-        6,
-        7
-      ],
-      "reaction": "ears_only",
-      "count": 1
-    },
-    {
       "kind": "book_among",
       "ingredients": [
-        1,
         2,
-        6
+        3,
+        5
       ],
-      "result": "lunar",
+      "result": "solar",
       "count": 1
     },
     {
       "kind": "sell_among",
       "ingredients": [
         1,
-        4,
-        6,
-        7
-      ],
-      "claimedPotion": {
-        "color": "G",
-        "sign": "+"
-      },
-      "result": "opposite",
-      "count": 6
-    },
-    {
-      "kind": "golem_reaction_among",
-      "ingredients": [
-        1,
-        2,
+        3,
+        5,
         6
       ],
-      "reaction": "ears_only",
-      "count": 1
+      "claimedPotion": {
+        "color": "B",
+        "sign": "+"
+      },
+      "result": "sign_ok",
+      "count": 5
+    },
+    {
+      "kind": "sell_among",
+      "ingredients": [
+        2,
+        3,
+        5,
+        6
+      ],
+      "claimedPotion": {
+        "color": "R",
+        "sign": "-"
+      },
+      "result": "sign_ok",
+      "count": 4
+    },
+    {
+      "kind": "sell_among",
+      "ingredients": [
+        3,
+        4,
+        5
+      ],
+      "claimedPotion": {
+        "color": "R",
+        "sign": "-"
+      },
+      "result": "opposite",
+      "count": 2
     }
   ],
   "questions": [
     {
       "kind": "debunk_min_steps"
-    },
-    {
-      "kind": "debunk_conflict_only",
-      "fixedIngredient": 2
     }
   ],
   "solution": {
-    "1": 5,
-    "2": 4,
-    "3": 8,
-    "4": 3,
-    "5": 2,
-    "6": 1,
-    "7": 7,
-    "8": 6
+    "1": 8,
+    "2": 7,
+    "3": 6,
+    "4": 4,
+    "5": 3,
+    "6": 2,
+    "7": 1,
+    "8": 5
   },
   "hints": [],
   "complexity": {
     "score": 86,
     "raw_score": 75,
-    "clue_score": 30,
-    "question_score": 15,
-    "world_score": 20,
+    "clue_score": 40,
+    "question_score": 10,
+    "world_score": 15,
     "residual_worlds": 4
   },
   "publications": [
-    null,
+    {
+      "ingredient": 1,
+      "claimedAlchemical": 5
+    },
     {
       "ingredient": 2,
-      "claimedAlchemical": 2
+      "claimedAlchemical": 6
     },
-    {
-      "ingredient": 3,
-      "claimedAlchemical": 4
-    },
+    null,
     {
       "ingredient": 4,
-      "claimedAlchemical": 5
+      "claimedAlchemical": 7
     },
-    null,
     null,
     {
-      "ingredient": 7,
-      "claimedAlchemical": 5
+      "ingredient": 6,
+      "claimedAlchemical": 4
     },
+    null,
     null
   ],
   "debunk_answers": {
     "debunk_min_steps": [
       {
         "kind": "master",
-        "ingredient1": 2,
-        "ingredient2": 7
-      },
-      {
-        "kind": "master",
-        "ingredient1": 3,
+        "ingredient1": 1,
         "ingredient2": 4
       },
       {
         "kind": "master",
-        "ingredient1": 4,
-        "ingredient2": 7
-      }
-    ],
-    "debunk_conflict_only": [
+        "ingredient1": 1,
+        "ingredient2": 6
+      },
       {
         "kind": "master",
         "ingredient1": 2,
         "ingredient2": 4
-      },
-      {
-        "kind": "master",
-        "ingredient1": 3,
-        "ingredient2": 7
       }
     ]
   },
@@ -175,51 +146,7 @@
       "aspect": "B",
       "entries": [
         {
-          "ingredient": 2,
-          "sign": "-"
-        },
-        {
-          "ingredient": 3,
-          "sign": "-"
-        },
-        {
-          "ingredient": 4,
-          "sign": "+"
-        },
-        {
-          "ingredient": 6,
-          "sign": "+"
-        }
-      ]
-    },
-    {
-      "id": "art-R-2",
-      "aspect": "R",
-      "entries": [
-        {
-          "ingredient": 2,
-          "sign": "+"
-        },
-        {
-          "ingredient": 4,
-          "sign": "-"
-        },
-        {
-          "ingredient": 7,
-          "sign": "+"
-        },
-        {
-          "ingredient": 8,
-          "sign": "-"
-        }
-      ]
-    },
-    {
-      "id": "art-G-3",
-      "aspect": "G",
-      "entries": [
-        {
-          "ingredient": 3,
+          "ingredient": 1,
           "sign": "-"
         },
         {
@@ -227,11 +154,55 @@
           "sign": "+"
         },
         {
-          "ingredient": 6,
+          "ingredient": 7,
+          "sign": "-"
+        },
+        {
+          "ingredient": 8,
+          "sign": "+"
+        }
+      ]
+    },
+    {
+      "id": "art-G-2",
+      "aspect": "G",
+      "entries": [
+        {
+          "ingredient": 2,
           "sign": "+"
         },
         {
+          "ingredient": 3,
+          "sign": "-"
+        },
+        {
+          "ingredient": 6,
+          "sign": "-"
+        },
+        {
           "ingredient": 7,
+          "sign": "+"
+        }
+      ]
+    },
+    {
+      "id": "art-R-3",
+      "aspect": "R",
+      "entries": [
+        {
+          "ingredient": 1,
+          "sign": "-"
+        },
+        {
+          "ingredient": 2,
+          "sign": "+"
+        },
+        {
+          "ingredient": 3,
+          "sign": "+"
+        },
+        {
+          "ingredient": 6,
           "sign": "-"
         }
       ]

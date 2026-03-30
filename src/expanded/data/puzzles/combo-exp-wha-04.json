@@ -1,32 +1,34 @@
 {
   "id": "combo-exp-wha-04",
   "mode": "expanded",
-  "title": "The Final Entry",
+  "title": "The Infinite Volume",
   "description": "Four ingredient\u2013sign pairs form a valid encyclopedia article. All the clue types are in play \u2014 deduce which aspect colour they share.",
   "difficulty": "easy",
-  "golem": {
-    "chest": {
-      "color": "R",
-      "size": "S"
-    },
-    "ears": {
-      "color": "G",
-      "size": "L"
-    }
-  },
   "clues": [
     {
-      "kind": "golem_test",
-      "ingredient": 7,
-      "chest_reacted": true,
-      "ears_reacted": true
-    },
-    {
       "kind": "encyclopedia",
-      "aspect": "R",
+      "aspect": "B",
       "entries": [
         {
           "ingredient": 2,
+          "sign": "+"
+        },
+        {
+          "ingredient": 7,
+          "sign": "+"
+        },
+        {
+          "ingredient": 8,
+          "sign": "+"
+        }
+      ]
+    },
+    {
+      "kind": "encyclopedia",
+      "aspect": "G",
+      "entries": [
+        {
+          "ingredient": 1,
           "sign": "+"
         },
         {
@@ -40,34 +42,44 @@
       ]
     },
     {
+      "kind": "book_among",
+      "ingredients": [
+        2,
+        3,
+        7,
+        8
+      ],
+      "result": "solar",
+      "count": 1
+    },
+    {
+      "kind": "book_among",
+      "ingredients": [
+        1,
+        2,
+        3,
+        5
+      ],
+      "result": "lunar",
+      "count": 1
+    },
+    {
       "kind": "encyclopedia",
-      "aspect": "G",
+      "aspect": "B",
       "entries": [
+        {
+          "ingredient": 1,
+          "sign": "-"
+        },
+        {
+          "ingredient": 3,
+          "sign": "-"
+        },
         {
           "ingredient": 5,
           "sign": "-"
-        },
-        {
-          "ingredient": 7,
-          "sign": "-"
-        },
-        {
-          "ingredient": 8,
-          "sign": "-"
         }
       ]
-    },
-    {
-      "kind": "golem_test",
-      "ingredient": 1,
-      "chest_reacted": true,
-      "ears_reacted": false
-    },
-    {
-      "kind": "golem_test",
-      "ingredient": 5,
-      "chest_reacted": false,
-      "ears_reacted": false
     }
   ],
   "questions": [
@@ -79,34 +91,34 @@
           "sign": "-"
         },
         {
-          "ingredient": 4,
+          "ingredient": 2,
+          "sign": "-"
+        },
+        {
+          "ingredient": 3,
           "sign": "+"
         },
         {
           "ingredient": 5,
           "sign": "+"
-        },
-        {
-          "ingredient": 8,
-          "sign": "-"
         }
       ]
     }
   ],
   "solution": {
     "1": 1,
-    "2": 2,
+    "2": 5,
     "3": 6,
-    "4": 4,
-    "5": 5,
+    "4": 7,
+    "5": 3,
     "6": 8,
-    "7": 3,
-    "8": 7
+    "7": 4,
+    "8": 2
   },
   "hints": [
     {
       "level": 1,
-      "text": "For each colour R/G/B, check whether all four ingredient\u2013sign pairs (ingredient 1 -, ingredient 4 +, ingredient 5 +, ingredient 8 -) hold across the remaining worlds."
+      "text": "For each colour R/G/B, check whether all four ingredient\u2013sign pairs (ingredient 1 -, ingredient 2 -, ingredient 3 +, ingredient 5 +) hold across the remaining worlds."
     },
     {
       "level": 2,
@@ -114,15 +126,15 @@
     },
     {
       "level": 3,
-      "text": "The answer is B (Blue): every remaining world maps all four entries onto the Blue aspect."
+      "text": "The answer is R (Red): every remaining world maps all four entries onto the Red aspect."
     }
   ],
   "complexity": {
     "score": 47,
     "raw_score": 25,
-    "clue_score": 0,
+    "clue_score": 10,
     "question_score": 5,
-    "world_score": 10,
-    "residual_worlds": 6
+    "world_score": 0,
+    "residual_worlds": 2
   }
 }

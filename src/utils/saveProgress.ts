@@ -14,7 +14,7 @@
  * per-puzzle keys for backwards compatibility).
  */
 
-export const SAVE_VERSION = 4;
+export const SAVE_VERSION = 5;
 
 // ─── ID rename map (v3 → v4) ──────────────────────────────────────────────────
 
@@ -139,6 +139,47 @@ const EXPANDED_QUESTIONS_CHANGED = new Set([
   'exp-hard-among-golem-01',
 ]);
 
+/** Legacy golem puzzles deleted in v4→v5 (carried puzzle.golem field; replaced by joint-golem equivalents) */
+const DELETED_IN_V5_EXPANDED = new Set([
+  'golem-enc-02', 'golem-enc-03', 'golem-enc-04', 'golem-enc-05', 'golem-enc-06',
+  'golem-sl-02',  'golem-sl-03',  'golem-sl-04',  'golem-sl-05',  'golem-sl-06',
+  'golem-mix-02', 'golem-mix-03', 'golem-mix-04', 'golem-mix-05', 'golem-mix-06',
+  'all-02', 'all-03', 'all-04', 'all-05', 'all-06',
+  'among-golem-02', 'among-golem-03',
+  'combo-exp-med-all-02', 'combo-exp-med-all-03', 'combo-exp-med-all-04', 'combo-exp-med-all-05',
+  'mixed-exp-golem-02',  'mixed-exp-golem-03',  'mixed-exp-golem-04',  'mixed-exp-golem-05',
+  'mixed-exp-golem-06',  'mixed-exp-golem-07',  'mixed-exp-golem-08',  'mixed-exp-golem-09',
+  'mixed-exp-golem-10',  'mixed-exp-golem-11',  'mixed-exp-golem-12',  'mixed-exp-golem-13',
+  'mixed-exp-golem-14',  'mixed-exp-golem-15',  'mixed-exp-golem-16',  'mixed-exp-golem-17',
+  'mixed-exp-golem-18',  'mixed-exp-golem-19',  'mixed-exp-golem-20',  'mixed-exp-golem-21',
+  'mixed-exp-golem-22',  'mixed-exp-golem-23',  'mixed-exp-golem-24',  'mixed-exp-golem-25',
+  'mixed-exp-golem-26',
+  'mixed-exp-mix-02',  'mixed-exp-mix-03',  'mixed-exp-mix-04',  'mixed-exp-mix-05',
+  'mixed-exp-mix-06',  'mixed-exp-mix-07',  'mixed-exp-mix-08',  'mixed-exp-mix-09',
+  'mixed-exp-mix-10',  'mixed-exp-mix-11',  'mixed-exp-mix-12',  'mixed-exp-mix-13',
+  'mixed-exp-mix-14',  'mixed-exp-mix-15',  'mixed-exp-mix-16',  'mixed-exp-mix-17',
+  'mixed-exp-mix-18',  'mixed-exp-mix-19',  'mixed-exp-mix-20',  'mixed-exp-mix-21',
+  'mixed-exp-mix-22',  'mixed-exp-mix-23',  'mixed-exp-mix-24',  'mixed-exp-mix-25',
+  'mixed-exp-mix-26',
+  'mixed-exp-02',  'mixed-exp-03',  'mixed-exp-04',  'mixed-exp-05',  'mixed-exp-06',
+  'mixed-exp-07',  'mixed-exp-08',  'mixed-exp-09',  'mixed-exp-10',  'mixed-exp-11',
+  'mixed-exp-debunk-02',  'mixed-exp-debunk-03',  'mixed-exp-debunk-04',  'mixed-exp-debunk-05',
+  'mixed-exp-debunk-06',  'mixed-exp-debunk-07',  'mixed-exp-debunk-08',  'mixed-exp-debunk-09',
+  'mixed-exp-debunk-10',  'mixed-exp-debunk-11',  'mixed-exp-debunk-12',  'mixed-exp-debunk-13',
+  'mixed-exp-debunk-14',  'mixed-exp-debunk-15',  'mixed-exp-debunk-16',  'mixed-exp-debunk-17',
+  'mixed-exp-debunk-18',  'mixed-exp-debunk-19',  'mixed-exp-debunk-20',  'mixed-exp-debunk-21',
+  'mixed-exp-debunk-22',  'mixed-exp-debunk-23',  'mixed-exp-debunk-24',  'mixed-exp-debunk-25',
+  'mixed-exp-debunk-26',  'mixed-exp-debunk-27',  'mixed-exp-debunk-28',  'mixed-exp-debunk-29',
+  'mixed-exp-debunk-30',  'mixed-exp-debunk-31',  'mixed-exp-debunk-32',  'mixed-exp-debunk-33',
+  'mixed-exp-debunk-34',  'mixed-exp-debunk-35',  'mixed-exp-debunk-36',  'mixed-exp-debunk-37',
+  'mixed-exp-debunk-38',  'mixed-exp-debunk-39',  'mixed-exp-debunk-40',  'mixed-exp-debunk-41',
+  'mixed-exp-debunk-42',  'mixed-exp-debunk-43',  'mixed-exp-debunk-44',  'mixed-exp-debunk-45',
+  'mixed-exp-debunk-46',  'mixed-exp-debunk-47',  'mixed-exp-debunk-48',  'mixed-exp-debunk-49',
+  'mixed-exp-debunk-50',  'mixed-exp-debunk-51',
+  'combo-exp-wha-02', 'combo-exp-wha-03', 'combo-exp-wha-04', 'combo-exp-wha-05',
+  'combo-exp-xsl-02', 'combo-exp-xsl-03', 'combo-exp-xsl-04', 'combo-exp-xsl-05',
+]);
+
 /**
  * Run once on startup.  Applies all pending migrations in order:
  *   v2 → v3  reset answers for puzzles whose questions changed
@@ -230,6 +271,10 @@ export function runMigrations(): void {
             delete file.puzzles[oldId];
           }
         }
+        // v4 → v5: delete progress for legacy golem puzzles (replaced by joint-golem equivalents)
+        for (const id of DELETED_IN_V5_EXPANDED) {
+          delete file.puzzles[id];
+        }
         file.version = SAVE_VERSION;
         localStorage.setItem(EXPANDED_KEY, JSON.stringify(file));
       }
@@ -242,7 +287,8 @@ export function runMigrations(): void {
         const ids: string[] = JSON.parse(raw2);
         const renamed = ids
           .filter(id => originalVersion >= 3 || !EXPANDED_QUESTIONS_CHANGED.has(id))
-          .map(id => ID_RENAMES[id] ?? id);
+          .map(id => ID_RENAMES[id] ?? id)
+          .filter(id => !DELETED_IN_V5_EXPANDED.has(id));
         localStorage.setItem(key, JSON.stringify(renamed));
       }
     }

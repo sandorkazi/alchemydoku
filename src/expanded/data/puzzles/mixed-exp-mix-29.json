@@ -1,0 +1,128 @@
+{
+  "id": "mixed-exp-mix-29",
+  "mode": "expanded",
+  "title": "The Intercepted Letter",
+  "description": "Mixing, selling, and debunking records all point toward a single pair. Deduce what potion they produce.",
+  "difficulty": "extreme",
+  "clues": [
+    {
+      "kind": "sell_result_among",
+      "ingredients": [
+        2,
+        4,
+        7,
+        8
+      ],
+      "claimedPotion": {
+        "color": "B",
+        "sign": "+"
+      },
+      "sellResult": "opposite"
+    },
+    {
+      "kind": "book_among",
+      "ingredients": [
+        2,
+        3,
+        5,
+        8
+      ],
+      "result": "lunar",
+      "count": 1
+    },
+    {
+      "kind": "mixing_count_among",
+      "ingredients": [
+        3,
+        6,
+        8
+      ],
+      "result": {
+        "color": "G",
+        "sign": "+"
+      },
+      "count": 2
+    },
+    {
+      "kind": "sell_among",
+      "ingredients": [
+        2,
+        3,
+        7,
+        8
+      ],
+      "claimedPotion": {
+        "color": "R",
+        "sign": "-"
+      },
+      "result": "opposite",
+      "count": 1
+    },
+    {
+      "kind": "sell_result_among",
+      "ingredients": [
+        2,
+        3,
+        6
+      ],
+      "claimedPotion": {
+        "color": "B",
+        "sign": "+"
+      },
+      "sellResult": "total_match"
+    },
+    {
+      "kind": "sell_among",
+      "ingredients": [
+        2,
+        4,
+        7
+      ],
+      "claimedPotion": {
+        "color": "B",
+        "sign": "+"
+      },
+      "result": "opposite",
+      "count": 3
+    }
+  ],
+  "questions": [
+    {
+      "kind": "mixing-result",
+      "ingredient1": 1,
+      "ingredient2": 3
+    }
+  ],
+  "solution": {
+    "1": 6,
+    "2": 3,
+    "3": 4,
+    "4": 2,
+    "5": 5,
+    "6": 8,
+    "7": 7,
+    "8": 1
+  },
+  "hints": [
+    {
+      "level": 1,
+      "text": "To find the result of mixing ing1 and ing3, apply the mixing rule: scan colours R\u2192G\u2192B in order. The first colour where both ingredients share the same sign determines the result potion. If all three colours have opposing signs, the result is neutral."
+    },
+    {
+      "level": 2,
+      "text": "Step through each colour:\n  R: ing1=R+ (ing1 has R+), ing3=R- (ing3 has R-)\n      \u2192 opposite signs \u2192 skip.\n  G: ing1=G+ (ing1 has G+), ing3=G+ (ing3 has G+)\n      \u2192 SAME sign + \u2192 G+ resolves."
+    },
+    {
+      "level": 3,
+      "text": "ing1=Ppn, ing3=nPp. Mix result: G+."
+    }
+  ],
+  "complexity": {
+    "score": 83,
+    "raw_score": 70,
+    "clue_score": 45,
+    "question_score": 0,
+    "world_score": 15,
+    "residual_worlds": 1
+  }
+}

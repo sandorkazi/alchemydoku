@@ -1,0 +1,116 @@
+{
+  "id": "mixed-exp-mix-39",
+  "mode": "expanded",
+  "title": "The Dampening Factor",
+  "description": "Mixing, selling, and debunking records all point toward a single pair. Deduce what potion they produce.",
+  "difficulty": "hard",
+  "clues": [
+    {
+      "kind": "sell_result_among",
+      "ingredients": [
+        1,
+        2,
+        5,
+        7
+      ],
+      "claimedPotion": {
+        "color": "G",
+        "sign": "+"
+      },
+      "sellResult": "opposite"
+    },
+    {
+      "kind": "book_among",
+      "ingredients": [
+        2,
+        3,
+        7
+      ],
+      "result": "solar",
+      "count": 1
+    },
+    {
+      "kind": "sell_among",
+      "ingredients": [
+        3,
+        4,
+        5,
+        6
+      ],
+      "claimedPotion": {
+        "color": "G",
+        "sign": "+"
+      },
+      "result": "sign_ok",
+      "count": 4
+    },
+    {
+      "kind": "sell_among",
+      "ingredients": [
+        2,
+        3,
+        7
+      ],
+      "claimedPotion": {
+        "color": "R",
+        "sign": "-"
+      },
+      "result": "opposite",
+      "count": 3
+    },
+    {
+      "kind": "sell_among",
+      "ingredients": [
+        2,
+        4,
+        5,
+        8
+      ],
+      "claimedPotion": {
+        "color": "R",
+        "sign": "-"
+      },
+      "result": "opposite",
+      "count": 3
+    }
+  ],
+  "questions": [
+    {
+      "kind": "mixing-result",
+      "ingredient1": 2,
+      "ingredient2": 8
+    }
+  ],
+  "solution": {
+    "1": 7,
+    "2": 4,
+    "3": 8,
+    "4": 2,
+    "5": 5,
+    "6": 3,
+    "7": 6,
+    "8": 1
+  },
+  "hints": [
+    {
+      "level": 1,
+      "text": "To find the result of mixing ing2 and ing8, apply the mixing rule: scan colours R\u2192G\u2192B in order. The first colour where both ingredients share the same sign determines the result potion. If all three colours have opposing signs, the result is neutral."
+    },
+    {
+      "level": 2,
+      "text": "Step through each colour:\n  R: ing2=R- (ing2 has R-), ing8=R- (ing8 has R-)\n      \u2192 SAME sign - \u2192 R- resolves."
+    },
+    {
+      "level": 3,
+      "text": "ing2=nPp, ing8=npN. Mix result: G+."
+    }
+  ],
+  "complexity": {
+    "score": 80,
+    "raw_score": 65,
+    "clue_score": 40,
+    "question_score": 0,
+    "world_score": 15,
+    "residual_worlds": 2
+  }
+}

@@ -1,0 +1,94 @@
+{
+  "id": "golem-23",
+  "mode": "expanded",
+  "title": "The Product Inhibition",
+  "description": "Use the clues to answer the question.",
+  "difficulty": "easy",
+  "clues": [
+    {
+      "kind": "mixing",
+      "ingredient1": 5,
+      "ingredient2": 6,
+      "result": {
+        "color": "R",
+        "sign": "+"
+      }
+    },
+    {
+      "kind": "mixing",
+      "ingredient1": 1,
+      "ingredient2": 7,
+      "result": {
+        "color": "G",
+        "sign": "+"
+      }
+    },
+    {
+      "kind": "mixing",
+      "ingredient1": 4,
+      "ingredient2": 8,
+      "result": {
+        "color": "R",
+        "sign": "+"
+      }
+    },
+    {
+      "kind": "golem_test",
+      "ingredient": 2,
+      "chest_reacted": false,
+      "ears_reacted": false
+    },
+    {
+      "kind": "golem_test",
+      "ingredient": 4,
+      "chest_reacted": true,
+      "ears_reacted": true
+    },
+    {
+      "kind": "mixing",
+      "ingredient1": 3,
+      "ingredient2": 4,
+      "result": {
+        "color": "B",
+        "sign": "-"
+      }
+    }
+  ],
+  "questions": [
+    {
+      "kind": "golem_animation_ing"
+    }
+  ],
+  "solution": {
+    "1": 4,
+    "2": 5,
+    "3": 7,
+    "4": 3,
+    "5": 8,
+    "6": 2,
+    "7": 1,
+    "8": 6
+  },
+  "hints": [
+    {
+      "level": 1,
+      "text": "Reason about all possible golem configurations jointly with ingredient assignments. Each golem_test clue eliminates configs \u00d7 worlds that are inconsistent with the result."
+    },
+    {
+      "level": 2,
+      "text": "After all clues: 2 config(s) remain. True config: chest=GL, ears=RS."
+    },
+    {
+      "level": 3,
+      "text": "Answer: [1, 7]"
+    }
+  ],
+  "complexity": {
+    "score": 10,
+    "raw_score": 10,
+    "clue_score": 0,
+    "question_score": 0,
+    "world_score": 0,
+    "residual_worlds": 16
+  }
+}

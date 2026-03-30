@@ -2,101 +2,77 @@
   "id": "mixed-exp-debunk-05",
   "mode": "expanded",
   "kind": "debunk",
-  "title": "The Phase Boundary",
+  "title": "The Bridge Number",
   "description": "Mixed evidence surrounds several suspicious publications. Use master debunking to expose the lies.",
   "difficulty": "extreme",
-  "golem": {
-    "chest": {
-      "color": "R",
-      "size": "L"
-    },
-    "ears": {
-      "color": "B",
-      "size": "L"
-    }
-  },
   "clues": [
-    {
-      "kind": "golem_test",
-      "ingredient": 7,
-      "chest_reacted": true,
-      "ears_reacted": true
-    },
-    {
-      "kind": "golem_test",
-      "ingredient": 5,
-      "chest_reacted": false,
-      "ears_reacted": false
-    },
     {
       "kind": "sell_result_among",
       "ingredients": [
-        1,
         2,
         4,
-        8
+        6,
+        7
       ],
       "claimedPotion": {
-        "color": "R",
+        "color": "B",
         "sign": "+"
       },
       "sellResult": "opposite"
     },
     {
-      "kind": "golem_reaction_among",
-      "ingredients": [
-        2,
-        3,
-        6,
-        7
-      ],
-      "reaction": "ears_only",
-      "count": 1
-    },
-    {
       "kind": "book_among",
       "ingredients": [
-        3,
+        1,
+        2,
         5,
         7
       ],
-      "result": "lunar",
+      "result": "solar",
       "count": 1
     },
     {
       "kind": "sell_among",
       "ingredients": [
-        1,
+        5,
         6,
-        7,
-        8
+        7
       ],
       "claimedPotion": {
         "color": "R",
+        "sign": "-"
+      },
+      "result": "sign_ok",
+      "count": 3
+    },
+    {
+      "kind": "sell_among",
+      "ingredients": [
+        1,
+        2,
+        3,
+        5
+      ],
+      "claimedPotion": {
+        "color": "R",
+        "sign": "-"
+      },
+      "result": "sign_ok",
+      "count": 3
+    },
+    {
+      "kind": "sell_among",
+      "ingredients": [
+        1,
+        2,
+        6
+      ],
+      "claimedPotion": {
+        "color": "G",
         "sign": "+"
       },
       "result": "opposite",
-      "count": 5
-    },
-    {
-      "kind": "golem_reaction_among",
-      "ingredients": [
-        2,
-        3,
-        8
-      ],
-      "reaction": "chest_only",
-      "count": 1
-    },
-    {
-      "kind": "golem_reaction_among",
-      "ingredients": [
-        4,
-        7,
-        8
-      ],
-      "reaction": "ears_only",
-      "count": 1
+      "count": 2
     }
   ],
   "questions": [
@@ -105,46 +81,43 @@
     }
   ],
   "solution": {
-    "1": 5,
+    "1": 1,
     "2": 6,
-    "3": 8,
-    "4": 2,
-    "5": 3,
-    "6": 1,
-    "7": 7,
+    "3": 5,
+    "4": 8,
+    "5": 7,
+    "6": 3,
+    "7": 2,
     "8": 4
   },
   "hints": [],
   "complexity": {
-    "score": 83,
-    "raw_score": 70,
-    "clue_score": 35,
+    "score": 86,
+    "raw_score": 75,
+    "clue_score": 40,
     "question_score": 10,
     "world_score": 15,
-    "residual_worlds": 3
+    "residual_worlds": 4
   },
   "publications": [
-    {
-      "ingredient": 1,
-      "claimedAlchemical": 5
-    },
+    null,
     null,
     {
       "ingredient": 3,
-      "claimedAlchemical": 4
+      "claimedAlchemical": 8
     },
     null,
     {
       "ingredient": 5,
-      "claimedAlchemical": 1
+      "claimedAlchemical": 8
     },
     {
       "ingredient": 6,
-      "claimedAlchemical": 2
+      "claimedAlchemical": 1
     },
     {
       "ingredient": 7,
-      "claimedAlchemical": 6
+      "claimedAlchemical": 8
     },
     null
   ],
@@ -169,19 +142,19 @@
       "entries": [
         {
           "ingredient": 1,
-          "sign": "+"
-        },
-        {
-          "ingredient": 2,
-          "sign": "+"
-        },
-        {
-          "ingredient": 3,
           "sign": "-"
         },
         {
-          "ingredient": 4,
+          "ingredient": 5,
+          "sign": "+"
+        },
+        {
+          "ingredient": 7,
           "sign": "-"
+        },
+        {
+          "ingredient": 8,
+          "sign": "+"
         }
       ]
     },
@@ -191,18 +164,18 @@
       "entries": [
         {
           "ingredient": 1,
-          "sign": "-"
-        },
-        {
-          "ingredient": 2,
-          "sign": "-"
-        },
-        {
-          "ingredient": 3,
           "sign": "+"
         },
         {
-          "ingredient": 5,
+          "ingredient": 3,
+          "sign": "-"
+        },
+        {
+          "ingredient": 4,
+          "sign": "-"
+        },
+        {
+          "ingredient": 7,
           "sign": "+"
         }
       ]
@@ -212,19 +185,19 @@
       "aspect": "R",
       "entries": [
         {
+          "ingredient": 3,
+          "sign": "-"
+        },
+        {
           "ingredient": 4,
           "sign": "-"
         },
         {
           "ingredient": 5,
-          "sign": "-"
-        },
-        {
-          "ingredient": 7,
           "sign": "+"
         },
         {
-          "ingredient": 8,
+          "ingredient": 6,
           "sign": "+"
         }
       ]

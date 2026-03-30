@@ -1,40 +1,24 @@
 {
   "id": "combo-exp-wha-05",
   "mode": "expanded",
-  "title": "The Locked Candidate",
+  "title": "The Scholar's Gambit",
   "description": "Four ingredient\u2013sign pairs form a valid encyclopedia article. All the clue types are in play \u2014 deduce which aspect colour they share.",
   "difficulty": "easy",
-  "golem": {
-    "chest": {
-      "color": "R",
-      "size": "S"
-    },
-    "ears": {
-      "color": "B",
-      "size": "S"
-    }
-  },
   "clues": [
     {
-      "kind": "golem_test",
-      "ingredient": 2,
-      "chest_reacted": true,
-      "ears_reacted": true
-    },
-    {
       "kind": "encyclopedia",
-      "aspect": "G",
+      "aspect": "R",
       "entries": [
         {
           "ingredient": 2,
           "sign": "-"
         },
         {
-          "ingredient": 3,
+          "ingredient": 7,
           "sign": "-"
         },
         {
-          "ingredient": 6,
+          "ingredient": 8,
           "sign": "-"
         }
       ]
@@ -48,26 +32,44 @@
           "sign": "-"
         },
         {
-          "ingredient": 4,
+          "ingredient": 5,
           "sign": "-"
         },
         {
-          "ingredient": 7,
+          "ingredient": 8,
           "sign": "-"
         }
       ]
     },
     {
-      "kind": "golem_test",
-      "ingredient": 1,
-      "chest_reacted": false,
-      "ears_reacted": true
+      "kind": "mixing",
+      "ingredient1": 2,
+      "ingredient2": 4,
+      "result": {
+        "color": "R",
+        "sign": "-"
+      }
     },
     {
-      "kind": "golem_test",
-      "ingredient": 3,
-      "chest_reacted": false,
-      "ears_reacted": true
+      "kind": "book_among",
+      "ingredients": [
+        3,
+        4,
+        6,
+        7
+      ],
+      "result": "solar",
+      "count": 1
+    },
+    {
+      "kind": "book",
+      "ingredient": 6,
+      "result": "lunar"
+    },
+    {
+      "kind": "book",
+      "ingredient": 5,
+      "result": "lunar"
     }
   ],
   "questions": [
@@ -76,14 +78,14 @@
       "entries": [
         {
           "ingredient": 1,
-          "sign": "+"
-        },
-        {
-          "ingredient": 4,
           "sign": "-"
         },
         {
-          "ingredient": 6,
+          "ingredient": 3,
+          "sign": "+"
+        },
+        {
+          "ingredient": 5,
           "sign": "+"
         },
         {
@@ -94,19 +96,19 @@
     }
   ],
   "solution": {
-    "1": 6,
-    "2": 3,
-    "3": 5,
-    "4": 1,
-    "5": 4,
+    "1": 3,
+    "2": 5,
+    "3": 8,
+    "4": 4,
+    "5": 6,
     "6": 2,
     "7": 7,
-    "8": 8
+    "8": 1
   },
   "hints": [
     {
       "level": 1,
-      "text": "For each colour R/G/B, check whether all four ingredient\u2013sign pairs (ingredient 1 +, ingredient 4 -, ingredient 6 +, ingredient 7 -) hold across the remaining worlds."
+      "text": "For each colour R/G/B, check whether all four ingredient\u2013sign pairs (ingredient 1 -, ingredient 3 +, ingredient 5 +, ingredient 7 -) hold across the remaining worlds."
     },
     {
       "level": 2,
@@ -114,15 +116,15 @@
     },
     {
       "level": 3,
-      "text": "The answer is R (Red): every remaining world maps all four entries onto the Red aspect."
+      "text": "The answer is G (Green): every remaining world maps all four entries onto the Green aspect."
     }
   ],
   "complexity": {
     "score": 47,
     "raw_score": 25,
-    "clue_score": 0,
+    "clue_score": 5,
     "question_score": 5,
-    "world_score": 10,
-    "residual_worlds": 4
+    "world_score": 5,
+    "residual_worlds": 1
   }
 }

@@ -1,53 +1,62 @@
 {
   "id": "mixed-exp-02",
   "mode": "expanded",
-  "title": "Celestial Shadows",
+  "title": "The Donated Manuscript",
   "description": "Use the clues to decide which ingredient reveals the most information when consulted in the Royal Society book.",
-  "difficulty": "easy",
-  "golem": {
-    "chest": {
-      "color": "R",
-      "size": "S"
-    },
-    "ears": {
-      "color": "B",
-      "size": "L"
-    }
-  },
+  "difficulty": "medium",
   "clues": [
     {
       "kind": "sell_result_among",
       "ingredients": [
-        3,
-        4,
+        1,
         5,
-        6
+        6,
+        8
+      ],
+      "claimedPotion": {
+        "color": "R",
+        "sign": "+"
+      },
+      "sellResult": "opposite"
+    },
+    {
+      "kind": "book_among",
+      "ingredients": [
+        1,
+        2,
+        3,
+        8
+      ],
+      "result": "solar",
+      "count": 1
+    },
+    {
+      "kind": "mixing_count_among",
+      "ingredients": [
+        4,
+        6,
+        7
+      ],
+      "result": {
+        "color": "G",
+        "sign": "-"
+      },
+      "count": 2
+    },
+    {
+      "kind": "sell_among",
+      "ingredients": [
+        1,
+        2,
+        6,
+        8
       ],
       "claimedPotion": {
         "color": "G",
         "sign": "-"
       },
-      "sellResult": "opposite"
-    },
-    {
-      "kind": "golem_reaction_among",
-      "ingredients": [
-        5,
-        6,
-        8
-      ],
-      "reaction": "ears_only",
-      "count": 1
-    },
-    {
-      "kind": "book_among",
-      "ingredients": [
-        3,
-        5,
-        8
-      ],
-      "result": "solar",
-      "count": 1
+      "result": "opposite",
+      "count": 6
     }
   ],
   "questions": [
@@ -56,35 +65,35 @@
     }
   ],
   "solution": {
-    "1": 5,
-    "2": 6,
-    "3": 4,
-    "4": 7,
-    "5": 8,
-    "6": 3,
-    "7": 1,
-    "8": 2
+    "1": 8,
+    "2": 4,
+    "3": 7,
+    "4": 5,
+    "5": 1,
+    "6": 2,
+    "7": 3,
+    "8": 6
   },
   "hints": [
     {
       "level": 1,
-      "text": "Consulting the Royal Society book about an ingredient tells you whether its alchemical is Solar or Lunar. The most informative ingredient is the one whose answer has maximum Shannon entropy \u2014 closest to a 50/50 split across the 8748 remaining worlds."
+      "text": "The Royal Society book reveals whether an ingredient's alchemical is Solar or Lunar. Consulting a confirmed ingredient gives no new information. The most useful choice is the ingredient whose Solar/Lunar nature is most uncertain \u2014 the one most evenly split between the two possibilities."
     },
     {
       "level": 2,
-      "text": "Top 5 ingredients by entropy:\n  ing6: solar=4932/8748 (56%)  H=0.988\n  ing4: solar=5220/8748 (60%)  H=0.973\n  ing7: solar=5364/8748 (61%)  H=0.963\n  ing2: solar=5364/8748 (61%)  H=0.963\n  ing1: solar=5364/8748 (61%)  H=0.963"
+      "text": "Confirmed Solar: ing4, ing5, ing7\nConfirmed Lunar: ing3, ing6\nStill uncertain (Solar / Lunar candidates both possible):\n  ing2: 4 Solar / 4 Lunar alchemicals still consistent \u2190 most balanced\n  ing1: 2 Solar / 6 Lunar alchemicals still consistent\n  ing8: 2 Solar / 6 Lunar alchemicals still consistent"
     },
     {
       "level": 3,
-      "text": "Most informative ingredient to consult: ing6 (entropy 0.988)."
+      "text": "Most informative ingredient to consult: ing2."
     }
   ],
   "complexity": {
-    "score": 47,
-    "raw_score": 25,
-    "clue_score": 15,
+    "score": 62,
+    "raw_score": 40,
+    "clue_score": 30,
     "question_score": 0,
     "world_score": 0,
-    "residual_worlds": 8748
+    "residual_worlds": 8
   }
 }

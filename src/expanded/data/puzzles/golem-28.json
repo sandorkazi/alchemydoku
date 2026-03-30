@@ -1,0 +1,108 @@
+{
+  "id": "golem-28",
+  "mode": "expanded",
+  "title": "The Dual Problem",
+  "description": "Use the clues to answer the question.",
+  "difficulty": "easy",
+  "clues": [
+    {
+      "kind": "mixing",
+      "ingredient1": 1,
+      "ingredient2": 7,
+      "result": {
+        "color": "B",
+        "sign": "-"
+      }
+    },
+    {
+      "kind": "mixing",
+      "ingredient1": 5,
+      "ingredient2": 6,
+      "result": {
+        "color": "G",
+        "sign": "-"
+      }
+    },
+    {
+      "kind": "mixing",
+      "ingredient1": 5,
+      "ingredient2": 7,
+      "result": {
+        "color": "G",
+        "sign": "-"
+      }
+    },
+    {
+      "kind": "mixing",
+      "ingredient1": 2,
+      "ingredient2": 4,
+      "result": {
+        "type": "neutral"
+      }
+    },
+    {
+      "kind": "mixing",
+      "ingredient1": 4,
+      "ingredient2": 8,
+      "result": {
+        "color": "R",
+        "sign": "-"
+      }
+    },
+    {
+      "kind": "golem_test",
+      "ingredient": 1,
+      "chest_reacted": true,
+      "ears_reacted": true
+    },
+    {
+      "kind": "golem_test",
+      "ingredient": 8,
+      "chest_reacted": true,
+      "ears_reacted": null
+    },
+    {
+      "kind": "golem_test",
+      "ingredient": 6,
+      "chest_reacted": null,
+      "ears_reacted": false
+    }
+  ],
+  "questions": [
+    {
+      "kind": "golem_animation_ing"
+    }
+  ],
+  "solution": {
+    "1": 1,
+    "2": 6,
+    "3": 8,
+    "4": 5,
+    "5": 2,
+    "6": 7,
+    "7": 3,
+    "8": 4
+  },
+  "hints": [
+    {
+      "level": 1,
+      "text": "Reason about all possible golem configurations jointly with ingredient assignments. Each golem_test clue eliminates configs \u00d7 worlds that are inconsistent with the result."
+    },
+    {
+      "level": 2,
+      "text": "After all clues: 1 config(s) remain. True config: chest=RS, ears=GS."
+    },
+    {
+      "level": 3,
+      "text": "Answer: [4, 6]"
+    }
+  ],
+  "complexity": {
+    "score": 10,
+    "raw_score": 10,
+    "clue_score": 0,
+    "question_score": 0,
+    "world_score": 0,
+    "residual_worlds": 1
+  }
+}

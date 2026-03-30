@@ -1,0 +1,112 @@
+{
+  "id": "golem-14",
+  "mode": "expanded",
+  "title": "The Buried Clue",
+  "description": "Use the clues to answer the question.",
+  "difficulty": "easy",
+  "clues": [
+    {
+      "kind": "mixing",
+      "ingredient1": 1,
+      "ingredient2": 6,
+      "result": {
+        "color": "B",
+        "sign": "-"
+      }
+    },
+    {
+      "kind": "mixing",
+      "ingredient1": 7,
+      "ingredient2": 8,
+      "result": {
+        "color": "B",
+        "sign": "-"
+      }
+    },
+    {
+      "kind": "mixing",
+      "ingredient1": 3,
+      "ingredient2": 7,
+      "result": {
+        "color": "R",
+        "sign": "+"
+      }
+    },
+    {
+      "kind": "mixing",
+      "ingredient1": 1,
+      "ingredient2": 2,
+      "result": {
+        "color": "R",
+        "sign": "+"
+      }
+    },
+    {
+      "kind": "golem_test",
+      "ingredient": 7,
+      "chest_reacted": false,
+      "ears_reacted": false
+    },
+    {
+      "kind": "golem_test",
+      "ingredient": 1,
+      "chest_reacted": false,
+      "ears_reacted": true
+    },
+    {
+      "kind": "golem_test",
+      "ingredient": 2,
+      "chest_reacted": true,
+      "ears_reacted": true
+    },
+    {
+      "kind": "golem_test",
+      "ingredient": 6,
+      "chest_reacted": null,
+      "ears_reacted": true
+    },
+    {
+      "kind": "aspect",
+      "ingredient": 6,
+      "color": "G",
+      "sign": "+"
+    }
+  ],
+  "questions": [
+    {
+      "kind": "golem_reaction_component"
+    }
+  ],
+  "solution": {
+    "1": 6,
+    "2": 2,
+    "3": 8,
+    "4": 5,
+    "5": 4,
+    "6": 1,
+    "7": 3,
+    "8": 7
+  },
+  "hints": [
+    {
+      "level": 1,
+      "text": "Reason about all possible golem configurations jointly with ingredient assignments. Each golem_test clue eliminates configs \u00d7 worlds that are inconsistent with the result."
+    },
+    {
+      "level": 2,
+      "text": "After all clues: 1 config(s) remain. True config: chest=BL, ears=GS."
+    },
+    {
+      "level": 3,
+      "text": "Answer: {'chest': {'color': 'B', 'size': 'L'}, 'ears': {'color': 'G', 'size': 'S'}}"
+    }
+  ],
+  "complexity": {
+    "score": 10,
+    "raw_score": 10,
+    "clue_score": 0,
+    "question_score": 0,
+    "world_score": 0,
+    "residual_worlds": 4
+  }
+}
