@@ -12,9 +12,9 @@ import { ALCHEMICALS } from '../../data/alchemicals';
 import { IngredientIcon, ElemImage, SignedElemImage, PotionImage, SellResultIcon, AlchemicalImage } from '../../components/GameSprites';
 import type { AlchemicalId } from '../../types';
 import type {
-  AnyClue, EncyclopediaClue, EncyclopediaUncertainClue,
+  AnyClue, EncyclopediaUncertainClue,
   DebunkApprenticeClue, DebunkMasterClue,
-  BookClue, EncyclopediaEntry,
+  BookClue, BookAmongClue,
   GolemTestClue, GolemAnimationClue, GolemHintColorClue, GolemHintSizeClue, GolemReactionAmongClue, GolemReactionGroup,
 } from '../types';
 import type { Color, MixingAmongClue, SellAmongClue, MixingCountAmongClue, SellResultAmongClue, SellResult } from '../../types';
@@ -151,21 +151,6 @@ function IngMarkableExpanded({ slotId, clueIndex }: { slotId: number; clueIndex:
   );
 }
 
-// ─── Encyclopedia entry grid ──────────────────────────────────────────────────
-
-function EntryGrid({ aspect, entries }: { aspect: Color; entries: EncyclopediaEntry[] }) {
-  return (
-    <div className="flex flex-wrap gap-x-3 gap-y-1 mt-1">
-      {entries.map((e, i) => (
-        <span key={i} className="inline-flex items-center gap-1">
-          <Ing slotId={e.ingredient} />
-          <SignedElemImage color={aspect} sign={e.sign} width={20} />
-        </span>
-      ))}
-    </div>
-  );
-}
-
 // ─── Expanded clue cards ──────────────────────────────────────────────────────
 
 function BookClueCard({ clue }: { clue: BookClue }) {
@@ -187,14 +172,27 @@ function BookClueCard({ clue }: { clue: BookClue }) {
   );
 }
 
-function EncyclopediaClueCard({ clue }: { clue: EncyclopediaClue }) {
+function BookAmongClueCard({ clue, clueIndex }: { clue: BookAmongClue; clueIndex?: number }) {
+  const n = clue.ingredients.length;
+  const isSolar = clue.result === 'solar';
   return (
-    <Card icon="📜" label={<><ElemImage color={clue.aspect} size="S" width={12} /> Verified Publication</>} accent="green">
-      <p className="text-[10px] opacity-60 mb-0.5">All entries guaranteed correct</p>
-      <EntryGrid aspect={clue.aspect} entries={[...clue.entries]} />
+    <Card icon="📖" label="Book Token (Among)" accent="purple">
+      <div className="text-xs text-gray-600 mb-1">
+        {clue.count} of {n === 2 ? 'these 2' : `these ${n}`}{' '}ingredients is{' '}
+        <span className={`inline-flex items-center gap-0.5 font-semibold
+          ${isSolar ? 'text-amber-700' : 'text-blue-700'}`}>
+          {isSolar ? <><span className="text-orange-400">☀</span> Solar</> : <><span className="text-slate-400">☽</span> Lunar</>}
+        </span>
+      </div>
+      <div className="flex flex-wrap gap-1">
+        {clue.ingredients.map(id => (
+          <IngMarkableExpanded key={id} slotId={id} clueIndex={clueIndex ?? -1} />
+        ))}
+      </div>
     </Card>
   );
 }
+
 
 function EncyclopediaUncertainClueCard({ clue }: { clue: EncyclopediaUncertainClue }) {
   return (
@@ -395,12 +393,17 @@ function ExpandedBaseClueCard({ clue, clueIndex = 0 }: { clue: AnyClue; clueInde
 
 function GolemTestCard({ clue }: { clue: GolemTestClue }) {
   function Badge({ reacted, part }: { reacted: boolean | null; part: 'chest' | 'ears' }) {
-    if (reacted === null) return null; // not observed — skip
+    if (reacted === null) return (
+      <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-xs font-semibold bg-blue-50 text-blue-600 border border-blue-200">
+        <GolemPartIcon part={part} size={18} />
+        ?
+      </span>
+    );
     return (
       <span className={`inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-xs font-semibold
         ${reacted
           ? 'bg-green-100 text-green-700 border border-green-300'
-          : 'bg-gray-100 text-gray-400 border border-gray-200'}`}>
+          : 'bg-red-50 text-red-500 border border-red-200'}`}>
         <GolemPartIcon part={part} size={18} />
         {reacted ? '✓' : '✗'}
       </span>
@@ -411,8 +414,8 @@ function GolemTestCard({ clue }: { clue: GolemTestClue }) {
       <div className="flex items-center gap-2 flex-wrap">
         <Ing slotId={clue.ingredient} />
         <div className="flex gap-1.5">
-          <Badge reacted={clue.chest_reacted} part="chest" />
           <Badge reacted={clue.ears_reacted}  part="ears"  />
+          <Badge reacted={clue.chest_reacted} part="chest" />
         </div>
       </div>
     </Card>
@@ -492,7 +495,7 @@ function GolemReactionAmongCard({ clue, clueIndex }: { clue: GolemReactionAmongC
 export function ExpandedClueCard({ clue, clueIndex }: { clue: AnyClue; clueIndex?: number }) {
   switch (clue.kind) {
     case 'book':                   return <BookClueCard clue={clue} />;
-    case 'encyclopedia':           return <EncyclopediaClueCard clue={clue} />;
+    case 'book_among':             return <BookAmongClueCard clue={clue} clueIndex={clueIndex} />;
     case 'encyclopedia_uncertain': return <EncyclopediaUncertainClueCard clue={clue} />;
     case 'debunk_apprentice':      return <DebunkApprenticeCard clue={clue} />;
     case 'debunk_master':          return <DebunkMasterCard clue={clue} />;

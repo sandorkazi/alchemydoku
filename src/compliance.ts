@@ -19,7 +19,7 @@ export const NON_COMPLIANT_EXPANDED_CLUE_KINDS: ReadonlySet<string> = new Set([
 /** True if the puzzle contains any non-compliant clue kind or an unrealistic publication/article layout. */
 export function isPuzzleNonCompliant(
   puzzle: {
-    clues: { kind: string }[];
+    clues: { kind: string; chest_reacted?: boolean | null; ears_reacted?: boolean | null }[];
     publications?: (null | { ingredient: number; claimedAlchemical: number })[];
     articles?: { aspect: string; entries: { ingredient: number }[] }[];
   },
@@ -27,6 +27,13 @@ export function isPuzzleNonCompliant(
 ): boolean {
   const set = mode === 'expanded' ? NON_COMPLIANT_EXPANDED_CLUE_KINDS : NON_COMPLIANT_BASE_CLUE_KINDS;
   if (puzzle.clues.some(c => set.has(c.kind))) return true;
+
+  // A golem_test that only reveals one part's reaction is unrealistic — the board
+  // game always reveals both reactions simultaneously.
+  if (puzzle.clues.some(c =>
+    c.kind === 'golem_test' &&
+    (c.chest_reacted === null || c.ears_reacted === null)
+  )) return true;
 
   if (puzzle.publications) {
     const pubs = puzzle.publications.filter((p): p is { ingredient: number; claimedAlchemical: number } => p !== null);
