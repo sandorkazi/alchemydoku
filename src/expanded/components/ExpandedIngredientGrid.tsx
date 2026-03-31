@@ -17,6 +17,8 @@ import { useExpandedSolver, useExpandedIngredient, computeSolarLunarAutoMarks } 
 import type { GolemSlotMark } from '../contexts/ExpandedSolverContext';
 import type { Color, Size } from '../../types';
 import { isSolar } from '../logic/solarLunar';
+import { ALL_GOLEM_CONFIGS } from '../logic/golem';
+import { getExpandedPuzzleGolemState } from '../puzzles/schemaExpanded';
 import { getEliminatedCells } from '../../logic/deducer';
 import { AlchemicalDisplay } from '../../components/AlchemicalDisplay';
 import { AlchemicalImage, IngredientIcon, ElemImage, PotionImage, SignedElemImage } from '../../components/GameSprites';
@@ -656,6 +658,14 @@ export function GolemPanel({ activeTool }: { activeTool: GridTool }) {
   const { puzzle, golemNotepad, autoDeduction } = state;
   const getIngredient = useExpandedIngredient();
 
+  // Surviving golem configs (memoised — puzzle clues never change mid-game).
+  // Used to compute bottom-grid visual hints when autoDeduction is on.
+  const survivingConfigs = useMemo(() => {
+    const gs = getExpandedPuzzleGolemState(puzzle);
+    if (!gs) return null;
+    return ALL_GOLEM_CONFIGS.filter((_, ci) => gs[ci] !== null);
+  }, [puzzle]);
+
   const hasGolemContent = !!puzzle.golem
     || puzzle.clues.some(c => c.kind.startsWith('golem_'))
     || puzzle.questions.some(q => q.kind.startsWith('golem_'));
@@ -684,7 +694,7 @@ export function GolemPanel({ activeTool }: { activeTool: GridTool }) {
 
   // Visual hints (circles on unmarked cells when Hints mode is on)
   const ingHints: Record<string, 'eliminated' | 'confirmed'> = {};
-  const bottomHints: Record<string, 'confirmed'> = {};
+  const bottomHints: Record<string, 'eliminated' | 'confirmed'> = {};
   if (autoDeduction) {
     for (const [slotStr, reactions] of Object.entries(clueMap)) {
       for (const part of ['chest', 'ears'] as const) {
@@ -694,8 +704,19 @@ export function GolemPanel({ activeTool }: { activeTool: GridTool }) {
         }
       }
     }
-    // Note: bottomHints are NOT pre-filled from puzzle.golem — the player must
-    // deduce the golem config from the clues, not receive it as hidden truth.
+    // Bottom grid hints: derive confirmed/eliminated from surviving golem configs.
+    if (survivingConfigs && survivingConfigs.length > 0) {
+      for (const part of ['chest', 'ears'] as const) {
+        for (const col of ALCH_COLS) {
+          const colKey = `${col.color}${col.size}`;
+          const cellKey = `${part}-${colKey}`;
+          const anyMatch = survivingConfigs.some(c => c[part].color === col.color && c[part].size === col.size);
+          const allMatch = survivingConfigs.every(c => c[part].color === col.color && c[part].size === col.size);
+          if (allMatch) bottomHints[cellKey] = 'confirmed';
+          else if (!anyMatch) bottomHints[cellKey] = 'eliminated';
+        }
+      }
+    }
   }
 
   // Image is 760×400 → AR = 400/760 ≈ 0.526. Explicit height avoids distortion.
@@ -817,15 +838,18 @@ export function GolemPanel({ activeTool }: { activeTool: GridTool }) {
             onClick={e => e.stopPropagation()}
             className="absolute inset-0 z-20 w-full h-full text-center text-[11px] font-bold bg-white/90 border-2 border-indigo-400 rounded outline-none"
           />
-        ) : note ? (
-          <span className="absolute bottom-0.5 right-0.5 text-[8px] font-bold text-indigo-500 leading-none pointer-events-none"
-            style={{ textShadow: stroke('white') }}>{note}</span>
         ) : null}
 
-        {/* Marker glyph — same white-with-stroke style as ingredient grid */}
-        {!editing && glyph && (
+        {/* Marker glyph — hidden when note text present, same style as ingredient grid */}
+        {!editing && glyph && !note && (
           <span className="relative z-10 text-xl font-black leading-none select-none"
             style={{ color: 'white', textShadow }}>{glyph}</span>
+        )}
+
+        {/* Note text overlay — same style as ingredient grid */}
+        {!editing && note && (
+          <span className="relative z-10 text-[11px] font-black leading-none select-none tracking-tight"
+            style={{ color: 'white', textShadow: stroke('#1e1b4b') }}>{note}</span>
         )}
       </button>
     );
@@ -833,10 +857,10 @@ export function GolemPanel({ activeTool }: { activeTool: GridTool }) {
 
   function cycleIngMark(cur: GolemSlotMark): GolemSlotMark {
     if (activeTool === 'mark') {
-      if (cur === null)       return 'reacts';
-      if (cur === 'reacts')   return 'no-react';
-      if (cur === 'no-react') return 'possible';
-      return null;
+      if (cur === null)        return 'no-react';  // unknown → eliminated (✗)
+      if (cur === 'no-react')  return 'reacts';    // eliminated → confirmed (✔)
+      if (cur === 'reacts')    return 'possible';  // confirmed → possible (?)
+      return null;                                  // possible → unknown
     }
     return cur;  // text tool — no cycling on golem marks
   }
