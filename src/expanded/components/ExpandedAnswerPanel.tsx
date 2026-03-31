@@ -269,17 +269,16 @@ function RevealedAnswer({ q, answer }: { q: AnyQuestion; answer: AnyAnswer }) {
       const gc = answer as GolemConfigAnswer;
       const sizeLabel: Record<Size, string> = { L: 'Large', S: 'Small' };
       return (
-        <span className="inline-flex flex-col gap-0.5 text-xs font-semibold text-violet-700">
-          <span className="inline-flex items-center gap-1">
-            <span className="text-violet-500">Ears:</span>
-            <ElemImage color={gc.ears.color} size={gc.ears.size} width={20} />
-            <span>{sizeLabel[gc.ears.size]}</span>
-          </span>
-          <span className="inline-flex items-center gap-1">
-            <span className="text-violet-500">Chest:</span>
-            <ElemImage color={gc.chest.color} size={gc.chest.size} width={20} />
-            <span>{sizeLabel[gc.chest.size]}</span>
-          </span>
+        <span className="inline-flex flex-col gap-1 text-xs font-semibold text-violet-700">
+          {(['ears', 'chest'] as const).map(part => (
+            <span key={part} className="inline-flex items-center gap-1.5">
+              <span className="text-violet-500 capitalize">{part}:</span>
+              <span className="inline-flex items-center justify-center" style={{ width: 28, height: 28 }}>
+                <ElemImage color={gc[part].color} size={gc[part].size} width={gc[part].size === 'L' ? 26 : 11} />
+              </span>
+              <span>{sizeLabel[gc[part].size]}</span>
+            </span>
+          ))}
         </span>
       );
     }
@@ -452,16 +451,18 @@ function GolemConfigPicker({ value, onChange }: {
         <div key={part} className="space-y-1">
           <p className="text-[10px] font-semibold text-violet-600 uppercase">{part}</p>
           <div className="flex flex-wrap gap-1">
-            {(['R','G','B'] as Color[]).map(col => (['L','S'] as Size[]).map(sz => {
+            {(['B','G','R'] as Color[]).map(col => (['L','S'] as Size[]).map(sz => {
               const active = isSelected(part, col, sz);
+              const orbW = sz === 'L' ? 26 : 11;
               return (
                 <button key={`${col}${sz}`} aria-pressed={active}
+                  aria-label={`${part} ${col === 'B' ? 'Blue' : col === 'G' ? 'Green' : 'Red'} ${sz === 'L' ? 'Large' : 'Small'}`}
                   onClick={() => select(part, col, sz)}
-                  className={`flex items-center gap-0.5 px-2 py-1 rounded-lg border-2 text-xs font-semibold transition-all
+                  className={`flex items-center justify-center rounded-lg border-2 transition-all
                     press-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-indigo-400
-                    ${active ? 'border-indigo-500 bg-indigo-50 shadow-md' : 'border-transparent bg-gray-100 hover:bg-gray-200 hover:border-gray-300'}`}>
-                  <ElemImage color={col} size={sz} width={18} />
-                  <span>{sz === 'L' ? 'L' : 'S'}</span>
+                    ${active ? 'border-indigo-500 bg-indigo-50 shadow-md' : 'border-transparent bg-gray-100 hover:bg-gray-200 hover:border-gray-300'}`}
+                  style={{ width: 38, height: 34 }}>
+                  <ElemImage color={col} size={sz} width={orbW} />
                 </button>
               );
             }))}
