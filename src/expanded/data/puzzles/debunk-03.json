@@ -1,0 +1,215 @@
+{
+  "id": "debunk-03",
+  "mode": "expanded",
+  "kind": "debunk",
+  "title": "The Carbon Dating",
+  "description": "Mixed evidence surrounds several suspicious publications. Use master debunking to expose the lies.",
+  "difficulty": "easy",
+  "clues": [
+    {
+      "kind": "encyclopedia",
+      "aspect": "B",
+      "entries": [
+        {
+          "ingredient": 1,
+          "sign": "+"
+        },
+        {
+          "ingredient": 3,
+          "sign": "+"
+        },
+        {
+          "ingredient": 5,
+          "sign": "+"
+        }
+      ]
+    },
+    {
+      "kind": "encyclopedia",
+      "aspect": "R",
+      "entries": [
+        {
+          "ingredient": 6,
+          "sign": "-"
+        },
+        {
+          "ingredient": 7,
+          "sign": "-"
+        },
+        {
+          "ingredient": 8,
+          "sign": "-"
+        }
+      ]
+    },
+    {
+      "kind": "encyclopedia",
+      "aspect": "G",
+      "entries": [
+        {
+          "ingredient": 1,
+          "sign": "+"
+        },
+        {
+          "ingredient": 5,
+          "sign": "+"
+        },
+        {
+          "ingredient": 6,
+          "sign": "+"
+        }
+      ]
+    },
+    {
+      "kind": "encyclopedia",
+      "aspect": "R",
+      "entries": [
+        {
+          "ingredient": 2,
+          "sign": "+"
+        },
+        {
+          "ingredient": 3,
+          "sign": "+"
+        },
+        {
+          "ingredient": 5,
+          "sign": "+"
+        }
+      ]
+    }
+  ],
+  "questions": [
+    {
+      "kind": "debunk_min_steps"
+    }
+  ],
+  "solution": {
+    "1": 4,
+    "2": 6,
+    "3": 2,
+    "4": 3,
+    "5": 8,
+    "6": 1,
+    "7": 5,
+    "8": 7
+  },
+  "hints": [],
+  "complexity": {
+    "score": 57,
+    "raw_score": 35,
+    "clue_score": 0,
+    "question_score": 10,
+    "world_score": 15,
+    "residual_worlds": 4
+  },
+  "publications": [
+    {
+      "ingredient": 1,
+      "claimedAlchemical": 2
+    },
+    null,
+    {
+      "ingredient": 3,
+      "claimedAlchemical": 3
+    },
+    null,
+    {
+      "ingredient": 5,
+      "claimedAlchemical": 3
+    },
+    {
+      "ingredient": 6,
+      "claimedAlchemical": 7
+    },
+    null,
+    null
+  ],
+  "debunk_answers": {
+    "debunk_min_steps": [
+      {
+        "kind": "master",
+        "ingredient1": 1,
+        "ingredient2": 3
+      },
+      {
+        "kind": "master",
+        "ingredient1": 1,
+        "ingredient2": 5
+      },
+      {
+        "kind": "master",
+        "ingredient1": 1,
+        "ingredient2": 6
+      }
+    ]
+  },
+  "articles": [
+    {
+      "id": "art-B-1",
+      "aspect": "B",
+      "entries": [
+        {
+          "ingredient": 2,
+          "sign": "-"
+        },
+        {
+          "ingredient": 5,
+          "sign": "-"
+        },
+        {
+          "ingredient": 7,
+          "sign": "+"
+        },
+        {
+          "ingredient": 8,
+          "sign": "+"
+        }
+      ]
+    },
+    {
+      "id": "art-G-2",
+      "aspect": "G",
+      "entries": [
+        {
+          "ingredient": 1,
+          "sign": "-"
+        },
+        {
+          "ingredient": 3,
+          "sign": "-"
+        },
+        {
+          "ingredient": 4,
+          "sign": "+"
+        },
+        {
+          "ingredient": 8,
+          "sign": "+"
+        }
+      ]
+    },
+    {
+      "id": "art-R-3",
+      "aspect": "R",
+      "entries": [
+        {
+          "ingredient": 1,
+          "sign": "+"
+        },
+        {
+          "ingredient": 4,
+          "sign": "+"
+        },
+        {
+          "ingredient": 5,
+          "sign": "-"
+        },
+        {
+          "ingredient": 7,
+          "sign": "-"
+        }
+      ]
+    }
+  ]
+}

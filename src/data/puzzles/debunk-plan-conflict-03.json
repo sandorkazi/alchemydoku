@@ -1,0 +1,129 @@
+{
+  "id": "debunk-plan-conflict-03",
+  "title": "The Period-Doubling",
+  "description": "Several publications are on the board. Plan a master debunking sequence that creates conflicts exposing every false claim.",
+  "difficulty": "medium",
+  "clues": [
+    {
+      "kind": "debunk",
+      "variant": "master",
+      "ingredient1": 4,
+      "ingredient2": 8,
+      "claimedPotion": {
+        "color": "B",
+        "sign": "-"
+      },
+      "outcome": "success"
+    },
+    {
+      "kind": "debunk",
+      "variant": "master",
+      "ingredient1": 5,
+      "ingredient2": 7,
+      "claimedPotion": {
+        "color": "B",
+        "sign": "-"
+      },
+      "outcome": "success"
+    },
+    {
+      "kind": "debunk",
+      "variant": "master",
+      "ingredient1": 2,
+      "ingredient2": 7,
+      "claimedPotion": {
+        "color": "R",
+        "sign": "+"
+      },
+      "outcome": "success"
+    },
+    {
+      "kind": "debunk",
+      "variant": "master",
+      "ingredient1": 1,
+      "ingredient2": 8,
+      "claimedPotion": {
+        "color": "R",
+        "sign": "+"
+      },
+      "outcome": "success"
+    },
+    {
+      "kind": "debunk",
+      "variant": "master",
+      "ingredient1": 4,
+      "ingredient2": 6,
+      "claimedPotion": {
+        "color": "G",
+        "sign": "+"
+      },
+      "outcome": "success"
+    }
+  ],
+  "questions": [
+    {
+      "kind": "debunk_conflict_only",
+      "fixedIngredient": 3
+    }
+  ],
+  "solution": {
+    "1": 8,
+    "2": 2,
+    "3": 5,
+    "4": 1,
+    "5": 7,
+    "6": 4,
+    "7": 6,
+    "8": 3
+  },
+  "hints": [],
+  "complexity": {
+    "score": 62,
+    "raw_score": 40,
+    "clue_score": 0,
+    "question_score": 15,
+    "world_score": 15,
+    "residual_worlds": 2
+  },
+  "publications": [
+    null,
+    null,
+    {
+      "ingredient": 3,
+      "claimedAlchemical": 7
+    },
+    {
+      "ingredient": 4,
+      "claimedAlchemical": 5
+    },
+    {
+      "ingredient": 5,
+      "claimedAlchemical": 3
+    },
+    {
+      "ingredient": 6,
+      "claimedAlchemical": 7
+    },
+    null,
+    null
+  ],
+  "debunk_answers": {
+    "debunk_conflict_only": [
+      {
+        "kind": "master",
+        "ingredient1": 3,
+        "ingredient2": 4
+      },
+      {
+        "kind": "master",
+        "ingredient1": 3,
+        "ingredient2": 5
+      },
+      {
+        "kind": "master",
+        "ingredient1": 3,
+        "ingredient2": 6
+      }
+    ]
+  }
+}

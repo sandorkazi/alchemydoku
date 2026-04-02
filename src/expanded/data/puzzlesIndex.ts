@@ -40,6 +40,8 @@ import encSl06              from './puzzles/enc-sl-06.json';
 import expDebunkTutorial01  from './puzzles/exp-debunk-tutorial-01.json';
 import debunk01             from './puzzles/debunk-01.json';
 import debunk02             from './puzzles/debunk-02.json';
+import debunk03             from './puzzles/debunk-03.json';
+import debunk04             from './puzzles/debunk-04.json';
 
 // ── Combination: Grand Synthesis ──────────────────────────────────────────────
 import comboExp02           from './puzzles/combo-exp-02.json';
@@ -82,21 +84,25 @@ import golem27              from './puzzles/golem-27.json';
 import golem28              from './puzzles/golem-28.json';
 import golem29              from './puzzles/golem-29.json';
 import golem30              from './puzzles/golem-30.json';
+import golem31              from './puzzles/golem-31.json';
 
 import comboExpMedAll02     from './puzzles/combo-exp-med-all-02.json';
 import comboExpMedAll03     from './puzzles/combo-exp-med-all-03.json';
 import comboExpMedAll04     from './puzzles/combo-exp-med-all-04.json';
 import comboExpMedAll05     from './puzzles/combo-exp-med-all-05.json';
+import comboExpMedAll06     from './puzzles/combo-exp-med-all-06.json';
 
 import comboExpWha02        from './puzzles/combo-exp-wha-02.json';
 import comboExpWha03        from './puzzles/combo-exp-wha-03.json';
 import comboExpWha04        from './puzzles/combo-exp-wha-04.json';
 import comboExpWha05        from './puzzles/combo-exp-wha-05.json';
+import comboExpWha06        from './puzzles/combo-exp-wha-06.json';
 
 import comboExpXsl02        from './puzzles/combo-exp-xsl-02.json';
 import comboExpXsl03        from './puzzles/combo-exp-xsl-03.json';
 import comboExpXsl04        from './puzzles/combo-exp-xsl-04.json';
 import comboExpXsl05        from './puzzles/combo-exp-xsl-05.json';
+import comboExpXsl06        from './puzzles/combo-exp-xsl-06.json';
 
 import mixedExp02           from './puzzles/mixed-exp-02.json';
 import mixedExp03           from './puzzles/mixed-exp-03.json';
@@ -211,24 +217,39 @@ import mixedExpDebunk49     from './puzzles/mixed-exp-debunk-49.json';
 import mixedExpDebunk50     from './puzzles/mixed-exp-debunk-50.json';
 import mixedExpDebunk51     from './puzzles/mixed-exp-debunk-51.json';
 
+import expEasySl02          from './puzzles/exp-easy-sl-02.json';
+import expEasySl03          from './puzzles/exp-easy-sl-03.json';
+import expEasySl04          from './puzzles/exp-easy-sl-04.json';
+
+import expMediumEncSl02     from './puzzles/exp-medium-enc-sl-02.json';
+import expMediumEncSl03     from './puzzles/exp-medium-enc-sl-03.json';
+import expMediumEncSl04     from './puzzles/exp-medium-enc-sl-04.json';
+import expMediumEncSl05     from './puzzles/exp-medium-enc-sl-05.json';
+import expMediumEncSl06     from './puzzles/exp-medium-enc-sl-06.json';
+
+import comboExpMedSl02      from './puzzles/combo-exp-med-sl-02.json';
+
 import type { ExpandedPuzzle } from '../types';
 
 export const ALL_EXPANDED_PUZZLES: ExpandedPuzzle[] = [
   expTutorialBook01, expTutorialEnc01,
-  golem02, golem03, golem04, golem05, golem06, golem07, golem08, golem09, golem10, golem11, golem12, golem13, golem14, golem15, golem16, golem17, golem18, golem19, golem20, golem21, golem22, golem23, golem24, golem25, golem26, golem27, golem28, golem29, golem30,
+  golem02, golem03, golem04, golem05, golem06, golem07, golem08, golem09, golem10, golem11, golem12, golem13, golem14, golem15, golem16, golem17, golem18, golem19, golem20, golem21, golem22, golem23, golem24, golem25, golem26, golem27, golem28, golem29, golem30, golem31,
   enc01, enc02, enc03, enc04, enc05,
   enc06, enc07, enc08, enc09, enc10,
   sl01, sl02, sl03, sl04, sl05, sl06, sl07,
   encSl02, encSl03, encSl04, encSl05, encSl06,
-  expDebunkTutorial01, debunk01, debunk02,
+  expDebunkTutorial01, debunk01, debunk02, debunk03, debunk04,
   comboExp02, comboExp03, comboExp04, comboExp05, comboExp06,
   comboExpSl02, comboExpSl03, comboExpSl04, comboExpSl05,
-  comboExpMedAll02, comboExpMedAll03, comboExpMedAll04, comboExpMedAll05,
-  comboExpWha02, comboExpWha03, comboExpWha04, comboExpWha05,
-  comboExpXsl02, comboExpXsl03, comboExpXsl04, comboExpXsl05,
+  comboExpMedAll02, comboExpMedAll03, comboExpMedAll04, comboExpMedAll05, comboExpMedAll06,
+  comboExpWha02, comboExpWha03, comboExpWha04, comboExpWha05, comboExpWha06,
+  comboExpXsl02, comboExpXsl03, comboExpXsl04, comboExpXsl05, comboExpXsl06,
   mixedExp02, mixedExp03, mixedExp04, mixedExp05, mixedExp06, mixedExp07, mixedExp08, mixedExp09, mixedExp10, mixedExp11,
   mixedExpMix02, mixedExpMix03, mixedExpMix04, mixedExpMix05, mixedExpMix06, mixedExpMix07, mixedExpMix08, mixedExpMix09, mixedExpMix10, mixedExpMix11, mixedExpMix12, mixedExpMix13, mixedExpMix14, mixedExpMix15, mixedExpMix16, mixedExpMix17, mixedExpMix18, mixedExpMix19, mixedExpMix20, mixedExpMix21, mixedExpMix22, mixedExpMix23, mixedExpMix24, mixedExpMix25, mixedExpMix26, mixedExpMix27, mixedExpMix28, mixedExpMix29, mixedExpMix30, mixedExpMix31, mixedExpMix32, mixedExpMix33, mixedExpMix34, mixedExpMix35, mixedExpMix36, mixedExpMix37, mixedExpMix38, mixedExpMix39, mixedExpMix40, mixedExpMix41, mixedExpMix42, mixedExpMix43, mixedExpMix44, mixedExpMix45, mixedExpMix46, mixedExpMix47, mixedExpMix48, mixedExpMix49, mixedExpMix50, mixedExpMix51,
   mixedExpDebunk02, mixedExpDebunk03, mixedExpDebunk04, mixedExpDebunk05, mixedExpDebunk06, mixedExpDebunk07, mixedExpDebunk08, mixedExpDebunk09, mixedExpDebunk10, mixedExpDebunk11, mixedExpDebunk12, mixedExpDebunk13, mixedExpDebunk14, mixedExpDebunk15, mixedExpDebunk16, mixedExpDebunk17, mixedExpDebunk18, mixedExpDebunk19, mixedExpDebunk20, mixedExpDebunk21, mixedExpDebunk22, mixedExpDebunk23, mixedExpDebunk24, mixedExpDebunk25, mixedExpDebunk26, mixedExpDebunk27, mixedExpDebunk28, mixedExpDebunk29, mixedExpDebunk30, mixedExpDebunk31, mixedExpDebunk32, mixedExpDebunk33, mixedExpDebunk34, mixedExpDebunk35, mixedExpDebunk36, mixedExpDebunk37, mixedExpDebunk38, mixedExpDebunk39, mixedExpDebunk40, mixedExpDebunk41, mixedExpDebunk42, mixedExpDebunk43, mixedExpDebunk44, mixedExpDebunk45, mixedExpDebunk46, mixedExpDebunk47, mixedExpDebunk48, mixedExpDebunk49, mixedExpDebunk50, mixedExpDebunk51,
+  expEasySl02, expEasySl03, expEasySl04,
+  expMediumEncSl02, expMediumEncSl03, expMediumEncSl04, expMediumEncSl05, expMediumEncSl06,
+  comboExpMedSl02,
 ] as unknown as ExpandedPuzzle[];
 
 export const EXPANDED_PUZZLE_MAP: Record<string, ExpandedPuzzle> =
@@ -271,6 +292,7 @@ export const EXPANDED_COLLECTIONS: ExpandedCollection[] = [
     puzzleIds: [
       'sl-01', 'sl-02', 'sl-03',
       'sl-04', 'sl-05', 'sl-06', 'sl-07',
+      'exp-easy-sl-02', 'exp-easy-sl-03', 'exp-easy-sl-04',
     ],
     unlockedAfter: 'exp-tutorials',
   },
@@ -282,6 +304,8 @@ export const EXPANDED_COLLECTIONS: ExpandedCollection[] = [
     puzzleIds: [
       'enc-sl-02', 'enc-sl-03', 'enc-sl-04',
       'enc-sl-05', 'enc-sl-06',
+      'exp-medium-enc-sl-02', 'exp-medium-enc-sl-03', 'exp-medium-enc-sl-04',
+      'exp-medium-enc-sl-05', 'exp-medium-enc-sl-06',
     ],
     unlockedAfter: 'exp-easy-enc',
   },
@@ -290,7 +314,7 @@ export const EXPANDED_COLLECTIONS: ExpandedCollection[] = [
     title: 'Debunking',
     description: "Rivals have published false alchemical theories. You know the truth — plan the fewest possible debunk actions to clear the board.",
     difficulty: 'medium',
-    puzzleIds: ['exp-debunk-tutorial-01', 'debunk-01', 'debunk-02'],
+    puzzleIds: ['exp-debunk-tutorial-01', 'debunk-01', 'debunk-02', 'debunk-03', 'debunk-04'],
     unlockedAfter: 'exp-tutorials',
   },
   {
@@ -300,7 +324,7 @@ export const EXPANDED_COLLECTIONS: ExpandedCollection[] = [
     difficulty: 'medium',
     puzzleIds: [
       'golem-02', 'golem-03', 'golem-04',
-      'golem-05', 'golem-06', 'golem-07', 'golem-08', 'golem-09', 'golem-10', 'golem-11', 'golem-12', 'golem-13', 'golem-14', 'golem-15', 'golem-16', 'golem-17', 'golem-18', 'golem-19', 'golem-20', 'golem-21', 'golem-22', 'golem-23', 'golem-24', 'golem-25', 'golem-26', 'golem-27', 'golem-28', 'golem-29', 'golem-30',
+      'golem-05', 'golem-06', 'golem-07', 'golem-08', 'golem-09', 'golem-10', 'golem-11', 'golem-12', 'golem-13', 'golem-14', 'golem-15', 'golem-16', 'golem-17', 'golem-18', 'golem-19', 'golem-20', 'golem-21', 'golem-22', 'golem-23', 'golem-24', 'golem-25', 'golem-26', 'golem-27', 'golem-28', 'golem-29', 'golem-30', 'golem-31',
     ],
     unlockedAfter: 'exp-tutorials',
     boardGameCompliant: false,
@@ -313,6 +337,10 @@ export const EXPANDED_COLLECTIONS: ExpandedCollection[] = [
     puzzleIds: [
       'combo-exp-02', 'combo-exp-03', 'combo-exp-04', 'combo-exp-05', 'combo-exp-06',
       'combo-exp-sl-02', 'combo-exp-sl-03', 'combo-exp-sl-04', 'combo-exp-sl-05',
+      'combo-exp-med-sl-02',
+      'combo-exp-med-all-02', 'combo-exp-med-all-03', 'combo-exp-med-all-04', 'combo-exp-med-all-05', 'combo-exp-med-all-06',
+      'combo-exp-wha-02', 'combo-exp-wha-03', 'combo-exp-wha-04', 'combo-exp-wha-05', 'combo-exp-wha-06',
+      'combo-exp-xsl-02', 'combo-exp-xsl-03', 'combo-exp-xsl-04', 'combo-exp-xsl-05', 'combo-exp-xsl-06',
     ],
     unlockedAfter: 'exp-debunk',
   },
@@ -322,6 +350,19 @@ export const EXPANDED_COLLECTIONS: ExpandedCollection[] = [
     description: 'Ambiguous clues from multiple mechanics surround wrong publications. Use master debunking to clear the board — and find the one mix that creates an irresolvable conflict.',
     difficulty: 'extreme',
     puzzleIds: [
+      'mixed-exp-debunk-02', 'mixed-exp-debunk-03', 'mixed-exp-debunk-04', 'mixed-exp-debunk-05',
+      'mixed-exp-debunk-06', 'mixed-exp-debunk-07', 'mixed-exp-debunk-08', 'mixed-exp-debunk-09',
+      'mixed-exp-debunk-10', 'mixed-exp-debunk-11', 'mixed-exp-debunk-12', 'mixed-exp-debunk-13',
+      'mixed-exp-debunk-14', 'mixed-exp-debunk-15', 'mixed-exp-debunk-16', 'mixed-exp-debunk-17',
+      'mixed-exp-debunk-18', 'mixed-exp-debunk-19', 'mixed-exp-debunk-20', 'mixed-exp-debunk-21',
+      'mixed-exp-debunk-22', 'mixed-exp-debunk-23', 'mixed-exp-debunk-24', 'mixed-exp-debunk-25',
+      'mixed-exp-debunk-26', 'mixed-exp-debunk-27', 'mixed-exp-debunk-28', 'mixed-exp-debunk-29',
+      'mixed-exp-debunk-30', 'mixed-exp-debunk-31', 'mixed-exp-debunk-32', 'mixed-exp-debunk-33',
+      'mixed-exp-debunk-34', 'mixed-exp-debunk-35', 'mixed-exp-debunk-36', 'mixed-exp-debunk-37',
+      'mixed-exp-debunk-38', 'mixed-exp-debunk-39', 'mixed-exp-debunk-40', 'mixed-exp-debunk-41',
+      'mixed-exp-debunk-42', 'mixed-exp-debunk-43', 'mixed-exp-debunk-44', 'mixed-exp-debunk-45',
+      'mixed-exp-debunk-46', 'mixed-exp-debunk-47', 'mixed-exp-debunk-48', 'mixed-exp-debunk-49',
+      'mixed-exp-debunk-50', 'mixed-exp-debunk-51',
     ],
     unlockedAfter: 'exp-debunk',
     boardGameCompliant: false,
@@ -332,6 +373,19 @@ export const EXPANDED_COLLECTIONS: ExpandedCollection[] = [
     description: 'Ambiguous sell results, overheard reactions, and uncertain solar/lunar observations — all pointing to 3 or 4 possible ingredients. Questions range from potion mixing to solar/lunar classifications.',
     difficulty: 'hard',
     puzzleIds: [
+      'mixed-exp-mix-02', 'mixed-exp-mix-03', 'mixed-exp-mix-04', 'mixed-exp-mix-05',
+      'mixed-exp-mix-06', 'mixed-exp-mix-07', 'mixed-exp-mix-08', 'mixed-exp-mix-09',
+      'mixed-exp-mix-10', 'mixed-exp-mix-11', 'mixed-exp-mix-12', 'mixed-exp-mix-13',
+      'mixed-exp-mix-14', 'mixed-exp-mix-15', 'mixed-exp-mix-16', 'mixed-exp-mix-17',
+      'mixed-exp-mix-18', 'mixed-exp-mix-19', 'mixed-exp-mix-20', 'mixed-exp-mix-21',
+      'mixed-exp-mix-22', 'mixed-exp-mix-23', 'mixed-exp-mix-24', 'mixed-exp-mix-25',
+      'mixed-exp-mix-26', 'mixed-exp-mix-27', 'mixed-exp-mix-28', 'mixed-exp-mix-29',
+      'mixed-exp-mix-30', 'mixed-exp-mix-31', 'mixed-exp-mix-32', 'mixed-exp-mix-33',
+      'mixed-exp-mix-34', 'mixed-exp-mix-35', 'mixed-exp-mix-36', 'mixed-exp-mix-37',
+      'mixed-exp-mix-38', 'mixed-exp-mix-39', 'mixed-exp-mix-40', 'mixed-exp-mix-41',
+      'mixed-exp-mix-42', 'mixed-exp-mix-43', 'mixed-exp-mix-44', 'mixed-exp-mix-45',
+      'mixed-exp-mix-46', 'mixed-exp-mix-47', 'mixed-exp-mix-48', 'mixed-exp-mix-49',
+      'mixed-exp-mix-50', 'mixed-exp-mix-51',
     ],
     unlockedAfter: 'combo-exp',
     boardGameCompliant: false,
@@ -342,6 +396,9 @@ export const EXPANDED_COLLECTIONS: ExpandedCollection[] = [
     description: 'Mixed sell, among, and solar/lunar clues leave the board partially resolved. Find the single ingredient whose Book consultation carries the most information — the Shannon-optimal experiment.',
     difficulty: 'hard',
     puzzleIds: [
+      'mixed-exp-02', 'mixed-exp-03', 'mixed-exp-04', 'mixed-exp-05',
+      'mixed-exp-06', 'mixed-exp-07', 'mixed-exp-08', 'mixed-exp-09',
+      'mixed-exp-10', 'mixed-exp-11',
     ],
     unlockedAfter: 'mixed-clues-exp',
     boardGameCompliant: false,

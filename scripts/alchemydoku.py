@@ -1122,6 +1122,31 @@ def _find_removal_plan_expanded(sol: dict, pub_map: dict, articles: list, known:
 DEBUNK_QUESTION_KINDS = {'debunk_min_steps', 'debunk_conflict_only', 'debunk_apprentice_plan'}
 
 
+def _find_apprentice_only_plan(worlds: frozenset, pub_map: dict, sol: dict):
+    """Find an apprentice-only debunk plan.
+    For each false publication, find a color where claimed and actual signs differ.
+    Returns list of step dicts, or None if any false pub ingredient is not definitively known."""
+    ing_alch = {}
+    for s in SLOTS:
+        alch_set = {w[s - 1] for w in worlds}
+        if len(alch_set) == 1:
+            ing_alch[s] = next(iter(alch_set))
+    steps = []
+    for slot, claimed_alch in sorted(pub_map.items()):
+        actual_alch = sol[slot]
+        if claimed_alch == actual_alch:
+            continue  # true publication, skip
+        if slot not in ing_alch:
+            return None  # false pub ingredient not definitively known
+        for col in COLORS:
+            c_sgn = ALCH_DATA[claimed_alch][col][0]
+            a_sgn = ALCH_DATA[actual_alch][col][0]
+            if c_sgn != a_sgn:
+                steps.append({'kind': 'apprentice', 'ingredient': slot, 'color': col})
+                break
+    return steps if steps else None
+
+
 def _plan_debunk(profile, sol: dict, worlds: frozenset, rng: random.Random):
     """Plan publications, articles and debunk answers for a debunk profile.
     Returns a dict with publications/articles/questions/debunk_answers, or None on failure."""
@@ -1134,6 +1159,41 @@ def _plan_debunk(profile, sol: dict, worlds: frozenset, rng: random.Random):
             continue
         for _ in range(30):
             pub_map = _make_publications(sol, known, n_pubs, rng)
+
+            # Branch: apprentice-only plan
+            if profile.question_kind == 'debunk_apprentice_plan':
+                plan = _find_apprentice_only_plan(worlds, pub_map, sol)
+                if plan is None:
+                    continue
+                pubs_array = [None] * 8
+                for s, wrong_alch in pub_map.items():
+                    pubs_array[s - 1] = {'ingredient': s, 'claimedAlchemical': wrong_alch}
+                return {
+                    'publications': pubs_array,
+                    'articles': [],
+                    'questions': [{'kind': 'debunk_apprentice_plan'}],
+                    'debunk_answers': {'debunk_apprentice_plan': plan},
+                }
+
+            # Branch: conflict-only plan
+            if profile.question_kind == 'debunk_conflict_only':
+                conflict_cover = _find_conflict_cover(sol, pub_map, worlds)
+                if not conflict_cover:
+                    continue
+                ing_c = conflict_cover[0][0]
+                pubs_array = [None] * 8
+                for s, wrong_alch in pub_map.items():
+                    pubs_array[s - 1] = {'ingredient': s, 'claimedAlchemical': wrong_alch}
+                return {
+                    'publications': pubs_array,
+                    'articles': [],
+                    'questions': [{'kind': 'debunk_conflict_only', 'fixedIngredient': ing_c}],
+                    'debunk_answers': {'debunk_conflict_only': [
+                        {'kind': 'master', 'ingredient1': a, 'ingredient2': b}
+                        for a, b in conflict_cover
+                    ]},
+                }
+
             if is_expanded:
                 articles = _make_articles(sol, known, 3, rng)
                 plan = _find_removal_plan_expanded(sol, pub_map, articles, known, worlds)
@@ -1659,6 +1719,17 @@ PROFILES = {
     'combo_exp_med_all':  Profile('combo-exp-med-all',    ['base', 'encyclopedia', 'solar_lunar'],             'encyclopedia_fourth',      'medium', 14, False),
     'combo_exp_hard_wha': Profile('combo-exp-wha',         ['base', 'encyclopedia', 'solar_lunar'],             'encyclopedia_which_aspect','hard',   16, False),
     'combo_exp_hard_sl':  Profile('combo-exp-xsl',         ['base', 'encyclopedia', 'solar_lunar'],             'solar_lunar',              'hard',   15, False),
+    # ── New base profiles ─────────────────────────────────────────────────────
+    'mix_medium':         Profile('mix-med',              ['base', 'sell'],                                    'mixing-result',            'medium', 8,  False),
+    'ded_hard':           Profile('ded-hard',             ['base'],                                            'mixing-result',            'hard',   10, False),
+    'cross_expert':       Profile('cross-hard',           ['base', 'sell', 'debunk'],                          'mixing-result',            'hard',   12, False),
+    'safe_pub':           Profile('safe-publish',         ['base', 'sell'],                                    'safe-publish',             'medium', 8,  False),
+    'aspect_set_p':       Profile('aspect-set',           ['base'],                                            'aspect-set',               'medium', 8,  False),
+    'large_comp_p':       Profile('large-comp',           ['base'],                                            'large-component',          'medium', 8,  False),
+    'debunk_ap_p':        Profile('debunk-plan-easy',     ['base', 'debunk'],                                  'debunk_apprentice_plan',   'easy',   8,  False),
+    'debunk_conflict_p':  Profile('debunk-plan-conflict', ['base', 'debunk'],                                  'debunk_conflict_only',     'medium', 8,  False),
+    # ── New expanded profiles ──────────────────────────────────────────────────
+    'exp_debunk_p':       Profile('debunk',               ['base', 'encyclopedia', 'sell', 'debunk'],          'debunk_min_steps',         'medium', 15, False),
 }
 
 # ── Clue pool ─────────────────────────────────────────────────────────────────
@@ -1989,6 +2060,18 @@ def build_question_anchor(profile: Profile, sol: dict, golem: Optional[dict],
         return {'kind': 'golem_animation_alch'}, None, set()
     if k == 'golem_animation_ing':
         return {'kind': 'golem_animation_ing'}, None, set()
+
+    if k == 'safe-publish':
+        return {'kind': 'safe-publish', 'ingredient': rng.choice(SLOTS)}, None, set()
+
+    if k == 'aspect-set':
+        col  = rng.choice(COLORS)
+        sign = rng.choice(['+', '-'])
+        return {'kind': 'aspect-set', 'color': col, 'sign': sign}, None, set()
+
+    if k == 'large-component':
+        col = rng.choice(COLORS)
+        return {'kind': 'large-component', 'color': col}, None, set()
 
     return None, None, set()
 
@@ -3112,6 +3195,11 @@ DESCS = {
     'guaranteed-non-producer':   "Find all ingredients that can never produce the target potion with any partner in any remaining world.",
     'most_informative_book':     "Use the clues to decide which ingredient reveals the most information when consulted in the Royal Society book.",
     'debunk_min_steps':          "Mixed evidence surrounds several suspicious publications. Use master debunking to expose the lies.",
+    'safe-publish':              "Two aspects of an ingredient are still uncertain. Identify the one colour that is safe to hedge when publishing.",
+    'aspect-set':                "Four ingredients share the same sign for a colour aspect. Use the mixing records to identify exactly which four.",
+    'large-component':           "Use the clues to identify all four ingredients carrying the large component for a given colour.",
+    'debunk_apprentice_plan':    "False publications have been made. Use what you know to plan a minimal apprentice debunking strategy.",
+    'debunk_conflict_only':      "Several publications are on the board. Plan a master debunking sequence that creates conflicts exposing every false claim.",
 }
 
 EXP_PUZZLE_DIR = Path(__file__).parent.parent / 'src' / 'expanded' / 'data' / 'puzzles'
@@ -3124,6 +3212,7 @@ _EXP_PREFIX_COLLECTION: dict[str, str] = {
     'enc':                'exp-easy-enc',
     'sl':                 'exp-easy-sl',
     'enc-sl':             'exp-medium-enc-sl',
+    'debunk':             'exp-debunk',
     'combo-exp':          'combo-exp',
     'combo-exp-med-all':  'combo-exp',
     'combo-exp-wha':      'combo-exp',

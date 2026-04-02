@@ -1,0 +1,90 @@
+{
+  "id": "safe-publish-05",
+  "title": "The Sigma Framework",
+  "description": "Two aspects of an ingredient are still uncertain. Identify the one colour that is safe to hedge when publishing.",
+  "difficulty": "easy",
+  "clues": [
+    {
+      "kind": "sell",
+      "ingredient1": 2,
+      "ingredient2": 3,
+      "claimedResult": {
+        "type": "potion",
+        "color": "R",
+        "sign": "+"
+      },
+      "sellResult": "neutral"
+    },
+    {
+      "kind": "sell",
+      "ingredient1": 5,
+      "ingredient2": 8,
+      "claimedResult": {
+        "type": "potion",
+        "color": "B",
+        "sign": "+"
+      },
+      "sellResult": "total_match"
+    },
+    {
+      "kind": "sell",
+      "ingredient1": 1,
+      "ingredient2": 6,
+      "claimedResult": {
+        "type": "potion",
+        "color": "G",
+        "sign": "+"
+      },
+      "sellResult": "total_match"
+    },
+    {
+      "kind": "sell",
+      "ingredient1": 4,
+      "ingredient2": 5,
+      "claimedResult": {
+        "type": "potion",
+        "color": "R",
+        "sign": "-"
+      },
+      "sellResult": "opposite"
+    }
+  ],
+  "questions": [
+    {
+      "kind": "safe-publish",
+      "ingredient": 4
+    }
+  ],
+  "solution": {
+    "1": 1,
+    "2": 8,
+    "3": 7,
+    "4": 6,
+    "5": 2,
+    "6": 4,
+    "7": 3,
+    "8": 5
+  },
+  "hints": [
+    {
+      "level": 1,
+      "text": "When publishing a theory about ing4, you hedge the one colour whose sign is still uncertain \u2014 that protects you if you're wrong about it. Check which of R, G, B still has an ambiguous sign across the remaining worlds."
+    },
+    {
+      "level": 2,
+      "text": "For ing4: confirmed aspects: R+, B-. Uncertain colour(s): ['G']."
+    },
+    {
+      "level": 3,
+      "text": "Safe colour to hedge for ing4: G."
+    }
+  ],
+  "complexity": {
+    "score": 43,
+    "raw_score": 22,
+    "clue_score": 2,
+    "question_score": 0,
+    "world_score": 10,
+    "residual_worlds": 12
+  }
+}

@@ -75,7 +75,9 @@
       "mix-6002",
       "mix-6000",
       "mix-6007",
-      "mix-6003"
+      "mix-6003",
+      "mix-med-02",
+      "mix-med-03"
     ],
     "unlockedAfter": "easy-mixing"
   },
@@ -115,7 +117,11 @@
       "ded-9001",
       "ded-9004",
       "ded-9003",
-      "ded-9000"
+      "ded-9000",
+      "ded-hard-02",
+      "ded-hard-03",
+      "ded-hard-04",
+      "ded-hard-05"
     ],
     "unlockedAfter": "medium-mixing"
   },
@@ -150,7 +156,8 @@
       "safe-publish-04",
       "safe-publish-01",
       "safe-publish-02",
-      "safe-publish-03"
+      "safe-publish-03",
+      "safe-publish-05"
     ],
     "unlockedAfter": "tutorial-mixing"
   },
@@ -167,7 +174,9 @@
       "cross-1003",
       "cross-1008",
       "cross-1004",
-      "cross-1007"
+      "cross-1007",
+      "cross-hard-02",
+      "cross-hard-03"
     ],
     "unlockedAfter": "hard-deduction"
   },
@@ -179,7 +188,9 @@
     "puzzleIds": [
       "aspect-set-01",
       "large-comp-01",
-      "aspect-set-04"
+      "aspect-set-04",
+      "aspect-set-05",
+      "large-comp-02"
     ],
     "unlockedAfter": "medium-mixing"
   },
@@ -190,7 +201,10 @@
     "difficulty": "easy",
     "puzzleIds": [
       "debunk-plan-easy-01",
-      "debunk-plan-easy-03"
+      "debunk-plan-easy-03",
+      "debunk-plan-easy-05",
+      "debunk-plan-easy-06",
+      "debunk-plan-easy-07"
     ],
     "unlockedAfter": "tutorial-debunking-apprentice"
   },
@@ -200,7 +214,11 @@
     "description": "Plans requiring master debunks — including the subtle conflict-only challenge.",
     "difficulty": "medium",
     "puzzleIds": [
-      "debunk-plan-conflict-01"
+      "debunk-plan-conflict-01",
+      "debunk-plan-conflict-02",
+      "debunk-plan-conflict-03",
+      "debunk-plan-conflict-04",
+      "debunk-plan-conflict-05"
     ],
     "unlockedAfter": "tutorial-debunking-master"
   },
@@ -264,7 +282,10 @@
     "difficulty": "medium",
     "puzzleIds": [
       "best-mix-02",
-      "best-mix-03"
+      "best-mix-03",
+      "best-mix-04",
+      "best-mix-05",
+      "best-mix-06"
     ],
     "unlockedAfter": "new-mechanics"
   },
@@ -294,7 +315,11 @@
       "combo-b-ip-02",
       "combo-b-ip-03",
       "combo-b-ip-04",
-      "combo-b-ip-05"
+      "combo-b-ip-05",
+      "combo-b-med-asp-02",
+      "combo-b-med-np-02",
+      "combo-b-hard-pp-02",
+      "combo-b-hard-ip-02"
     ],
     "unlockedAfter": "expert-cross"
   },

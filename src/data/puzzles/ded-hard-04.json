@@ -1,0 +1,83 @@
+{
+  "id": "ded-hard-04",
+  "title": "The Duplicate Volume",
+  "description": "Mixing, selling, and debunking records all point toward a single pair. Deduce what potion they produce.",
+  "difficulty": "easy",
+  "clues": [
+    {
+      "kind": "mixing",
+      "ingredient1": 1,
+      "ingredient2": 2,
+      "result": {
+        "color": "R",
+        "sign": "+"
+      }
+    },
+    {
+      "kind": "mixing",
+      "ingredient1": 3,
+      "ingredient2": 4,
+      "result": {
+        "color": "R",
+        "sign": "+"
+      }
+    },
+    {
+      "kind": "mixing",
+      "ingredient1": 1,
+      "ingredient2": 7,
+      "result": {
+        "color": "G",
+        "sign": "+"
+      }
+    },
+    {
+      "kind": "mixing",
+      "ingredient1": 3,
+      "ingredient2": 6,
+      "result": {
+        "color": "G",
+        "sign": "-"
+      }
+    }
+  ],
+  "questions": [
+    {
+      "kind": "mixing-result",
+      "ingredient1": 6,
+      "ingredient2": 7
+    }
+  ],
+  "solution": {
+    "1": 8,
+    "2": 2,
+    "3": 3,
+    "4": 6,
+    "5": 4,
+    "6": 5,
+    "7": 1,
+    "8": 7
+  },
+  "hints": [
+    {
+      "level": 1,
+      "text": "To find the result of mixing ing6 and ing7, apply the mixing rule: scan colours R\u2192G\u2192B in order. The first colour where both ingredients share the same sign determines the result potion. If all three colours have opposing signs, the result is neutral."
+    },
+    {
+      "level": 2,
+      "text": "Step through each colour:\n  R: ing6=R- (ing6 has R-), ing7=R- (ing7 has R-)\n      \u2192 SAME sign - \u2192 R- resolves."
+    },
+    {
+      "level": 3,
+      "text": "ing6=Nnp, ing7=npN. Mix result: R-."
+    }
+  ],
+  "complexity": {
+    "score": 52,
+    "raw_score": 30,
+    "clue_score": 0,
+    "question_score": 0,
+    "world_score": 20,
+    "residual_worlds": 8
+  }
+}

@@ -1,0 +1,100 @@
+{
+  "id": "mix-med-02",
+  "title": "The Tightened Bound",
+  "description": "Mixing, selling, and debunking records all point toward a single pair. Deduce what potion they produce.",
+  "difficulty": "easy",
+  "clues": [
+    {
+      "kind": "sell",
+      "ingredient1": 1,
+      "ingredient2": 8,
+      "claimedResult": {
+        "type": "potion",
+        "color": "R",
+        "sign": "+"
+      },
+      "sellResult": "total_match"
+    },
+    {
+      "kind": "mixing",
+      "ingredient1": 2,
+      "ingredient2": 4,
+      "result": {
+        "color": "R",
+        "sign": "+"
+      }
+    },
+    {
+      "kind": "sell",
+      "ingredient1": 3,
+      "ingredient2": 8,
+      "claimedResult": {
+        "type": "potion",
+        "color": "G",
+        "sign": "-"
+      },
+      "sellResult": "total_match"
+    },
+    {
+      "kind": "sell",
+      "ingredient1": 4,
+      "ingredient2": 7,
+      "claimedResult": {
+        "type": "potion",
+        "color": "B",
+        "sign": "-"
+      },
+      "sellResult": "sign_ok"
+    },
+    {
+      "kind": "sell",
+      "ingredient1": 4,
+      "ingredient2": 5,
+      "claimedResult": {
+        "type": "potion",
+        "color": "B",
+        "sign": "+"
+      },
+      "sellResult": "total_match"
+    }
+  ],
+  "questions": [
+    {
+      "kind": "mixing-result",
+      "ingredient1": 3,
+      "ingredient2": 4
+    }
+  ],
+  "solution": {
+    "1": 6,
+    "2": 8,
+    "3": 5,
+    "4": 2,
+    "5": 4,
+    "6": 1,
+    "7": 7,
+    "8": 3
+  },
+  "hints": [
+    {
+      "level": 1,
+      "text": "To find the result of mixing ing3 and ing4, apply the mixing rule: scan colours R\u2192G\u2192B in order. The first colour where both ingredients share the same sign determines the result potion. If all three colours have opposing signs, the result is neutral."
+    },
+    {
+      "level": 2,
+      "text": "Step through each colour:\n  R: ing3=R- (ing3 has R-), ing4=R+ (ing2+ing4=R+: both share R+)\n      \u2192 opposite signs \u2192 skip.\n  G: ing3=G- (ing3 has G-), ing4=G- (ing4 has G-)\n      \u2192 SAME sign - \u2192 G- resolves."
+    },
+    {
+      "level": 3,
+      "text": "ing3=Nnp, ing4=pnP. Mix result: B+."
+    }
+  ],
+  "complexity": {
+    "score": 49,
+    "raw_score": 27,
+    "clue_score": 2,
+    "question_score": 0,
+    "world_score": 15,
+    "residual_worlds": 2
+  }
+}

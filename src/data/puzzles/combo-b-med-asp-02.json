@@ -1,0 +1,69 @@
+{
+  "id": "combo-b-med-asp-02",
+  "title": "The Water-Stained Record",
+  "description": "Multiple clue types constrain the world. Identify the sign of the target colour aspect.",
+  "difficulty": "easy",
+  "clues": [
+    {
+      "kind": "debunk",
+      "variant": "master",
+      "ingredient1": 1,
+      "ingredient2": 8,
+      "claimedPotion": {
+        "color": "R",
+        "sign": "-"
+      },
+      "outcome": "success"
+    },
+    {
+      "kind": "sell",
+      "ingredient1": 2,
+      "ingredient2": 8,
+      "claimedResult": {
+        "type": "potion",
+        "color": "B",
+        "sign": "+"
+      },
+      "sellResult": "sign_ok"
+    }
+  ],
+  "questions": [
+    {
+      "kind": "aspect",
+      "ingredient": 1,
+      "color": "G"
+    }
+  ],
+  "solution": {
+    "1": 5,
+    "2": 8,
+    "3": 7,
+    "4": 2,
+    "5": 6,
+    "6": 4,
+    "7": 3,
+    "8": 1
+  },
+  "hints": [
+    {
+      "level": 1,
+      "text": "Determine the G sign of ing1. There are 2 alchemicals still consistent with the clues for slot 1. Check whether they all agree on the G sign."
+    },
+    {
+      "level": 2,
+      "text": "Remaining alchemicals for ing1: Nnp(G-), NNN(G-). All share G-."
+    },
+    {
+      "level": 3,
+      "text": "ing1 has G-."
+    }
+  ],
+  "complexity": {
+    "score": 43,
+    "raw_score": 22,
+    "clue_score": 2,
+    "question_score": 0,
+    "world_score": 10,
+    "residual_worlds": 960
+  }
+}

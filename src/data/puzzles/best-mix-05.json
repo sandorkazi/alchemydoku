@@ -1,0 +1,81 @@
+{
+  "id": "best-mix-05",
+  "title": "The Viscosity Measurement",
+  "description": "Decide which partner provides the most information (maximum entropy) when mixed with the target ingredient.",
+  "difficulty": "easy",
+  "clues": [
+    {
+      "kind": "mixing",
+      "ingredient1": 1,
+      "ingredient2": 2,
+      "result": {
+        "type": "neutral"
+      }
+    },
+    {
+      "kind": "mixing",
+      "ingredient1": 3,
+      "ingredient2": 4,
+      "result": {
+        "color": "G",
+        "sign": "-"
+      }
+    },
+    {
+      "kind": "mixing",
+      "ingredient1": 3,
+      "ingredient2": 5,
+      "result": {
+        "color": "B",
+        "sign": "+"
+      }
+    },
+    {
+      "kind": "mixing",
+      "ingredient1": 2,
+      "ingredient2": 6,
+      "result": {
+        "color": "R",
+        "sign": "-"
+      }
+    }
+  ],
+  "questions": [
+    {
+      "kind": "most-informative-mix",
+      "ingredient": 7
+    }
+  ],
+  "solution": {
+    "1": 6,
+    "2": 5,
+    "3": 2,
+    "4": 3,
+    "5": 4,
+    "6": 1,
+    "7": 7,
+    "8": 8
+  },
+  "hints": [
+    {
+      "level": 1,
+      "text": "The most informative mix partner for ing7 is the one whose result is most unpredictable \u2014 more distinct possible outcomes means more information gained from the experiment, since each result rules out different alchemicals."
+    },
+    {
+      "level": 2,
+      "text": "Partners ranked by number of possible outcomes:\n  ing2: 5 distinct results (B-, B+, G-, G+, R-)\n  ing3: 5 distinct results (B+, G-, R-, R+, neutral)\n  ing5: 5 distinct results (B+, G+, R-, R+, neutral) \u2190 most informative\n  ing1: 4 distinct results (B-, B+, G+, R+)\n  ing4: 4 distinct results (B-, G-, R+, neutral)\n  ing8: 4 distinct results (B-, G+, R+, neutral)"
+    },
+    {
+      "level": 3,
+      "text": "Most informative partner for ing7: ing5."
+    }
+  ],
+  "complexity": {
+    "score": 40,
+    "raw_score": 20,
+    "clue_score": 0,
+    "question_score": 0,
+    "world_score": 10,
+    "residual_worlds": 16
+  }
+}

@@ -1,0 +1,61 @@
+{
+  "id": "combo-b-hard-pp-02",
+  "title": "The Braid Word",
+  "description": "The evidence narrows things down \u2014 but not all the way. Mark every potion this pair could still produce.",
+  "difficulty": "medium",
+  "clues": [
+    {
+      "kind": "sell_among",
+      "ingredients": [
+        2,
+        5,
+        6
+      ],
+      "claimedPotion": {
+        "color": "G",
+        "sign": "-"
+      },
+      "result": "total_match",
+      "count": 2
+    }
+  ],
+  "questions": [
+    {
+      "kind": "possible-potions",
+      "ingredient1": 1,
+      "ingredient2": 6
+    }
+  ],
+  "solution": {
+    "1": 6,
+    "2": 3,
+    "3": 1,
+    "4": 8,
+    "5": 5,
+    "6": 2,
+    "7": 4,
+    "8": 7
+  },
+  "hints": [
+    {
+      "level": 1,
+      "text": "Find every potion ing1+ing6 can possibly produce, given the 8 remaining candidate alchemical(s) for ing1 and 4 for ing6. Apply the mixing rule (R\u2192G\u2192B): the first color where both share the same sign AND have different sizes gives the potion; if all colors are skipped, the result is neutral."
+    },
+    {
+      "level": 2,
+      "text": "Color-by-color analysis:\n  R: ing1=R+ or R-, ing6=R+ or R- \u2014 R- or R+ possible (or skip)\n  G: ing1=G+ or G-, ing6=G- (confirmed) \u2014 G- possible (or skip)\n  B: ing1=B+ or B-, ing6=B+ or B- \u2014 B- or B+ possible (or skip)\n  \u2192 Neutral: possible when no color finds a mixed-size pair"
+    },
+    {
+      "level": 3,
+      "text": "Possible potions for ing1+ing6: ['B+', 'B-', 'G-', 'R+', 'R-', 'neutral']."
+    }
+  ],
+  "complexity": {
+    "score": 66,
+    "raw_score": 45,
+    "clue_score": 10,
+    "question_score": 5,
+    "world_score": 20,
+    "residual_worlds": 2880
+  }
+}

@@ -1,0 +1,121 @@
+{
+  "id": "debunk-plan-conflict-04",
+  "title": "The Michaelis Complex",
+  "description": "Several publications are on the board. Plan a master debunking sequence that creates conflicts exposing every false claim.",
+  "difficulty": "medium",
+  "clues": [
+    {
+      "kind": "debunk",
+      "variant": "master",
+      "ingredient1": 4,
+      "ingredient2": 6,
+      "claimedPotion": {
+        "color": "G",
+        "sign": "+"
+      },
+      "outcome": "success"
+    },
+    {
+      "kind": "debunk",
+      "variant": "master",
+      "ingredient1": 1,
+      "ingredient2": 7,
+      "claimedPotion": {
+        "color": "G",
+        "sign": "+"
+      },
+      "outcome": "success"
+    },
+    {
+      "kind": "debunk",
+      "variant": "master",
+      "ingredient1": 1,
+      "ingredient2": 8,
+      "claimedPotion": {
+        "color": "B",
+        "sign": "+"
+      },
+      "outcome": "success"
+    },
+    {
+      "kind": "debunk",
+      "variant": "master",
+      "ingredient1": 5,
+      "ingredient2": 6,
+      "claimedPotion": {
+        "color": "B",
+        "sign": "+"
+      },
+      "outcome": "success"
+    },
+    {
+      "kind": "debunk",
+      "variant": "master",
+      "ingredient1": 2,
+      "ingredient2": 6,
+      "claimedPotion": {
+        "color": "R",
+        "sign": "+"
+      },
+      "outcome": "success"
+    }
+  ],
+  "questions": [
+    {
+      "kind": "debunk_conflict_only",
+      "fixedIngredient": 1
+    }
+  ],
+  "solution": {
+    "1": 4,
+    "2": 3,
+    "3": 7,
+    "4": 1,
+    "5": 5,
+    "6": 8,
+    "7": 6,
+    "8": 2
+  },
+  "hints": [],
+  "complexity": {
+    "score": 62,
+    "raw_score": 40,
+    "clue_score": 0,
+    "question_score": 15,
+    "world_score": 15,
+    "residual_worlds": 2
+  },
+  "publications": [
+    {
+      "ingredient": 1,
+      "claimedAlchemical": 1
+    },
+    {
+      "ingredient": 2,
+      "claimedAlchemical": 5
+    },
+    null,
+    null,
+    null,
+    null,
+    null,
+    {
+      "ingredient": 8,
+      "claimedAlchemical": 5
+    }
+  ],
+  "debunk_answers": {
+    "debunk_conflict_only": [
+      {
+        "kind": "master",
+        "ingredient1": 1,
+        "ingredient2": 2
+      },
+      {
+        "kind": "master",
+        "ingredient1": 2,
+        "ingredient2": 8
+      }
+    ]
+  }
+}
