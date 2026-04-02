@@ -1,0 +1,137 @@
+{
+  "id": "combo-exp-wha-06",
+  "mode": "expanded",
+  "title": "The Linking Number",
+  "description": "Four ingredient\u2013sign pairs form a valid encyclopedia article. All the clue types are in play \u2014 deduce which aspect colour they share.",
+  "difficulty": "easy",
+  "clues": [
+    {
+      "kind": "encyclopedia",
+      "aspect": "G",
+      "entries": [
+        {
+          "ingredient": 1,
+          "sign": "+"
+        },
+        {
+          "ingredient": 3,
+          "sign": "+"
+        },
+        {
+          "ingredient": 6,
+          "sign": "+"
+        }
+      ]
+    },
+    {
+      "kind": "encyclopedia",
+      "aspect": "R",
+      "entries": [
+        {
+          "ingredient": 4,
+          "sign": "+"
+        },
+        {
+          "ingredient": 5,
+          "sign": "+"
+        },
+        {
+          "ingredient": 8,
+          "sign": "+"
+        }
+      ]
+    },
+    {
+      "kind": "mixing",
+      "ingredient1": 2,
+      "ingredient2": 3,
+      "result": {
+        "color": "B",
+        "sign": "+"
+      }
+    },
+    {
+      "kind": "book_among",
+      "ingredients": [
+        6,
+        7,
+        8
+      ],
+      "result": "lunar",
+      "count": 1
+    },
+    {
+      "kind": "encyclopedia",
+      "aspect": "G",
+      "entries": [
+        {
+          "ingredient": 1,
+          "sign": "+"
+        },
+        {
+          "ingredient": 5,
+          "sign": "+"
+        },
+        {
+          "ingredient": 6,
+          "sign": "+"
+        }
+      ]
+    }
+  ],
+  "questions": [
+    {
+      "kind": "encyclopedia_which_aspect",
+      "entries": [
+        {
+          "ingredient": 1,
+          "sign": "+"
+        },
+        {
+          "ingredient": 2,
+          "sign": "+"
+        },
+        {
+          "ingredient": 5,
+          "sign": "-"
+        },
+        {
+          "ingredient": 8,
+          "sign": "-"
+        }
+      ]
+    }
+  ],
+  "solution": {
+    "1": 4,
+    "2": 5,
+    "3": 8,
+    "4": 2,
+    "5": 6,
+    "6": 1,
+    "7": 7,
+    "8": 3
+  },
+  "hints": [
+    {
+      "level": 1,
+      "text": "For each colour R/G/B, check whether all four ingredient\u2013sign pairs (ingredient 1 +, ingredient 2 +, ingredient 5 -, ingredient 8 -) hold across the remaining worlds."
+    },
+    {
+      "level": 2,
+      "text": "Eliminate any colour where at least one remaining world disagrees. Only one colour will survive."
+    },
+    {
+      "level": 3,
+      "text": "The answer is B (Blue): every remaining world maps all four entries onto the Blue aspect."
+    }
+  ],
+  "complexity": {
+    "score": 47,
+    "raw_score": 25,
+    "clue_score": 5,
+    "question_score": 5,
+    "world_score": 5,
+    "residual_worlds": 1
+  }
+}

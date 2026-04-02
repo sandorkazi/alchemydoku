@@ -1,0 +1,100 @@
+{
+  "id": "aspect-set-05",
+  "title": "The Reduced Matrix",
+  "description": "Four ingredients share the same sign for a colour aspect. Use the mixing records to identify exactly which four.",
+  "difficulty": "easy",
+  "clues": [
+    {
+      "kind": "mixing",
+      "ingredient1": 1,
+      "ingredient2": 2,
+      "result": {
+        "color": "R",
+        "sign": "+"
+      }
+    },
+    {
+      "kind": "mixing",
+      "ingredient1": 7,
+      "ingredient2": 8,
+      "result": {
+        "color": "R",
+        "sign": "+"
+      }
+    },
+    {
+      "kind": "mixing",
+      "ingredient1": 1,
+      "ingredient2": 6,
+      "result": {
+        "color": "G",
+        "sign": "+"
+      }
+    },
+    {
+      "kind": "mixing",
+      "ingredient1": 2,
+      "ingredient2": 5,
+      "result": {
+        "type": "neutral"
+      }
+    },
+    {
+      "kind": "mixing",
+      "ingredient1": 1,
+      "ingredient2": 3,
+      "result": {
+        "color": "B",
+        "sign": "+"
+      }
+    },
+    {
+      "kind": "mixing",
+      "ingredient1": 1,
+      "ingredient2": 7,
+      "result": {
+        "color": "R",
+        "sign": "+"
+      }
+    }
+  ],
+  "questions": [
+    {
+      "kind": "aspect-set",
+      "color": "B",
+      "sign": "-"
+    }
+  ],
+  "solution": {
+    "1": 8,
+    "2": 3,
+    "3": 5,
+    "4": 7,
+    "5": 4,
+    "6": 1,
+    "7": 2,
+    "8": 6
+  },
+  "hints": [
+    {
+      "level": 1,
+      "text": "Find the 4 ingredients with B-. Exactly 4 of the 8 alchemicals carry each sign per colour. A colored mixing result of B- directly reveals that both mixed ingredients share B-."
+    },
+    {
+      "level": 2,
+      "text": "Evidence:\n  (none direct \u2014 use elimination)\nConfirmed B-: [2, 4, 6, 8]."
+    },
+    {
+      "level": 3,
+      "text": "The 4 ingredients with B-: [2, 4, 6, 8]."
+    }
+  ],
+  "complexity": {
+    "score": 31,
+    "raw_score": 15,
+    "clue_score": 0,
+    "question_score": 5,
+    "world_score": 0,
+    "residual_worlds": 1
+  }
+}

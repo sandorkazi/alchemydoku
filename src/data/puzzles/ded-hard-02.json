@@ -1,0 +1,82 @@
+{
+  "id": "ded-hard-02",
+  "title": "The Puncture",
+  "description": "Mixing, selling, and debunking records all point toward a single pair. Deduce what potion they produce.",
+  "difficulty": "easy",
+  "clues": [
+    {
+      "kind": "mixing",
+      "ingredient1": 1,
+      "ingredient2": 2,
+      "result": {
+        "color": "R",
+        "sign": "+"
+      }
+    },
+    {
+      "kind": "mixing",
+      "ingredient1": 7,
+      "ingredient2": 8,
+      "result": {
+        "color": "R",
+        "sign": "+"
+      }
+    },
+    {
+      "kind": "mixing",
+      "ingredient1": 1,
+      "ingredient2": 6,
+      "result": {
+        "color": "G",
+        "sign": "+"
+      }
+    },
+    {
+      "kind": "mixing",
+      "ingredient1": 2,
+      "ingredient2": 3,
+      "result": {
+        "type": "neutral"
+      }
+    }
+  ],
+  "questions": [
+    {
+      "kind": "mixing-result",
+      "ingredient1": 4,
+      "ingredient2": 5
+    }
+  ],
+  "solution": {
+    "1": 8,
+    "2": 3,
+    "3": 4,
+    "4": 7,
+    "5": 5,
+    "6": 1,
+    "7": 6,
+    "8": 2
+  },
+  "hints": [
+    {
+      "level": 1,
+      "text": "To find the result of mixing ing4 and ing5, apply the mixing rule: scan colours R\u2192G\u2192B in order. The first colour where both ingredients share the same sign determines the result potion. If all three colours have opposing signs, the result is neutral."
+    },
+    {
+      "level": 2,
+      "text": "Step through each colour:\n  R: ing4=R- (ing4 has R-), ing5=R- (ing5 has R-)\n      \u2192 SAME sign - \u2192 R- resolves."
+    },
+    {
+      "level": 3,
+      "text": "ing4=NNN, ing5=Nnp. Mix result: G-."
+    }
+  ],
+  "complexity": {
+    "score": 52,
+    "raw_score": 30,
+    "clue_score": 0,
+    "question_score": 0,
+    "world_score": 20,
+    "residual_worlds": 8
+  }
+}

@@ -1,0 +1,133 @@
+{
+  "id": "debunk-plan-easy-06",
+  "title": "The Reluctant Admission",
+  "description": "False publications have been made. Use what you know to plan a minimal apprentice debunking strategy.",
+  "difficulty": "easy",
+  "clues": [
+    {
+      "kind": "debunk",
+      "variant": "master",
+      "ingredient1": 6,
+      "ingredient2": 7,
+      "claimedPotion": {
+        "color": "R",
+        "sign": "+"
+      },
+      "outcome": "success"
+    },
+    {
+      "kind": "debunk",
+      "variant": "master",
+      "ingredient1": 3,
+      "ingredient2": 5,
+      "claimedPotion": {
+        "color": "R",
+        "sign": "+"
+      },
+      "outcome": "success"
+    },
+    {
+      "kind": "debunk",
+      "variant": "master",
+      "ingredient1": 4,
+      "ingredient2": 7,
+      "claimedPotion": {
+        "color": "G",
+        "sign": "-"
+      },
+      "outcome": "success"
+    },
+    {
+      "kind": "debunk",
+      "variant": "master",
+      "ingredient1": 3,
+      "ingredient2": 8,
+      "claimedPotion": {
+        "color": "G",
+        "sign": "+"
+      },
+      "outcome": "success"
+    },
+    {
+      "kind": "debunk",
+      "variant": "master",
+      "ingredient1": 2,
+      "ingredient2": 5,
+      "claimedPotion": {
+        "color": "B",
+        "sign": "-"
+      },
+      "outcome": "success"
+    }
+  ],
+  "questions": [
+    {
+      "kind": "debunk_apprentice_plan"
+    }
+  ],
+  "solution": {
+    "1": 5,
+    "2": 1,
+    "3": 6,
+    "4": 7,
+    "5": 3,
+    "6": 8,
+    "7": 2,
+    "8": 4
+  },
+  "hints": [],
+  "complexity": {
+    "score": 57,
+    "raw_score": 35,
+    "clue_score": 0,
+    "question_score": 10,
+    "world_score": 15,
+    "residual_worlds": 1
+  },
+  "publications": [
+    {
+      "ingredient": 1,
+      "claimedAlchemical": 4
+    },
+    null,
+    {
+      "ingredient": 3,
+      "claimedAlchemical": 7
+    },
+    null,
+    {
+      "ingredient": 5,
+      "claimedAlchemical": 1
+    },
+    {
+      "ingredient": 6,
+      "claimedAlchemical": 2
+    },
+    null,
+    null
+  ],
+  "debunk_answers": {
+    "debunk_apprentice_plan": [
+      {
+        "kind": "apprentice",
+        "ingredient": 1,
+        "color": "G"
+      },
+      {
+        "kind": "apprentice",
+        "ingredient": 3,
+        "color": "R"
+      },
+      {
+        "kind": "apprentice",
+        "ingredient": 5,
+        "color": "R"
+      },
+      {
+        "kind": "apprentice",
+        "ingredient": 6,
+        "color": "G"
+      }
+    ]
+  }
+}

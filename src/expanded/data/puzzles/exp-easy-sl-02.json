@@ -1,0 +1,92 @@
+{
+  "id": "exp-easy-sl-02",
+  "mode": "expanded",
+  "title": "Pending Review",
+  "description": "Use the clues to deduce which alchemical belongs to the target ingredient.",
+  "difficulty": "easy",
+  "clues": [
+    {
+      "kind": "mixing",
+      "ingredient1": 3,
+      "ingredient2": 6,
+      "result": {
+        "color": "B",
+        "sign": "-"
+      }
+    },
+    {
+      "kind": "mixing",
+      "ingredient1": 2,
+      "ingredient2": 4,
+      "result": {
+        "color": "G",
+        "sign": "-"
+      }
+    },
+    {
+      "kind": "mixing",
+      "ingredient1": 1,
+      "ingredient2": 6,
+      "result": {
+        "color": "B",
+        "sign": "-"
+      }
+    },
+    {
+      "kind": "mixing",
+      "ingredient1": 3,
+      "ingredient2": 4,
+      "result": {
+        "color": "R",
+        "sign": "-"
+      }
+    },
+    {
+      "kind": "mixing",
+      "ingredient1": 1,
+      "ingredient2": 7,
+      "result": {
+        "color": "R",
+        "sign": "-"
+      }
+    }
+  ],
+  "questions": [
+    {
+      "kind": "alchemical",
+      "ingredient": 7
+    }
+  ],
+  "solution": {
+    "1": 7,
+    "2": 3,
+    "3": 1,
+    "4": 5,
+    "5": 2,
+    "6": 6,
+    "7": 4,
+    "8": 8
+  },
+  "hints": [
+    {
+      "level": 1,
+      "text": "Identify the alchemical for ingredient 7. Direct clues: ing1+ing7=R-."
+    },
+    {
+      "level": 2,
+      "text": "Eliminated for slot 7: [1, 2, 3, 5, 6, 7, 8]. Remaining: [4]."
+    },
+    {
+      "level": 3,
+      "text": "Ingredient 7 = nPp (R- G+ B+)."
+    }
+  ],
+  "complexity": {
+    "score": 31,
+    "raw_score": 15,
+    "clue_score": 0,
+    "question_score": 0,
+    "world_score": 5,
+    "residual_worlds": 2
+  }
+}

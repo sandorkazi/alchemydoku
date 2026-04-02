@@ -1,0 +1,100 @@
+{
+  "id": "combo-b-med-np-02",
+  "title": "The Swordfish",
+  "description": "Use the clues to identify the one ingredient that always mixes to neutral with the target ingredient.",
+  "difficulty": "easy",
+  "clues": [
+    {
+      "kind": "debunk",
+      "variant": "master",
+      "ingredient1": 2,
+      "ingredient2": 3,
+      "claimedPotion": {
+        "color": "R",
+        "sign": "+"
+      },
+      "outcome": "success"
+    },
+    {
+      "kind": "debunk",
+      "variant": "master",
+      "ingredient1": 1,
+      "ingredient2": 6,
+      "claimedPotion": {
+        "color": "R",
+        "sign": "+"
+      },
+      "outcome": "success"
+    },
+    {
+      "kind": "debunk",
+      "variant": "master",
+      "ingredient1": 1,
+      "ingredient2": 4,
+      "claimedPotion": {
+        "color": "G",
+        "sign": "-"
+      },
+      "outcome": "success"
+    },
+    {
+      "kind": "debunk",
+      "variant": "master",
+      "ingredient1": 3,
+      "ingredient2": 5,
+      "claimedPotion": {
+        "color": "G",
+        "sign": "+"
+      },
+      "outcome": "success"
+    },
+    {
+      "kind": "debunk",
+      "variant": "master",
+      "ingredient1": 2,
+      "ingredient2": 7,
+      "claimedPotion": {
+        "type": "neutral"
+      },
+      "outcome": "success"
+    }
+  ],
+  "questions": [
+    {
+      "kind": "neutral-partner",
+      "ingredient": 8
+    }
+  ],
+  "solution": {
+    "1": 3,
+    "2": 2,
+    "3": 6,
+    "4": 5,
+    "5": 4,
+    "6": 8,
+    "7": 1,
+    "8": 7
+  },
+  "hints": [
+    {
+      "level": 1,
+      "text": "Find the ingredient whose alchemical is the direct opposite of ingredient 8. Two alchemicals are direct opposites when their mix is always neutral \u2014 all three colour aspects have opposite signs."
+    },
+    {
+      "level": 2,
+      "text": "Ingredient 8 has alchemical properties: R- G- B-. Its direct opposite has all signs flipped. Check which remaining possible alchemicals always mix to neutral with it."
+    },
+    {
+      "level": 3,
+      "text": "Ingredient 8 = NNN. Its direct opposite is ingredient 6 = PPP."
+    }
+  ],
+  "complexity": {
+    "score": 40,
+    "raw_score": 20,
+    "clue_score": 0,
+    "question_score": 0,
+    "world_score": 10,
+    "residual_worlds": 2
+  }
+}

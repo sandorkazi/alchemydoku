@@ -1,0 +1,72 @@
+{
+  "id": "best-mix-06",
+  "title": "The Allosteric Site",
+  "description": "Decide which partner provides the most information (maximum entropy) when mixed with the target ingredient.",
+  "difficulty": "easy",
+  "clues": [
+    {
+      "kind": "mixing",
+      "ingredient1": 1,
+      "ingredient2": 2,
+      "result": {
+        "type": "neutral"
+      }
+    },
+    {
+      "kind": "mixing",
+      "ingredient1": 3,
+      "ingredient2": 5,
+      "result": {
+        "color": "B",
+        "sign": "-"
+      }
+    },
+    {
+      "kind": "mixing",
+      "ingredient1": 2,
+      "ingredient2": 6,
+      "result": {
+        "color": "B",
+        "sign": "-"
+      }
+    }
+  ],
+  "questions": [
+    {
+      "kind": "most-informative-mix",
+      "ingredient": 1
+    }
+  ],
+  "solution": {
+    "1": 4,
+    "2": 3,
+    "3": 6,
+    "4": 5,
+    "5": 1,
+    "6": 7,
+    "7": 2,
+    "8": 8
+  },
+  "hints": [
+    {
+      "level": 1,
+      "text": "The most informative mix partner for ing1 is the one whose result is most unpredictable \u2014 more distinct possible outcomes means more information gained from the experiment, since each result rules out different alchemicals."
+    },
+    {
+      "level": 2,
+      "text": "Partners ranked by number of possible outcomes:\n  ing3: 4 distinct results (G-, G+, R-, R+)\n  ing5: 4 distinct results (G-, G+, R-, R+)\n  ing6: 4 distinct results (G-, G+, R-, R+) \u2190 most informative\n  ing4: 3 distinct results (B+, R-, R+)\n  ing7: 3 distinct results (B+, R-, R+)\n  ing8: 3 distinct results (B+, R-, R+)"
+    },
+    {
+      "level": 3,
+      "text": "Most informative partner for ing1: ing6."
+    }
+  ],
+  "complexity": {
+    "score": 40,
+    "raw_score": 20,
+    "clue_score": 0,
+    "question_score": 0,
+    "world_score": 10,
+    "residual_worlds": 96
+  }
+}

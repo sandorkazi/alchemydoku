@@ -1,0 +1,91 @@
+{
+  "id": "combo-b-hard-ip-02",
+  "title": "The Kauffman Bracket",
+  "description": "Determine all potions that the target ingredient can certainly produce when mixed with at least one partner.",
+  "difficulty": "hard",
+  "clues": [
+    {
+      "kind": "sell_among",
+      "ingredients": [
+        3,
+        6,
+        7,
+        8
+      ],
+      "claimedPotion": {
+        "color": "G",
+        "sign": "-"
+      },
+      "result": "total_match",
+      "count": 4
+    },
+    {
+      "kind": "sell_among",
+      "ingredients": [
+        3,
+        5,
+        6,
+        7
+      ],
+      "claimedPotion": {
+        "color": "R",
+        "sign": "+"
+      },
+      "result": "opposite",
+      "count": 6
+    },
+    {
+      "kind": "sell_among",
+      "ingredients": [
+        4,
+        5,
+        6,
+        8
+      ],
+      "claimedPotion": {
+        "color": "G",
+        "sign": "+"
+      },
+      "result": "opposite",
+      "count": 1
+    }
+  ],
+  "questions": [
+    {
+      "kind": "ingredient-potion-profile",
+      "ingredient": 1
+    }
+  ],
+  "solution": {
+    "1": 6,
+    "2": 4,
+    "3": 7,
+    "4": 8,
+    "5": 1,
+    "6": 5,
+    "7": 3,
+    "8": 2
+  },
+  "hints": [
+    {
+      "level": 1,
+      "text": "Find all potions that ingredient 1 can certainly produce. Neutral is always certain \u2014 every alchemical has a direct opposite, and mixing them always yields neutral. For the other potions, a result is 'certain' when it's the same across every remaining possible world."
+    },
+    {
+      "level": 2,
+      "text": "Check each of ingredient 1's 7 partners for non-neutral certain results. Non-neutral certain results: ing2\u2192G+."
+    },
+    {
+      "level": 3,
+      "text": "Ingredient 1 = Ppn. Certain potions (neutral always included): ['G+', 'neutral']."
+    }
+  ],
+  "complexity": {
+    "score": 74,
+    "raw_score": 55,
+    "clue_score": 30,
+    "question_score": 5,
+    "world_score": 10,
+    "residual_worlds": 4
+  }
+}

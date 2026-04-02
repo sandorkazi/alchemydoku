@@ -1,0 +1,102 @@
+{
+  "id": "cross-hard-02",
+  "title": "The Subtle Distinction",
+  "description": "Mixing, selling, and debunking records all point toward a single pair. Deduce what potion they produce.",
+  "difficulty": "easy",
+  "clues": [
+    {
+      "kind": "debunk",
+      "variant": "master",
+      "ingredient1": 5,
+      "ingredient2": 8,
+      "claimedPotion": {
+        "color": "R",
+        "sign": "+"
+      },
+      "outcome": "success"
+    },
+    {
+      "kind": "debunk",
+      "variant": "master",
+      "ingredient1": 3,
+      "ingredient2": 4,
+      "claimedPotion": {
+        "color": "R",
+        "sign": "+"
+      },
+      "outcome": "success"
+    },
+    {
+      "kind": "debunk",
+      "variant": "master",
+      "ingredient1": 2,
+      "ingredient2": 3,
+      "claimedPotion": {
+        "color": "G",
+        "sign": "+"
+      },
+      "outcome": "success"
+    },
+    {
+      "kind": "sell",
+      "ingredient1": 1,
+      "ingredient2": 5,
+      "claimedResult": {
+        "type": "potion",
+        "color": "B",
+        "sign": "-"
+      },
+      "sellResult": "sign_ok"
+    },
+    {
+      "kind": "debunk",
+      "variant": "master",
+      "ingredient1": 7,
+      "ingredient2": 8,
+      "claimedPotion": {
+        "color": "B",
+        "sign": "-"
+      },
+      "outcome": "success"
+    }
+  ],
+  "questions": [
+    {
+      "kind": "mixing-result",
+      "ingredient1": 2,
+      "ingredient2": 5
+    }
+  ],
+  "solution": {
+    "1": 5,
+    "2": 1,
+    "3": 8,
+    "4": 2,
+    "5": 3,
+    "6": 4,
+    "7": 7,
+    "8": 6
+  },
+  "hints": [
+    {
+      "level": 1,
+      "text": "To find the result of mixing ing2 and ing5, apply the mixing rule: scan colours R\u2192G\u2192B in order. The first colour where both ingredients share the same sign determines the result potion. If all three colours have opposing signs, the result is neutral."
+    },
+    {
+      "level": 2,
+      "text": "Step through each colour:\n  R: ing2=R- (ing2 has R-), ing5=R+ (ing5 has R+)\n      \u2192 opposite signs \u2192 skip.\n  G: ing2=G+ (ing2 has G+), ing5=G- (ing5 has G-)\n      \u2192 opposite signs \u2192 skip.\n  B: ing2=B- (ing2 has B-), ing5=B- (ing5 has B-)\n      \u2192 SAME sign - \u2192 B- resolves."
+    },
+    {
+      "level": 3,
+      "text": "ing2=npN, ing5=pNn. Mix result: B-."
+    }
+  ],
+  "complexity": {
+    "score": 49,
+    "raw_score": 27,
+    "clue_score": 2,
+    "question_score": 0,
+    "world_score": 15,
+    "residual_worlds": 1
+  }
+}

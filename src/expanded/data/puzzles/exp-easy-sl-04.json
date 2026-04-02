@@ -1,0 +1,81 @@
+{
+  "id": "exp-easy-sl-04",
+  "mode": "expanded",
+  "title": "The Finite-Size Effect",
+  "description": "Use the clues to deduce which alchemical belongs to the target ingredient.",
+  "difficulty": "easy",
+  "clues": [
+    {
+      "kind": "mixing",
+      "ingredient1": 1,
+      "ingredient2": 7,
+      "result": {
+        "color": "G",
+        "sign": "-"
+      }
+    },
+    {
+      "kind": "mixing",
+      "ingredient1": 1,
+      "ingredient2": 2,
+      "result": {
+        "color": "B",
+        "sign": "+"
+      }
+    },
+    {
+      "kind": "book_among",
+      "ingredients": [
+        2,
+        3,
+        7,
+        8
+      ],
+      "result": "solar",
+      "count": 1
+    },
+    {
+      "kind": "book",
+      "ingredient": 8,
+      "result": "solar"
+    }
+  ],
+  "questions": [
+    {
+      "kind": "alchemical",
+      "ingredient": 7
+    }
+  ],
+  "solution": {
+    "1": 2,
+    "2": 4,
+    "3": 6,
+    "4": 5,
+    "5": 8,
+    "6": 1,
+    "7": 7,
+    "8": 3
+  },
+  "hints": [
+    {
+      "level": 1,
+      "text": "Identify the alchemical for ingredient 7. Direct clues: ing1+ing7=G-."
+    },
+    {
+      "level": 2,
+      "text": "Eliminated for slot 7: [1, 2, 3, 4, 5, 6, 8]. Remaining: [7]."
+    },
+    {
+      "level": 3,
+      "text": "Ingredient 7 = NNN (R- G- B-)."
+    }
+  ],
+  "complexity": {
+    "score": 40,
+    "raw_score": 20,
+    "clue_score": 5,
+    "question_score": 0,
+    "world_score": 5,
+    "residual_worlds": 60
+  }
+}

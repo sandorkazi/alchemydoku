@@ -1,0 +1,90 @@
+{
+  "id": "large-comp-02",
+  "title": "The Sequential Binding",
+  "description": "Use the clues to identify all four ingredients carrying the large component for a given colour.",
+  "difficulty": "easy",
+  "clues": [
+    {
+      "kind": "mixing",
+      "ingredient1": 1,
+      "ingredient2": 2,
+      "result": {
+        "color": "B",
+        "sign": "-"
+      }
+    },
+    {
+      "kind": "mixing",
+      "ingredient1": 4,
+      "ingredient2": 5,
+      "result": {
+        "color": "B",
+        "sign": "-"
+      }
+    },
+    {
+      "kind": "mixing",
+      "ingredient1": 1,
+      "ingredient2": 6,
+      "result": {
+        "color": "R",
+        "sign": "+"
+      }
+    },
+    {
+      "kind": "mixing",
+      "ingredient1": 2,
+      "ingredient2": 8,
+      "result": {
+        "type": "neutral"
+      }
+    },
+    {
+      "kind": "mixing",
+      "ingredient1": 1,
+      "ingredient2": 4,
+      "result": {
+        "color": "R",
+        "sign": "+"
+      }
+    }
+  ],
+  "questions": [
+    {
+      "kind": "large-component",
+      "color": "B"
+    }
+  ],
+  "solution": {
+    "1": 3,
+    "2": 1,
+    "3": 4,
+    "4": 6,
+    "5": 7,
+    "6": 8,
+    "7": 5,
+    "8": 2
+  },
+  "hints": [
+    {
+      "level": 1,
+      "text": "Find the 4 ingredients that hold the Large component of B. When two ingredients share the same B sign, the Large one (vs Small) produces the coloured potion. Mixing clues with B results reveal which ingredients interact on this colour."
+    },
+    {
+      "level": 2,
+      "text": "Mixing clues for B:\n  ing1+ing2=B-: one of these holds Large-B\n  ing4+ing5=B-: one of these holds Large-B\nConfirmed Large-B so far: [2, 5, 6, 8]."
+    },
+    {
+      "level": 3,
+      "text": "The 4 Large-B ingredients: [2, 5, 6, 8]."
+    }
+  ],
+  "complexity": {
+    "score": 10,
+    "raw_score": 10,
+    "clue_score": 0,
+    "question_score": 0,
+    "world_score": 0,
+    "residual_worlds": 4
+  }
+}
