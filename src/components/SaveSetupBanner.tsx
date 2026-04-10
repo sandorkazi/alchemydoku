@@ -1,6 +1,6 @@
 import { useState, useRef, useEffect } from 'react';
 import { useDrive } from '../contexts/DriveContext';
-import { loadSyncPref, saveSyncPref, hasLocalProgress } from '../utils/syncPreference';
+import { saveSyncPref, hasLocalProgress } from '../utils/syncPreference';
 import { uploadSaveFile } from '../utils/saveFileTransfer';
 
 /**
@@ -12,7 +12,9 @@ export function SaveSetupBanner() {
   const clientId = import.meta.env.VITE_GOOGLE_CLIENT_ID as string | undefined;
   const { authStatus, signIn } = useDrive();
 
-  const [show, setShow] = useState(() => loadSyncPref() === null);
+  // Never auto-show: new visitors default silently to browser-local storage.
+  // The banner can still be triggered programmatically if needed.
+  const [show, setShow] = useState(false);
   const [isSigningIn, setIsSigningIn] = useState(false);
   const [uploadState, setUploadState] = useState<'idle' | 'done' | 'error'>('idle');
   const [uploadError, setUploadError] = useState<string | null>(null);

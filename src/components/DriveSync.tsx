@@ -137,9 +137,15 @@ export function DriveSync() {
       <button
         onClick={() => signIn()}
         className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs text-gray-500 bg-white border border-gray-200 hover:border-amber-300 hover:text-amber-700 hover:bg-amber-50 transition-colors shadow-sm"
-        title={`Reconnect as ${savedUser.name}`}
+        title={`Reconnect as ${savedUser.name} to resume cloud sync`}
       >
-        <Avatar user={savedUser} />
+        <div className="relative shrink-0">
+          <Avatar user={savedUser} />
+          <span className="absolute -top-1 -right-1 flex h-3 w-3 pointer-events-none">
+            <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-amber-400 opacity-75" />
+            <span className="relative inline-flex h-3 w-3 rounded-full bg-amber-500 text-white text-[7px] font-bold items-center justify-center leading-none">!</span>
+          </span>
+        </div>
         <CloudIcon status={authStatus === 'error' ? 'error' : 'idle'} />
         <span>Reconnect</span>
       </button>
