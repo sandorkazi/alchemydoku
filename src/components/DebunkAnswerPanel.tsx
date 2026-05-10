@@ -10,7 +10,7 @@ import { useSolver, useIngredient } from '../contexts/SolverContext';
 import { IngredientIcon, AlchemicalImage, ElemImage, PotionImage, CorrectIcon, IncorrectIcon } from './GameSprites';
 import { PotionPicker } from './AnswerPickers';
 import { simulatePlanForDisplay, isPublicationDefinitelyFalse } from '../logic/debunk';
-import type { DebunkStep, IngredientId, Color, Publication, PotionResult } from '../types';
+import type { DebunkStep, IngredientId, Color, Publication, PotionResult, QuestionTarget } from '../types';
 
 // ─── Ingredient picker ────────────────────────────────────────────────────────
 
@@ -307,6 +307,33 @@ function SolutionStep({ step, index }: { step: DebunkStep; index: number }) {
   );
 }
 
+// ─── Per-question helpers ─────────────────────────────────────────────────────
+
+function questionTitle(q: QuestionTarget): string {
+  if (q.kind === 'debunk_conflict_only') return 'Demonstrate a conflict';
+  if (q.kind === 'debunk_apprentice_plan') return 'Apprentice plan';
+  return 'Debunk plan';
+}
+
+function questionDescription(q: QuestionTarget): string {
+  if (q.kind === 'debunk_conflict_only')
+    return "Find a minimal number of master mixes which will cover all incorrect publications with contradictions (at least 1 for each), without removing any. The covered publications shown are those whose claims are contradicted by the mix — not removals. An ingredient can help disprove another's publication without its own claim being contested.";
+  if (q.kind === 'debunk_apprentice_plan')
+    return 'Remove all false publications using only apprentice debunks, in as few steps as possible.';
+  return 'Remove all false publications in as few steps as possible.';
+}
+
+function initialDraftForQ(q: QuestionTarget): DraftStep {
+  if (q.kind === 'debunk_conflict_only') {
+    const fixedIng = (q as { fixedIngredient?: IngredientId }).fixedIngredient ?? null;
+    return { kind: 'master', ingredient1: fixedIng, ingredient2: null, claimedPotion: null };
+  }
+  if (q.kind === 'debunk_apprentice_plan') {
+    return { kind: 'apprentice', ingredient: null, color: null };
+  }
+  return { kind: 'master', ingredient1: null, ingredient2: null, claimedPotion: null };
+}
+
 // ─── Main panel ───────────────────────────────────────────────────────────────
 
 export function DebunkAnswerPanel({ onNext, isTutorial = false }: {
@@ -318,76 +345,93 @@ export function DebunkAnswerPanel({ onNext, isTutorial = false }: {
 
   const publications: Publication[] = (puzzle.publications ?? []).filter(Boolean) as Publication[];
 
-  const isConflictOnly = puzzle.questions.some(q => q.kind === 'debunk_conflict_only');
-  const isApprenticeOnly = puzzle.questions.some(q => q.kind === 'debunk_apprentice_plan');
-  const fixedIngredient = puzzle.questions.find(q => q.kind === 'debunk_conflict_only')
-    ? (puzzle.questions.find(q => q.kind === 'debunk_conflict_only') as { fixedIngredient?: IngredientId }).fixedIngredient ?? null
-    : null;
+  // All debunk questions in order — for multi-question puzzles each gets its own plan builder.
+  const debunkQuestions = puzzle.questions.filter(q =>
+    q.kind === 'debunk_min_steps' || q.kind === 'debunk_conflict_only' || q.kind === 'debunk_apprentice_plan'
+  );
 
-  const isMasterOnly = !isConflictOnly && !isApprenticeOnly;
+  // allDrafts[qi] = draft steps for question qi
+  const [allDrafts, setAllDrafts] = useState<DraftStep[][]>(() =>
+    debunkQuestions.map(q => [initialDraftForQ(q)])
+  );
 
-  const initialDraft = (): DraftStep => isConflictOnly || isMasterOnly
-    ? { kind: 'master', ingredient1: isConflictOnly ? fixedIngredient : null, ingredient2: null, claimedPotion: null }
-    : { kind: 'apprentice', ingredient: null, color: null };
-
-  const [drafts, setDrafts] = useState<DraftStep[]>([initialDraft()]);
   const [showStepFeedback, setShowStepFeedback] = useState(isTutorial);
   const [showFeedbackConfirm, setShowFeedbackConfirm] = useState(false);
 
-  const completedSteps = drafts.filter(isComplete) as DebunkStep[];
-  // All outcomes derived from public information only (claimed alchemicals + observed results).
-  // No hidden solution used — publication truth is determined from worlds.
-  const displayOutcomes = simulatePlanForDisplay(completedSteps, puzzle.solution, publications, worlds);
-  const removedSet = new Set<IngredientId>(displayOutcomes.flatMap(o => o.removed));
-  const conflictedSet = new Set<IngredientId>(displayOutcomes.flatMap(o => o.conflicts));
-
-  // Definitively-false publications: false in ALL worlds consistent with clues.
-  // These are the only valid debunk targets — ambiguous publications cannot be
-  // deterministically disproved and are not required to be covered.
+  // Per-question derived values
   const definitivelyFalsePubs = publications.filter(p => isPublicationDefinitelyFalse(worlds, p));
 
-  const allStepsComplete = drafts.length > 0 && drafts.every(isComplete);
-  const allConflictsCovered = isConflictOnly && definitivelyFalsePubs.length > 0
-    && definitivelyFalsePubs.every(p => conflictedSet.has(p.ingredient));
-  const refAnswer = isConflictOnly
-    ? puzzle.debunk_answers?.debunk_conflict_only
-    : isApprenticeOnly
-      ? puzzle.debunk_answers?.debunk_apprentice_plan
-      : puzzle.debunk_answers?.debunk_min_steps;
-  const refLen = refAnswer?.length ?? 1;
+  const perQ = debunkQuestions.map((q, qi) => {
+    const drafts = allDrafts[qi];
+    const isConflictOnly = q.kind === 'debunk_conflict_only';
+    const isApprenticeOnly = q.kind === 'debunk_apprentice_plan';
+    const isMasterOnly = !isConflictOnly && !isApprenticeOnly;
+    const fixedIngredient = isConflictOnly
+      ? (q as { fixedIngredient?: IngredientId }).fixedIngredient ?? null
+      : null;
+    const refAnswer = isConflictOnly
+      ? puzzle.debunk_answers?.debunk_conflict_only
+      : isApprenticeOnly
+        ? puzzle.debunk_answers?.debunk_apprentice_plan
+        : puzzle.debunk_answers?.debunk_min_steps;
+    const refLen = refAnswer?.length ?? 1;
+    const completedSteps = drafts.filter(isComplete) as DebunkStep[];
+    const displayOutcomes = simulatePlanForDisplay(completedSteps, puzzle.solution, publications, worlds);
+    const removedSet = new Set<IngredientId>(displayOutcomes.flatMap(o => o.removed));
+    const conflictedSet = new Set<IngredientId>(displayOutcomes.flatMap(o => o.conflicts));
+    const allStepsComplete = drafts.length > 0 && drafts.every(isComplete);
+    const allConflictsCovered = isConflictOnly && definitivelyFalsePubs.length > 0
+      && definitivelyFalsePubs.every(p => conflictedSet.has(p.ingredient));
+    return {
+      q, drafts, isConflictOnly, isApprenticeOnly, isMasterOnly, fixedIngredient,
+      refAnswer, refLen, completedSteps, displayOutcomes,
+      removedSet, conflictedSet, allStepsComplete, allConflictsCovered,
+    };
+  });
 
-  function addStep(kind: 'apprentice' | 'master') {
+  // Combined board: removals and conflicts from all plans
+  const allRemovedSet = new Set<IngredientId>(perQ.flatMap(p => [...p.removedSet]));
+  const allConflictedSet = new Set<IngredientId>(perQ.flatMap(p => [...p.conflictedSet]));
+
+  const allAnswersComplete = perQ.every(p => p.allStepsComplete);
+
+  function updateStep(qi: number, si: number, d: DraftStep) {
+    setAllDrafts(prev => prev.map((drafts, i) =>
+      i === qi ? drafts.map((x, j) => j === si ? d : x) : drafts
+    ));
+  }
+
+  function removeStep(qi: number, si: number) {
+    setAllDrafts(prev => prev.map((drafts, i) =>
+      i === qi ? drafts.filter((_, j) => j !== si) : drafts
+    ));
+  }
+
+  function addStep(qi: number, kind: 'apprentice' | 'master') {
     const newDraft: DraftStep = kind === 'master'
       ? { kind: 'master', ingredient1: null, ingredient2: null, claimedPotion: null }
       : { kind: 'apprentice', ingredient: null, color: null };
-    setDrafts(prev => [...prev, newDraft]);
-  }
-
-  function removeStep(i: number) {
-    setDrafts(prev => prev.filter((_, j) => j !== i));
-  }
-
-  function updateStep(i: number, d: DraftStep) {
-    setDrafts(prev => prev.map((x, j) => j === i ? d : x));
+    setAllDrafts(prev => prev.map((drafts, i) =>
+      i === qi ? [...drafts, newDraft] : drafts
+    ));
   }
 
   function handleSubmit() {
-    if (!allStepsComplete) return;
+    if (!allAnswersComplete) return;
     dispatch({
       type: 'SUBMIT_ANSWER',
-      answers: [{ kind: 'debunk-plan', steps: completedSteps }],
+      answers: perQ.map(p => ({ kind: 'debunk-plan', steps: p.completedSteps })),
     });
   }
 
-  // Build solution reveal
-  const solutionSteps = refAnswer ?? [];
+  const totalSteps = perQ.reduce((s, p) => s + p.drafts.length, 0);
 
   return (
     <div className="space-y-4">
 
       {/* Publications board */}
       <div className="bg-red-50 border border-red-200 rounded-xl px-4 py-3">
-        <PublicationsBoard publications={publications} removedSet={removedSet} conflictedSet={conflictedSet} />
+        <PublicationsBoard publications={publications} removedSet={allRemovedSet} conflictedSet={allConflictedSet} />
       </div>
 
       {/* Step-feedback confirmation modal (non-tutorial only) */}
@@ -423,12 +467,21 @@ export function DebunkAnswerPanel({ onNext, isTutorial = false }: {
         </div>
       )}
 
-      {/* Plan builder */}
-      {!completed && !showSolution && (
-        <div className="space-y-2">
+      {/* Plan builders — one per debunk question */}
+      {!completed && !showSolution && perQ.map(({
+        q, drafts, isConflictOnly, isApprenticeOnly, isMasterOnly,
+        refLen, displayOutcomes, completedSteps, removedSet,
+        allStepsComplete: qComplete, allConflictsCovered,
+      }, qi) => (
+        <div key={qi} className="space-y-2">
+          {debunkQuestions.length > 1 && (
+            <div className="text-[10px] uppercase tracking-widest text-indigo-400 font-bold">
+              Part {qi + 1} of {debunkQuestions.length}
+            </div>
+          )}
           <div className="flex items-center justify-between">
             <span className="text-xs font-bold text-gray-500 uppercase tracking-widest">
-              {isConflictOnly ? 'Demonstrate a conflict' : isApprenticeOnly ? 'Apprentice plan' : 'Debunk plan'}
+              {questionTitle(q)}
             </span>
             <div className="flex items-center gap-3">
               {showStepFeedback && (isConflictOnly
@@ -437,11 +490,11 @@ export function DebunkAnswerPanel({ onNext, isTutorial = false }: {
                 )
                 : definitivelyFalsePubs.length > 0
                   && definitivelyFalsePubs.every(p => removedSet.has(p.ingredient))
-                  && drafts.length > 0 && (
+                  && drafts.length > 0 && qComplete && (
                   <span className="text-[10px] text-green-600 font-semibold">✓ All publications covered</span>
                 )
               )}
-              {!isTutorial && (
+              {qi === 0 && !isTutorial && (
                 <label className="flex items-center gap-1.5 text-xs cursor-pointer select-none">
                   <span className={showStepFeedback ? 'text-indigo-600 font-semibold' : 'text-gray-400'}>
                     Step hints
@@ -465,24 +518,18 @@ export function DebunkAnswerPanel({ onNext, isTutorial = false }: {
             </div>
           </div>
 
-          <p className="text-xs text-gray-500">
-            {isConflictOnly
-              ? 'Find a minimal number of master mixes which will cover all incorrect publications with contradictions (at least 1 for each), without removing any. The covered publications shown are those whose claims are contradicted by the mix — not removals. An ingredient can help disprove another\'s publication without its own claim being contested.'
-              : isApprenticeOnly
-                ? 'Remove all false publications using only apprentice debunks, in as few steps as possible.'
-                : 'Remove all false publications in as few steps as possible.'}
-          </p>
+          <p className="text-xs text-gray-500">{questionDescription(q)}</p>
 
-          {drafts.map((draft, i) => (
+          {drafts.map((draft, si) => (
             <StepEditor
-              key={i}
-              index={i}
+              key={si}
+              index={si}
               draft={draft}
               outcome={isComplete(draft) ? displayOutcomes[completedSteps.indexOf(draft as DebunkStep)] : undefined}
-              onUpdate={d => updateStep(i, d)}
-              onRemove={() => removeStep(i)}
+              onUpdate={d => updateStep(qi, si, d)}
+              onRemove={() => removeStep(qi, si)}
               isConflictOnly={isConflictOnly}
-              isIngredientLocked={isConflictOnly && i === 0}
+              isIngredientLocked={isConflictOnly && si === 0}
               showOutcome={showStepFeedback}
             />
           ))}
@@ -490,7 +537,7 @@ export function DebunkAnswerPanel({ onNext, isTutorial = false }: {
           <div className="flex gap-2">
             {isApprenticeOnly && (
               <button
-                onClick={() => addStep('apprentice')}
+                onClick={() => addStep(qi, 'apprentice')}
                 className="flex-1 border-2 border-dashed border-gray-200 hover:border-indigo-300
                            text-gray-400 hover:text-indigo-500 rounded-lg py-2 text-xs font-semibold
                            transition-colors"
@@ -500,7 +547,7 @@ export function DebunkAnswerPanel({ onNext, isTutorial = false }: {
             )}
             {(isMasterOnly || isConflictOnly) && (
               <button
-                onClick={() => addStep('master')}
+                onClick={() => addStep(qi, 'master')}
                 className="flex-1 border-2 border-dashed border-gray-200 hover:border-indigo-300
                            text-gray-400 hover:text-indigo-500 rounded-lg py-2 text-xs font-semibold
                            transition-colors"
@@ -509,20 +556,48 @@ export function DebunkAnswerPanel({ onNext, isTutorial = false }: {
               </button>
             )}
           </div>
+
+          {/* Per-question wrong-attempt feedback (only when length is off) */}
+          {!completed && wrongAttempts > 0 && !showSolution && (
+            drafts.length !== refLen && (
+              <div className="text-xs text-red-500 font-semibold">
+                {isConflictOnly
+                  ? drafts.length < refLen
+                    ? `This part needs at least ${refLen} step${refLen !== 1 ? 's' : ''}.`
+                    : `This part needs exactly ${refLen} step${refLen !== 1 ? 's' : ''}.`
+                  : drafts.length < refLen
+                    ? `This part needs at least ${refLen} step${refLen !== 1 ? 's' : ''}.`
+                    : `This part needs exactly ${refLen} step${refLen !== 1 ? 's' : ''}.`
+                }
+              </div>
+            )
+          )}
+
+          {debunkQuestions.length > 1 && qi < debunkQuestions.length - 1 && (
+            <div className="border-t border-gray-100 pt-2" />
+          )}
         </div>
-      )}
+      ))}
 
       {/* Solution reveal */}
-      {showSolution && (
-        <div className="bg-indigo-50 border border-indigo-200 rounded-xl px-4 py-3 space-y-2">
-          <span className="text-xs font-bold text-indigo-600 uppercase tracking-widest">
-            Reference solution ({solutionSteps.length} step{solutionSteps.length !== 1 ? 's' : ''})
-          </span>
-          {solutionSteps.map((step, i) => (
-            <SolutionStep key={i} step={step} index={i} />
-          ))}
-        </div>
-      )}
+      {showSolution && perQ.map(({ q, refAnswer }, qi) => {
+        const solutionSteps = refAnswer ?? [];
+        return (
+          <div key={qi} className="bg-indigo-50 border border-indigo-200 rounded-xl px-4 py-3 space-y-2">
+            {debunkQuestions.length > 1 && (
+              <span className="text-[10px] uppercase tracking-widest text-indigo-400 font-bold">
+                Part {qi + 1}: {questionTitle(q)}
+              </span>
+            )}
+            <span className="text-xs font-bold text-indigo-600 uppercase tracking-widest">
+              Reference solution ({solutionSteps.length} step{solutionSteps.length !== 1 ? 's' : ''})
+            </span>
+            {solutionSteps.map((step, i) => (
+              <SolutionStep key={i} step={step} index={i} />
+            ))}
+          </div>
+        );
+      })}
 
       {/* Correct */}
       {completed && (
@@ -542,22 +617,14 @@ export function DebunkAnswerPanel({ onNext, isTutorial = false }: {
         </div>
       )}
 
-      {/* Wrong attempt */}
-      {!completed && wrongAttempts > 0 && !showSolution && (
+      {/* Wrong attempt — overall message when all lengths are correct but plan fails */}
+      {!completed && wrongAttempts > 0 && !showSolution && perQ.every(p => p.drafts.length === p.refLen) && (
         <div className="rounded-xl bg-red-50 border border-red-200 p-4 space-y-2 animate-fadein">
           <div className="flex items-center gap-2 text-red-700 font-semibold">
             <IncorrectIcon width={24} />
-            {isConflictOnly
-              ? drafts.length < refLen
-                ? `Plan uses ${drafts.length} step${drafts.length !== 1 ? 's' : ''} — at least ${refLen} are needed.`
-                : drafts.length > refLen
-                  ? `Plan uses ${drafts.length} step${drafts.length !== 1 ? 's' : ''} — needs exactly ${refLen}.`
-                  : "That plan doesn't cover all publications — ensure each step creates a conflict without removing any."
-              : drafts.length < refLen
-                ? `Plan has ${drafts.length} step${drafts.length !== 1 ? 's' : ''} — at least ${refLen} are needed.`
-                : drafts.length > refLen
-                  ? `Plan has ${drafts.length} step${drafts.length !== 1 ? 's' : ''} — needs exactly ${refLen}.`
-                  : "That plan doesn't work — check each step removes at least one publication."
+            {perQ.some(p => p.isConflictOnly)
+              ? "A plan doesn't cover all publications — ensure each conflict step doesn't remove any publication."
+              : "A plan doesn't work — check each step removes at least one publication."
             }
           </div>
           {wrongAttempts >= 3 && (
@@ -573,13 +640,13 @@ export function DebunkAnswerPanel({ onNext, isTutorial = false }: {
       {!completed && !showSolution && (
         <button
           onClick={handleSubmit}
-          disabled={!allStepsComplete}
+          disabled={!allAnswersComplete}
           className="w-full bg-indigo-600 text-white py-3 rounded-xl font-semibold
                      hover:bg-indigo-700 disabled:opacity-40 disabled:cursor-not-allowed
                      transition-colors focus-visible:outline-none focus-visible:ring-2
                      focus-visible:ring-indigo-400 active:scale-[0.99]"
         >
-          Submit Plan ({drafts.length} step{drafts.length !== 1 ? 's' : ''})
+          Submit {debunkQuestions.length > 1 ? 'All Plans' : 'Plan'} ({totalSteps} step{totalSteps !== 1 ? 's' : ''})
         </button>
       )}
     </div>
