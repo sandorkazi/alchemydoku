@@ -178,7 +178,7 @@ function BookAmongClueCard({ clue, clueIndex }: { clue: BookAmongClue; clueIndex
   return (
     <Card icon="📖" label="Book Token (Among)" accent="purple">
       <div className="text-xs text-gray-600 mb-1">
-        {clue.count} of {n === 2 ? 'these 2' : `these ${n}`}{' '}ingredients is{' '}
+        Exactly {clue.count} of {n === 2 ? 'these 2' : `these ${n}`}{' '}ingredients is{' '}
         <span className={`inline-flex items-center gap-0.5 font-semibold
           ${isSolar ? 'text-amber-700' : 'text-blue-700'}`}>
           {isSolar ? <><span className="text-orange-400">☀</span> Solar</> : <><span className="text-slate-400">☽</span> Lunar</>}
@@ -478,7 +478,7 @@ function GolemReactionAmongCard({ clue, clueIndex }: { clue: GolemReactionAmongC
   return (
     <Card icon="🤖" label="Observed Golem Test" accent="purple">
       <div className="text-xs text-gray-600 mb-1">
-        {clue.count} of {n === 2 ? 'these 2' : `these ${n}`}{' '}
+        Exactly {clue.count} of {n === 2 ? 'these 2' : `these ${n}`}{' '}
         triggered {article} <span className="font-semibold">{label}</span> reaction.
       </div>
       <div className="flex flex-wrap gap-1">

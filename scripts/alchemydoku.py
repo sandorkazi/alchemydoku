@@ -1388,6 +1388,21 @@ def compute_difficulty(puzzle: dict) -> dict:
     w_score = max(0, min(20, w_score))
 
     raw = 10 + clue_score + q_score + w_score
+
+    # Pure-elimination questions: target ingredient absent from every clue field.
+    # Full-board constraint propagation is required → force at least medium (pip 3).
+    # raw >= 37 → _scale_score >= 59 → score_to_pip == 3.
+    _any_clue_ings: set = set()
+    for c in clues:
+        for _fld in ('ingredient', 'ingredient1', 'ingredient2'):
+            if _fld in c:
+                _any_clue_ings.add(c[_fld])
+        _any_clue_ings.update(c.get('ingredients', []))
+    for q in questions:
+        if q.get('kind') in ('alchemical', 'solar_lunar') and q.get('ingredient') not in _any_clue_ings:
+            raw = max(raw, 37)
+            break
+
     return {
         'score':          _scale_score(raw),
         'raw_score':      raw,
@@ -2790,13 +2805,33 @@ def gen_hints(raw: dict) -> list:
         w2 = apply_all(all_worlds(), clues, golem)
         remaining  = {w[slot - 1] for w in w2}
         eliminated = sorted(set(ALL_ALCH) - remaining)
-        hints.append({'level': 1, 'text':
-            f"Identify the alchemical for ingredient {slot}. "
-            f"Direct clues: {', '.join(_dc(c) for c in direct) or 'none'}."
-        })
-        hints.append({'level': 2, 'text':
-            f"Eliminated for slot {slot}: {eliminated}. Remaining: {sorted(remaining)}."
-        })
+        # Collect every ingredient that appears in any clue field (including group lists).
+        any_clue_ings: set = set()
+        for c in clues:
+            for _fld in ('ingredient', 'ingredient1', 'ingredient2'):
+                if _fld in c:
+                    any_clue_ings.add(c[_fld])
+            any_clue_ings.update(c.get('ingredients', []))
+        if slot not in any_clue_ings:
+            # Pure elimination: target appears in no clue — give actionable guidance.
+            constrained = sorted(any_clue_ings)
+            hints.append({'level': 1, 'text':
+                f"Ingredient {slot} doesn't appear in any clue. "
+                f"Solve by elimination: work out the alchemicals for every other ingredient first."
+            })
+            hints.append({'level': 2, 'text':
+                f"Ingredients {constrained} are each constrained by at least one clue. "
+                f"Once all are resolved, ingredient {slot} is the only one left "
+                f"and gets the sole remaining alchemical."
+            })
+        else:
+            hints.append({'level': 1, 'text':
+                f"Identify the alchemical for ingredient {slot}. "
+                f"Direct clues: {', '.join(_dc(c) for c in direct) or 'none'}."
+            })
+            hints.append({'level': 2, 'text':
+                f"Eliminated for slot {slot}: {eliminated}. Remaining: {sorted(remaining)}."
+            })
         hints.append({'level': 3, 'text':
             f"Ingredient {slot} = {ALCH_CODES[alch]} "
             f"(R{sgn_str(ALCH_DATA[alch]['R'][0])} "
