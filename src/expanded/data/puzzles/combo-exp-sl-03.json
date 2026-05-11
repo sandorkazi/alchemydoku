@@ -3,7 +3,7 @@
   "mode": "expanded",
   "title": "Cross-Reference",
   "description": "Use the clues to determine whether the target ingredient is Solar or Lunar.",
-  "difficulty": "easy",
+  "difficulty": "medium",
   "clues": [
     {
       "kind": "encyclopedia",
@@ -78,8 +78,8 @@
     }
   ],
   "complexity": {
-    "score": 10,
-    "raw_score": 10,
+    "score": 59,
+    "raw_score": 37,
     "clue_score": 0,
     "question_score": 0,
     "world_score": 0,
