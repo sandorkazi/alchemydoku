@@ -52,13 +52,16 @@ export function groupClues<C extends GroupableClue>(clues: C[]): ClueGroup<C>[] 
 
     const ac = clue as unknown as AspectClue;
     const siblings = aspectsByIng.get(ac.ingredient) ?? [];
+    const uniqueColors = new Set(siblings.map(s => s.color));
+    // Canonical: one clue per distinct color (first occurrence wins).
+    const canonical = [...uniqueColors].map(col => siblings.find(s => s.color === col)!);
 
-    if (siblings.length === 3 && !consumed.has(siblings[0])) {
+    if (uniqueColors.size === 3 && !consumed.has(siblings[0])) {
       for (const s of siblings) consumed.add(s);
-      groups.push({ type: 'full', clues: siblings });
-    } else if (siblings.length === 2 && !consumed.has(siblings[0])) {
+      groups.push({ type: 'full', clues: canonical });
+    } else if (uniqueColors.size === 2 && !consumed.has(siblings[0])) {
       for (const s of siblings) consumed.add(s);
-      groups.push({ type: 'multi', clues: siblings });
+      groups.push({ type: 'multi', clues: canonical });
     } else if (!consumed.has(clue)) {
       consumed.add(clue);
       groups.push({ type: 'single', clue });
