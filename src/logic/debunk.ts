@@ -301,17 +301,16 @@ export function validateConflictOnlyAnswer(
 function simulateConflictOnlyStep(
   step: DebunkStep,
   solution: Assignment,
-  worlds: WorldSet,
+  _worlds: WorldSet,
   activePubs: Map<IngredientId, AlchemicalId>,
 ): StepOutcome {
   const conflicts: IngredientId[] = [];
 
   if (step.kind === 'master') {
     const { ingredient1, ingredient2 } = step;
-    // Result must be deterministically known from clues for the audience to verify.
-    if (!isMixResultDetermined(worlds, ingredient1, ingredient2)) {
-      return { removed: [], conflicts: [] };
-    }
+    // No isMixResultDetermined check here — conflict detection is based on the
+    // observed mix result alone (the audience sees it directly), not on whether
+    // the result was pre-deducible from clues. Per spec §4c.
     if (activePubs.has(ingredient1) && activePubs.has(ingredient2)) {
       const trueCode = trueMixCode(solution, ingredient1, ingredient2);
       const claimed1 = activePubs.get(ingredient1)!;
@@ -369,19 +368,19 @@ export function simulatePlanForDisplay(
       for (const ing of removed) activePubs.delete(ing);
     } else if (step.kind === 'master') {
       const { ingredient1, ingredient2 } = step;
-      // Only show effect if the result is deterministically known from the clues.
-      if (!isMixResultDetermined(worlds, ingredient1, ingredient2)) {
-        return { removed: [], conflicts: [] };
-      }
       const trueCode = trueMixCode(solution, ingredient1, ingredient2);
-      // Direct disproval
-      if (activePubs.has(ingredient1) && !canProduceResult(activePubs.get(ingredient1)!, trueCode)) {
-        removed.push(ingredient1); activePubs.delete(ingredient1);
+      // Direct disproval — only when result is deterministically known from clues
+      // (removal requires the audience to be able to verify the expected result).
+      if (isMixResultDetermined(worlds, ingredient1, ingredient2)) {
+        if (activePubs.has(ingredient1) && !canProduceResult(activePubs.get(ingredient1)!, trueCode)) {
+          removed.push(ingredient1); activePubs.delete(ingredient1);
+        }
+        if (activePubs.has(ingredient2) && !canProduceResult(activePubs.get(ingredient2)!, trueCode)) {
+          removed.push(ingredient2); activePubs.delete(ingredient2);
+        }
       }
-      if (activePubs.has(ingredient2) && !canProduceResult(activePubs.get(ingredient2)!, trueCode)) {
-        removed.push(ingredient2); activePubs.delete(ingredient2);
-      }
-      // Conflict: both still active, each result-compatible, together predict wrong
+      // Conflict: both still active, each result-compatible, together predict wrong.
+      // No isMixResultDetermined guard — the audience observes the mix result directly.
       if (activePubs.has(ingredient1) && activePubs.has(ingredient2)) {
         const c1 = activePubs.get(ingredient1)!;
         const c2 = activePubs.get(ingredient2)!;

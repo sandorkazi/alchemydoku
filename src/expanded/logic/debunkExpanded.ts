@@ -151,17 +151,15 @@ function simulateExpandedStep(
 function simulateConflictOnlyExpandedStep(
   step: DebunkStep,
   solution: Assignment,
-  worlds: WorldSet,
+  _worlds: WorldSet,
   activePubs: Map<IngredientId, AlchemicalId>,
 ): ExpandedStepOutcome {
   const conflicts: IngredientId[] = [];
 
   if (step.kind === 'master') {
     const { ingredient1, ingredient2 } = step;
-    // Result must be deterministically known from clues for the audience to verify.
-    if (!isMixResultDetermined(worlds, ingredient1, ingredient2)) {
-      return { removedPubs: [], removedArts: [], conflicts: [] };
-    }
+    // No isMixResultDetermined check — conflict detection is based on the
+    // observed mix result alone. Per spec §4c.
     if (activePubs.has(ingredient1) && activePubs.has(ingredient2)) {
       const trueCode = trueMixCode(solution, ingredient1, ingredient2);
       const claimed1 = activePubs.get(ingredient1)!;
@@ -243,19 +241,17 @@ export function simulateExpandedPlanForDisplay(
       for (const ing of removedPubs) activePubs.delete(ing);
     } else if (step.kind === 'master') {
       const { ingredient1, ingredient2 } = step;
-      // Only show effect if the result is deterministically known from the clues.
-      if (!isMixResultDetermined(worlds, ingredient1, ingredient2)) {
-        return { removedPubs: [], removedArts: [], conflicts: [] };
-      }
       const trueCode = trueMixCode(solution, ingredient1, ingredient2);
-      // Direct disproval
-      if (activePubs.has(ingredient1) && !canProduceResult(activePubs.get(ingredient1)!, trueCode)) {
-        removedPubs.push(ingredient1); activePubs.delete(ingredient1);
+      // Direct disproval — only when result is deterministically known from clues.
+      if (isMixResultDetermined(worlds, ingredient1, ingredient2)) {
+        if (activePubs.has(ingredient1) && !canProduceResult(activePubs.get(ingredient1)!, trueCode)) {
+          removedPubs.push(ingredient1); activePubs.delete(ingredient1);
+        }
+        if (activePubs.has(ingredient2) && !canProduceResult(activePubs.get(ingredient2)!, trueCode)) {
+          removedPubs.push(ingredient2); activePubs.delete(ingredient2);
+        }
       }
-      if (activePubs.has(ingredient2) && !canProduceResult(activePubs.get(ingredient2)!, trueCode)) {
-        removedPubs.push(ingredient2); activePubs.delete(ingredient2);
-      }
-      // Conflict
+      // Conflict — no isMixResultDetermined guard; observed result suffices.
       if (activePubs.has(ingredient1) && activePubs.has(ingredient2)) {
         const c1 = activePubs.get(ingredient1)!;
         const c2 = activePubs.get(ingredient2)!;
