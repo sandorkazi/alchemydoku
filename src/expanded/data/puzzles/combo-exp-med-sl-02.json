@@ -3,7 +3,7 @@
   "mode": "expanded",
   "title": "The Irreversible Step",
   "description": "Use the clues to determine whether the target ingredient is Solar or Lunar.",
-  "difficulty": "easy",
+  "difficulty": "medium",
   "clues": [
     {
       "kind": "encyclopedia",
@@ -101,8 +101,8 @@
     }
   ],
   "complexity": {
-    "score": 31,
-    "raw_score": 15,
+    "score": 59,
+    "raw_score": 37,
     "clue_score": 5,
     "question_score": 0,
     "world_score": 0,
