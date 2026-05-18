@@ -23,7 +23,7 @@ function IngPicker({
   onChange: (id: IngredientId) => void;
 }) {
   const getIngredient = useIngredient();
-  const slots = ([1, 2, 3, 4, 5, 6, 7, 8] as IngredientId[]).filter(id => id !== exclude);
+  const slots = [1, 2, 3, 4, 5, 6, 7, 8] as IngredientId[];
   return (
     <div className="flex flex-col gap-1">
       <span className="text-[10px] uppercase tracking-widest text-gray-400 font-bold">{label}</span>
@@ -31,16 +31,20 @@ function IngPicker({
         {slots.map(slotId => {
           const { index } = getIngredient(slotId);
           const sel = value === slotId;
+          const disabled = slotId === exclude;
           return (
             <button
               key={slotId}
-              onClick={() => onChange(slotId)}
+              onClick={() => { if (!disabled) onChange(slotId); }}
+              disabled={disabled}
               className={`rounded border-2 transition-all p-0.5 ${
-                sel
-                  ? 'border-indigo-500 bg-indigo-50 ring-1 ring-indigo-300'
-                  : 'border-gray-200 hover:border-gray-400'
+                disabled
+                  ? 'border-red-200 bg-red-50 opacity-50 cursor-not-allowed'
+                  : sel
+                    ? 'border-indigo-500 bg-indigo-50 ring-1 ring-indigo-300'
+                    : 'border-gray-200 hover:border-gray-400'
               }`}
-              title={`Ingredient ${slotId}`}
+              title={disabled ? 'Already selected as the other ingredient' : `Ingredient ${slotId}`}
             >
               <IngredientIcon index={index} width={24} />
             </button>
@@ -408,12 +412,14 @@ export function DebunkAnswerPanel({ onNext, isTutorial = false }: {
   }
 
   function addStep(qi: number, kind: 'apprentice' | 'master') {
-    const newDraft: DraftStep = kind === 'master'
-      ? { kind: 'master', ingredient1: null, ingredient2: null, claimedPotion: null }
-      : { kind: 'apprentice', ingredient: null, color: null };
-    setAllDrafts(prev => prev.map((drafts, i) =>
-      i === qi ? [...drafts, newDraft] : drafts
-    ));
+    setAllDrafts(prev => prev.map((drafts, i) => {
+      if (i !== qi) return drafts;
+      const { isConflictOnly, fixedIngredient } = perQ[qi];
+      const newDraft: DraftStep = kind === 'master'
+        ? { kind: 'master', ingredient1: isConflictOnly && drafts.length === 0 ? fixedIngredient : null, ingredient2: null, claimedPotion: null }
+        : { kind: 'apprentice', ingredient: null, color: null };
+      return [...drafts, newDraft];
+    }));
   }
 
   function handleSubmit() {
