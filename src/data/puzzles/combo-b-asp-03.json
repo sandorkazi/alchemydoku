@@ -44,20 +44,7 @@
     "7": 2,
     "8": 1
   },
-  "hints": [
-    {
-      "level": 1,
-      "text": "Determine the R sign of ing6. There are 2 alchemicals still consistent with the clues for slot 6. Check whether they all agree on the R sign."
-    },
-    {
-      "level": 2,
-      "text": "Remaining alchemicals for ing6: nPp(R-), Nnp(R-). All share R-."
-    },
-    {
-      "level": 3,
-      "text": "ing6 has R-."
-    }
-  ],
+  "hints": [],
   "complexity": {
     "score": 40,
     "raw_score": 20,

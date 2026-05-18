@@ -75,20 +75,7 @@
     "7": 2,
     "8": 6
   },
-  "hints": [
-    {
-      "level": 1,
-      "text": "Find the 4 ingredients with B-. Exactly 4 of the 8 alchemicals carry each sign per colour. A colored mixing result of B- directly reveals that both mixed ingredients share B-."
-    },
-    {
-      "level": 2,
-      "text": "Evidence:\n  (none direct \u2014 use elimination)\nConfirmed B-: [2, 4, 6, 8]."
-    },
-    {
-      "level": 3,
-      "text": "The 4 ingredients with B-: [2, 4, 6, 8]."
-    }
-  ],
+  "hints": [],
   "complexity": {
     "score": 31,
     "raw_score": 15,

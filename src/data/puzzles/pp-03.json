@@ -1,7 +1,7 @@
 {
   "id": "pp-03",
   "title": "The Three-Faced Oracle",
-  "description": "Three distinct outcomes are consistent with the evidence \u2014 mark them all.",
+  "description": "Three distinct outcomes are consistent with the evidence — mark them all.",
   "difficulty": "easy",
   "clues": [
     {
@@ -66,20 +66,7 @@
       "avgClueDifficulty": 1.4
     }
   },
-  "hints": [
-    {
-      "level": 1,
-      "text": "There are 4 possible outcomes for this mix. Start by ruling out clearly impossible ones."
-    },
-    {
-      "level": 2,
-      "text": "Each clue constrains the alchemical assignments \u2014 trace which potions survive all constraints."
-    },
-    {
-      "level": 3,
-      "text": "The answer has 4 potions: B+, B-, G-, R+."
-    }
-  ],
+  "hints": [],
   "complexity": {
     "score": 57,
     "raw_score": 35,

@@ -52,20 +52,7 @@
     "7": 7,
     "8": 6
   },
-  "hints": [
-    {
-      "level": 1,
-      "text": "Find all ingredients that can never produce R+ with any partner in any remaining world. An ingredient is a non-producer if no world/partner combination yields R+."
-    },
-    {
-      "level": 2,
-      "text": "Check each ingredient: does any remaining world have this ingredient produce R+ with some partner? Non-producers found: [3, 7]."
-    },
-    {
-      "level": 3,
-      "text": "Guaranteed non-producers of R+: [3, 7]."
-    }
-  ],
+  "hints": [],
   "complexity": {
     "score": 31,
     "raw_score": 15,

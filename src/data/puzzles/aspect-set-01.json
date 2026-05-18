@@ -67,20 +67,7 @@
     "questionType": "aspect-set",
     "confirmedCount": 4
   },
-  "hints": [
-    {
-      "level": 1,
-      "text": "Look for ingredients that appear in mixing results only involving R\u2212 potions."
-    },
-    {
-      "level": 2,
-      "text": "Cross-reference every mix result that produces a potion of this colour. Both participants share that sign. Ruling out the alternative through a second result pins the ingredient."
-    },
-    {
-      "level": 3,
-      "text": "The ingredients with confirmed R\u2212 are: ingredient 1, ingredient 2, ingredient 3, ingredient 6."
-    }
-  ],
+  "hints": [],
   "complexity": {
     "score": 31,
     "raw_score": 15,

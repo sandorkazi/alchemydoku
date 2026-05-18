@@ -32,20 +32,7 @@
     "7": 5,
     "8": 7
   },
-  "hints": [
-    {
-      "level": 1,
-      "text": "Find all potions that ingredient 6 can certainly produce. Neutral is always certain \u2014 every alchemical has a direct opposite, and mixing them always yields neutral. For the other potions, a result is 'certain' when it's the same across every remaining possible world."
-    },
-    {
-      "level": 2,
-      "text": "Check each of ingredient 6's 7 partners for non-neutral certain results. Non-neutral certain results: ing7\u2192G-."
-    },
-    {
-      "level": 3,
-      "text": "Ingredient 6 = pNn. Certain potions (neutral always included): ['G-', 'neutral']."
-    }
-  ],
+  "hints": [],
   "complexity": {
     "score": 47,
     "raw_score": 25,

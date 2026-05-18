@@ -120,20 +120,7 @@
     "7": 8,
     "8": 5
   },
-  "hints": [
-    {
-      "level": 1,
-      "text": "The article on the G aspect has three known entries: ingredients [1, 4, 7] all have G+. There are exactly 4 alchemicals with G+. The fourth must be one of: [2, 3, 5, 6, 8]. Use the other clues to eliminate candidates."
-    },
-    {
-      "level": 2,
-      "text": "Eliminate candidates:\n  \u2014 ingredient 2: survives\n  \u2014 ingredient 3: eliminated (eliminated by constraints)\n  \u2014 ingredient 5: eliminated (eliminated by constraints)\n  \u2014 ingredient 6: eliminated (eliminated by constraints)\n  \u2014 ingredient 8: eliminated (eliminated by constraints)"
-    },
-    {
-      "level": 3,
-      "text": "Only ingredient 2 remains. It is alchemical npN, which has G+. It is the missing fourth entry."
-    }
-  ],
+  "hints": [],
   "complexity": {
     "score": 40,
     "raw_score": 20,

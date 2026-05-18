@@ -96,20 +96,7 @@
       "avgClueDifficulty": 1.53
     }
   },
-  "hints": [
-    {
-      "level": 1,
-      "text": "There are 2 possible outcomes for this mix. Start by ruling out clearly impossible ones."
-    },
-    {
-      "level": 2,
-      "text": "Each clue constrains the alchemical assignments \u2014 trace which potions survive all constraints."
-    },
-    {
-      "level": 3,
-      "text": "The answer has 2 potions: B+, B-."
-    }
-  ],
+  "hints": [],
   "complexity": {
     "score": 63,
     "raw_score": 41,

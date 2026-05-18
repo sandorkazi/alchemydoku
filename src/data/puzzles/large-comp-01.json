@@ -1,7 +1,7 @@
 {
   "id": "large-comp-01",
   "title": "The Heavy Component",
-  "description": "Two mixing results \u2014 one per pair \u2014 are enough to pin which ingredients carry a Large Red component.",
+  "description": "Two mixing results — one per pair — are enough to pin which ingredients carry a Large Red component.",
   "difficulty": "easy",
   "clues": [
     {
@@ -82,20 +82,7 @@
     "questionType": "large-component",
     "largeCount": 4
   },
-  "hints": [
-    {
-      "level": 1,
-      "text": "A R+ mixing result means both ingredients share a R+ sign AND have opposite R sizes. One is Large, one is Small."
-    },
-    {
-      "level": 2,
-      "text": "If ingredient A appears in two R-coloured results with different partners, and both partners are known to be the same size, that pins A's R size."
-    },
-    {
-      "level": 3,
-      "text": "The ingredients with confirmed Large R: ingredient 5, ingredient 6, ingredient 7, ingredient 8."
-    }
-  ],
+  "hints": [],
   "complexity": {
     "score": 10,
     "raw_score": 10,

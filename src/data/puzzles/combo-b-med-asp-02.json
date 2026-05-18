@@ -44,20 +44,7 @@
     "7": 3,
     "8": 1
   },
-  "hints": [
-    {
-      "level": 1,
-      "text": "Determine the G sign of ing1. There are 2 alchemicals still consistent with the clues for slot 1. Check whether they all agree on the G sign."
-    },
-    {
-      "level": 2,
-      "text": "Remaining alchemicals for ing1: Nnp(G-), NNN(G-). All share G-."
-    },
-    {
-      "level": 3,
-      "text": "ing1 has G-."
-    }
-  ],
+  "hints": [],
   "complexity": {
     "score": 43,
     "raw_score": 22,

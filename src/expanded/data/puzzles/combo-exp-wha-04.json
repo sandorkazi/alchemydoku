@@ -2,7 +2,7 @@
   "id": "combo-exp-wha-04",
   "mode": "expanded",
   "title": "The Infinite Volume",
-  "description": "Four ingredient\u2013sign pairs form a valid encyclopedia article. All the clue types are in play \u2014 deduce which aspect colour they share.",
+  "description": "Four ingredient–sign pairs form a valid encyclopedia article. All the clue types are in play — deduce which aspect colour they share.",
   "difficulty": "easy",
   "clues": [
     {
@@ -115,20 +115,7 @@
     "7": 4,
     "8": 2
   },
-  "hints": [
-    {
-      "level": 1,
-      "text": "For each colour R/G/B, check whether all four ingredient\u2013sign pairs (ingredient 1 -, ingredient 2 -, ingredient 3 +, ingredient 5 +) hold across the remaining worlds."
-    },
-    {
-      "level": 2,
-      "text": "Eliminate any colour where at least one remaining world disagrees. Only one colour will survive."
-    },
-    {
-      "level": 3,
-      "text": "The answer is R (Red): every remaining world maps all four entries onto the Red aspect."
-    }
-  ],
+  "hints": [],
   "complexity": {
     "score": 47,
     "raw_score": 25,

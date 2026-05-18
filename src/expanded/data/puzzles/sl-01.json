@@ -40,20 +40,7 @@
     "7": 7,
     "8": 8
   },
-  "hints": [
-    {
-      "level": 1,
-      "text": "You know ingredient 1 has R+, G+, B\u2212. Count the negatives: how many aspects are negative? Apply the rule: 0 or 2 negatives = Solar, 1 or 3 negatives = Lunar."
-    },
-    {
-      "level": 2,
-      "text": "Ingredient 1 has exactly 1 negative (B\u2212). One is an odd number, so it is Lunar."
-    },
-    {
-      "level": 3,
-      "text": "Ingredient 1 is Lunar. It maps to Ppn (R+L G+S B\u2212S) \u2014 1 negative aspect \u2192 Lunar."
-    }
-  ],
+  "hints": [],
   "complexity": {
     "score": 10,
     "raw_score": 10,

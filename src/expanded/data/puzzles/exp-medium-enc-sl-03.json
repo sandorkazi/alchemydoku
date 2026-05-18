@@ -119,20 +119,7 @@
     "7": 4,
     "8": 3
   },
-  "hints": [
-    {
-      "level": 1,
-      "text": "The article on the B aspect has three known entries: ingredients [2, 3, 6] all have B+. There are exactly 4 alchemicals with B+. The fourth must be one of: [1, 4, 5, 7, 8]. Use the other clues to eliminate candidates."
-    },
-    {
-      "level": 2,
-      "text": "Eliminate candidates:\n  \u2014 ingredient 1: eliminated (eliminated by constraints)\n  \u2014 ingredient 4: eliminated (eliminated by constraints)\n  \u2014 ingredient 5: eliminated (eliminated by constraints)\n  \u2014 ingredient 7: survives\n  \u2014 ingredient 8: eliminated (eliminated by constraints)"
-    },
-    {
-      "level": 3,
-      "text": "Only ingredient 7 remains. It is alchemical nPp, which has B+. It is the missing fourth entry."
-    }
-  ],
+  "hints": [],
   "complexity": {
     "score": 40,
     "raw_score": 20,

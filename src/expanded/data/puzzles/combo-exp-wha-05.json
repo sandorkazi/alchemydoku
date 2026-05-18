@@ -2,7 +2,7 @@
   "id": "combo-exp-wha-05",
   "mode": "expanded",
   "title": "The Scholar's Gambit",
-  "description": "Four ingredient\u2013sign pairs form a valid encyclopedia article. All the clue types are in play \u2014 deduce which aspect colour they share.",
+  "description": "Four ingredient–sign pairs form a valid encyclopedia article. All the clue types are in play — deduce which aspect colour they share.",
   "difficulty": "easy",
   "clues": [
     {
@@ -105,20 +105,7 @@
     "7": 7,
     "8": 1
   },
-  "hints": [
-    {
-      "level": 1,
-      "text": "For each colour R/G/B, check whether all four ingredient\u2013sign pairs (ingredient 1 -, ingredient 3 +, ingredient 5 +, ingredient 7 -) hold across the remaining worlds."
-    },
-    {
-      "level": 2,
-      "text": "Eliminate any colour where at least one remaining world disagrees. Only one colour will survive."
-    },
-    {
-      "level": 3,
-      "text": "The answer is G (Green): every remaining world maps all four entries onto the Green aspect."
-    }
-  ],
+  "hints": [],
   "complexity": {
     "score": 47,
     "raw_score": 25,

@@ -1,7 +1,7 @@
 {
   "id": "debunk-plan-tutorial-01",
   "title": "The First Deception",
-  "description": "A theory has been published about ing1. Your aspect clues reveal the true signs \u2014 compare them against the claim and expose any contradiction.",
+  "description": "A theory has been published about ing1. Your aspect clues reveal the true signs — compare them against the claim and expose any contradiction.",
   "difficulty": "easy",
   "clues": [
     {
@@ -66,20 +66,7 @@
       }
     ]
   },
-  "hints": [
-    {
-      "level": 1,
-      "text": "The publication claims ingredient 1 is alchemical pNn. Your clues give you the true aspects of ingredient 1 \u2014 compare each aspect against what the publication claims."
-    },
-    {
-      "level": 2,
-      "text": "Alchemical pNn has R+, G\u2212, B\u2212. Your clues show ingredient 1's true aspects are R\u2212, G+, B\u2212. Any colour where the signs differ is a valid apprentice debunk: R (true \u2212 vs claimed +) or G (true + vs claimed \u2212)."
-    },
-    {
-      "level": 3,
-      "text": "One apprentice debunk: reveal the R or G aspect of ingredient 1. The true sign contradicts what the publication claims \u2192 publication removed. B matches the claim so revealing B would have no effect."
-    }
-  ],
+  "hints": [],
   "complexity": {
     "score": 57,
     "raw_score": 35,

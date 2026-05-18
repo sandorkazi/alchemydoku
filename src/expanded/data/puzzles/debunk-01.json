@@ -3,7 +3,7 @@
   "kind": "debunk",
   "mode": "expanded",
   "title": "The Unwitting Witness",
-  "description": "Two wrong publications sit on the board \u2014 one about Fern, one about Scorpion. A careful mix is worth more than two apprentice reveals.",
+  "description": "Two wrong publications sit on the board — one about Fern, one about Scorpion. A careful mix is worth more than two apprentice reveals.",
   "difficulty": "easy",
   "clues": [
     {
@@ -161,20 +161,7 @@
       }
     ]
   },
-  "hints": [
-    {
-      "level": 1,
-      "text": "Two publications need to go: ing1 claims pNn, and ing6 claims nPp. Use a definitively known ingredient as your witness to challenge each one in turn. ing4 is fully established by the clues and has no publication of its own."
-    },
-    {
-      "level": 2,
-      "text": "Mix ing4 + ing1. True result: G+.\nThe publication claims ing1 is pNn. Predicted mix(nPp + pNn) = neutral \u2260 G+, conflict is unambiguous \u2192 ing1's publication removed.\n\nNow mix ing4 + ing6. True result: G+.\nThe publication claims ing6 is nPp. Predicted mix(nPp + nPp) = neutral \u2260 G+, conflict is unambiguous \u2192 ing6's publication removed."
-    },
-    {
-      "level": 3,
-      "text": "Step 1: Master \u2014 mix ing4 + ing1 \u2192 true G+. Claimed pNn for ing1: mix(nPp, pNn) = neutral \u2260 G+ \u2192 ing1's publication removed.\nStep 2: Master \u2014 mix ing4 + ing6 \u2192 true G+. Claimed nPp for ing6: mix(nPp, nPp) = neutral \u2260 G+ \u2192 ing6's publication removed."
-    }
-  ],
+  "hints": [],
   "complexity": {
     "score": 57,
     "raw_score": 35,

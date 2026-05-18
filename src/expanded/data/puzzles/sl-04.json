@@ -62,20 +62,7 @@
     "7": 3,
     "8": 4
   },
-  "hints": [
-    {
-      "level": 1,
-      "text": "Identify the alchemical for ingredient 2. Direct clues: ing1+ing2=G-, ing2+ing5=neutral."
-    },
-    {
-      "level": 2,
-      "text": "Eliminated for slot 2: [1, 2, 3, 4, 5, 6, 8]. Remaining: [7]."
-    },
-    {
-      "level": 3,
-      "text": "Ingredient 2 = NNN (R- G- B-)."
-    }
-  ],
+  "hints": [],
   "complexity": {
     "score": 31,
     "raw_score": 15,

@@ -1,7 +1,7 @@
 {
   "id": "aspect-set-04",
   "title": "The Negative Aspects",
-  "description": "Red negative sign \u2014 derived purely from mixing chains, no direct aspect clues.",
+  "description": "Red negative sign — derived purely from mixing chains, no direct aspect clues.",
   "difficulty": "easy",
   "clues": [
     {
@@ -97,20 +97,7 @@
     "questionType": "aspect-set",
     "confirmedCount": 4
   },
-  "hints": [
-    {
-      "level": 1,
-      "text": "Look for ingredients that appear in mixing results only involving R\u2212 potions."
-    },
-    {
-      "level": 2,
-      "text": "Cross-reference every mix result that produces a potion of this colour. Both participants share that sign. Ruling out the alternative through a second result pins the ingredient."
-    },
-    {
-      "level": 3,
-      "text": "The ingredients with confirmed R\u2212 are: ingredient 2, ingredient 4, ingredient 6, ingredient 7."
-    }
-  ],
+  "hints": [],
   "complexity": {
     "score": 31,
     "raw_score": 15,

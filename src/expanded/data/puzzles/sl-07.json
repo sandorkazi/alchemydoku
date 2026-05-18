@@ -54,20 +54,7 @@
     "7": 8,
     "8": 1
   },
-  "hints": [
-    {
-      "level": 1,
-      "text": "Identify the alchemical for ingredient 1. Direct clues: ing1+ing2=R+, ing1+ing3=G+."
-    },
-    {
-      "level": 2,
-      "text": "Eliminated for slot 1: [1, 2, 3, 4, 5, 7, 8]. Remaining: [6]."
-    },
-    {
-      "level": 3,
-      "text": "Ingredient 1 = Ppn (R+ G+ B-)."
-    }
-  ],
+  "hints": [],
   "complexity": {
     "score": 31,
     "raw_score": 15,

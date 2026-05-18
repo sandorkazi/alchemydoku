@@ -58,20 +58,7 @@
     "7": 7,
     "8": 2
   },
-  "hints": [
-    {
-      "level": 1,
-      "text": "The Royal Society book reveals whether an ingredient's alchemical is Solar or Lunar. Consulting a confirmed ingredient gives no new information. The most useful choice is the ingredient whose Solar/Lunar nature is most uncertain \u2014 the one most evenly split between the two possibilities."
-    },
-    {
-      "level": 2,
-      "text": "Still uncertain (Solar / Lunar candidates both possible):\n  ing7: 444 Solar / 636 Lunar alchemicals still consistent \u2190 most balanced\n  ing1: 434 Solar / 646 Lunar alchemicals still consistent\n  ing5: 434 Solar / 646 Lunar alchemicals still consistent\n  ing4: 424 Solar / 656 Lunar alchemicals still consistent\n  ing6: 424 Solar / 656 Lunar alchemicals still consistent\n  ing2: 692 Solar / 388 Lunar alchemicals still consistent\n  ing3: 700 Solar / 380 Lunar alchemicals still consistent\n  ing8: 768 Solar / 312 Lunar alchemicals still consistent"
-    },
-    {
-      "level": 3,
-      "text": "Most informative ingredient to consult: ing7."
-    }
-  ],
+  "hints": [],
   "complexity": {
     "score": 52,
     "raw_score": 30,

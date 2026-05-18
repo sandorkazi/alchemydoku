@@ -75,20 +75,7 @@
     "7": 1,
     "8": 2
   },
-  "hints": [
-    {
-      "level": 1,
-      "text": "Reason about all possible golem configurations jointly with ingredient assignments. Each golem_test clue eliminates configs \u00d7 worlds that are inconsistent with the result."
-    },
-    {
-      "level": 2,
-      "text": "After all clues: 1 config(s) remain. True config: chest=BL, ears=RS."
-    },
-    {
-      "level": 3,
-      "text": "Answer: {'chest': {'color': 'B', 'size': 'L'}, 'ears': {'color': 'R', 'size': 'S'}}"
-    }
-  ],
+  "hints": [],
   "complexity": {
     "score": 10,
     "raw_score": 10,

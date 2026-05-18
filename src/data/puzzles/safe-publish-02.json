@@ -1,7 +1,7 @@
 {
   "id": "safe-publish-02",
   "title": "The Calculated Risk",
-  "description": "Red is positive. Blue is negative. But something is still uncertain \u2014 what?",
+  "description": "Red is positive. Blue is negative. But something is still uncertain — what?",
   "difficulty": "easy",
   "clues": [
     {
@@ -27,20 +27,7 @@
     "7": 7,
     "8": 8
   },
-  "hints": [
-    {
-      "level": 1,
-      "text": "You have R+ and B\u2212 confirmed. List all alchemicals with both R+ and B\u2212. Do they agree on Green?"
-    },
-    {
-      "level": 2,
-      "text": "pNn has G\u2212, Ppn has G+. Both satisfy R+ and B\u2212, so Green sign is still unknown."
-    },
-    {
-      "level": 3,
-      "text": "Hedge Green. Red and Blue are proven \u2014 no debunker can catch you on those. Green is the gap."
-    }
-  ],
+  "hints": [],
   "questions": [
     {
       "kind": "safe-publish",

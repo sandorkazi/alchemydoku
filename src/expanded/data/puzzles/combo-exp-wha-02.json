@@ -2,7 +2,7 @@
   "id": "combo-exp-wha-02",
   "mode": "expanded",
   "title": "The Alexander Polynomial",
-  "description": "Four ingredient\u2013sign pairs form a valid encyclopedia article. All the clue types are in play \u2014 deduce which aspect colour they share.",
+  "description": "Four ingredient–sign pairs form a valid encyclopedia article. All the clue types are in play — deduce which aspect colour they share.",
   "difficulty": "easy",
   "clues": [
     {
@@ -99,20 +99,7 @@
     "7": 7,
     "8": 4
   },
-  "hints": [
-    {
-      "level": 1,
-      "text": "For each colour R/G/B, check whether all four ingredient\u2013sign pairs (ingredient 1 +, ingredient 2 +, ingredient 5 -, ingredient 8 -) hold across the remaining worlds."
-    },
-    {
-      "level": 2,
-      "text": "Eliminate any colour where at least one remaining world disagrees. Only one colour will survive."
-    },
-    {
-      "level": 3,
-      "text": "The answer is R (Red): every remaining world maps all four entries onto the Red aspect."
-    }
-  ],
+  "hints": [],
   "complexity": {
     "score": 57,
     "raw_score": 35,

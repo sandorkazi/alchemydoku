@@ -1,7 +1,7 @@
 {
   "id": "debunk-plan-conflict-01",
   "title": "Mutual Suspicion",
-  "description": "Two theories have been published. Your aspect clues reveal the truth about both ingredients. Find a master mix involving ing1 that puts both publications under simultaneous suspicion \u2014 without removing either one.",
+  "description": "Two theories have been published. Your aspect clues reveal the truth about both ingredients. Find a master mix involving ing1 that puts both publications under simultaneous suspicion — without removing either one.",
   "difficulty": "medium",
   "clues": [
     {
@@ -88,20 +88,7 @@
       }
     ]
   },
-  "hints": [
-    {
-      "level": 1,
-      "text": "The question asks for a conflict without removal: a master mix where both publications are contradicted simultaneously, but the audience can't single out which one to remove. Use your clues to determine the true alchemicals for both ingredients, then find a pair whose true mix result differs from both publications' predictions."
-    },
-    {
-      "level": 2,
-      "text": "ing1 has R-, G+, B- \u2192 truly npN. The publication claims pNn \u2014 R contradicts (true R- vs claimed R+). ing2 has R+, G-, B+ \u2192 truly pnP. The publication claims Nnp \u2014 R contradicts (true R+ vs claimed R-). Both publications are false. Mix the two: true result is neutral (they are direct opposites). Under pub1: mix(pNn, pnP) = G- \u2260 neutral \u2192 conflict on pub1. Under pub2: mix(npN, Nnp) = R- \u2260 neutral \u2192 conflict on pub2. Both conflict simultaneously \u2014 the audience can't single out which."
-    },
-    {
-      "level": 3,
-      "text": "One master debunk: mix ingredient 1 + ingredient 2. True result: neutral. Expected if pub1 correct: G\u2212. Expected if pub2 correct: R\u2212. Both differ from neutral \u2192 both conflict \u2192 neither publication is removed. That is the conflict-only outcome the puzzle asks for."
-    }
-  ],
+  "hints": [],
   "complexity": {
     "score": 62,
     "raw_score": 40,

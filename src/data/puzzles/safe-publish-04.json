@@ -35,20 +35,7 @@
     "7": 6,
     "8": 4
   },
-  "hints": [
-    {
-      "level": 1,
-      "text": "The B+ mix result tells you that both ingredients share the same Blue sign, but with different sizes. Combined with G+, how many alchemicals remain for ingredient 1?"
-    },
-    {
-      "level": 2,
-      "text": "Ingredient 1 must have G+ and be part of a pair that produces B+. That narrows it to nPp and PPP \u2014 both have G+ and B+, but they disagree on Red."
-    },
-    {
-      "level": 3,
-      "text": "Hedge Red. The mixing result and aspect clue together confirm G and B, but leave Red ambiguous \u2014 a debunker targeting Red could still catch you out."
-    }
-  ],
+  "hints": [],
   "questions": [
     {
       "kind": "safe-publish",
