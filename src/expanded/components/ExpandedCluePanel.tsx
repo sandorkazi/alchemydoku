@@ -46,7 +46,7 @@ export function ExpandedCluePanel({ clues }: { clues: AnyClue[] }) {
       </h3>
       <div className="flex flex-col gap-2">
         {groups.map((g, i) => (
-          <CollapsibleClueWrapper key={i} label={clueGroupLabel(g)}>
+          <CollapsibleClueWrapper key={i} label={clueGroupLabel(g)} num={i + 1}>
             {g.type === 'full'
               ? <InferredAlchemicalGroupCard clues={g.clues} ingWidth={28} getIngredient={getIngredient} />
               : g.type === 'multi'

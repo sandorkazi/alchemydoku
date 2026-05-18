@@ -212,43 +212,59 @@ export function clueGroupLabel(g: ClueGroup): string {
  * Wraps a rendered clue card with a collapse/expand toggle.
  * When expanded: a "−" button appears on hover (top-right corner).
  * When collapsed: a compact pill shows the clue type label; clicking expands.
+ * num: 1-based sequential clue number displayed as a left-side gutter badge.
  */
-export function CollapsibleClueWrapper({ label, children }: {
+export function CollapsibleClueWrapper({ label, children, num }: {
   label: string;
   children: React.ReactNode;
+  num?: number;
 }) {
   const [collapsed, setCollapsed] = useState(false);
 
   if (collapsed) {
     return (
-      <button
-        onClick={() => setCollapsed(false)}
-        className="w-full text-left rounded-lg border border-gray-200 px-2 py-1.5
-                   flex items-center gap-1.5 text-[10px] font-semibold uppercase tracking-wide
-                   text-gray-400 hover:text-gray-600 hover:border-gray-300 transition-colors"
-        title="Expand clue"
-        aria-expanded={false}
-      >
-        <span aria-hidden="true" className="opacity-60 text-[8px]">▶</span>
-        {label}
-      </button>
+      <div className="flex items-start gap-1.5">
+        {num != null && (
+          <span className="text-[10px] font-bold text-gray-400 mt-[7px] w-5 shrink-0 text-right select-none leading-none">
+            {num}
+          </span>
+        )}
+        <button
+          onClick={() => setCollapsed(false)}
+          className="flex-1 text-left rounded-lg border border-gray-200 px-2 py-1.5
+                     flex items-center gap-1.5 text-[10px] font-semibold uppercase tracking-wide
+                     text-gray-400 hover:text-gray-600 hover:border-gray-300 transition-colors"
+          title="Expand clue"
+          aria-expanded={false}
+        >
+          <span aria-hidden="true" className="opacity-60 text-[8px]">▶</span>
+          {label}
+        </button>
+      </div>
     );
   }
 
   return (
-    <div className="relative group">
-      {children}
-      <button
-        onClick={() => setCollapsed(true)}
-        className="absolute top-1 right-1 z-10 w-5 h-5 flex items-center justify-center
-                   rounded text-base leading-none text-gray-400 hover:text-gray-700
-                   opacity-0 group-hover:opacity-100 transition-opacity"
-        title="Collapse clue"
-        aria-label="Collapse clue"
-        aria-expanded={true}
-      >
-        −
-      </button>
+    <div className="group flex items-start gap-1.5">
+      {num != null && (
+        <span className="text-[10px] font-bold text-gray-400 mt-2.5 w-5 shrink-0 text-right select-none leading-none">
+          {num}
+        </span>
+      )}
+      <div className="flex-1 min-w-0 relative">
+        {children}
+        <button
+          onClick={() => setCollapsed(true)}
+          className="absolute top-1 right-1 z-10 w-5 h-5 flex items-center justify-center
+                     rounded text-base leading-none text-gray-400 hover:text-gray-700
+                     opacity-0 group-hover:opacity-100 transition-opacity"
+          title="Collapse clue"
+          aria-label="Collapse clue"
+          aria-expanded={true}
+        >
+          −
+        </button>
+      </div>
     </div>
   );
 }

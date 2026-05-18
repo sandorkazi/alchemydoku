@@ -23,7 +23,7 @@ export function CluePanel({ clues }: { clues: Clue[] }) {
       </h2>
       <div className="flex flex-col gap-2">
         {groups.map((g, i) => (
-          <CollapsibleClueWrapper key={i} label={clueGroupLabel(g)}>
+          <CollapsibleClueWrapper key={i} label={clueGroupLabel(g)} num={i + 1}>
             {g.type === 'single'
               ? <ClueCard clue={g.clue} clueIndex={clues.indexOf(g.clue)} />
               : g.type === 'multi'

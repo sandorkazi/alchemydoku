@@ -22,6 +22,7 @@ import { BuildStamp } from '../components/BuildStamp';
 import type { Settings } from '../utils/settings';
 import { isPuzzleNonCompliant } from '../compliance';
 import { hashToDisplayMap } from '../utils/permalink';
+import { DriveSync } from '../components/DriveSync';
 
 // ─── Progress persistence ─────────────────────────────────────────────────────
 
@@ -407,6 +408,7 @@ export function ExpandedHome({ onModeChange, initialPuzzleId, initialShuffleHash
             >
               ⚙️
             </button>
+            <DriveSync />
           </div>
         )}
 

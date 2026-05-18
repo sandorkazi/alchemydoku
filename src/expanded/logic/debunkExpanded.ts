@@ -31,7 +31,6 @@ function mixCodeToColor(code: number): Color | null {
   return 'B';
 }
 
-const NEXT_COLOR: Record<Color, Color> = { R: 'G', G: 'B', B: 'R' };
 
 function trueSign(solution: Assignment, ingSlot: IngredientId, color: Color): 0 | 1 {
   const alchId = solution[ingSlot];
@@ -112,6 +111,7 @@ function simulateExpandedStep(
       return { removedPubs: [], removedArts: [], conflicts: [] };
     }
     const trueCode = trueMixCode(solution, ingredient1, ingredient2);
+    const resultColor = mixCodeToColor(trueCode);
     const ing1Known = isDefinitivelyKnown(worlds, ingredient1);
     const ing2Known = isDefinitivelyKnown(worlds, ingredient2);
 
@@ -139,41 +139,27 @@ function simulateExpandedStep(
     else if (blame2 && !blame1) { removedPubs.push(ingredient2); activePubs.delete(ingredient2); }
     else if (blame1 && blame2) { conflicts.push(ingredient1, ingredient2); }
 
-    // Articles: definitively-known ingredient check (verifies all aspect entries)
-    const knownIngs: IngredientId[] = [];
-    if (ing1Known) knownIngs.push(ingredient1);
-    if (ing2Known) knownIngs.push(ingredient2);
+    // Articles: a single demonstration can only disprove the result-color article.
+    if (resultColor !== null) {
+      const knownIngs: IngredientId[] = [];
+      if (ing1Known) knownIngs.push(ingredient1);
+      if (ing2Known) knownIngs.push(ingredient2);
 
-    for (const [artId, art] of activeArts) {
-      if (removedArts.includes(artId)) continue;
-      for (const entry of art.entries) {
-        if (!knownIngs.includes(entry.ingredient)) continue;
-        const trueSgn = trueSign(solution, entry.ingredient, art.aspect);
-        const entrySgn = entry.sign === '+' ? 1 : 0;
-        if (entrySgn !== trueSgn) {
-          removedArts.push(artId);
-          break;
+      for (const [artId, art] of activeArts) {
+        if (art.aspect !== resultColor) continue;
+        // Definitively-known ingredient check: wrong aspect entry in the result-color article.
+        for (const entry of art.entries) {
+          if (!knownIngs.includes(entry.ingredient)) continue;
+          const trueSgn = trueSign(solution, entry.ingredient, art.aspect);
+          const entrySgn = entry.sign === '+' ? 1 : 0;
+          if (entrySgn !== trueSgn) { removedArts.push(artId); break; }
         }
-      }
-    }
-
-    // Two-color rule: if an article has entries for both mixed ingredients on its aspect C,
-    // the observed result must be consistent with those claimed signs. If not, article is false.
-    //   Same claimed sign on C → result must be color C or NEXT_COLOR[C]
-    //   Different claimed signs on C → result color must not be C
-    const resultColor = mixCodeToColor(trueCode);
-    for (const [artId, art] of activeArts) {
-      if (removedArts.includes(artId)) continue;
-      const e1 = art.entries.find(e => e.ingredient === ingredient1);
-      const e2 = art.entries.find(e => e.ingredient === ingredient2);
-      if (!e1 || !e2) continue;
-      const C = art.aspect as Color;
-      if (e1.sign === e2.sign) {
-        if (resultColor === null || (resultColor !== C && resultColor !== NEXT_COLOR[C])) {
-          removedArts.push(artId);
-        }
-      } else {
-        if (resultColor === C) removedArts.push(artId);
+        if (removedArts.includes(artId)) continue;
+        // Two-color rule: different claimed signs on result color predict no result-color output,
+        // but the result IS result-color — article is false.
+        const e1 = art.entries.find(e => e.ingredient === ingredient1);
+        const e2 = art.entries.find(e => e.ingredient === ingredient2);
+        if (e1 && e2 && e1.sign !== e2.sign) removedArts.push(artId);
       }
     }
 

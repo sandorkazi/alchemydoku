@@ -1135,34 +1135,31 @@ def _find_removal_plan_expanded(sol: dict, pub_map: dict, articles: list, known:
             remaining_pubs.discard(ing_b)
         # Both blame → conflict: neither removed.
 
-        # Articles: definitively-known ingredient check.
-        for ing in (ing_a if a_known else None, ing_b if b_known else None):
-            if ing is None:
-                continue
-            for art_id in art_cleared_by_ing.get(ing, set()):
-                if art_id in arts:
-                    removed_arts.add(art_id)
-
-        # Articles: two-color rule check.
+        # Articles: a single demonstration can only disprove the result-color article.
         if true_r != 'neutral':
             result_col = true_r[0]  # 'R', 'G', or 'B'
         else:
             result_col = None
-        for art_id in arts - removed_arts:
-            art = art_by_id[art_id]
-            entries_map = {e['ingredient']: e['sign'] for e in art['entries']}
-            s_a = entries_map.get(ing_a)
-            s_b = entries_map.get(ing_b)
-            if s_a is None or s_b is None:
-                continue
-            C = art['aspect']
-            if s_a == s_b:
-                # Same claimed sign: result must be C or NEXT_COLOR[C]
-                if result_col is None or (result_col != C and result_col != NEXT_COLOR[C]):
-                    removed_arts.add(art_id)
-            else:
-                # Different claimed signs: result color must not be C
-                if result_col == C:
+        if result_col is not None:
+            for art_id in arts - removed_arts:
+                art = art_by_id[art_id]
+                if art['aspect'] != result_col:
+                    continue
+                # Definitively-known ingredient check: wrong aspect entry in result-color article.
+                for ing in (ing_a if a_known else None, ing_b if b_known else None):
+                    if ing is None:
+                        continue
+                    if art_id in art_cleared_by_ing.get(ing, set()):
+                        removed_arts.add(art_id)
+                        break
+                if art_id in removed_arts:
+                    continue
+                # Two-color rule: different claimed signs on result color predict no result-color
+                # output, but the result IS result-color — article is false.
+                entries_map = {e['ingredient']: e['sign'] for e in art['entries']}
+                s_a = entries_map.get(ing_a)
+                s_b = entries_map.get(ing_b)
+                if s_a is not None and s_b is not None and s_a != s_b:
                     removed_arts.add(art_id)
 
         valid = bool(removed_pubs) or bool(removed_arts)

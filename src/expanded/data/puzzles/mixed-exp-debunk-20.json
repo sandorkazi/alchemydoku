@@ -129,6 +129,11 @@
       },
       {
         "kind": "master",
+        "ingredient1": 2,
+        "ingredient2": 6
+      },
+      {
+        "kind": "master",
         "ingredient1": 4,
         "ingredient2": 6
       }
