@@ -348,6 +348,8 @@ function AppInner() {
   const [lastPuzzleId, setLastPuzzleId] = useState<string | null>(() => loadLastPuzzle(initMode));
   /** Incremented on reset to force SolverProvider remount even for same puzzleId */
   const [resetVersion, setResetVersion] = useState(0);
+  const [searchOpen, setSearchOpen] = useState(false);
+  const [searchQuery, setSearchQuery] = useState('');
 
   const { onPuzzleComplete } = useDrive();
 
@@ -532,114 +534,201 @@ function AppInner() {
     ? (COLLECTIONS as Collection[]).find(c => c.puzzleIds.includes(lastPuzzle.id))
     : null;
 
+  const searchTrimmed = searchQuery.trim();
+  const searchResults = searchTrimmed
+    ? ALL_PUZZLES.filter(p => p.title.toLowerCase().includes(searchTrimmed.toLowerCase()))
+    : null;
+
   return (
     <div className="min-h-screen bg-gray-50 animate-fadein">
       <div className="max-w-xl mx-auto px-4 py-10 space-y-8">
 
         {/* Mode switcher + settings + cloud save — very top */}
-        <div className="flex items-center justify-between gap-2">
-          <ModeSwitcher mode="base" onChange={handleModeChange} />
-          <div className="flex items-center gap-1.5 shrink-0">
+        {searchOpen ? (
+          <div className="flex items-center gap-2">
             <button
-              onClick={() => setSettingsOpen(true)}
-              title="Settings"
-              aria-label="Open settings"
-              className="flex items-center justify-center w-8 h-8 rounded-xl text-gray-500
+              onClick={() => { setSearchOpen(false); setSearchQuery(''); }}
+              aria-label="Close search"
+              className="shrink-0 flex items-center justify-center w-8 h-8 rounded-xl text-gray-500
                 bg-white border border-gray-200 hover:border-gray-300 hover:text-gray-700
-                shadow-sm transition-colors focus-visible:outline-none
-                focus-visible:ring-2 focus-visible:ring-indigo-400"
+                shadow-sm transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-indigo-400"
             >
-              ⚙️
+              ←
             </button>
-            <DriveSync />
-          </div>
-        </div>
-
-        {/* What's New banner */}
-        {settings.showLatestUpdates && showReleaseNotes && releaseEntry && (
-          <WhatsNewBanner entry={releaseEntry} onDismiss={handleDismissReleaseNotes} variant="base" />
-        )}
-
-        {/* Hero */}
-        <div className="text-center space-y-2">
-          <div className="text-5xl" aria-hidden="true">⚗️</div>
-          <h1 className="text-3xl font-bold text-gray-900">Alchemy Sudoku Training</h1>
-          <p className="text-gray-500 text-sm">
-            Train your deduction skills with interactive alchemy puzzles.
-          </p>
-        </div>
-
-        {/* First-visit sync setup — shown until user chooses a save method */}
-        <SaveSetupBanner />
-
-        {/* Quick references — each toggled independently in settings */}
-        {settings.showRulesRef && (
-          <RulesQuickReference showPuzzleOnly={settings.showPuzzleOnly} />
-        )}
-        {settings.showInterfaceRef && (
-          <InterfaceQuickReference />
-        )}
-
-        {/* Continue banner */}
-        {lastPuzzle && lastCol && !completed.has(lastPuzzle.id) && (
-          <button
-            onClick={() => openPuzzle(lastPuzzle.id, lastCol.id)}
-            aria-label={`Continue: ${lastPuzzle.title}`}
-            className="w-full flex items-center gap-4 bg-indigo-600 text-white rounded-2xl
-                       p-4 hover:bg-indigo-700 transition-colors press-sm
-                       focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-indigo-400"
-          >
-            <span className="text-2xl" aria-hidden="true">▶</span>
-            <div className="flex-1 text-left">
-              <div className="font-semibold text-sm">Continue where you left off</div>
-              <div className="text-indigo-200 text-xs">{lastPuzzle.title}</div>
+            <div className="relative flex-1">
+              <input
+                autoFocus
+                type="search"
+                placeholder="Search puzzles…"
+                value={searchQuery}
+                onChange={e => setSearchQuery(e.target.value)}
+                onKeyDown={e => { if (e.key === 'Escape') { setSearchOpen(false); setSearchQuery(''); } }}
+                className="w-full pl-3 pr-8 py-1.5 rounded-xl border border-gray-200 bg-white text-sm text-gray-900
+                           placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-indigo-400 focus:border-transparent"
+              />
+              {searchQuery && (
+                <button
+                  onClick={() => setSearchQuery('')}
+                  aria-label="Clear search"
+                  className="absolute right-2.5 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600 text-xs font-bold px-1"
+                >
+                  ✕
+                </button>
+              )}
             </div>
-            <span className="text-indigo-200 text-sm" aria-hidden="true">→</span>
-          </button>
+          </div>
+        ) : (
+          <div className="flex items-center justify-between gap-2">
+            <ModeSwitcher mode="base" onChange={handleModeChange} />
+            <div className="flex items-center gap-1.5 shrink-0">
+              <button
+                onClick={() => setSearchOpen(true)}
+                title="Search puzzles"
+                aria-label="Search puzzles"
+                className="flex items-center justify-center w-8 h-8 rounded-xl text-gray-500
+                  bg-white border border-gray-200 hover:border-gray-300 hover:text-gray-700
+                  shadow-sm transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-indigo-400"
+              >
+                🔍
+              </button>
+              <button
+                onClick={() => setSettingsOpen(true)}
+                title="Settings"
+                aria-label="Open settings"
+                className="flex items-center justify-center w-8 h-8 rounded-xl text-gray-500
+                  bg-white border border-gray-200 hover:border-gray-300 hover:text-gray-700
+                  shadow-sm transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-indigo-400"
+              >
+                ⚙️
+              </button>
+              <DriveSync />
+            </div>
+          </div>
         )}
 
-        {/* Puzzle collections */}
-        <section aria-label="Puzzle collections" className="space-y-3">
-          {(COLLECTIONS as Collection[]).map(col => {
-            const nonCompliantCount = col.puzzleIds.filter(id => { const p = PUZZLE_MAP[id]; return !!p && isPuzzleNonCompliant(p, 'base'); }).length;
-            const hiddenCount = settings.showPuzzleOnly ? 0 : nonCompliantCount;
-            const visibleCompleted = !settings.showPuzzleOnly
-              ? col.puzzleIds.filter(id => completed.has(id) && !!PUZZLE_MAP[id] && !isPuzzleNonCompliant(PUZZLE_MAP[id]!, 'base')).length
-              : col.puzzleIds.filter(id => completed.has(id)).length;
-            return (
-            <CollectionCard
-              key={col.id}
-              col={col}
-              completed={visibleCompleted}
-              hiddenCount={hiddenCount}
-              nonCompliantCount={nonCompliantCount}
-              locked={false}
-              onOpen={() => {
-                const tutorialMap: Record<string, TutorialId> = {
-                  'tutorial-mixing':              'mixing',
-                  'tutorial-aspect-balance':      'aspect-balance',
-                  'tutorial-selling':             'selling',
-                  'tutorial-two-color':           'two-color',
-                  'tutorial-debunking-apprentice': 'debunk-apprentice',
-                  'tutorial-debunking-master':    'debunk-master',
-                };
-                const tid = tutorialMap[col.id];
-                if (tid) {
-                  setView({ kind: 'tutorial', tutorialId: tid });
-                } else {
-                  setView({ kind: 'collection', colId: col.id });
-                }
-              }}
-            />
-            );
-          })}
-        </section>
+        {searchResults ? (
+          <div className="space-y-2">
+            <p className="text-xs text-gray-400">
+              {searchResults.length} puzzle{searchResults.length !== 1 ? 's' : ''} found
+            </p>
+            {searchResults.length === 0 ? (
+              <p className="text-center text-gray-400 py-8 text-sm">No puzzles match "{searchTrimmed}"</p>
+            ) : (
+              <div className="space-y-1.5">
+                {searchResults.map(p => {
+                  const col = (COLLECTIONS as Collection[]).find(c => c.puzzleIds.includes(p.id));
+                  if (!col) return null;
+                  return (
+                    <button
+                      key={p.id}
+                      onClick={() => openPuzzle(p.id, col.id)}
+                      className="w-full text-left px-4 py-3 rounded-xl bg-white border border-gray-200
+                                 hover:border-indigo-300 hover:shadow-sm transition-all press-sm
+                                 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-indigo-400"
+                    >
+                      <div className="flex items-center justify-between gap-2">
+                        <span className="font-medium text-gray-900 text-sm truncate">{p.title}</span>
+                        <span className={`shrink-0 text-[10px] font-semibold px-1.5 py-0.5 rounded-full
+                          ${DIFF_BADGE[p.difficulty] ?? 'bg-gray-100 text-gray-600'}`}>
+                          {p.difficulty}
+                        </span>
+                      </div>
+                      <p className="text-xs text-gray-400 mt-0.5 truncate">{col.title}</p>
+                    </button>
+                  );
+                })}
+              </div>
+            )}
+          </div>
+        ) : (
+          <>
+            {/* What's New banner */}
+            {settings.showLatestUpdates && showReleaseNotes && releaseEntry && (
+              <WhatsNewBanner entry={releaseEntry} onDismiss={handleDismissReleaseNotes} variant="base" />
+            )}
 
-        <div className="pt-4 border-t" aria-live="polite">
-          <p className="text-xs text-gray-400 text-center">
-            {completed.size} / {ALL_PUZZLES.length} puzzles solved
-          </p>
-        </div>
+            {/* Hero */}
+            <div className="text-center space-y-2">
+              <div className="text-5xl" aria-hidden="true">⚗️</div>
+              <h1 className="text-3xl font-bold text-gray-900">Alchemy Sudoku Training</h1>
+              <p className="text-gray-500 text-sm">
+                Train your deduction skills with interactive alchemy puzzles.
+              </p>
+            </div>
+
+            {/* First-visit sync setup — shown until user chooses a save method */}
+            <SaveSetupBanner />
+
+            {/* Quick references — each toggled independently in settings */}
+            {settings.showRulesRef && (
+              <RulesQuickReference showPuzzleOnly={settings.showPuzzleOnly} />
+            )}
+            {settings.showInterfaceRef && (
+              <InterfaceQuickReference />
+            )}
+
+            {/* Continue banner */}
+            {lastPuzzle && lastCol && !completed.has(lastPuzzle.id) && (
+              <button
+                onClick={() => openPuzzle(lastPuzzle.id, lastCol.id)}
+                aria-label={`Continue: ${lastPuzzle.title}`}
+                className="w-full flex items-center gap-4 bg-indigo-600 text-white rounded-2xl
+                           p-4 hover:bg-indigo-700 transition-colors press-sm
+                           focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-indigo-400"
+              >
+                <span className="text-2xl" aria-hidden="true">▶</span>
+                <div className="flex-1 text-left">
+                  <div className="font-semibold text-sm">Continue where you left off</div>
+                  <div className="text-indigo-200 text-xs">{lastPuzzle.title}</div>
+                </div>
+                <span className="text-indigo-200 text-sm" aria-hidden="true">→</span>
+              </button>
+            )}
+
+            {/* Puzzle collections */}
+            <section aria-label="Puzzle collections" className="space-y-3">
+              {(COLLECTIONS as Collection[]).map(col => {
+                const nonCompliantCount = col.puzzleIds.filter(id => { const p = PUZZLE_MAP[id]; return !!p && isPuzzleNonCompliant(p, 'base'); }).length;
+                const hiddenCount = settings.showPuzzleOnly ? 0 : nonCompliantCount;
+                const visibleCompleted = !settings.showPuzzleOnly
+                  ? col.puzzleIds.filter(id => completed.has(id) && !!PUZZLE_MAP[id] && !isPuzzleNonCompliant(PUZZLE_MAP[id]!, 'base')).length
+                  : col.puzzleIds.filter(id => completed.has(id)).length;
+                return (
+                <CollectionCard
+                  key={col.id}
+                  col={col}
+                  completed={visibleCompleted}
+                  hiddenCount={hiddenCount}
+                  nonCompliantCount={nonCompliantCount}
+                  locked={false}
+                  onOpen={() => {
+                    const tutorialMap: Record<string, TutorialId> = {
+                      'tutorial-mixing':              'mixing',
+                      'tutorial-aspect-balance':      'aspect-balance',
+                      'tutorial-selling':             'selling',
+                      'tutorial-two-color':           'two-color',
+                      'tutorial-debunking-apprentice': 'debunk-apprentice',
+                      'tutorial-debunking-master':    'debunk-master',
+                    };
+                    const tid = tutorialMap[col.id];
+                    if (tid) {
+                      setView({ kind: 'tutorial', tutorialId: tid });
+                    } else {
+                      setView({ kind: 'collection', colId: col.id });
+                    }
+                  }}
+                />
+                );
+              })}
+            </section>
+
+            <div className="pt-4 border-t" aria-live="polite">
+              <p className="text-xs text-gray-400 text-center">
+                {completed.size} / {ALL_PUZZLES.length} puzzles solved
+              </p>
+            </div>
+          </>
+        )}
 
         <BuildStamp />
 
