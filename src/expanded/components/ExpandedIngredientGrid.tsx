@@ -268,8 +268,9 @@ function AutoDeduceModal({ onConfirm, onCancel }: { onConfirm: () => void; onCan
 
 // ─── Main grid ────────────────────────────────────────────────────────────────
 
-export function ExpandedIngredientGrid({ onRandomize, activeTool, setActiveTool, scrollContainerRef, onScrollSync }: {
+export function ExpandedIngredientGrid({ onRandomize, onLongPressRandomize, activeTool, setActiveTool, scrollContainerRef, onScrollSync }: {
   onRandomize?: () => void;
+  onLongPressRandomize?: () => void;
   activeTool: GridTool;
   setActiveTool: (t: GridTool) => void;
   scrollContainerRef?: React.MutableRefObject<HTMLDivElement | null>;
@@ -287,6 +288,8 @@ export function ExpandedIngredientGrid({ onRandomize, activeTool, setActiveTool,
   const livePathRef = useRef<SVGPathElement>(null);
   const isDrawingRef = useRef(false);
   const drawPointsRef = useRef<{x: number; y: number}[]>([]);
+  const longPressTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const longFired = useRef(false);
 
   // ── Visual hint circles (worlds-derived, never touch gridState) ───────────
   const hintCells = useMemo(() => {
@@ -465,9 +468,30 @@ export function ExpandedIngredientGrid({ onRandomize, activeTool, setActiveTool,
               >✕ Drawing</button>
             )}
             {onRandomize && (
-              <button onClick={onRandomize}
+              <button
+                title={onLongPressRandomize ? 'Reshuffle (hold for custom picker)' : 'Reshuffle'}
+                onPointerDown={() => {
+                  longFired.current = false;
+                  if (onLongPressRandomize) {
+                    longPressTimer.current = setTimeout(() => {
+                      longFired.current = true;
+                      onLongPressRandomize();
+                    }, 500);
+                  }
+                }}
+                onPointerUp={() => {
+                  if (longPressTimer.current) clearTimeout(longPressTimer.current);
+                  if (!longFired.current) onRandomize();
+                  longFired.current = false;
+                }}
+                onPointerLeave={() => {
+                  if (longPressTimer.current) clearTimeout(longPressTimer.current);
+                  longFired.current = false;
+                }}
                 className="text-xs text-gray-400 hover:text-indigo-600 border border-gray-200
-                           hover:border-indigo-300 rounded-lg px-2.5 py-1 transition-colors">🔀</button>
+                           hover:border-indigo-300 rounded-lg px-2.5 py-1 transition-colors select-none">
+                🔀
+              </button>
             )}
             <label className="flex items-center gap-1.5 text-xs cursor-pointer select-none">
               <span className={autoDeduction ? 'text-indigo-600 font-semibold' : 'text-gray-500'}>Grid Hints</span>

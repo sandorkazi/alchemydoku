@@ -71,20 +71,7 @@
     "7": 6,
     "8": 1
   },
-  "hints": [
-    {
-      "level": 1,
-      "text": "Identify the alchemical for ingredient 5. Direct clues: ing4+ing5=G-."
-    },
-    {
-      "level": 2,
-      "text": "Eliminated for slot 5: [1, 2, 4, 5, 6, 7, 8]. Remaining: [3]."
-    },
-    {
-      "level": 3,
-      "text": "Ingredient 5 = pNn (R+ G- B-)."
-    }
-  ],
+  "hints": [],
   "complexity": {
     "score": 31,
     "raw_score": 15,

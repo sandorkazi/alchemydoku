@@ -90,6 +90,7 @@ export type Action =
   | { type: 'REVEAL_SOLUTION' }
   | { type: 'RESET' }
   | { type: 'RESHUFFLE' }
+  | { type: 'RESHUFFLE_CUSTOM'; map: DisplayMap }
   | { type: 'CLEAR_GRID' }
   | { type: 'SET_NOTE'; key: string; value: string }
   | { type: 'LOAD_PROGRESS'; gridState: GridState; notes: Record<string,string>; hintLevel: number; wrongAttempts: number; answers: (PuzzleAnswer | null)[] }
@@ -161,12 +162,9 @@ function reducer(state: SolverState, action: Action): SolverState {
       return { ...state, showSolution: true };
 
     case 'RESET': {
-      const newMap = makeDisplayMap();
-      saveDisplayMap(`display-map-${state.puzzle.id}`, newMap);
       const undoStack = [snap(state), ...state.undoStack].slice(0, MAX_UNDO);
       return {
         ...state,
-        displayMap: newMap,
         gridState: emptyGrid(),
         hintLevel: 0,
         wrongAttempts: 0,
@@ -195,6 +193,11 @@ function reducer(state: SolverState, action: Action): SolverState {
       const newMap = makeDisplayMap();
       saveDisplayMap(`display-map-${state.puzzle.id}`, newMap);
       return { ...state, displayMap: newMap };
+    }
+
+    case 'RESHUFFLE_CUSTOM': {
+      saveDisplayMap(`display-map-${state.puzzle.id}`, action.map);
+      return { ...state, displayMap: action.map };
     }
 
     case 'LOAD_PROGRESS': {
@@ -271,15 +274,20 @@ type SolverContextValue = {
 
 const SolverContext = createContext<SolverContextValue | null>(null);
 
-export function SolverProvider({ puzzle, children }: { puzzle: Puzzle; children: ReactNode }) {
+export function SolverProvider({ puzzle, children, initialDisplayMap }: { puzzle: Puzzle; children: ReactNode; initialDisplayMap?: DisplayMap }) {
   const worlds = useMemo(() => applyClues(generateAllWorlds(), puzzle.clues), [puzzle]);
 
   const displayMap = useMemo(() => {
+    if (initialDisplayMap) {
+      saveDisplayMap(`display-map-${puzzle.id}`, initialDisplayMap);
+      return initialDisplayMap;
+    }
     const saved = loadDisplayMap(`display-map-${puzzle.id}`);
     if (saved) return saved;
     const fresh = makeDisplayMap();
     saveDisplayMap(`display-map-${puzzle.id}`, fresh);
     return fresh;
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [puzzle.id]);
 
   const savedState = useMemo(() => loadSolverState(puzzle.id), [puzzle.id]);

@@ -1,7 +1,7 @@
 {
   "id": "debunk-plan-easy-03",
   "title": "The Honest and the Thief",
-  "description": "Two theories have been published about ingredients you've fully studied. Check each claim against the aspect clues \u2014 not every publication is wrong. Expose only the one that is.",
+  "description": "Two theories have been published about ingredients you've fully studied. Check each claim against the aspect clues — not every publication is wrong. Expose only the one that is.",
   "difficulty": "easy",
   "clues": [
     {
@@ -84,20 +84,7 @@
       }
     ]
   },
-  "hints": [
-    {
-      "level": 1,
-      "text": "Each published ingredient has all three aspect clues. Determine the true alchemical for each from its clues, then compare it to what the publication claims. Only a claim where a sign differs from the clues needs to be debunked."
-    },
-    {
-      "level": 2,
-      "text": "ing1 has R-, G+, B- \u2192 alchemical npN. The publication claims npN \u2014 all three signs match. This publication is accurate; no debunk needed. ing4 has R-, G+, B+ \u2192 alchemical nPp. The publication claims pnP (R+, G-, B+). ing4's R- contradicts the claimed R+, and G+ contradicts the claimed G-. This publication is false."
-    },
-    {
-      "level": 3,
-      "text": "One-step plan: apprentice debunk on ing4, reveal R (or G). The true sign is R- (from the clue). The publication claims pnP which has R+. Since R- \u2260 R+, the publication is removed. The publication for ing1 correctly describes npN and is left untouched."
-    }
-  ],
+  "hints": [],
   "complexity": {
     "score": 57,
     "raw_score": 35,

@@ -1,7 +1,7 @@
 {
   "id": "pp-05",
   "title": "The Open Verdict",
-  "description": "Use every clue \u2014 the remaining ambiguity is the answer.",
+  "description": "Use every clue — the remaining ambiguity is the answer.",
   "difficulty": "medium",
   "clues": [
     {
@@ -95,20 +95,7 @@
       "avgClueDifficulty": 1.27
     }
   },
-  "hints": [
-    {
-      "level": 1,
-      "text": "There are 3 possible outcomes for this mix. Start by ruling out clearly impossible ones."
-    },
-    {
-      "level": 2,
-      "text": "Each clue constrains the alchemical assignments \u2014 trace which potions survive all constraints."
-    },
-    {
-      "level": 3,
-      "text": "The answer has 3 potions: B+, G+, G-."
-    }
-  ],
+  "hints": [],
   "complexity": {
     "score": 61,
     "raw_score": 39,

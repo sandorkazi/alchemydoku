@@ -44,20 +44,7 @@
     "7": 3,
     "8": 5
   },
-  "hints": [
-    {
-      "level": 1,
-      "text": "Determine the R sign of ing7. There are 4 alchemicals still consistent with the clues for slot 7. Check whether they all agree on the R sign."
-    },
-    {
-      "level": 2,
-      "text": "Remaining alchemicals for ing7: pnP(R+), pNn(R+), Ppn(R+), PPP(R+). All share R+."
-    },
-    {
-      "level": 3,
-      "text": "ing7 has R+."
-    }
-  ],
+  "hints": [],
   "complexity": {
     "score": 40,
     "raw_score": 20,

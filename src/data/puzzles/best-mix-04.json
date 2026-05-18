@@ -47,20 +47,7 @@
     "7": 7,
     "8": 3
   },
-  "hints": [
-    {
-      "level": 1,
-      "text": "The most informative mix partner for ing1 is the one whose result is most unpredictable \u2014 more distinct possible outcomes means more information gained from the experiment, since each result rules out different alchemicals."
-    },
-    {
-      "level": 2,
-      "text": "Partners ranked by number of possible outcomes:\n  ing3: 4 distinct results (B-, B+, R-, R+)\n  ing4: 4 distinct results (B-, B+, R-, R+)\n  ing6: 4 distinct results (B-, B+, R-, R+) \u2190 most informative\n  ing5: 3 distinct results (B-, B+, G-)\n  ing7: 3 distinct results (B-, B+, G-)\n  ing8: 3 distinct results (B-, B+, G-)"
-    },
-    {
-      "level": 3,
-      "text": "Most informative partner for ing1: ing6."
-    }
-  ],
+  "hints": [],
   "complexity": {
     "score": 40,
     "raw_score": 20,

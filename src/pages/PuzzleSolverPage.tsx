@@ -6,6 +6,7 @@ import { MixSimulator } from '../components/MixSimulator';
 import { HintDrawer } from '../components/HintDrawer';
 import { AnswerPanel } from '../components/AnswerPanel';
 import { PuzzleToolbar } from '../components/PuzzleToolbar';
+import { ShufflePickerModal } from '../components/ShufflePickerModal';
 import { downloadBothFiles, uploadBaseProgress } from '../utils/saveProgress';
 import { applyPermalink } from '../utils/permalink';
 import { BuildStamp } from '../components/BuildStamp';
@@ -79,7 +80,8 @@ function MixSimulatorSection() {
 
 function IngredientGridSection() {
   const [open, setOpen] = useState(false);
-  const { dispatch } = useSolver();
+  const [pickerOpen, setPickerOpen] = useState(false);
+  const { state, dispatch } = useSolver();
   return (
     <div className="border-t">
       <button
@@ -94,8 +96,18 @@ function IngredientGridSection() {
       </button>
       {open && (
         <div className="pb-2 animate-fadein">
-          <IngredientGrid onRandomize={() => dispatch({ type: 'RESHUFFLE' })} />
+          <IngredientGrid
+            onRandomize={() => dispatch({ type: 'RESHUFFLE' })}
+            onLongPressRandomize={() => setPickerOpen(true)}
+          />
         </div>
+      )}
+      {pickerOpen && (
+        <ShufflePickerModal
+          currentMap={state.displayMap}
+          onApply={map => { dispatch({ type: 'RESHUFFLE_CUSTOM', map }); setPickerOpen(false); }}
+          onClose={() => setPickerOpen(false)}
+        />
       )}
     </div>
   );
@@ -153,7 +165,7 @@ function SolverInner({
         onSave={handleSave}
         onLoad={handleLoad}
         onReset={() => dispatch({ type: 'RESET' })}
-        onPermalink={() => applyPermalink(puzzle.id, 'base')}
+        onPermalink={() => applyPermalink(puzzle.id, 'base', state.displayMap)}
         onUndo={() => dispatch({ type: 'UNDO' })}
         onRedo={() => dispatch({ type: 'REDO' })}
         canUndo={state.undoStack.length > 0}
@@ -203,14 +215,16 @@ export function PuzzleSolverPage({
   onBack,
   onNext,
   isTutorial = false,
+  initialDisplayMap,
 }: {
   puzzle: Puzzle;
   onBack: () => void;
   onNext?: () => void;
   isTutorial?: boolean;
+  initialDisplayMap?: import('../utils/solverStorage').DisplayMap;
 }) {
   return (
-    <SolverProvider key={puzzle.id} puzzle={puzzle}>
+    <SolverProvider key={puzzle.id} puzzle={puzzle} initialDisplayMap={initialDisplayMap}>
       <SolverInner onBack={onBack} onNext={onNext} isTutorial={isTutorial} />
     </SolverProvider>
   );

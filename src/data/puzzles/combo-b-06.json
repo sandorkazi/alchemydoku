@@ -66,20 +66,7 @@
     "7": 4,
     "8": 1
   },
-  "hints": [
-    {
-      "level": 1,
-      "text": "To find the result of mixing ing2 and ing5, apply the mixing rule: scan colours R\u2192G\u2192B in order. The first colour where both ingredients share the same sign determines the result potion. If all three colours have opposing signs, the result is neutral."
-    },
-    {
-      "level": 2,
-      "text": "Step through each colour:\n  R: ing2=R- (ing2 R?: (sign undetermined)), ing5=R+ (ing5 R?: (sign undetermined))\n      \u2192 opposite signs \u2192 skip.\n  G: ing2=G- (ing2 has G-), ing5=G- (ing5 has G-)\n      \u2192 SAME sign - \u2192 G- resolves."
-    },
-    {
-      "level": 3,
-      "text": "ing2=Nnp, ing5=pnP. Mix result: B+."
-    }
-  ],
+  "hints": [],
   "complexity": {
     "score": 52,
     "raw_score": 30,

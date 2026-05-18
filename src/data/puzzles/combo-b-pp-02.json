@@ -1,7 +1,7 @@
 {
   "id": "combo-b-pp-02",
   "title": "The Possible Outcomes",
-  "description": "The evidence narrows things down \u2014 but not all the way. Mark every potion this pair could still produce.",
+  "description": "The evidence narrows things down — but not all the way. Mark every potion this pair could still produce.",
   "difficulty": "easy",
   "clues": [
     {
@@ -33,20 +33,7 @@
     "7": 4,
     "8": 2
   },
-  "hints": [
-    {
-      "level": 1,
-      "text": "\"Possible potions\" means every outcome that occurs in at least one of the remaining 5760 possible worlds. The clues haven't pinned down the exact alchemicals for ing3 and ing8, so multiple outcomes are possible \u2014 collect all of them."
-    },
-    {
-      "level": 2,
-      "text": "Distribution across 5760 worlds (ing3+ing8):\n  B+: 960 worlds (16%)\n  B-: 960 worlds (16%)\n  G-: 960 worlds (16%)\n  R+: 960 worlds (16%)\n  R-: 960 worlds (16%)\n  neutral: 960 worlds (16%)"
-    },
-    {
-      "level": 3,
-      "text": "Possible potions for ing3+ing8: ['B+', 'B-', 'G-', 'R+', 'R-', 'neutral']."
-    }
-  ],
+  "hints": [],
   "complexity": {
     "score": 57,
     "raw_score": 35,

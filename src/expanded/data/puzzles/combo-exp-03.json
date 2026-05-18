@@ -96,20 +96,7 @@
     "7": 5,
     "8": 1
   },
-  "hints": [
-    {
-      "level": 1,
-      "text": "The article on the R aspect has three known entries: ingredients [1, 2, 6] all have R+. There are exactly 4 alchemicals with R+. The fourth must be one of: [3, 4, 5, 7, 8]. Use the other clues to eliminate candidates."
-    },
-    {
-      "level": 2,
-      "text": "Eliminate candidates:\n  \u2014 ingredient 3: survives\n  \u2014 ingredient 4: eliminated (eliminated by constraints)\n  \u2014 ingredient 5: eliminated (eliminated by constraints)\n  \u2014 ingredient 7: eliminated (eliminated by constraints)\n  \u2014 ingredient 8: eliminated (eliminated by constraints)"
-    },
-    {
-      "level": 3,
-      "text": "Only ingredient 3 remains. It is alchemical Ppn, which has R+. It is the missing fourth entry."
-    }
-  ],
+  "hints": [],
   "complexity": {
     "score": 31,
     "raw_score": 15,

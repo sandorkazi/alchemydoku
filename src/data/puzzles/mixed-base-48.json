@@ -88,20 +88,7 @@
     "7": 8,
     "8": 1
   },
-  "hints": [
-    {
-      "level": 1,
-      "text": "To find the result of mixing ing5 and ing8, apply the mixing rule: scan colours R\u2192G\u2192B in order. The first colour where both ingredients share the same sign determines the result potion. If all three colours have opposing signs, the result is neutral."
-    },
-    {
-      "level": 2,
-      "text": "Step through each colour:\n  R: ing5=R- (ing5 has R-), ing8=R- (ing8 R?: (sign undetermined))\n      \u2192 SAME sign - \u2192 R- resolves."
-    },
-    {
-      "level": 3,
-      "text": "ing5=nPp, ing8=npN. Mix result: G+."
-    }
-  ],
+  "hints": [],
   "complexity": {
     "score": 83,
     "raw_score": 70,

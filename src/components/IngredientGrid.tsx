@@ -197,7 +197,7 @@ function AutoDeduceModal({ onConfirm, onCancel }: { onConfirm: () => void; onCan
 
 // ─── Main component ───────────────────────────────────────────────────────────
 
-export function IngredientGrid({ onRandomize }: { onRandomize?: () => void }) {
+export function IngredientGrid({ onRandomize, onLongPressRandomize }: { onRandomize?: () => void; onLongPressRandomize?: () => void }) {
   const { state, dispatch } = useSolver();
   const notes = state.notes;
   const setNote = (key: string, value: string) => dispatch({ type: 'SET_NOTE', key, value });
@@ -208,6 +208,8 @@ export function IngredientGrid({ onRandomize }: { onRandomize?: () => void }) {
   const livePathRef = useRef<SVGPathElement>(null);
   const isDrawingRef = useRef(false);
   const drawPointsRef = useRef<{x: number; y: number}[]>([]);
+  const longPressTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const longFired = useRef(false);
 
   const [showConfirm, setShowConfirm] = useState(false);
   const [activeTool, setActiveTool] = useState<GridTool>('mark');
@@ -399,9 +401,28 @@ export function IngredientGrid({ onRandomize }: { onRandomize?: () => void }) {
             )}
 
             {onRandomize && (
-              <button onClick={onRandomize}
+              <button
+                title={onLongPressRandomize ? 'Reshuffle (hold for custom picker)' : 'Reshuffle'}
+                onPointerDown={() => {
+                  longFired.current = false;
+                  if (onLongPressRandomize) {
+                    longPressTimer.current = setTimeout(() => {
+                      longFired.current = true;
+                      onLongPressRandomize();
+                    }, 500);
+                  }
+                }}
+                onPointerUp={() => {
+                  if (longPressTimer.current) clearTimeout(longPressTimer.current);
+                  if (!longFired.current) onRandomize();
+                  longFired.current = false;
+                }}
+                onPointerLeave={() => {
+                  if (longPressTimer.current) clearTimeout(longPressTimer.current);
+                  longFired.current = false;
+                }}
                 className="text-xs text-gray-400 hover:text-indigo-600 border border-gray-200
-                           hover:border-indigo-300 rounded-lg px-2.5 py-1 transition-colors">
+                           hover:border-indigo-300 rounded-lg px-2.5 py-1 transition-colors select-none">
                 🔀
               </button>
             )}

@@ -77,20 +77,7 @@
     "7": 7,
     "8": 3
   },
-  "hints": [
-    {
-      "level": 1,
-      "text": "To find the result of mixing ing2 and ing6, apply the mixing rule: scan colours R\u2192G\u2192B in order. The first colour where both ingredients share the same sign determines the result potion. If all three colours have opposing signs, the result is neutral."
-    },
-    {
-      "level": 2,
-      "text": "Step through each colour:\n  R: ing2=R+ (ing2 has R+), ing6=R- (ing6 has R-)\n      \u2192 opposite signs \u2192 skip.\n  G: ing2=G+ (ing2 has G+), ing6=G- (ing6 has G-)\n      \u2192 opposite signs \u2192 skip.\n  B: ing2=B+ (ing2 has B+), ing6=B+ (ing6 has B+)\n      \u2192 SAME sign + \u2192 B+ resolves."
-    },
-    {
-      "level": 3,
-      "text": "ing2=PPP, ing6=Nnp. Mix result: B+."
-    }
-  ],
+  "hints": [],
   "complexity": {
     "score": 51,
     "raw_score": 29,

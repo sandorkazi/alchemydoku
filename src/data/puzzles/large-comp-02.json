@@ -65,20 +65,7 @@
     "7": 5,
     "8": 2
   },
-  "hints": [
-    {
-      "level": 1,
-      "text": "Find the 4 ingredients that hold the Large component of B. When two ingredients share the same B sign, the Large one (vs Small) produces the coloured potion. Mixing clues with B results reveal which ingredients interact on this colour."
-    },
-    {
-      "level": 2,
-      "text": "Mixing clues for B:\n  ing1+ing2=B-: one of these holds Large-B\n  ing4+ing5=B-: one of these holds Large-B\nConfirmed Large-B so far: [2, 5, 6, 8]."
-    },
-    {
-      "level": 3,
-      "text": "The 4 Large-B ingredients: [2, 5, 6, 8]."
-    }
-  ],
+  "hints": [],
   "complexity": {
     "score": 10,
     "raw_score": 10,

@@ -67,20 +67,7 @@
     "7": 4,
     "8": 8
   },
-  "hints": [
-    {
-      "level": 1,
-      "text": "Identify the alchemical for ingredient 7. Direct clues: ing1+ing7=R-."
-    },
-    {
-      "level": 2,
-      "text": "Eliminated for slot 7: [1, 2, 3, 5, 6, 7, 8]. Remaining: [4]."
-    },
-    {
-      "level": 3,
-      "text": "Ingredient 7 = nPp (R- G+ B+)."
-    }
-  ],
+  "hints": [],
   "complexity": {
     "score": 31,
     "raw_score": 15,

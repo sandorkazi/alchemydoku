@@ -33,20 +33,7 @@
     "7": 7,
     "8": 6
   },
-  "hints": [
-    {
-      "level": 1,
-      "text": "Determine the G sign of ing7. There are 4 alchemicals still consistent with the clues for slot 7. Check whether they all agree on the G sign."
-    },
-    {
-      "level": 2,
-      "text": "Remaining alchemicals for ing7: pnP(G-), pNn(G-), Nnp(G-), NNN(G-). All share G-."
-    },
-    {
-      "level": 3,
-      "text": "ing7 has G-."
-    }
-  ],
+  "hints": [],
   "complexity": {
     "score": 40,
     "raw_score": 20,

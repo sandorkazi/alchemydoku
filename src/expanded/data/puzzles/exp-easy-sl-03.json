@@ -71,20 +71,7 @@
     "7": 6,
     "8": 1
   },
-  "hints": [
-    {
-      "level": 1,
-      "text": "Ingredient 1 doesn't appear in any clue. Solve by elimination: work out the alchemicals for every other ingredient first."
-    },
-    {
-      "level": 2,
-      "text": "Ingredients [2, 3, 4, 5, 6, 7, 8] are each constrained by at least one clue. Once all are resolved, ingredient 1 is the only one left and gets the sole remaining alchemical."
-    },
-    {
-      "level": 3,
-      "text": "Ingredient 1 = nPp (R- G+ B+)."
-    }
-  ],
+  "hints": [],
   "complexity": {
     "score": 59,
     "raw_score": 37,

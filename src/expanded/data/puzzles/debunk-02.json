@@ -3,7 +3,7 @@
   "kind": "debunk",
   "mode": "expanded",
   "title": "The False Alibi",
-  "description": "Two wrong publications and a suspicious R-aspect article. The naive plan wastes a step \u2014 but one well-chosen master mix removes two targets at once and reveals why the article is wrong.",
+  "description": "Two wrong publications and a suspicious R-aspect article. The naive plan wastes a step — but one well-chosen master mix removes two targets at once and reveals why the article is wrong.",
   "difficulty": "easy",
   "clues": [
     {
@@ -184,20 +184,7 @@
       }
     ]
   },
-  "hints": [
-    {
-      "level": 1,
-      "text": "Three targets: ing1's publication (claims Ppn), ing3's publication (claims Nnp), and Art-1 (R aspect, partially wrong). The minimum plan for the publications is two master mixes. ing1 is definitively known \u2014 use it as your witness for both steps."
-    },
-    {
-      "level": 2,
-      "text": "Mix ing1 + ing5. True result: R\u2212.\ning1's publication claims Ppn. Predicted mix(Ppn + Nnp) = neutral \u2260 R\u2212, conflict is unambiguous \u2192 ing1's publication removed. As a bonus: the R\u2212 result confirms ing5 is R\u2212, directly contradicting Art-1's claim that ing5 is R+ \u2192 Art-1 also cleared.\n\nNow mix ing1 + ing3. True result: B\u2212.\ning3's publication claims Nnp. Predicted mix(npN + Nnp) = R\u2212 \u2260 B\u2212, conflict is unambiguous \u2192 ing3's publication removed."
-    },
-    {
-      "level": 3,
-      "text": "Step 1: Master \u2014 mix ing1 + ing5 \u2192 true R\u2212. Claimed Ppn for ing1: mix(Ppn, Nnp) = neutral \u2260 R\u2212 \u2192 ing1's publication removed. (Bonus: R\u2212 result with known ing5 confirms ing5 is R\u2212, contradicting Art-1's R+ claim \u2192 Art-1 cleared.)\nStep 2: Master \u2014 mix ing1 + ing3 \u2192 true B\u2212. Claimed Nnp for ing3: mix(npN, Nnp) = R\u2212 \u2260 B\u2212 \u2192 ing3's publication removed.\n\nQ2 (conflict only, fixed ing1): mix ing1 + ing3 \u2192 true B\u2212. Both publications are in conflict \u2014 neither can be unambiguously blamed \u2192 neither removed. Pure conflict."
-    }
-  ],
+  "hints": [],
   "complexity": {
     "score": 57,
     "raw_score": 35,

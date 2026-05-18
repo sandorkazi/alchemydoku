@@ -31,20 +31,7 @@
     "7": 3,
     "8": 5
   },
-  "hints": [
-    {
-      "level": 1,
-      "text": "Find the ingredient whose alchemical is the direct opposite of ingredient 2. Two alchemicals are direct opposites when their mix is always neutral \u2014 all three colour aspects have opposite signs."
-    },
-    {
-      "level": 2,
-      "text": "Ingredient 2 has alchemical properties: R+ G- B+. Its direct opposite has all signs flipped. Check which remaining possible alchemicals always mix to neutral with it."
-    },
-    {
-      "level": 3,
-      "text": "Ingredient 2 = pnP. Its direct opposite is ingredient 3 = npN."
-    }
-  ],
+  "hints": [],
   "complexity": {
     "score": 40,
     "raw_score": 20,

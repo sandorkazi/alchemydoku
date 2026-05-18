@@ -59,20 +59,7 @@
     "7": 5,
     "8": 6
   },
-  "hints": [
-    {
-      "level": 1,
-      "text": "Find all potions certainly achievable by some pair within ingredients [3, 5]. Check all 1 pair combinations."
-    },
-    {
-      "level": 2,
-      "text": "Certain pairs so far: ing3+ing5\u2192R+."
-    },
-    {
-      "level": 3,
-      "text": "Certain potions for group [3, 5]: ['R+']."
-    }
-  ],
+  "hints": [],
   "complexity": {
     "score": 57,
     "raw_score": 35,
