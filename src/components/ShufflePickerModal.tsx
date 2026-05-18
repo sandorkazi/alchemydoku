@@ -2,7 +2,6 @@ import { useState, useRef } from 'react';
 import { IngredientIcon } from './GameSprites';
 import { makeDisplayMap } from '../utils/solverStorage';
 import type { DisplayMap } from '../utils/solverStorage';
-import { INGREDIENTS } from '../data/ingredients';
 
 interface ShufflePickerModalProps {
   currentMap: DisplayMap;
@@ -11,9 +10,13 @@ interface ShufflePickerModalProps {
 }
 
 export function ShufflePickerModal({ currentMap, onApply, onClose }: ShufflePickerModalProps) {
-  const [order, setOrder] = useState<number[]>(() =>
-    [1, 2, 3, 4, 5, 6, 7, 8].map(i => currentMap[i] ?? i)
-  );
+  const initialOrder = [1, 2, 3, 4, 5, 6, 7, 8].map(i => currentMap[i] ?? i);
+
+  // Fixed: which ingredient each slot "represents" (the indicator)
+  const indicators = useRef(initialOrder);
+
+  // Moveable: which tile is currently sitting in each slot
+  const [tiles, setTiles] = useState<number[]>(initialOrder);
 
   const dragIndex = useRef<number | null>(null);
 
@@ -25,7 +28,7 @@ export function ShufflePickerModal({ currentMap, onApply, onClose }: ShufflePick
     e.preventDefault();
     const from = dragIndex.current;
     if (from === null || from === i) return;
-    setOrder(prev => {
+    setTiles(prev => {
       const next = [...prev];
       [next[from], next[i]] = [next[i], next[from]];
       return next;
@@ -39,12 +42,12 @@ export function ShufflePickerModal({ currentMap, onApply, onClose }: ShufflePick
 
   function handleRandomize() {
     const fresh = makeDisplayMap();
-    setOrder([1, 2, 3, 4, 5, 6, 7, 8].map(i => fresh[i]));
+    setTiles([1, 2, 3, 4, 5, 6, 7, 8].map(i => fresh[i]));
   }
 
   function handleApply() {
     const map: DisplayMap = {};
-    order.forEach((displayId, idx) => { map[idx + 1] = displayId; });
+    tiles.forEach((displayId, idx) => { map[idx + 1] = displayId; });
     onApply(map);
   }
 
@@ -56,25 +59,31 @@ export function ShufflePickerModal({ currentMap, onApply, onClose }: ShufflePick
       <div className="bg-white rounded-2xl shadow-xl p-6 max-w-lg w-full mx-4">
         <h2 className="text-base font-semibold text-gray-800 mb-1">Custom ingredient order</h2>
         <p className="text-xs text-gray-500 mb-4">
-          Drag to swap ingredients. The arrangement is encoded in the permalink when you copy a link.
+          Drag tiles to swap. Faded icon shows the slot's current ingredient; bright tile shows what will display there.
         </p>
 
         <div className="flex gap-2 justify-center flex-wrap">
-          {order.map((displayId, i) => (
+          {tiles.map((tileId, i) => (
             <div
-              key={displayId}
-              draggable
-              onDragStart={() => handleDragStart(i)}
+              key={i}
               onDragOver={e => handleDragOver(e, i)}
-              onDragEnd={handleDragEnd}
-              className="flex flex-col items-center gap-1 cursor-grab active:cursor-grabbing
-                         rounded-xl border-2 border-gray-200 hover:border-indigo-400
-                         bg-gray-50 hover:bg-indigo-50 px-2 py-2 transition-colors select-none"
+              className="relative flex items-center justify-center rounded-xl border-2 border-gray-200
+                         hover:border-indigo-400 bg-gray-50 hover:bg-indigo-50 w-14 h-14
+                         transition-colors"
             >
-              <IngredientIcon index={(displayId - 1) as 0} width={40} />
-              <span className="text-[10px] text-gray-600 font-medium text-center leading-tight w-12 truncate">
-                {INGREDIENTS[displayId as 1]?.name ?? String(displayId)}
-              </span>
+              {/* Fixed slot indicator */}
+              <div className="absolute inset-0 flex items-center justify-center opacity-20 pointer-events-none">
+                <IngredientIcon index={(indicators.current[i] - 1) as 0} width={48} />
+              </div>
+              {/* Draggable tile */}
+              <div
+                draggable
+                onDragStart={() => handleDragStart(i)}
+                onDragEnd={handleDragEnd}
+                className="relative z-10 cursor-grab active:cursor-grabbing select-none"
+              >
+                <IngredientIcon index={(tileId - 1) as 0} width={36} />
+              </div>
             </div>
           ))}
         </div>
