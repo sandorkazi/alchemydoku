@@ -241,6 +241,8 @@ export function ExpandedHome({ onModeChange, initialPuzzleId, initialShuffleHash
   );
 
   const [settingsOpen, setSettingsOpen] = useState(false);
+  const [searchOpen, setSearchOpen] = useState(false);
+  const [searchQuery, setSearchQuery] = useState('');
   const [completed, setCompleted] = useState<Set<string>>(loadCompleted as () => Set<string>);
   const [activePuzzle, setActivePuzzle] = useState<ExpandedPuzzle | null>(initPuzzle);
   const [activeCollection, setActiveCollection] = useState<ExpandedCollection | null>(null);
@@ -329,75 +331,162 @@ export function ExpandedHome({ onModeChange, initialPuzzleId, initialShuffleHash
 
   const releaseEntry = getCurrentReleaseEntry();
 
+  const expSearchTrimmed = searchQuery.trim();
+  const expSearchResults = expSearchTrimmed
+    ? ALL_EXPANDED_PUZZLES.filter(p => p.title.toLowerCase().includes(expSearchTrimmed.toLowerCase()))
+    : null;
+
   return (
     <div className="min-h-screen bg-amber-50 animate-fadein">
       <div className="max-w-xl mx-auto px-4 py-10 space-y-8">
 
         {/* Mode switcher + settings gear */}
-        <div className="flex items-center gap-2">
-          <div className="flex-1 flex rounded-xl border border-gray-200 overflow-hidden shadow-sm bg-white">
-            {(['base', 'expanded'] as const).map(m => (
-              <button key={m} onClick={() => onModeChange(m)}
-                aria-pressed={m === 'expanded'}
-                className={`flex-1 py-2 text-sm font-semibold capitalize transition-colors
-                  focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-indigo-400
-                  ${m === 'expanded'
-                    ? 'bg-violet-600 text-white'
-                    : 'bg-white text-gray-500 hover:text-gray-700'}`}>
-                {m === 'expanded' ? '✨ Expanded' : 'Base Game'}
-              </button>
-            ))}
+        {searchOpen ? (
+          <div className="flex items-center gap-2">
+            <button
+              onClick={() => { setSearchOpen(false); setSearchQuery(''); }}
+              aria-label="Close search"
+              className="shrink-0 flex items-center justify-center w-9 h-9 rounded-xl text-gray-500
+                border border-gray-200 bg-white hover:text-gray-700 shadow-sm transition-colors
+                focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-indigo-400"
+            >
+              ←
+            </button>
+            <div className="relative flex-1">
+              <input
+                autoFocus
+                type="search"
+                placeholder="Search puzzles…"
+                value={searchQuery}
+                onChange={e => setSearchQuery(e.target.value)}
+                onKeyDown={e => { if (e.key === 'Escape') { setSearchOpen(false); setSearchQuery(''); } }}
+                className="w-full pl-3 pr-8 py-1.5 rounded-xl border border-gray-200 bg-white text-sm text-gray-900
+                           placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-violet-400 focus:border-transparent"
+              />
+              {searchQuery && (
+                <button
+                  onClick={() => setSearchQuery('')}
+                  aria-label="Clear search"
+                  className="absolute right-2.5 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600 text-xs font-bold px-1"
+                >
+                  ✕
+                </button>
+              )}
+            </div>
           </div>
-          <button
-            onClick={() => setSettingsOpen(true)}
-            className="shrink-0 w-9 h-9 flex items-center justify-center rounded-xl border border-gray-200 bg-white
-              text-gray-500 hover:text-gray-700 shadow-sm transition-colors
-              focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-indigo-400"
-            aria-label="Settings"
-          >
-            ⚙️
-          </button>
-        </div>
-
-        {/* What's New banner */}
-        {showReleaseNotes && releaseEntry && onDismissReleaseNotes && (
-          <WhatsNewBanner entry={releaseEntry} onDismiss={onDismissReleaseNotes} variant="expanded" />
+        ) : (
+          <div className="flex items-center gap-2">
+            <div className="flex-1 flex rounded-xl border border-gray-200 overflow-hidden shadow-sm bg-white">
+              {(['base', 'expanded'] as const).map(m => (
+                <button key={m} onClick={() => onModeChange(m)}
+                  aria-pressed={m === 'expanded'}
+                  className={`flex-1 py-2 text-sm font-semibold capitalize transition-colors
+                    focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-indigo-400
+                    ${m === 'expanded'
+                      ? 'bg-violet-600 text-white'
+                      : 'bg-white text-gray-500 hover:text-gray-700'}`}>
+                  {m === 'expanded' ? '✨ Expanded' : 'Base Game'}
+                </button>
+              ))}
+            </div>
+            <button
+              onClick={() => setSearchOpen(true)}
+              aria-label="Search puzzles"
+              className="shrink-0 w-9 h-9 flex items-center justify-center rounded-xl border border-gray-200 bg-white
+                text-gray-500 hover:text-gray-700 shadow-sm transition-colors
+                focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-indigo-400"
+            >
+              🔍
+            </button>
+            <button
+              onClick={() => setSettingsOpen(true)}
+              className="shrink-0 w-9 h-9 flex items-center justify-center rounded-xl border border-gray-200 bg-white
+                text-gray-500 hover:text-gray-700 shadow-sm transition-colors
+                focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-indigo-400"
+              aria-label="Settings"
+            >
+              ⚙️
+            </button>
+          </div>
         )}
 
-        {/* Hero */}
-        <div className="text-center space-y-2">
-          <div className="text-5xl" aria-hidden="true">✨</div>
-          <h1 className="text-3xl font-bold text-gray-900">Expanded Rules</h1>
-          <p className="text-gray-500 text-sm">
-            New mechanics: Book Tokens, Solar/Lunar classification, and the Royal Encyclopedia.
-          </p>
-        </div>
+        {expSearchResults ? (
+          <div className="space-y-2">
+            <p className="text-xs text-gray-400">
+              {expSearchResults.length} puzzle{expSearchResults.length !== 1 ? 's' : ''} found
+            </p>
+            {expSearchResults.length === 0 ? (
+              <p className="text-center text-gray-400 py-8 text-sm">No puzzles match "{expSearchTrimmed}"</p>
+            ) : (
+              <div className="space-y-1.5">
+                {expSearchResults.map(p => {
+                  const coll = EXPANDED_COLLECTIONS.find(c => c.puzzleIds.includes(p.id));
+                  if (!coll) return null;
+                  return (
+                    <button
+                      key={p.id}
+                      onClick={() => openPuzzle(p)}
+                      className="w-full text-left px-4 py-3 rounded-xl bg-white border border-gray-200
+                                 hover:border-violet-300 hover:shadow-sm transition-all
+                                 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-violet-400"
+                    >
+                      <div className="flex items-center justify-between gap-2">
+                        <span className="font-medium text-gray-900 text-sm truncate">{p.title}</span>
+                        <span className={`shrink-0 text-[10px] font-semibold px-1.5 py-0.5 rounded-full
+                          ${DIFF_BADGE[p.difficulty] ?? 'bg-gray-100 text-gray-600'}`}>
+                          {p.difficulty}
+                        </span>
+                      </div>
+                      <p className="text-xs text-gray-400 mt-0.5 truncate">{coll.title}</p>
+                    </button>
+                  );
+                })}
+              </div>
+            )}
+          </div>
+        ) : (
+          <>
+            {/* What's New banner */}
+            {showReleaseNotes && releaseEntry && onDismissReleaseNotes && (
+              <WhatsNewBanner entry={releaseEntry} onDismiss={onDismissReleaseNotes} variant="expanded" />
+            )}
 
-        {/* Quick references — each toggled independently in settings */}
-        {settings.showRulesRef && (
-          <ExpandedRulesQuickReference showPuzzleOnly={settings.showPuzzleOnly} />
+            {/* Hero */}
+            <div className="text-center space-y-2">
+              <div className="text-5xl" aria-hidden="true">✨</div>
+              <h1 className="text-3xl font-bold text-gray-900">Expanded Rules</h1>
+              <p className="text-gray-500 text-sm">
+                New mechanics: Book Tokens, Solar/Lunar classification, and the Royal Encyclopedia.
+              </p>
+            </div>
+
+            {/* Quick references — each toggled independently in settings */}
+            {settings.showRulesRef && (
+              <ExpandedRulesQuickReference showPuzzleOnly={settings.showPuzzleOnly} />
+            )}
+            {settings.showInterfaceRef && (
+              <ExpandedInterfaceQuickReference />
+            )}
+
+            {/* Collections */}
+            <div className="space-y-3">
+              {EXPANDED_COLLECTIONS.map(coll => (
+                <CollectionSummaryCard
+                  key={coll.id}
+                  collection={coll}
+                  completed={completed}
+                  showPuzzleOnly={settings.showPuzzleOnly}
+                  onOpen={() => setActiveCollection(coll)}
+                />
+              ))}
+            </div>
+
+            {/* Progress */}
+            <p className="text-xs text-gray-400">
+              {totalDone} / {ALL_EXPANDED_PUZZLES.length} puzzles solved
+            </p>
+          </>
         )}
-        {settings.showInterfaceRef && (
-          <ExpandedInterfaceQuickReference />
-        )}
-
-        {/* Collections */}
-        <div className="space-y-3">
-          {EXPANDED_COLLECTIONS.map(coll => (
-            <CollectionSummaryCard
-              key={coll.id}
-              collection={coll}
-              completed={completed}
-              showPuzzleOnly={settings.showPuzzleOnly}
-              onOpen={() => setActiveCollection(coll)}
-            />
-          ))}
-        </div>
-
-        {/* Progress */}
-        <p className="text-xs text-gray-400">
-          {totalDone} / {ALL_EXPANDED_PUZZLES.length} puzzles solved
-        </p>
 
         <BuildStamp />
 
