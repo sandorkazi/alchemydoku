@@ -68,19 +68,21 @@ export function ShufflePickerModal({ currentMap, onApply, onClose }: ShufflePick
               key={i}
               onDragOver={e => handleDragOver(e, i)}
               className="relative flex items-center justify-center rounded-xl border-2 border-gray-200
-                         hover:border-indigo-400 bg-gray-50 hover:bg-indigo-50 w-14 h-14
+                         hover:border-indigo-400 bg-gray-50 hover:bg-indigo-50 w-16 h-16
                          transition-colors"
             >
               {/* Fixed slot indicator */}
               <div className="absolute inset-0 flex items-center justify-center opacity-20 pointer-events-none">
-                <IngredientIcon index={(indicators.current[i] - 1) as 0} width={48} />
+                <IngredientIcon index={(indicators.current[i] - 1) as 0} width={55} />
               </div>
-              {/* Draggable tile */}
+              {/* Draggable tile — round, same diameter as previous width */}
               <div
                 draggable
                 onDragStart={() => handleDragStart(i)}
                 onDragEnd={handleDragEnd}
-                className="relative z-10 cursor-grab active:cursor-grabbing select-none"
+                className="relative z-10 cursor-grab active:cursor-grabbing select-none
+                           rounded-full overflow-hidden"
+                style={{ width: 36, height: 36 }}
               >
                 <IngredientIcon index={(tileId - 1) as 0} width={36} />
               </div>
