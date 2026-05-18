@@ -50,9 +50,10 @@ ALCH_DATA = {
 }
 ALCH_CODES = {1: 'npN', 2: 'pnP', 3: 'pNn', 4: 'nPp',
               5: 'Nnp', 6: 'Ppn', 7: 'NNN', 8: 'PPP'}
-ALL_ALCH = list(range(1, 9))
-COLORS   = ['R', 'G', 'B']
-SLOTS    = list(range(1, 9))
+ALL_ALCH   = list(range(1, 9))
+COLORS     = ['R', 'G', 'B']
+SLOTS      = list(range(1, 9))
+NEXT_COLOR = {'R': 'G', 'G': 'B', 'B': 'R'}
 
 def is_solar(a: int) -> bool:
     # 0 or 2 negative aspects = solar; 1 or 3 = lunar
@@ -905,14 +906,32 @@ def _find_removal_plan(sol: dict, pub_map: dict, known: set, worlds: frozenset) 
         remaining = set(state)
         removed: set = set()
 
-        # Result-incompatibility: remove any pub whose claimed alch cannot produce
-        # the actual result with any partner.
+        # Phase 1: Result-incompatibility — remove any pub whose claimed alch cannot
+        # produce the actual result with any partner.
         for ing in (ing_a, ing_b):
             if ing in remaining and not _can_produce_result(pub_map[ing], true_r):
                 removed.add(ing)
                 remaining.discard(ing)
 
-        return frozenset(remaining - removed), removed
+        # Phase 2: Blame-based disproval (requires other ingredient definitively known).
+        a_known = ing_a in known
+        b_known = ing_b in known
+        blame_a = blame_b = False
+        if ing_a in remaining and b_known:
+            if MIX_TABLE[pub_map[ing_a]][sol[ing_b]] != true_r:
+                blame_a = True
+        if ing_b in remaining and a_known:
+            if MIX_TABLE[sol[ing_a]][pub_map[ing_b]] != true_r:
+                blame_b = True
+        if blame_a and not blame_b:
+            removed.add(ing_a)
+            remaining.discard(ing_a)
+        elif blame_b and not blame_a:
+            removed.add(ing_b)
+            remaining.discard(ing_b)
+        # Both blame → conflict: neither removed in removal-plan BFS.
+
+        return frozenset(remaining), removed
 
     # Only definitively-false publications (false in ALL worlds) are required targets.
     initial = frozenset(k for k, v in pub_map.items() if _pub_definitively_false(worlds, k, v))
@@ -1080,42 +1099,92 @@ def _find_removal_plan_expanded(sol: dict, pub_map: dict, articles: list, known:
     if not initial_pubs and not initial_arts:
         return []
 
-    def step_effect(ing_a, ing_b, pubs):
+    art_by_id = {a['id']: a for a in articles}
+
+    def step_effect(ing_a, ing_b, pubs, arts):
         # Skip if the result is not deterministically known from the clues.
         if not _mix_result_determined(worlds, ing_a, ing_b):
-            return pubs, False
+            return pubs, arts, False
         true_r = MIX_TABLE[sol[ing_a]][sol[ing_b]]
-        remaining = set(pubs)
+        remaining_pubs = set(pubs)
         removed_pubs: set = set()
+        removed_arts: set = set()
 
-        # Result-incompatibility: remove any pub whose claimed alch cannot produce
-        # the actual result with any partner.
-        if ing_a in remaining and not _can_produce_result(pub_map[ing_a], true_r):
+        # Phase 1: Result-incompatibility — remove any pub whose claimed alch cannot
+        # produce the actual result with any partner.
+        for ing in (ing_a, ing_b):
+            if ing in remaining_pubs and not _can_produce_result(pub_map[ing], true_r):
+                removed_pubs.add(ing)
+                remaining_pubs.discard(ing)
+
+        # Phase 2: Blame-based disproval (requires other ingredient definitively known).
+        a_known = ing_a in known
+        b_known = ing_b in known
+        blame_a = blame_b = False
+        if ing_a in remaining_pubs and b_known:
+            if MIX_TABLE[pub_map[ing_a]][sol[ing_b]] != true_r:
+                blame_a = True
+        if ing_b in remaining_pubs and a_known:
+            if MIX_TABLE[sol[ing_a]][pub_map[ing_b]] != true_r:
+                blame_b = True
+        if blame_a and not blame_b:
             removed_pubs.add(ing_a)
-            remaining.discard(ing_a)
-        if ing_b in remaining and not _can_produce_result(pub_map[ing_b], true_r):
+            remaining_pubs.discard(ing_a)
+        elif blame_b and not blame_a:
             removed_pubs.add(ing_b)
-            remaining.discard(ing_b)
+            remaining_pubs.discard(ing_b)
+        # Both blame → conflict: neither removed.
 
-        # Only publications drive the BFS state and validity; articles are a bonus.
-        return pubs - removed_pubs, bool(removed_pubs)
+        # Articles: definitively-known ingredient check.
+        for ing in (ing_a if a_known else None, ing_b if b_known else None):
+            if ing is None:
+                continue
+            for art_id in art_cleared_by_ing.get(ing, set()):
+                if art_id in arts:
+                    removed_arts.add(art_id)
 
-    # BFS over publication state only; articles clear as a side-effect during play.
-    queue = deque([(initial_pubs, [])])
-    visited = {initial_pubs}
+        # Articles: two-color rule check.
+        if true_r != 'neutral':
+            result_col = true_r[0]  # 'R', 'G', or 'B'
+        else:
+            result_col = None
+        for art_id in arts - removed_arts:
+            art = art_by_id[art_id]
+            entries_map = {e['ingredient']: e['sign'] for e in art['entries']}
+            s_a = entries_map.get(ing_a)
+            s_b = entries_map.get(ing_b)
+            if s_a is None or s_b is None:
+                continue
+            C = art['aspect']
+            if s_a == s_b:
+                # Same claimed sign: result must be C or NEXT_COLOR[C]
+                if result_col is None or (result_col != C and result_col != NEXT_COLOR[C]):
+                    removed_arts.add(art_id)
+            else:
+                # Different claimed signs: result color must not be C
+                if result_col == C:
+                    removed_arts.add(art_id)
+
+        valid = bool(removed_pubs) or bool(removed_arts)
+        return frozenset(remaining_pubs), frozenset(arts - removed_arts), valid
+
+    # BFS over (pub state, art state); a step is valid if it removes at least one.
+    queue = deque([(initial_pubs, initial_arts, [])])
+    visited = {(initial_pubs, initial_arts)}
     while queue:
-        pubs, steps = queue.popleft()
+        pubs, arts, steps = queue.popleft()
         for ing_a, ing_b in itertools.combinations(SLOTS, 2):
-            new_pubs, valid = step_effect(ing_a, ing_b, pubs)
+            new_pubs, new_arts, valid = step_effect(ing_a, ing_b, pubs, arts)
             if not valid:
                 continue
             new_step = {'kind': 'master', 'ingredient1': ing_a, 'ingredient2': ing_b}
             new_steps = steps + [new_step]
-            if not new_pubs:
+            if not new_pubs and not new_arts:
                 return new_steps
-            if new_pubs not in visited:
-                visited.add(new_pubs)
-                queue.append((new_pubs, new_steps))
+            state = (new_pubs, new_arts)
+            if state not in visited:
+                visited.add(state)
+                queue.append((new_pubs, new_arts, new_steps))
     return None
 
 

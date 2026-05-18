@@ -3,7 +3,7 @@
   "kind": "debunk",
   "mode": "expanded",
   "title": "The False Alibi",
-  "description": "Two wrong publications and a suspicious R-aspect article. The naive plan wastes a step — but one well-chosen master mix removes two targets at once and reveals why the article is wrong.",
+  "description": "Two wrong publications and a suspicious R-aspect article. The naive plan wastes a step \u2014 but one well-chosen master mix removes two targets at once and reveals why the article is wrong.",
   "difficulty": "easy",
   "clues": [
     {
@@ -175,11 +175,11 @@
       {
         "kind": "master",
         "ingredient1": 1,
-        "ingredient2": 3
+        "ingredient2": 2
       },
       {
         "kind": "master",
-        "ingredient1": 1,
+        "ingredient1": 3,
         "ingredient2": 5
       }
     ]

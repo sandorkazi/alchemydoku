@@ -15,13 +15,23 @@
  */
 
 import { ALCHEMICALS } from '../../data/alchemicals';
-import { isDefinitivelyKnown, isMixResultDetermined, isPublicationDefinitelyFalse } from '../../logic/debunk';
+import { isDefinitivelyKnown, isMixResultDetermined, isPublicationDefinitelyFalse, getDefinitiveAlch } from '../../logic/debunk';
 import { MIX_TABLE } from '../../logic/worldPack';
 import type { IngredientId, AlchemicalId, Color, Assignment, WorldSet } from '../../types';
 import type { DebunkStep, Publication } from '../../types';
 import type { DebunkArticle } from '../types';
 
 // ─── Helpers ──────────────────────────────────────────────────────────────────
+
+/** Returns the color for a non-neutral mix result code, or null for neutral. */
+function mixCodeToColor(code: number): Color | null {
+  if (code === 0) return null;
+  if (code <= 2) return 'R';
+  if (code <= 4) return 'G';
+  return 'B';
+}
+
+const NEXT_COLOR: Record<Color, Color> = { R: 'G', G: 'B', B: 'R' };
 
 function trueSign(solution: Assignment, ingSlot: IngredientId, color: Color): 0 | 1 {
   const alchId = solution[ingSlot];
@@ -105,7 +115,7 @@ function simulateExpandedStep(
     const ing1Known = isDefinitivelyKnown(worlds, ingredient1);
     const ing2Known = isDefinitivelyKnown(worlds, ingredient2);
 
-    // Direct disproval (result-incompatibility)
+    // Phase 1: Direct disproval (result-incompatibility)
     if (activePubs.has(ingredient1) && !canProduceResult(activePubs.get(ingredient1)!, trueCode)) {
       removedPubs.push(ingredient1);
       activePubs.delete(ingredient1);
@@ -115,14 +125,27 @@ function simulateExpandedStep(
       activePubs.delete(ingredient2);
     }
 
-    // Articles: if an ingredient is definitively known, the audience can verify
-    // any article entries for that ingredient on any aspect.
+    // Phase 2: Blame-based disproval (requires other ingredient definitively known)
+    let blame1 = false, blame2 = false;
+    if (activePubs.has(ingredient1) && ing2Known) {
+      const true2 = getDefinitiveAlch(worlds, ingredient2);
+      if (MIX_TABLE[(activePubs.get(ingredient1)! - 1) * 8 + true2] !== trueCode) blame1 = true;
+    }
+    if (activePubs.has(ingredient2) && ing1Known) {
+      const true1 = getDefinitiveAlch(worlds, ingredient1);
+      if (MIX_TABLE[true1 * 8 + (activePubs.get(ingredient2)! - 1)] !== trueCode) blame2 = true;
+    }
+    if (blame1 && !blame2) { removedPubs.push(ingredient1); activePubs.delete(ingredient1); }
+    else if (blame2 && !blame1) { removedPubs.push(ingredient2); activePubs.delete(ingredient2); }
+    else if (blame1 && blame2) { conflicts.push(ingredient1, ingredient2); }
+
+    // Articles: definitively-known ingredient check (verifies all aspect entries)
     const knownIngs: IngredientId[] = [];
     if (ing1Known) knownIngs.push(ingredient1);
     if (ing2Known) knownIngs.push(ingredient2);
 
     for (const [artId, art] of activeArts) {
-      if (removedArts.includes(artId)) continue; // already marked
+      if (removedArts.includes(artId)) continue;
       for (const entry of art.entries) {
         if (!knownIngs.includes(entry.ingredient)) continue;
         const trueSgn = trueSign(solution, entry.ingredient, art.aspect);
@@ -133,6 +156,27 @@ function simulateExpandedStep(
         }
       }
     }
+
+    // Two-color rule: if an article has entries for both mixed ingredients on its aspect C,
+    // the observed result must be consistent with those claimed signs. If not, article is false.
+    //   Same claimed sign on C → result must be color C or NEXT_COLOR[C]
+    //   Different claimed signs on C → result color must not be C
+    const resultColor = mixCodeToColor(trueCode);
+    for (const [artId, art] of activeArts) {
+      if (removedArts.includes(artId)) continue;
+      const e1 = art.entries.find(e => e.ingredient === ingredient1);
+      const e2 = art.entries.find(e => e.ingredient === ingredient2);
+      if (!e1 || !e2) continue;
+      const C = art.aspect as Color;
+      if (e1.sign === e2.sign) {
+        if (resultColor === null || (resultColor !== C && resultColor !== NEXT_COLOR[C])) {
+          removedArts.push(artId);
+        }
+      } else {
+        if (resultColor === C) removedArts.push(artId);
+      }
+    }
+
     for (const artId of removedArts) activeArts.delete(artId);
   }
 
@@ -242,14 +286,30 @@ export function simulateExpandedPlanForDisplay(
     } else if (step.kind === 'master') {
       const { ingredient1, ingredient2 } = step;
       const trueCode = trueMixCode(solution, ingredient1, ingredient2);
-      // Direct disproval — only when result is deterministically known from clues.
+      // Phase 1 + Phase 2 — only when result is deterministically known from clues.
       if (isMixResultDetermined(worlds, ingredient1, ingredient2)) {
+        // Phase 1: Direct disproval (result-incompatibility)
         if (activePubs.has(ingredient1) && !canProduceResult(activePubs.get(ingredient1)!, trueCode)) {
           removedPubs.push(ingredient1); activePubs.delete(ingredient1);
         }
         if (activePubs.has(ingredient2) && !canProduceResult(activePubs.get(ingredient2)!, trueCode)) {
           removedPubs.push(ingredient2); activePubs.delete(ingredient2);
         }
+        // Phase 2: Blame-based disproval (requires other ingredient definitively known)
+        const ing1Known = isDefinitivelyKnown(worlds, ingredient1);
+        const ing2Known = isDefinitivelyKnown(worlds, ingredient2);
+        let blame1 = false, blame2 = false;
+        if (activePubs.has(ingredient1) && ing2Known) {
+          const true2 = getDefinitiveAlch(worlds, ingredient2);
+          if (MIX_TABLE[(activePubs.get(ingredient1)! - 1) * 8 + true2] !== trueCode) blame1 = true;
+        }
+        if (activePubs.has(ingredient2) && ing1Known) {
+          const true1 = getDefinitiveAlch(worlds, ingredient1);
+          if (MIX_TABLE[true1 * 8 + (activePubs.get(ingredient2)! - 1)] !== trueCode) blame2 = true;
+        }
+        if (blame1 && !blame2) { removedPubs.push(ingredient1); activePubs.delete(ingredient1); }
+        else if (blame2 && !blame1) { removedPubs.push(ingredient2); activePubs.delete(ingredient2); }
+        else if (blame1 && blame2) { conflicts.push(ingredient1, ingredient2); }
       }
       // Conflict — no isMixResultDetermined guard; observed result suffices.
       if (activePubs.has(ingredient1) && activePubs.has(ingredient2)) {
