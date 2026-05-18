@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useMemo } from 'react';
 import { ALL_PUZZLES, COLLECTIONS, PUZZLE_MAP } from './data/puzzles/index';
 import { PuzzleSolverPage } from './pages/PuzzleSolverPage';
 import { TutorialPage } from './pages/TutorialPage';
@@ -15,7 +15,7 @@ import { SettingsModal } from './components/SettingsModal';
 import type { Puzzle } from './types';
 import { clearPuzzleState } from './contexts/SolverContext';
 import { ExpandedHome as ExpandedHomeImpl } from './expanded/ExpandedHome';
-import { parsePermalink } from './utils/permalink';
+import { parsePermalink, hashToDisplayMap } from './utils/permalink';
 import { DriveProvider, useDrive } from './contexts/DriveContext';
 import { DriveSync } from './components/DriveSync';
 import { shouldShowReleaseNotes, markReleaseNotesSeen, getCurrentReleaseEntry } from './utils/releaseNotes';
@@ -291,9 +291,10 @@ const TUTORIAL_STEPS = {
 
 // ─── Expanded home wrapper ────────────────────────────────────────────────────
 
-function ExpandedHome({ onModeChange, initialPuzzleId, showReleaseNotes, onDismissReleaseNotes, settings, onSettingsChange }: {
+function ExpandedHome({ onModeChange, initialPuzzleId, initialShuffleHash, showReleaseNotes, onDismissReleaseNotes, settings, onSettingsChange }: {
   onModeChange: (m: 'base' | 'expanded') => void;
   initialPuzzleId?: string;
+  initialShuffleHash?: string;
   showReleaseNotes: boolean;
   onDismissReleaseNotes: () => void;
   settings: Settings;
@@ -303,6 +304,7 @@ function ExpandedHome({ onModeChange, initialPuzzleId, showReleaseNotes, onDismi
     <ExpandedHomeImpl
       onModeChange={onModeChange}
       initialPuzzleId={initialPuzzleId}
+      initialShuffleHash={initialShuffleHash}
       showReleaseNotes={showReleaseNotes}
       onDismissReleaseNotes={onDismissReleaseNotes}
       settings={settings}
@@ -318,6 +320,12 @@ function AppInner() {
   // Read once at mount — window.location.hash is synchronous and stable.
   const [permalink] = useState(parsePermalink);
   const initMode = permalink?.mode ?? loadMode();
+  // Decode the shuffle hash once at mount; only applied to the first puzzle open
+  // (resetVersion > 0 means the user reset, so we skip the override).
+  const permalinkDisplayMap = useMemo(
+    () => permalink?.shuffleHash ? hashToDisplayMap(permalink.shuffleHash) ?? undefined : undefined,
+    [], // eslint-disable-line react-hooks/exhaustive-deps
+  );
 
   const [showReleaseNotes, setShowReleaseNotes] = useState(() => shouldShowReleaseNotes());
   const releaseEntry = getCurrentReleaseEntry();
@@ -379,6 +387,7 @@ function AppInner() {
       <ExpandedHome
         onModeChange={handleModeChange}
         initialPuzzleId={permalink?.mode === 'expanded' ? permalink.puzzleId : undefined}
+        initialShuffleHash={permalink?.mode === 'expanded' ? permalink.shuffleHash : undefined}
         showReleaseNotes={settings.showLatestUpdates && showReleaseNotes}
         onDismissReleaseNotes={handleDismissReleaseNotes}
         settings={settings}
@@ -451,6 +460,7 @@ function AppInner() {
       <PuzzleSolverPage
         key={`${view.puzzleId}-${resetVersion}`}
         puzzle={puzzle}
+        initialDisplayMap={resetVersion === 0 ? permalinkDisplayMap : undefined}
         onBack={() => setView({ kind: 'collection', colId: view.colId })}
         onNext={() => {
           markDone(view.puzzleId);

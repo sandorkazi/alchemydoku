@@ -6,7 +6,7 @@
  * Completely isolated from base game data (no base puzzle imports).
  */
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useMemo } from 'react';
 import { ExpandedRulesQuickReference } from './components/ExpandedRulesQuickReference';
 import { ExpandedInterfaceQuickReference } from './components/ExpandedInterfaceQuickReference';
 import { ALL_EXPANDED_PUZZLES, EXPANDED_COLLECTIONS, EXPANDED_PUZZLE_MAP } from './data/puzzlesIndex';
@@ -21,6 +21,7 @@ import { clearBaseProgress } from '../utils/saveProgress';
 import { BuildStamp } from '../components/BuildStamp';
 import type { Settings } from '../utils/settings';
 import { isPuzzleNonCompliant } from '../compliance';
+import { hashToDisplayMap } from '../utils/permalink';
 
 // ─── Progress persistence ─────────────────────────────────────────────────────
 
@@ -224,15 +225,20 @@ function computeInitialExpanded(puzzleId?: string): { puzzle: ExpandedPuzzle | n
   return { puzzle, queue };
 }
 
-export function ExpandedHome({ onModeChange, initialPuzzleId, showReleaseNotes, onDismissReleaseNotes, settings, onSettingsChange }: {
+export function ExpandedHome({ onModeChange, initialPuzzleId, initialShuffleHash, showReleaseNotes, onDismissReleaseNotes, settings, onSettingsChange }: {
   onModeChange: (m: 'base' | 'expanded') => void;
   initialPuzzleId?: string;
+  initialShuffleHash?: string;
   showReleaseNotes?: boolean;
   onDismissReleaseNotes?: () => void;
   settings: Settings;
   onSettingsChange: (s: Settings) => void;
 }) {
   const { puzzle: initPuzzle, queue: initQueue } = computeInitialExpanded(initialPuzzleId);
+  const permalinkDisplayMap = useMemo(
+    () => initialShuffleHash ? hashToDisplayMap(initialShuffleHash) ?? undefined : undefined,
+    [], // eslint-disable-line react-hooks/exhaustive-deps
+  );
 
   const [settingsOpen, setSettingsOpen] = useState(false);
   const [completed, setCompleted] = useState<Set<string>>(loadCompleted as () => Set<string>);
@@ -293,6 +299,7 @@ export function ExpandedHome({ onModeChange, initialPuzzleId, showReleaseNotes, 
       <ExpandedPuzzleSolverPage
         key={`${activePuzzle.id}-${resetVersion}`}
         puzzle={activePuzzle}
+        initialDisplayMap={resetVersion === 0 ? permalinkDisplayMap : undefined}
         onBack={() => setActivePuzzle(null)}
         onNext={handleNext}
         isTutorial={isTutorial}

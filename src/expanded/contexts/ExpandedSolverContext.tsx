@@ -182,6 +182,7 @@ export type ExpandedAction =
   | { type: 'REVEAL_SOLUTION' }
   | { type: 'RESET' }
   | { type: 'RESHUFFLE' }
+  | { type: 'RESHUFFLE_CUSTOM'; map: import('../../utils/solverStorage').DisplayMap }
   | { type: 'CLEAR_GRID' }
   | { type: 'SET_NOTE';            key: string; value: string }
   | { type: 'SET_SOLAR_LUNAR_MARK'; slot: number; mark: SolarLunarMark }
@@ -285,12 +286,9 @@ function reducer(state: ExpandedSolverState, action: ExpandedAction): ExpandedSo
       return { ...state, showSolution: true };
 
     case 'RESET': {
-      const newMap = makeDisplayMap();
-      saveDisplayMap(`exp-display-map-${state.puzzle.id}`, newMap);
       const undoStack = [snap(state), ...state.undoStack].slice(0, MAX_UNDO);
       return applyAutoDeduction({
         ...state,
-        displayMap:      newMap,
         gridState:       emptyGrid(),
         solarLunarMarks: emptySolarLunarMarks(),
         golemNotepad:    emptyGolemNotepad(),
@@ -309,6 +307,11 @@ function reducer(state: ExpandedSolverState, action: ExpandedAction): ExpandedSo
       const newMap = makeDisplayMap();
       saveDisplayMap(`exp-display-map-${state.puzzle.id}`, newMap);
       return { ...state, displayMap: newMap };
+    }
+
+    case 'RESHUFFLE_CUSTOM': {
+      saveDisplayMap(`exp-display-map-${state.puzzle.id}`, action.map);
+      return { ...state, displayMap: action.map };
     }
 
     case 'CLEAR_GRID': {
@@ -455,15 +458,20 @@ function reducer(state: ExpandedSolverState, action: ExpandedAction): ExpandedSo
 type ContextValue = { state: ExpandedSolverState; dispatch: React.Dispatch<ExpandedAction> };
 const ExpandedSolverContext = createContext<ContextValue | null>(null);
 
-export function ExpandedSolverProvider({ puzzle, children }: { puzzle: ExpandedPuzzle; children: ReactNode }) {
+export function ExpandedSolverProvider({ puzzle, children, initialDisplayMap }: { puzzle: ExpandedPuzzle; children: ReactNode; initialDisplayMap?: import('../../utils/solverStorage').DisplayMap }) {
   const worlds = useMemo(() => getExpandedPuzzleWorlds(puzzle), [puzzle]);
 
   const displayMap = useMemo(() => {
+    if (initialDisplayMap) {
+      saveDisplayMap(`exp-display-map-${puzzle.id}`, initialDisplayMap);
+      return initialDisplayMap;
+    }
     const saved = loadDisplayMap(`exp-display-map-${puzzle.id}`);
     if (saved) return saved;
     const fresh = makeDisplayMap();
     saveDisplayMap(`exp-display-map-${puzzle.id}`, fresh);
     return fresh;
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [puzzle.id]);
 
   const savedState = useMemo(() => loadSolverState(puzzle.id), [puzzle.id]);

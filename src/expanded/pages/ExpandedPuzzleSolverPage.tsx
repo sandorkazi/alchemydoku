@@ -14,6 +14,7 @@ import { ExpandedAnswerPanel } from '../components/ExpandedAnswerPanel';
 import { ExpandedMixSimulator } from '../components/ExpandedMixSimulator';
 import { ExpandedHintDrawer } from '../components/ExpandedHintDrawer';
 import { PuzzleToolbar } from '../../components/PuzzleToolbar';
+import { ShufflePickerModal } from '../../components/ShufflePickerModal';
 import { downloadBothFiles, uploadExpandedProgress } from '../../utils/saveProgress';
 import { applyPermalink } from '../../utils/permalink';
 import { BuildStamp } from '../../components/BuildStamp';
@@ -51,6 +52,7 @@ function IngredientGridSection() {
     || state.puzzle.questions.some(q => q.kind.startsWith('golem_'));
   const [open, setOpen] = useState(hasGolem);
   const [golemOpen, setGolemOpen] = useState(hasGolem);
+  const [pickerOpen, setPickerOpen] = useState(false);
   const [activeTool, setActiveTool] = useState<import('../components/ExpandedIngredientGrid').GridTool>('mark');
 
   const ingScrollRef = useRef<HTMLDivElement | null>(null);
@@ -70,6 +72,7 @@ function IngredientGridSection() {
         <div className="pb-2 animate-fadein">
           <ExpandedIngredientGrid
             onRandomize={() => dispatch({ type: 'RESHUFFLE' })}
+            onLongPressRandomize={() => setPickerOpen(true)}
             activeTool={activeTool}
             setActiveTool={setActiveTool}
             scrollContainerRef={ingScrollRef}
@@ -100,6 +103,13 @@ function IngredientGridSection() {
             </div>
           )}
         </div>
+      )}
+      {pickerOpen && (
+        <ShufflePickerModal
+          currentMap={state.displayMap}
+          onApply={map => { dispatch({ type: 'RESHUFFLE_CUSTOM', map }); setPickerOpen(false); }}
+          onClose={() => setPickerOpen(false)}
+        />
       )}
     </div>
   );
@@ -180,7 +190,7 @@ function SolverInner({ onBack, onNext, isTutorial = false }: {
         onSave={handleSave}
         onLoad={handleLoad}
         onReset={() => dispatch({ type: 'RESET' })}
-        onPermalink={() => applyPermalink(puzzle.id, 'expanded')}
+        onPermalink={() => applyPermalink(puzzle.id, 'expanded', state.displayMap)}
         onUndo={() => dispatch({ type: 'UNDO' })}
         onRedo={() => dispatch({ type: 'REDO' })}
         canUndo={state.undoStack.length > 0}
@@ -217,11 +227,12 @@ function SolverInner({ onBack, onNext, isTutorial = false }: {
 
 // ─── Public page component ────────────────────────────────────────────────────
 
-export function ExpandedPuzzleSolverPage({ puzzle, onBack, onNext, isTutorial = false }: {
+export function ExpandedPuzzleSolverPage({ puzzle, onBack, onNext, isTutorial = false, initialDisplayMap }: {
   puzzle: ExpandedPuzzle; onBack: () => void; onNext?: () => void; isTutorial?: boolean;
+  initialDisplayMap?: import('../../utils/solverStorage').DisplayMap;
 }) {
   return (
-    <ExpandedSolverProvider key={puzzle.id} puzzle={puzzle}>
+    <ExpandedSolverProvider key={puzzle.id} puzzle={puzzle} initialDisplayMap={initialDisplayMap}>
       <SolverInner onBack={onBack} onNext={onNext} isTutorial={isTutorial} />
     </ExpandedSolverProvider>
   );
