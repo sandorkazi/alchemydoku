@@ -45,6 +45,7 @@ export const RELEASE_NOTES: ReleaseEntry[] = [
       {
         heading: 'Bug Fixes',
         items: [
+          'Fixed expanded ingredient grid horizontal alignment — the solar/lunar row stripe no longer shifts the grid rightward',
           'Fixed debunk conflict semantics — result-incompatibility now correctly detected',
           'Fixed master debunk steps to require deterministic mix results across all worlds',
           'Fixed article removal to be restricted to result-color only',
