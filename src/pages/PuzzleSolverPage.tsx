@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useMemo } from 'react';
 import { SolverProvider, useSolver } from '../contexts/SolverContext';
 import { CluePanel } from '../components/CluePanel';
 import { IngredientGrid } from '../components/IngredientGrid';
@@ -9,8 +9,13 @@ import { PuzzleToolbar } from '../components/PuzzleToolbar';
 import { ShufflePickerModal } from '../components/ShufflePickerModal';
 import { downloadBothFiles, uploadBaseProgress } from '../utils/saveProgress';
 import { applyPermalink } from '../utils/permalink';
+import { loadSettings } from '../utils/settings';
 import { BuildStamp } from '../components/BuildStamp';
 import type { Puzzle } from '../types';
+
+function fmtTimer(s: number): string {
+  return `${String(Math.floor(s / 60)).padStart(2, '0')}:${String(s % 60).padStart(2, '0')}`;
+}
 
 // ─── Mobile clue drawer ───────────────────────────────────────────────────────
 
@@ -127,6 +132,9 @@ function SolverInner({
   const { state, dispatch } = useSolver();
   const { puzzle, worlds } = state;
 
+  const showTimer = useMemo(() => loadSettings().showTimer, []);
+  const timerDisplay = showTimer ? fmtTimer(state.timerElapsed) : undefined;
+
   const hints = (puzzle as unknown as { hints?: { level: number; text: string }[] }).hints;
 
   function handleSave() {
@@ -170,7 +178,27 @@ function SolverInner({
         onRedo={() => dispatch({ type: 'REDO' })}
         canUndo={state.undoStack.length > 0}
         canRedo={state.redoStack.length > 0}
+        timerDisplay={timerDisplay}
+        timerPaused={state.timerPaused}
+        onTimerToggle={() => dispatch({ type: state.timerPaused ? 'TIMER_RESUME' : 'TIMER_PAUSE' })}
       />
+
+      {/* ── Pause overlay (z-10, below toolbar z-20, hides puzzle content) ── */}
+      {showTimer && state.timerPaused && !state.completed && (
+        <div className="fixed inset-0 z-10 flex items-center justify-center bg-white/90 backdrop-blur-md">
+          <div className="text-center">
+            <div className="text-5xl mb-3">⏸</div>
+            <p className="text-lg font-semibold text-gray-700 mb-1">Timer paused</p>
+            <p className="text-sm text-gray-500 mb-6">{fmtTimer(state.timerElapsed)}</p>
+            <button
+              onClick={() => dispatch({ type: 'TIMER_RESUME' })}
+              className="px-6 py-2.5 bg-indigo-600 text-white rounded-xl text-sm font-semibold hover:bg-indigo-700"
+            >
+              Resume
+            </button>
+          </div>
+        </div>
+      )}
 
       {/* ── Mobile clue drawer ─────────────────────────────────────────────── */}
       <MobileClueDrawer clues={puzzle.clues} hints={hints} />

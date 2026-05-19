@@ -210,6 +210,12 @@ export function SettingsModal({
               value={settings.showPuzzleOnly}
               onChange={v => set({ showPuzzleOnly: v })}
             />
+            <ToggleRow
+              label="⏱ Show solve timer"
+              description="Display elapsed time in the toolbar while solving — takes effect on next puzzle load"
+              value={settings.showTimer}
+              onChange={v => set({ showTimer: v })}
+            />
           </div>
 
           {/* Drawing section */}

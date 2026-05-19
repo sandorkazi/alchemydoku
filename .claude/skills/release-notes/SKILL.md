@@ -49,7 +49,15 @@ Summarise what each low-quality commit actually did based on the diff (1–2 sen
 
 ## Step 4 — Classify and group changes
 
-Group the gathered information into sections. Use only sections that have content:
+**First, filter out everything a player cannot see or understand.** Silently discard any commit that touches only:
+- `.claude/`, `.husky/`, `.github/`, `scripts/`, `specs/`, `tests/`, `*.md` files
+- `vite.config.*`, `tsconfig.*`, `package*.json`, `eslint*`, deployment / CI config
+- Pure refactors, renames, type fixes, or test changes with no gameplay effect
+- Release notes tooling itself (`src/utils/releaseNotes.ts`, `src/data/releaseNotes.ts`)
+
+If a commit touches both player-visible files and invisible files, include only the player-visible part.
+
+Group the remaining changes into sections. Use only sections that have content:
 
 | Section heading | What belongs here |
 |---|---|
@@ -57,13 +65,13 @@ Group the gathered information into sections. Use only sections that have conten
 | Puzzle Content | New puzzles added, existing puzzles regenerated or corrected |
 | Bug Fixes | Incorrect answers, wrong UI behaviour, broken interactions |
 | UI / UX | Visual changes, layout, settings, tutorial flow |
-| Internals | Generator improvements, tooling, scoring, validation (only if user-visible impact) |
 
 Rules:
-- One bullet per user-visible change; omit pure-refactor / test-only commits entirely
+- One bullet per player-visible change
 - Bullets start with an active verb: "Added", "Fixed", "Corrected", "Improved", "Removed"
-- Do not mention file names, function names, or TypeScript types in bullets
+- Do not mention file names, function names, TypeScript types, or internal tool names
 - Do not invent features — only describe what the diffs confirm
+- If after filtering nothing remains, tell the user there are no player-visible changes and stop
 
 ## Step 5 — Draft the ReleaseEntry
 
@@ -98,3 +106,54 @@ After writing, run:
 npx tsc --noEmit 2>&1 | head -20
 ```
 and report any type errors (there should be none).
+
+## Step 7 — Push branch and open PR
+
+After the type check passes, ask the user: "Shall I commit and push this to a new branch so you can open a PR?"
+
+If the user confirms:
+
+1. Determine the remote URL:
+```bash
+git remote get-url origin
+```
+
+2. Use `git worktree` to create the branch without touching the current working tree (avoids stash conflicts with any uncommitted changes):
+```bash
+CURRENT=$(git branch --show-current)
+git worktree add /tmp/rn-pr main
+cd /tmp/rn-pr
+git checkout -b release-notes/<TODAY>
+git checkout "$CURRENT" -- src/data/releaseNotes.ts src/utils/releaseNotes.ts
+git add src/data/releaseNotes.ts src/utils/releaseNotes.ts
+git commit -m "chore(release): bump RELEASE_VERSION to <TODAY>"
+git push -u origin release-notes/<TODAY>
+cd -
+git worktree remove /tmp/rn-pr
+```
+
+4. Derive the GitHub repo path from the remote URL (strip `.git`, convert SSH → HTTPS if needed), then build a pre-filled PR URL using Python:
+
+```bash
+python3 - <<'EOF'
+import urllib.parse
+
+repo = "<owner>/<repo>"   # derived from remote URL
+today = "<TODAY>"
+entry_title = "<entry title>"
+
+body_lines = ["## Summary", ""]
+# For each section in the release entry, append:
+#   ### <heading>
+#   - <item>
+#   ...
+body_lines += ["", "---", "🤖 Generated with [Claude Code](https://claude.com/claude-code)"]
+
+body = "\n".join(body_lines)
+pr_title = f"chore(release): release notes {today} — {entry_title}"
+params = urllib.parse.urlencode({"expand": "1", "title": pr_title, "body": body})
+print(f"https://github.com/{repo}/compare/main...release-notes/{today}?{params}")
+EOF
+```
+
+Output the resulting URL and tell the user: "Open this URL to create the PR on GitHub — the title and description will be pre-filled."

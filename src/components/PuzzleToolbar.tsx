@@ -30,6 +30,9 @@ export type PuzzleToolbarProps = {
   onRedo?:  () => void;
   canUndo?: boolean;
   canRedo?: boolean;
+  timerDisplay?: string;
+  timerPaused?: boolean;
+  onTimerToggle?: () => void;
 };
 
 export function PuzzleToolbar({
@@ -37,6 +40,7 @@ export function PuzzleToolbar({
   isTutorial = false, subtitle,
   onBack, onSave, onLoad, onReset, onPermalink,
   onUndo, onRedo, canUndo = false, canRedo = false,
+  timerDisplay, timerPaused, onTimerToggle,
 }: PuzzleToolbarProps) {
   const [menuOpen, setMenuOpen] = useState(false);
   const [copied, setCopied]     = useState(false);
@@ -80,6 +84,18 @@ export function PuzzleToolbar({
           {worldsLeft.toLocaleString()}w
         </span>
 
+        {/* Timer chip */}
+        {timerDisplay !== undefined && (
+          <button
+            onClick={onTimerToggle}
+            title={timerPaused ? 'Resume timer' : 'Pause timer'}
+            className="text-xs font-mono tabular-nums shrink-0 px-2 py-1 rounded-lg
+                       bg-gray-100 hover:bg-gray-200 text-gray-600 transition-colors"
+          >
+            {timerDisplay} {timerPaused ? '▶' : '⏸'}
+          </button>
+        )}
+
         {/* Desktop actions */}
         <div className="hidden sm:flex items-center gap-1">
           {onPermalink && (
@@ -112,6 +128,11 @@ export function PuzzleToolbar({
           </button>
           {menuOpen && (
             <div className="absolute right-0 top-full mt-1 bg-white border rounded-xl shadow-lg py-1 z-30 min-w-[140px] animate-fadein">
+              {timerDisplay !== undefined && (
+                <button onClick={() => { onTimerToggle?.(); setMenuOpen(false); }} className={menuItem}>
+                  {timerPaused ? '▶ Resume' : '⏸ Pause'} ({timerDisplay})
+                </button>
+              )}
               {onPermalink && (
                 <button onClick={() => { handlePermalink(); setMenuOpen(false); }} className={menuItem}>
                   {copied ? '✓ Copied!' : '🔗 Copy link'}

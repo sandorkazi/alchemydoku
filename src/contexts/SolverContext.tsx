@@ -3,6 +3,7 @@ import { generateAllWorlds, applyClues } from '../logic/worldSet';
 import { checkAnswers, checkDebunkAnswers } from '../puzzles/schema';
 import { makeDisplayMap, loadDisplayMap, saveDisplayMap, emptyGrid, mergeIntoUnifiedStore } from '../utils/solverStorage';
 import { normalizeStroke, type DrawStroke } from '../utils/penColors';
+import { loadSettings } from '../utils/settings';
 import type { Puzzle, CellState, WorldSet } from '../types';
 import type { PuzzleAnswer } from '../puzzles/schema';
 
@@ -31,7 +32,7 @@ function snap(s: SolverState): UndoSnapshot {
 
 // ─── State ────────────────────────────────────────────────────────────────────
 
-function loadSolverState(puzzleId: string): { gridState: GridState; notes: Record<string,string>; hintLevel: number; drawStrokes: DrawStroke[] } | null {
+function loadSolverState(puzzleId: string): { gridState: GridState; notes: Record<string,string>; hintLevel: number; drawStrokes: DrawStroke[]; timerElapsed: number } | null {
   try {
     // 1. Try new unified key (written by save-file load + auto-save)
     const unified = localStorage.getItem('alch-save-base');
@@ -40,10 +41,11 @@ function loadSolverState(puzzleId: string): { gridState: GridState; notes: Recor
       const entry = file?.puzzles?.[puzzleId];
       if (entry?.gridState) {
         return {
-          gridState:   entry.gridState as GridState,
-          notes:       (entry.notes ?? {}) as Record<string,string>,
-          hintLevel:   typeof entry.hintLevel === 'number' ? entry.hintLevel : 0,
-          drawStrokes: ((entry.drawStrokes ?? []) as (string | DrawStroke)[]).map(normalizeStroke),
+          gridState:    entry.gridState as GridState,
+          notes:        (entry.notes ?? {}) as Record<string,string>,
+          hintLevel:    typeof entry.hintLevel === 'number' ? entry.hintLevel : 0,
+          drawStrokes:  ((entry.drawStrokes ?? []) as (string | DrawStroke)[]).map(normalizeStroke),
+          timerElapsed: typeof entry.timerElapsed === 'number' ? entry.timerElapsed : 0,
         };
       }
     }
@@ -53,10 +55,11 @@ function loadSolverState(puzzleId: string): { gridState: GridState; notes: Recor
     const parsed = JSON.parse(raw);
     if (typeof parsed !== 'object' || !parsed.gridState) return null;
     return {
-      gridState:   parsed.gridState  as GridState,
-      notes:       (parsed.notes ?? {}) as Record<string,string>,
-      hintLevel:   typeof parsed.hintLevel === 'number' ? parsed.hintLevel : 0,
-      drawStrokes: ((parsed.drawStrokes ?? []) as (string | DrawStroke)[]).map(normalizeStroke),
+      gridState:    parsed.gridState  as GridState,
+      notes:        (parsed.notes ?? {}) as Record<string,string>,
+      hintLevel:    typeof parsed.hintLevel === 'number' ? parsed.hintLevel : 0,
+      drawStrokes:  ((parsed.drawStrokes ?? []) as (string | DrawStroke)[]).map(normalizeStroke),
+      timerElapsed: typeof parsed.timerElapsed === 'number' ? parsed.timerElapsed : 0,
     };
   } catch { return null; }
 }
@@ -80,6 +83,8 @@ export type SolverState = {
   drawStrokes: DrawStroke[];
   undoStack: UndoSnapshot[];
   redoStack: UndoSnapshot[];
+  timerElapsed: number;
+  timerPaused: boolean;
 };
 
 // ─── Actions ──────────────────────────────────────────────────────────────────
@@ -100,7 +105,10 @@ export type Action =
   | { type: 'ADD_DRAW_STROKE'; d: string; color: string }
   | { type: 'CLEAR_DRAW_STROKES' }
   | { type: 'UNDO' }
-  | { type: 'REDO' };
+  | { type: 'REDO' }
+  | { type: 'TIMER_TICK' }
+  | { type: 'TIMER_PAUSE' }
+  | { type: 'TIMER_RESUME' };
 
 // ─── Reducer ──────────────────────────────────────────────────────────────────
 
@@ -144,7 +152,7 @@ function reducer(state: SolverState, action: Action): SolverState {
       const correct = hasDebunk
         ? checkDebunkAnswers(state.puzzle, state.worlds, action.answers)
         : checkAnswers(state.puzzle, action.answers);
-      if (correct) return { ...state, answers: action.answers, completed: true };
+      if (correct) return { ...state, answers: action.answers, completed: true, timerPaused: true };
       const wrongAttempts = state.wrongAttempts + 1;
       return {
         ...state,
@@ -174,6 +182,8 @@ function reducer(state: SolverState, action: Action): SolverState {
         answers: state.puzzle.questions.map(() => null),
         completed: false,
         showSolution: false,
+        timerElapsed: 0,
+        timerPaused: false,
         undoStack,
         redoStack: [],
       };
@@ -263,6 +273,16 @@ function reducer(state: SolverState, action: Action): SolverState {
       };
     }
 
+    case 'TIMER_TICK':
+      if (state.timerPaused || state.completed) return state;
+      return { ...state, timerElapsed: state.timerElapsed + 1 };
+
+    case 'TIMER_PAUSE':
+      return { ...state, timerPaused: true };
+
+    case 'TIMER_RESUME':
+      return { ...state, timerPaused: false };
+
     default:
       return state;
   }
@@ -295,6 +315,8 @@ export function SolverProvider({ puzzle, children, initialDisplayMap }: { puzzle
 
   const savedState = useMemo(() => loadSolverState(puzzle.id), [puzzle.id]);
 
+  const showTimer = useMemo(() => loadSettings().showTimer, []);
+
   const initialState: SolverState = {
     puzzle,
     worlds,
@@ -310,21 +332,30 @@ export function SolverProvider({ puzzle, children, initialDisplayMap }: { puzzle
     drawStrokes: savedState?.drawStrokes ?? [],
     undoStack: [],
     redoStack: [],
+    timerElapsed: savedState?.timerElapsed ?? 0,
+    timerPaused: false,
   };
 
   const [state, dispatch] = useReducer(reducer, initialState);
 
   useEffect(() => {
+    if (!showTimer || state.completed) return;
+    const id = setInterval(() => dispatch({ type: 'TIMER_TICK' }), 1000);
+    return () => clearInterval(id);
+  }, [showTimer, state.completed]);
+
+  useEffect(() => {
     try {
       if (!state.completed) {
         const progress = {
-          savedAt:      new Date().toISOString(),
-          gridState:    state.gridState,
-          notes:        state.notes,
-          hintLevel:    state.hintLevel,
+          savedAt:       new Date().toISOString(),
+          gridState:     state.gridState,
+          notes:         state.notes,
+          hintLevel:     state.hintLevel,
           wrongAttempts: state.wrongAttempts,
-          answers:      state.answers,
-          drawStrokes:  state.drawStrokes,
+          answers:       state.answers,
+          drawStrokes:   state.drawStrokes,
+          timerElapsed:  state.timerElapsed,
         };
         // Legacy per-puzzle key (backwards compat)
         localStorage.setItem(`solver-${puzzle.id}`, JSON.stringify(progress));
@@ -332,7 +363,7 @@ export function SolverProvider({ puzzle, children, initialDisplayMap }: { puzzle
         mergeIntoUnifiedStore('alch-save-base', puzzle.id, progress);
       }
     } catch { /* ignore */ }
-  }, [state.gridState, state.notes, state.completed, state.hintLevel, state.wrongAttempts, state.answers, state.drawStrokes, puzzle.id]);
+  }, [state.gridState, state.notes, state.completed, state.hintLevel, state.wrongAttempts, state.answers, state.drawStrokes, state.timerElapsed, puzzle.id]);
 
   return (
     <SolverContext.Provider value={{ state, dispatch }}>

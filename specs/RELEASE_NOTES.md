@@ -334,7 +334,79 @@ The first entry to add to `RELEASE_NOTES` when this feature ships:
 
 ---
 
-## 10. Deferred / Out of Scope
+## 10. Developer Workflow — Keeping Release Notes Up to Date
+
+### 10.1 Tooling overview
+
+Three mechanisms work together to ensure release notes stay current:
+
+| Tool | Trigger | Blocking? |
+|---|---|---|
+| Pre-commit hook warning | Every commit to `src/` when notes are stale | No — warning only |
+| `/release-notes` Claude skill | Run manually or via `/commit` skill | N/A |
+| GitHub Actions `check-release-notes.yml` | Every PR targeting `main` | Yes — must bump `RELEASE_VERSION` |
+
+### 10.2 Pre-commit hook
+
+`.husky/pre-commit` extracts `RELEASE_VERSION` from `src/utils/releaseNotes.ts` and counts commits to `src/` made after that date (excluding the releaseNotes files themselves). If any exist and the current staged diff does not touch a releaseNotes file, it prints:
+
+```
+⚠️  Release notes may be stale (last: 2026-05-19, N src/ commit(s) since then)
+   Run /release-notes in Claude Code to auto-draft an update.
+```
+
+The hook always exits 0 — it never blocks the commit.
+
+### 10.3 `/release-notes` Claude skill
+
+Located at `.claude/skills/release-notes/SKILL.md`. Invoke with `/release-notes` in Claude Code.
+
+What it does:
+1. Reads `RELEASE_VERSION` from `src/utils/releaseNotes.ts`
+2. Runs `git log --oneline --after="<version>" -- src/` to find commits since the last release
+3. Evaluates each commit message for quality (length, generic keywords, presence of scope colon); fetches `git show --stat` for low-quality messages to reconstruct what changed
+4. Groups changes into sections: New Features, Puzzle Content, Bug Fixes, UI/UX, Internals
+5. Proposes a `ReleaseEntry` with a title for review — **does not write anything until confirmed**
+6. On confirmation: prepends the entry to `RELEASE_NOTES` in `src/data/releaseNotes.ts` and bumps `RELEASE_VERSION` in `src/utils/releaseNotes.ts` to today's date
+
+An optional date argument overrides the since-date: `/release-notes 2026-04-01`
+
+### 10.4 `/commit` skill integration
+
+The `/commit` skill (`.claude/skills/commit/SKILL.md`) runs the same staleness check before drafting a commit message. If notes are stale it pauses and asks whether to run `/release-notes` first or proceed anyway.
+
+### 10.5 GitHub Actions PR check
+
+`.github/workflows/check-release-notes.yml` runs on every PR targeting `main`. It compares `RELEASE_VERSION` in the PR branch against `main`; if they are identical the check fails with:
+
+```
+❌ Release notes not updated.
+   RELEASE_VERSION is still '2026-05-19' — same as main.
+   Run /release-notes in Claude Code to draft an entry, then commit the result.
+```
+
+**To make this check required for merging**, configure a GitHub Ruleset:
+
+1. Repository → Settings → Rules → Rulesets → New ruleset → New branch ruleset
+2. Target branches: `main`
+3. Enable **Require a pull request before merging**
+4. Enable **Require status checks to pass** → add `Release Notes Check`
+5. Enforcement: Active → Save
+
+> The `Release Notes Check` job name only appears in the search after the workflow has run on at least one PR. Open a test PR first if it does not appear.
+
+### 10.6 Authoring guidelines for release entry content
+
+- Write for players, not developers — no file names, function names, or TypeScript types
+- One bullet per user-visible change; omit pure-refactor, test-only, and tooling commits
+- Bullets start with an active verb: "Added", "Fixed", "Corrected", "Improved", "Removed"
+- Reference puzzles by title, not by ID
+- `version` must be an ISO date string (`YYYY-MM-DD`) and must be strictly greater than all previous entries (lexicographic order)
+- Most recent entry goes first in the `RELEASE_NOTES` array
+
+---
+
+## 11. Deferred / Out of Scope
 
 | Item | Notes |
 |---|---|
