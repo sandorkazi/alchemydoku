@@ -1,3 +1,20 @@
 npm run build
 python3 scripts/check_puzzles.py
 npm run test
+_HOOK_STATUS=$?
+
+# Non-blocking: warn if release notes are stale
+RELEASE_VERSION=$(grep -oE "'[0-9]{4}-[0-9]{2}-[0-9]{2}'" src/utils/releaseNotes.ts 2>/dev/null | head -1 | tr -d "'")
+if [ -n "$RELEASE_VERSION" ]; then
+  CHANGES_SINCE=$(git log --oneline --after="$RELEASE_VERSION" -- src/ \
+    ':(exclude)src/utils/releaseNotes.ts' \
+    ':(exclude)src/data/releaseNotes.ts' 2>/dev/null | wc -l | tr -d ' ')
+  TOUCHING_NOTES=$(git diff --cached --name-only 2>/dev/null | grep -c 'releaseNotes' || true)
+  if [ "$CHANGES_SINCE" -gt 0 ] && [ "$TOUCHING_NOTES" -eq 0 ]; then
+    echo ""
+    echo "⚠️  Release notes may be stale (last: $RELEASE_VERSION, $CHANGES_SINCE src/ commit(s) since then)"
+    echo "   Run /release-notes in Claude Code to auto-draft an update."
+    echo ""
+  fi
+fi
+exit $_HOOK_STATUS
