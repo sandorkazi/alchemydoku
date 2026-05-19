@@ -75,6 +75,11 @@ export function isPublicationDefinitelyFalse(worlds: WorldSet, pub: Publication)
   return true;
 }
 
+/** Returns the 0-indexed alch ID for `slot` from the first world. Only valid when isDefinitivelyKnown. */
+export function getDefinitiveAlch(worlds: WorldSet, slot: IngredientId): number {
+  return WORLD_DATA[worlds[0] * 8 + (slot - 1)];
+}
+
 /**
  * Returns true if the mix result for (ing1, ing2) is the same across ALL worlds.
  * If false, the result is ambiguous — the audience cannot verify any debunk based on it,
@@ -137,7 +142,7 @@ function simulateStep(
     }
     const trueCode = trueMixCode(solution, ingredient1, ingredient2);
 
-    // Direct disproval (result-incompatibility): a claimed alchemical that cannot
+    // Phase 1: Direct disproval (result-incompatibility): a claimed alchemical that cannot
     // produce the actual result with any partner is removed immediately.
     if (activePubs.has(ingredient1) && !canProduceResult(activePubs.get(ingredient1)!, trueCode)) {
       removed.push(ingredient1);
@@ -147,6 +152,24 @@ function simulateStep(
       removed.push(ingredient2);
       activePubs.delete(ingredient2);
     }
+
+    // Phase 2: Blame-based disproval (requires other ingredient definitively known).
+    // If partner B is known, mix(claimed_A, true_B) ≠ actual → A is blamed and removed.
+    // If both blame each other → conflict (neither removed).
+    const ing1Known = isDefinitivelyKnown(worlds, ingredient1);
+    const ing2Known = isDefinitivelyKnown(worlds, ingredient2);
+    let blame1 = false, blame2 = false;
+    if (activePubs.has(ingredient1) && ing2Known) {
+      const true2 = WORLD_DATA[worlds[0] * 8 + (ingredient2 - 1)];
+      if (MIX_TABLE[(activePubs.get(ingredient1)! - 1) * 8 + true2] !== trueCode) blame1 = true;
+    }
+    if (activePubs.has(ingredient2) && ing1Known) {
+      const true1 = WORLD_DATA[worlds[0] * 8 + (ingredient1 - 1)];
+      if (MIX_TABLE[true1 * 8 + (activePubs.get(ingredient2)! - 1)] !== trueCode) blame2 = true;
+    }
+    if (blame1 && !blame2) { removed.push(ingredient1); activePubs.delete(ingredient1); }
+    else if (blame2 && !blame1) { removed.push(ingredient2); activePubs.delete(ingredient2); }
+    else if (blame1 && blame2) { conflicts.push(ingredient1, ingredient2); }
   }
 
   return { removed, conflicts };
@@ -369,15 +392,30 @@ export function simulatePlanForDisplay(
     } else if (step.kind === 'master') {
       const { ingredient1, ingredient2 } = step;
       const trueCode = trueMixCode(solution, ingredient1, ingredient2);
-      // Direct disproval — only when result is deterministically known from clues
-      // (removal requires the audience to be able to verify the expected result).
+      // Phase 1 + Phase 2 — only when result is deterministically known from clues.
       if (isMixResultDetermined(worlds, ingredient1, ingredient2)) {
+        // Phase 1: Direct disproval (result-incompatibility)
         if (activePubs.has(ingredient1) && !canProduceResult(activePubs.get(ingredient1)!, trueCode)) {
           removed.push(ingredient1); activePubs.delete(ingredient1);
         }
         if (activePubs.has(ingredient2) && !canProduceResult(activePubs.get(ingredient2)!, trueCode)) {
           removed.push(ingredient2); activePubs.delete(ingredient2);
         }
+        // Phase 2: Blame-based disproval (requires other ingredient definitively known)
+        const ing1Known = isDefinitivelyKnown(worlds, ingredient1);
+        const ing2Known = isDefinitivelyKnown(worlds, ingredient2);
+        let blame1 = false, blame2 = false;
+        if (activePubs.has(ingredient1) && ing2Known) {
+          const true2 = WORLD_DATA[worlds[0] * 8 + (ingredient2 - 1)];
+          if (MIX_TABLE[(activePubs.get(ingredient1)! - 1) * 8 + true2] !== trueCode) blame1 = true;
+        }
+        if (activePubs.has(ingredient2) && ing1Known) {
+          const true1 = WORLD_DATA[worlds[0] * 8 + (ingredient1 - 1)];
+          if (MIX_TABLE[true1 * 8 + (activePubs.get(ingredient2)! - 1)] !== trueCode) blame2 = true;
+        }
+        if (blame1 && !blame2) { removed.push(ingredient1); activePubs.delete(ingredient1); }
+        else if (blame2 && !blame1) { removed.push(ingredient2); activePubs.delete(ingredient2); }
+        else if (blame1 && blame2) { conflicts.push(ingredient1, ingredient2); }
       }
       // Conflict: both still active, each result-compatible, together predict wrong.
       // No isMixResultDetermined guard — the audience observes the mix result directly.

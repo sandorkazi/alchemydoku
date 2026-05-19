@@ -2,11 +2,14 @@
  * User-adjustable settings, persisted in localStorage and synced via Google Drive.
  */
 
+import { DEFAULT_PEN_COLOR } from './penColors';
+
 export type Settings = {
   showLatestUpdates: boolean;  // show What's New banner for new releases (default: true)
   showRulesRef: boolean;       // show Rules quick reference section (default: false)
   showInterfaceRef: boolean;   // show Interface quick reference section (default: false)
   showPuzzleOnly: boolean;     // show non-board-game (puzzle-only) collections (default: false)
+  penColor: string;            // default pen color for draw tool (default: orange-500)
 };
 
 export const DEFAULT_SETTINGS: Settings = {
@@ -14,6 +17,7 @@ export const DEFAULT_SETTINGS: Settings = {
   showRulesRef: false,
   showInterfaceRef: false,
   showPuzzleOnly: false,
+  penColor: DEFAULT_PEN_COLOR,
 };
 
 const SETTINGS_KEY = 'alch-settings';

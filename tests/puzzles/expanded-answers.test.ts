@@ -1,9 +1,10 @@
 import { describe, it, expect } from 'vitest';
 import { ALL_EXPANDED_PUZZLES } from '../../src/expanded/data/puzzlesIndex';
 import { getExpandedPuzzleWorlds, computeExpandedAnswer, getExpandedPuzzleGolemState } from '../../src/expanded/puzzles/schemaExpanded';
-import { validateMasterPlanAnswer, validateApprenticePlanAnswer, validateConflictOnlyAnswer } from '../../src/logic/debunk';
+import { validateExpandedMinStepsAnswer, validateExpandedApprenticePlanAnswer, validateExpandedConflictOnlyAnswer } from '../../src/expanded/logic/debunkExpanded';
 import type { AnyQuestion } from '../../src/expanded/types';
 import type { Publication } from '../../src/types';
+import type { DebunkArticle } from '../../src/expanded/types';
 
 // Debunk planning questions return null by design — skip them.
 const SKIP_KINDS = new Set<AnyQuestion['kind']>([
@@ -25,6 +26,7 @@ describe('expanded debunk reference answers', () => {
     it(puzzle.id, () => {
       const worlds = getExpandedPuzzleWorlds(puzzle);
       const pubs = (puzzle.publications ?? []).filter(Boolean) as Publication[];
+      const arts = (puzzle.articles ?? []) as DebunkArticle[];
       const answers = puzzle.debunk_answers ?? {};
 
       for (const q of debunkQs) {
@@ -32,20 +34,20 @@ describe('expanded debunk reference answers', () => {
           const ref = answers['debunk_min_steps'] ?? [];
           expect(ref.length, 'debunk_min_steps must have a reference answer').toBeGreaterThan(0);
           expect(
-            validateMasterPlanAnswer(ref, puzzle.solution, pubs, worlds, ref.length),
+            validateExpandedMinStepsAnswer(ref, puzzle.solution, pubs, arts, worlds, ref.length),
             'debunk_min_steps reference answer must pass the validator',
           ).toBe(true);
         } else if (q.kind === 'debunk_apprentice_plan') {
           const ref = answers['debunk_apprentice_plan'] ?? [];
           expect(ref.length, 'debunk_apprentice_plan must have a reference answer').toBeGreaterThan(0);
           expect(
-            validateApprenticePlanAnswer(ref, puzzle.solution, pubs, worlds, ref.length),
+            validateExpandedApprenticePlanAnswer(ref, puzzle.solution, pubs, arts, worlds, ref.length),
             'debunk_apprentice_plan reference answer must pass the validator',
           ).toBe(true);
         } else if (q.kind === 'debunk_conflict_only') {
           const ref = answers['debunk_conflict_only'] ?? [];
           expect(
-            validateConflictOnlyAnswer(ref, puzzle.solution, pubs, worlds, ref.length),
+            validateExpandedConflictOnlyAnswer(ref, puzzle.solution, pubs, arts, worlds, ref.length),
             'debunk_conflict_only reference answer must pass the validator',
           ).toBe(true);
         }

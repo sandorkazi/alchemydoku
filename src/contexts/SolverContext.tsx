@@ -2,6 +2,7 @@ import { createContext, useContext, useReducer, useEffect, useMemo, type ReactNo
 import { generateAllWorlds, applyClues } from '../logic/worldSet';
 import { checkAnswers, checkDebunkAnswers } from '../puzzles/schema';
 import { makeDisplayMap, loadDisplayMap, saveDisplayMap, emptyGrid, mergeIntoUnifiedStore } from '../utils/solverStorage';
+import { normalizeStroke, type DrawStroke } from '../utils/penColors';
 import type { Puzzle, CellState, WorldSet } from '../types';
 import type { PuzzleAnswer } from '../puzzles/schema';
 
@@ -14,10 +15,12 @@ type DisplayMap = import('../utils/solverStorage').DisplayMap;
 
 // ─── Undo / Redo ──────────────────────────────────────────────────────────────
 
+export type { DrawStroke } from '../utils/penColors';
+
 export type UndoSnapshot = {
   gridState:   GridState;
   notes:       Record<string, string>;
-  drawStrokes: string[];
+  drawStrokes: DrawStroke[];
 };
 
 const MAX_UNDO = 100;
@@ -28,7 +31,7 @@ function snap(s: SolverState): UndoSnapshot {
 
 // ─── State ────────────────────────────────────────────────────────────────────
 
-function loadSolverState(puzzleId: string): { gridState: GridState; notes: Record<string,string>; hintLevel: number; drawStrokes: string[] } | null {
+function loadSolverState(puzzleId: string): { gridState: GridState; notes: Record<string,string>; hintLevel: number; drawStrokes: DrawStroke[] } | null {
   try {
     // 1. Try new unified key (written by save-file load + auto-save)
     const unified = localStorage.getItem('alch-save-base');
@@ -40,7 +43,7 @@ function loadSolverState(puzzleId: string): { gridState: GridState; notes: Recor
           gridState:   entry.gridState as GridState,
           notes:       (entry.notes ?? {}) as Record<string,string>,
           hintLevel:   typeof entry.hintLevel === 'number' ? entry.hintLevel : 0,
-          drawStrokes: (entry.drawStrokes ?? []) as string[],
+          drawStrokes: ((entry.drawStrokes ?? []) as (string | DrawStroke)[]).map(normalizeStroke),
         };
       }
     }
@@ -53,7 +56,7 @@ function loadSolverState(puzzleId: string): { gridState: GridState; notes: Recor
       gridState:   parsed.gridState  as GridState,
       notes:       (parsed.notes ?? {}) as Record<string,string>,
       hintLevel:   typeof parsed.hintLevel === 'number' ? parsed.hintLevel : 0,
-      drawStrokes: (parsed.drawStrokes ?? []) as string[],
+      drawStrokes: ((parsed.drawStrokes ?? []) as (string | DrawStroke)[]).map(normalizeStroke),
     };
   } catch { return null; }
 }
@@ -74,7 +77,7 @@ export type SolverState = {
   answers: (PuzzleAnswer | null)[];
   completed: boolean;
   showSolution: boolean;
-  drawStrokes: string[];
+  drawStrokes: DrawStroke[];
   undoStack: UndoSnapshot[];
   redoStack: UndoSnapshot[];
 };
@@ -94,7 +97,7 @@ export type Action =
   | { type: 'CLEAR_GRID' }
   | { type: 'SET_NOTE'; key: string; value: string }
   | { type: 'LOAD_PROGRESS'; gridState: GridState; notes: Record<string,string>; hintLevel: number; wrongAttempts: number; answers: (PuzzleAnswer | null)[] }
-  | { type: 'ADD_DRAW_STROKE'; d: string }
+  | { type: 'ADD_DRAW_STROKE'; d: string; color: string }
   | { type: 'CLEAR_DRAW_STROKES' }
   | { type: 'UNDO' }
   | { type: 'REDO' };
@@ -230,7 +233,7 @@ function reducer(state: SolverState, action: Action): SolverState {
 
     case 'ADD_DRAW_STROKE': {
       const undoStack = [snap(state), ...state.undoStack].slice(0, MAX_UNDO);
-      return { ...state, drawStrokes: [...state.drawStrokes, action.d], undoStack, redoStack: [] };
+      return { ...state, drawStrokes: [...state.drawStrokes, { d: action.d, color: action.color }], undoStack, redoStack: [] };
     }
 
     case 'CLEAR_DRAW_STROKES': {

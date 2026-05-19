@@ -124,8 +124,8 @@
       },
       {
         "kind": "master",
-        "ingredient1": 1,
-        "ingredient2": 3
+        "ingredient1": 3,
+        "ingredient2": 4
       },
       {
         "kind": "master",

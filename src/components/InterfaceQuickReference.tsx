@@ -161,7 +161,10 @@ export function BaseInterfaceCards() {
             <div className="flex items-center gap-1.5 flex-wrap">
               <span className="px-2 py-0.5 rounded border border-gray-200 text-[10px] text-gray-500 bg-white">✕ Clear</span>
               <span className="px-2 py-0.5 rounded border border-rose-200 text-[10px] text-rose-400 bg-white">✕ Drawing</span>
-              <span className="px-2 py-0.5 rounded border border-gray-200 text-[10px] text-gray-500 bg-white">🔀</span>
+              <span className="flex items-center gap-0.5">
+                <span className="px-2 py-0.5 rounded border border-gray-200 text-[10px] text-gray-500 bg-white">🔀</span>
+                <span className="text-[8px] text-gray-400">hold →&nbsp;picker</span>
+              </span>
             </div>
             <div className="flex items-center gap-1.5 flex-wrap">
               <span className="px-1.5 py-0.5 rounded bg-gray-100 text-[9px] font-mono text-gray-600">⇧ click</span>
@@ -173,7 +176,7 @@ export function BaseInterfaceCards() {
             </div>
           </div>
         }
-        text="Inside the ingredient grid: ✕ Clear wipes all cell marks and notes; ✕ Drawing (appears when you have strokes) clears only the freehand sketches; 🔀 reshuffles which ingredient icon appears in each column (the underlying slot assignments stay the same). Keyboard modifiers: Shift+click always uses the ✗✔? mark tool. Keyboard shortcuts (when no text field is focused): U undoes the last grid change, R redoes it."
+        text="Inside the ingredient grid: ✕ Clear wipes all cell marks and notes; ✕ Drawing (appears when you have strokes) clears only the freehand sketches; 🔀 click reshuffles ingredient icons randomly (slots stay the same); 🔀 long-press opens a picker to drag ingredients into a custom order. Keyboard modifiers: Shift+click always uses the ✗✔? mark tool. Keyboard shortcuts (when no text field is focused): U undoes the last grid change, R redoes it."
       />
 
       {/* Collapsible clues */}

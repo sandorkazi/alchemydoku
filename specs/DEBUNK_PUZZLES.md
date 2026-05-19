@@ -1,6 +1,6 @@
 # Debunk Puzzles — Design Specification
 
-*Status: Base-game debunk puzzles FULLY IMPLEMENTED. Mixed-clue debunk collections (base + expanded) fully generated and registered. Generator not yet implemented for standalone expanded puzzles.*
+*Status: Base-game debunk puzzles FULLY IMPLEMENTED. Mixed-clue debunk collections (base + expanded) fully generated and registered. Generator not yet implemented for standalone expanded puzzles. Phase 2 blame-based disproval and two-color article disproof fully implemented (2026-05-19).*
 
 Debunk puzzles are a distinct puzzle type (alongside `alchemical`, `encyclopedia_fourth`, etc.)
 where the player is given a solved world (via clues) plus a board state of wrong publications
@@ -141,10 +141,10 @@ An article makes claims about a colour aspect's sign for 2–4 ingredients. Entr
 partially correct (correct entries and wrong entries can coexist in the same article).
 
 **Removal rule**: an article is removed if **at least one entry** is directly and
-unambiguously disproved. One factual contradiction is sufficient to invalidate an academic
-claim.
+unambiguously disproved, OR if the article's claims violate the two-color rule (§2f).
+One factual contradiction is sufficient to invalidate an academic claim.
 
-An entry `(ingredient X, color C, sign S)` is disproved when:
+An entry `(ingredient X, color C, sign S)` is disproved via **entry-level disproof** when:
 - **Apprentice**: player reveals the true sign for `(X, C)` and it is `¬S`.
 - **Master**: a mix result unambiguously implies `(X, C) = ¬S` (i.e. X is definitively
   known in the context of the mix — see §2d — and the mix result pins the aspect).
@@ -152,6 +152,40 @@ An entry `(ingredient X, color C, sign S)` is disproved when:
 Unlike publications, which claim a complete alchemical, an article only claims one aspect sign
 per ingredient. Therefore only the specific entries involved in a disproof matter; other
 entries in the same article are irrelevant once one is disproved.
+
+### 2f. Two-color rule for article disproof (master only)
+
+The Alchemists mixing system has a provable structural property: for any two non-opposite
+alchemicals A and B, if both have the **same sign on colour C**, the result of mixing A and B
+is always a potion of colour C or the next colour in the cycle (R→G→B→R). If they have
+**opposite signs on C**, the result is never colour C.
+
+This can be exploited to disprove articles. Suppose an article claims ingredient X has sign S
+and ingredient Y has sign S on colour C (same sign). If the player mixes X and Y and the
+actual result is a colour that is neither C nor next(C), the article's claims are internally
+inconsistent with the observed result — the article is removed.
+
+Similarly, if an article claims X and Y have opposite signs on C, and the result IS colour C,
+the article is disproved.
+
+**Formally** — a master mix of ingredients X and Y with observed result R disproves an article
+if the article has entries for **both** X and Y on aspect C, and:
+
+| Article entries | Constraint violated if… |
+|---|---|
+| Both same sign on C | result is neutral, or result color ≠ C and ≠ next(C) |
+| Opposite signs on C | result color = C |
+
+Where `next(C)` follows the cycle R→G→B→R.
+
+**No "definitively known" requirement**: unlike blame-based disproval (§2b) and entry-level
+article disproof, the two-color check does not require either ingredient to be definitively
+known. The constraint is verifiable purely from the observed mix result and the article's own
+claims.
+
+**Gated by `isMixResultDetermined`**: the master step must still have a deterministic result
+from the clue worlds (so the audience can verify what the result actually was). If the mix
+result is ambiguous across worlds, the step is rejected entirely as per §2b.
 
 ---
 
@@ -417,8 +451,41 @@ def evaluate_plan(steps, solution, publications, articles, clue_worlds):
                 conflicts.append(('publication', b))
                 # neither removed
 
-            # Article entries: only when the relevant ingredient is definitively known
-            # (so the mix result unambiguously implies the ingredient's aspect)
+            # Article entries — two mechanisms:
+
+            # (i) Entry-level disproof: ingredient is definitively known → verify all entries
+            for ing in (a if a_known else None, b if b_known else None):
+                if ing is None:
+                    continue
+                for art_id, art in list(active_arts.items()):
+                    for entry in art['entries']:
+                        if entry['ingredient'] == ing:
+                            true_sgn = ALCH_DATA[solution[ing]][art['aspect']][0]
+                            if sgn_int(entry['sign']) != true_sgn:
+                                removed.append(('article', art_id))
+                                del active_arts[art_id]
+                                break
+
+            # (ii) Two-color rule (§2f): article covers both mixed ingredients on same aspect
+            NEXT_COLOR = {'R': 'G', 'G': 'B', 'B': 'R'}
+            result_color = true_result[0] if true_result != 'neutral' else None
+            for art_id, art in list(active_arts.items()):
+                entries_by_ing = {e['ingredient']: e['sign'] for e in art['entries']}
+                s_a = entries_by_ing.get(a)
+                s_b = entries_by_ing.get(b)
+                if s_a is None or s_b is None:
+                    continue  # article doesn't cover both mixed ingredients
+                C = art['aspect']
+                if s_a == s_b:
+                    # Same claimed sign: result must be C or next(C)
+                    if result_color is None or (result_color != C and result_color != NEXT_COLOR[C]):
+                        removed.append(('article', art_id))
+                        del active_arts[art_id]
+                else:
+                    # Opposite claimed signs: result must NOT be C
+                    if result_color == C:
+                        removed.append(('article', art_id))
+                        del active_arts[art_id]
 
         outcomes.append({ 'removed': removed, 'conflicts': conflicts })
 
@@ -500,8 +567,8 @@ Large generated sets combining standard mix/sell/debunk-evidence clues with debu
 
 | File                                                  | Role                                                    |
 |-------------------------------------------------------|---------------------------------------------------------|
-| `src/logic/debunk.ts`                                 | `canProduceResult`, `isDefinitivelyKnown`, `simulateStep`, `simulateConflictOnlyStep`, `simulatePlan` (UI helper), `evaluatePlan`, `validateMinStepsAnswer`, `validateMasterPlanAnswer`, `validateApprenticePlanAnswer`, `validateConflictOnlyAnswer`, `describeMixResult` |
-| `src/expanded/logic/debunkExpanded.ts`                | Expanded variants: `simulateExpandedStep`, `simulateExpandedPlan`, `validateExpandedMinStepsAnswer`, `validateExpandedApprenticePlanAnswer`, `validateExpandedConflictOnlyAnswer` |
+| `src/logic/debunk.ts`                                 | `canProduceResult`, `isDefinitivelyKnown`, `getDefinitiveAlch`, `isMixResultDetermined`, `simulateStep` (Phase 1 + Phase 2), `simulateConflictOnlyStep`, `simulatePlanForDisplay`, `simulatePlan` (UI helper), `validateMinStepsAnswer`, `validateMasterPlanAnswer`, `validateApprenticePlanAnswer`, `validateConflictOnlyAnswer`, `describeMixResult` |
+| `src/expanded/logic/debunkExpanded.ts`                | Expanded variants: `simulateExpandedStep` (Phase 1 + Phase 2 + two-color rule), `simulateExpandedPlan`, `simulateExpandedPlanForDisplay`, `validateExpandedMinStepsAnswer`, `validateExpandedApprenticePlanAnswer`, `validateExpandedConflictOnlyAnswer` |
 | `src/puzzles/schema.ts`                               | Routes debunk question kinds to debunk validators; `checkDebunkAnswers()` |
 | `src/expanded/puzzles/schemaExpanded.ts`              | Expanded equivalent; handles both publications and articles |
 | `src/contexts/SolverContext.tsx`                      | `SUBMIT_ANSWER` dispatches to `checkDebunkAnswers()` for debunk questions |
@@ -517,9 +584,10 @@ Large generated sets combining standard mix/sell/debunk-evidence clues with debu
 
 - **Seals / hedging**: 1-seal, 2-seal publications; apprentice seals (reputation protection);
   own-publication removal strategy. Rich design space, reserved for after initial content.
-- **Conflict-only Q3 for expanded articles**: a master mix that conflicts with an article
-  entry but doesn't remove it (because the aspect implication is ambiguous). Deferred until
-  the article disproof unambiguity rules are fully specified for partial knowledge states.
+- **Conflict-only Q3 for expanded articles**: a master mix that creates mutual blame with an
+  article entry (where neither the article nor a publication can be unambiguously removed).
+  Deferred — the interaction between publication conflicts and article two-color rule in a
+  single step is complex and reserved for a later puzzle type.
 - **`debunk_max_removals` Q2**: meaningful once puzzles have correct publications mixed in
   with wrong ones, making "don't accidentally remove the right ones" a constraint.
 - **Multi-step conflict chains**: using a conflict-only step to establish knowledge that

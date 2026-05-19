@@ -401,9 +401,9 @@ function makeInitialPlan(q: { kind: string; fixedIngredient?: IngredientId }): Q
   const isConflictOnly = q.kind === 'debunk_conflict_only';
   const isApprenticeOnly = q.kind === 'debunk_apprentice_plan';
   const fixedIngredient = isConflictOnly ? (q.fixedIngredient ?? null) : null;
-  const initialDraft: DraftStep = isConflictOnly
-    ? { kind: 'master', ingredient1: fixedIngredient, ingredient2: null, claimedPotion: null }
-    : { kind: 'apprentice', ingredient: null, color: null };
+  const initialDraft: DraftStep = isApprenticeOnly
+    ? { kind: 'apprentice', ingredient: null, color: null }
+    : { kind: 'master', ingredient1: isConflictOnly ? fixedIngredient : null, ingredient2: null, claimedPotion: null };
   return { drafts: [initialDraft], isConflictOnly, isApprenticeOnly, fixedIngredient };
 }
 
@@ -570,7 +570,7 @@ export function ExpandedDebunkAnswerPanel({ onNext, isTutorial = false }: {
                 ? 'Find a minimal number of master mixes which will cover all incorrect publications with contradictions (at least 1 for each), without removing any. The covered publications shown are those whose claims are contradicted by the mix — not removals. An ingredient can help disprove another\'s publication without its own claim being contested.'
                 : plan.isApprenticeOnly
                   ? 'Remove all false publications using only apprentice debunks, in as few steps as possible.'
-                  : 'Remove all false publications in as few steps as possible.'}
+                  : 'Remove all false publications and encyclopedia articles in as few steps as possible. You may use both apprentice and master debunks — master steps can also clear encyclopedia articles for definitively-identified ingredients.'}
             </p>
 
             {plan.drafts.map((draft, i) => {

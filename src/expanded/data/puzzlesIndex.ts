@@ -169,31 +169,24 @@ import mixedExpMix51        from './puzzles/mixed-exp-mix-51.json';
 import mixedExpDebunk02     from './puzzles/mixed-exp-debunk-02.json';
 import mixedExpDebunk03     from './puzzles/mixed-exp-debunk-03.json';
 import mixedExpDebunk04     from './puzzles/mixed-exp-debunk-04.json';
-import mixedExpDebunk05     from './puzzles/mixed-exp-debunk-05.json';
 import mixedExpDebunk06     from './puzzles/mixed-exp-debunk-06.json';
 import mixedExpDebunk07     from './puzzles/mixed-exp-debunk-07.json';
-import mixedExpDebunk08     from './puzzles/mixed-exp-debunk-08.json';
 import mixedExpDebunk09     from './puzzles/mixed-exp-debunk-09.json';
 import mixedExpDebunk10     from './puzzles/mixed-exp-debunk-10.json';
 import mixedExpDebunk11     from './puzzles/mixed-exp-debunk-11.json';
 import mixedExpDebunk12     from './puzzles/mixed-exp-debunk-12.json';
 import mixedExpDebunk13     from './puzzles/mixed-exp-debunk-13.json';
-import mixedExpDebunk14     from './puzzles/mixed-exp-debunk-14.json';
 import mixedExpDebunk15     from './puzzles/mixed-exp-debunk-15.json';
 import mixedExpDebunk16     from './puzzles/mixed-exp-debunk-16.json';
 import mixedExpDebunk17     from './puzzles/mixed-exp-debunk-17.json';
 import mixedExpDebunk18     from './puzzles/mixed-exp-debunk-18.json';
 import mixedExpDebunk19     from './puzzles/mixed-exp-debunk-19.json';
 import mixedExpDebunk20     from './puzzles/mixed-exp-debunk-20.json';
-import mixedExpDebunk21     from './puzzles/mixed-exp-debunk-21.json';
 import mixedExpDebunk22     from './puzzles/mixed-exp-debunk-22.json';
 import mixedExpDebunk23     from './puzzles/mixed-exp-debunk-23.json';
 import mixedExpDebunk24     from './puzzles/mixed-exp-debunk-24.json';
-import mixedExpDebunk25     from './puzzles/mixed-exp-debunk-25.json';
-import mixedExpDebunk26     from './puzzles/mixed-exp-debunk-26.json';
 import mixedExpDebunk27     from './puzzles/mixed-exp-debunk-27.json';
 import mixedExpDebunk28     from './puzzles/mixed-exp-debunk-28.json';
-import mixedExpDebunk29     from './puzzles/mixed-exp-debunk-29.json';
 import mixedExpDebunk30     from './puzzles/mixed-exp-debunk-30.json';
 import mixedExpDebunk31     from './puzzles/mixed-exp-debunk-31.json';
 import mixedExpDebunk32     from './puzzles/mixed-exp-debunk-32.json';
@@ -201,21 +194,28 @@ import mixedExpDebunk33     from './puzzles/mixed-exp-debunk-33.json';
 import mixedExpDebunk34     from './puzzles/mixed-exp-debunk-34.json';
 import mixedExpDebunk35     from './puzzles/mixed-exp-debunk-35.json';
 import mixedExpDebunk36     from './puzzles/mixed-exp-debunk-36.json';
-import mixedExpDebunk37     from './puzzles/mixed-exp-debunk-37.json';
 import mixedExpDebunk38     from './puzzles/mixed-exp-debunk-38.json';
 import mixedExpDebunk39     from './puzzles/mixed-exp-debunk-39.json';
 import mixedExpDebunk40     from './puzzles/mixed-exp-debunk-40.json';
 import mixedExpDebunk41     from './puzzles/mixed-exp-debunk-41.json';
 import mixedExpDebunk42     from './puzzles/mixed-exp-debunk-42.json';
 import mixedExpDebunk43     from './puzzles/mixed-exp-debunk-43.json';
-import mixedExpDebunk44     from './puzzles/mixed-exp-debunk-44.json';
 import mixedExpDebunk45     from './puzzles/mixed-exp-debunk-45.json';
 import mixedExpDebunk46     from './puzzles/mixed-exp-debunk-46.json';
 import mixedExpDebunk47     from './puzzles/mixed-exp-debunk-47.json';
-import mixedExpDebunk48     from './puzzles/mixed-exp-debunk-48.json';
 import mixedExpDebunk49     from './puzzles/mixed-exp-debunk-49.json';
 import mixedExpDebunk50     from './puzzles/mixed-exp-debunk-50.json';
 import mixedExpDebunk51     from './puzzles/mixed-exp-debunk-51.json';
+import mixedExpDebunk52     from './puzzles/mixed-exp-debunk-52.json';
+import mixedExpDebunk53     from './puzzles/mixed-exp-debunk-53.json';
+import mixedExpDebunk54     from './puzzles/mixed-exp-debunk-54.json';
+import mixedExpDebunk55     from './puzzles/mixed-exp-debunk-55.json';
+import mixedExpDebunk56     from './puzzles/mixed-exp-debunk-56.json';
+import mixedExpDebunk57     from './puzzles/mixed-exp-debunk-57.json';
+import mixedExpDebunk58     from './puzzles/mixed-exp-debunk-58.json';
+import mixedExpDebunk59     from './puzzles/mixed-exp-debunk-59.json';
+import mixedExpDebunk60     from './puzzles/mixed-exp-debunk-60.json';
+import mixedExpDebunk61     from './puzzles/mixed-exp-debunk-61.json';
 
 import expEasySl02          from './puzzles/exp-easy-sl-02.json';
 import expEasySl03          from './puzzles/exp-easy-sl-03.json';
@@ -246,7 +246,7 @@ export const ALL_EXPANDED_PUZZLES: ExpandedPuzzle[] = [
   comboExpXsl02, comboExpXsl03, comboExpXsl04, comboExpXsl05, comboExpXsl06,
   mixedExp02, mixedExp03, mixedExp04, mixedExp05, mixedExp06, mixedExp07, mixedExp08, mixedExp09, mixedExp10, mixedExp11,
   mixedExpMix02, mixedExpMix03, mixedExpMix04, mixedExpMix05, mixedExpMix06, mixedExpMix07, mixedExpMix08, mixedExpMix09, mixedExpMix10, mixedExpMix11, mixedExpMix12, mixedExpMix13, mixedExpMix14, mixedExpMix15, mixedExpMix16, mixedExpMix17, mixedExpMix18, mixedExpMix19, mixedExpMix20, mixedExpMix21, mixedExpMix22, mixedExpMix23, mixedExpMix24, mixedExpMix25, mixedExpMix26, mixedExpMix27, mixedExpMix28, mixedExpMix29, mixedExpMix30, mixedExpMix31, mixedExpMix32, mixedExpMix33, mixedExpMix34, mixedExpMix35, mixedExpMix36, mixedExpMix37, mixedExpMix38, mixedExpMix39, mixedExpMix40, mixedExpMix41, mixedExpMix42, mixedExpMix43, mixedExpMix44, mixedExpMix45, mixedExpMix46, mixedExpMix47, mixedExpMix48, mixedExpMix49, mixedExpMix50, mixedExpMix51,
-  mixedExpDebunk02, mixedExpDebunk03, mixedExpDebunk04, mixedExpDebunk05, mixedExpDebunk06, mixedExpDebunk07, mixedExpDebunk08, mixedExpDebunk09, mixedExpDebunk10, mixedExpDebunk11, mixedExpDebunk12, mixedExpDebunk13, mixedExpDebunk14, mixedExpDebunk15, mixedExpDebunk16, mixedExpDebunk17, mixedExpDebunk18, mixedExpDebunk19, mixedExpDebunk20, mixedExpDebunk21, mixedExpDebunk22, mixedExpDebunk23, mixedExpDebunk24, mixedExpDebunk25, mixedExpDebunk26, mixedExpDebunk27, mixedExpDebunk28, mixedExpDebunk29, mixedExpDebunk30, mixedExpDebunk31, mixedExpDebunk32, mixedExpDebunk33, mixedExpDebunk34, mixedExpDebunk35, mixedExpDebunk36, mixedExpDebunk37, mixedExpDebunk38, mixedExpDebunk39, mixedExpDebunk40, mixedExpDebunk41, mixedExpDebunk42, mixedExpDebunk43, mixedExpDebunk44, mixedExpDebunk45, mixedExpDebunk46, mixedExpDebunk47, mixedExpDebunk48, mixedExpDebunk49, mixedExpDebunk50, mixedExpDebunk51,
+  mixedExpDebunk02, mixedExpDebunk03, mixedExpDebunk04, mixedExpDebunk06, mixedExpDebunk07, mixedExpDebunk09, mixedExpDebunk10, mixedExpDebunk11, mixedExpDebunk12, mixedExpDebunk13, mixedExpDebunk15, mixedExpDebunk16, mixedExpDebunk17, mixedExpDebunk18, mixedExpDebunk19, mixedExpDebunk20, mixedExpDebunk22, mixedExpDebunk23, mixedExpDebunk24, mixedExpDebunk27, mixedExpDebunk28, mixedExpDebunk30, mixedExpDebunk31, mixedExpDebunk32, mixedExpDebunk33, mixedExpDebunk34, mixedExpDebunk35, mixedExpDebunk36, mixedExpDebunk38, mixedExpDebunk39, mixedExpDebunk40, mixedExpDebunk41, mixedExpDebunk42, mixedExpDebunk43, mixedExpDebunk45, mixedExpDebunk46, mixedExpDebunk47, mixedExpDebunk49, mixedExpDebunk50, mixedExpDebunk51, mixedExpDebunk52, mixedExpDebunk53, mixedExpDebunk54, mixedExpDebunk55, mixedExpDebunk56, mixedExpDebunk57, mixedExpDebunk58, mixedExpDebunk59, mixedExpDebunk60, mixedExpDebunk61,
   expEasySl02, expEasySl03, expEasySl04,
   expMediumEncSl02, expMediumEncSl03, expMediumEncSl04, expMediumEncSl05, expMediumEncSl06,
   comboExpMedSl02,
@@ -314,7 +314,7 @@ export const EXPANDED_COLLECTIONS: ExpandedCollection[] = [
     title: 'Debunking',
     description: "Rivals have published false alchemical theories. You know the truth — plan the fewest possible debunk actions to clear the board.",
     difficulty: 'medium',
-    puzzleIds: ['exp-debunk-tutorial-01', 'debunk-01', 'debunk-02', 'debunk-03', 'debunk-04'],
+    puzzleIds: ['exp-debunk-tutorial-01', 'debunk-01', 'debunk-02', 'debunk-03'],
     unlockedAfter: 'exp-tutorials',
   },
   {
@@ -350,19 +350,19 @@ export const EXPANDED_COLLECTIONS: ExpandedCollection[] = [
     description: 'Ambiguous clues from multiple mechanics surround wrong publications. Use master debunking to clear the board — and find the one mix that creates an irresolvable conflict.',
     difficulty: 'extreme',
     puzzleIds: [
-      'mixed-exp-debunk-02', 'mixed-exp-debunk-03', 'mixed-exp-debunk-04', 'mixed-exp-debunk-05',
-      'mixed-exp-debunk-06', 'mixed-exp-debunk-07', 'mixed-exp-debunk-08', 'mixed-exp-debunk-09',
-      'mixed-exp-debunk-10', 'mixed-exp-debunk-11', 'mixed-exp-debunk-12', 'mixed-exp-debunk-13',
-      'mixed-exp-debunk-14', 'mixed-exp-debunk-15', 'mixed-exp-debunk-16', 'mixed-exp-debunk-17',
-      'mixed-exp-debunk-18', 'mixed-exp-debunk-19', 'mixed-exp-debunk-20', 'mixed-exp-debunk-21',
-      'mixed-exp-debunk-22', 'mixed-exp-debunk-23', 'mixed-exp-debunk-24', 'mixed-exp-debunk-25',
-      'mixed-exp-debunk-26', 'mixed-exp-debunk-27', 'mixed-exp-debunk-28', 'mixed-exp-debunk-29',
+      'mixed-exp-debunk-02', 'mixed-exp-debunk-03', 'mixed-exp-debunk-04',
+      'mixed-exp-debunk-06', 'mixed-exp-debunk-07',
+      'mixed-exp-debunk-09', 'mixed-exp-debunk-10', 'mixed-exp-debunk-11', 'mixed-exp-debunk-12',
+      'mixed-exp-debunk-13', 'mixed-exp-debunk-15', 'mixed-exp-debunk-16', 'mixed-exp-debunk-17',
+      'mixed-exp-debunk-18', 'mixed-exp-debunk-19', 'mixed-exp-debunk-20',
+      'mixed-exp-debunk-22', 'mixed-exp-debunk-23', 'mixed-exp-debunk-24',
+      'mixed-exp-debunk-27', 'mixed-exp-debunk-28',
       'mixed-exp-debunk-30', 'mixed-exp-debunk-31', 'mixed-exp-debunk-32', 'mixed-exp-debunk-33',
-      'mixed-exp-debunk-34', 'mixed-exp-debunk-35', 'mixed-exp-debunk-36', 'mixed-exp-debunk-37',
+      'mixed-exp-debunk-34', 'mixed-exp-debunk-35', 'mixed-exp-debunk-36',
       'mixed-exp-debunk-38', 'mixed-exp-debunk-39', 'mixed-exp-debunk-40', 'mixed-exp-debunk-41',
-      'mixed-exp-debunk-42', 'mixed-exp-debunk-43', 'mixed-exp-debunk-44', 'mixed-exp-debunk-45',
-      'mixed-exp-debunk-46', 'mixed-exp-debunk-47', 'mixed-exp-debunk-48', 'mixed-exp-debunk-49',
-      'mixed-exp-debunk-50', 'mixed-exp-debunk-51',
+      'mixed-exp-debunk-42', 'mixed-exp-debunk-43',
+      'mixed-exp-debunk-45', 'mixed-exp-debunk-46', 'mixed-exp-debunk-47',
+      'mixed-exp-debunk-49', 'mixed-exp-debunk-50', 'mixed-exp-debunk-51', 'mixed-exp-debunk-52', 'mixed-exp-debunk-53', 'mixed-exp-debunk-54', 'mixed-exp-debunk-55', 'mixed-exp-debunk-56', 'mixed-exp-debunk-57', 'mixed-exp-debunk-58', 'mixed-exp-debunk-59', 'mixed-exp-debunk-60', 'mixed-exp-debunk-61',
     ],
     unlockedAfter: 'exp-debunk',
     boardGameCompliant: false,

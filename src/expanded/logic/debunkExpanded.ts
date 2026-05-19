@@ -15,13 +15,22 @@
  */
 
 import { ALCHEMICALS } from '../../data/alchemicals';
-import { isDefinitivelyKnown, isMixResultDetermined, isPublicationDefinitelyFalse } from '../../logic/debunk';
+import { isDefinitivelyKnown, isMixResultDetermined, isPublicationDefinitelyFalse, getDefinitiveAlch } from '../../logic/debunk';
 import { MIX_TABLE } from '../../logic/worldPack';
 import type { IngredientId, AlchemicalId, Color, Assignment, WorldSet } from '../../types';
 import type { DebunkStep, Publication } from '../../types';
 import type { DebunkArticle } from '../types';
 
 // ─── Helpers ──────────────────────────────────────────────────────────────────
+
+/** Returns the color for a non-neutral mix result code, or null for neutral. */
+function mixCodeToColor(code: number): Color | null {
+  if (code === 0) return null;
+  if (code <= 2) return 'R';
+  if (code <= 4) return 'G';
+  return 'B';
+}
+
 
 function trueSign(solution: Assignment, ingSlot: IngredientId, color: Color): 0 | 1 {
   const alchId = solution[ingSlot];
@@ -102,10 +111,11 @@ function simulateExpandedStep(
       return { removedPubs: [], removedArts: [], conflicts: [] };
     }
     const trueCode = trueMixCode(solution, ingredient1, ingredient2);
+    const resultColor = mixCodeToColor(trueCode);
     const ing1Known = isDefinitivelyKnown(worlds, ingredient1);
     const ing2Known = isDefinitivelyKnown(worlds, ingredient2);
 
-    // Direct disproval (result-incompatibility)
+    // Phase 1: Direct disproval (result-incompatibility)
     if (activePubs.has(ingredient1) && !canProduceResult(activePubs.get(ingredient1)!, trueCode)) {
       removedPubs.push(ingredient1);
       activePubs.delete(ingredient1);
@@ -115,24 +125,44 @@ function simulateExpandedStep(
       activePubs.delete(ingredient2);
     }
 
-    // Articles: if an ingredient is definitively known, the audience can verify
-    // any article entries for that ingredient on any aspect.
-    const knownIngs: IngredientId[] = [];
-    if (ing1Known) knownIngs.push(ingredient1);
-    if (ing2Known) knownIngs.push(ingredient2);
+    // Phase 2: Blame-based disproval (requires other ingredient definitively known)
+    let blame1 = false, blame2 = false;
+    if (activePubs.has(ingredient1) && ing2Known) {
+      const true2 = getDefinitiveAlch(worlds, ingredient2);
+      if (MIX_TABLE[(activePubs.get(ingredient1)! - 1) * 8 + true2] !== trueCode) blame1 = true;
+    }
+    if (activePubs.has(ingredient2) && ing1Known) {
+      const true1 = getDefinitiveAlch(worlds, ingredient1);
+      if (MIX_TABLE[true1 * 8 + (activePubs.get(ingredient2)! - 1)] !== trueCode) blame2 = true;
+    }
+    if (blame1 && !blame2) { removedPubs.push(ingredient1); activePubs.delete(ingredient1); }
+    else if (blame2 && !blame1) { removedPubs.push(ingredient2); activePubs.delete(ingredient2); }
+    else if (blame1 && blame2) { conflicts.push(ingredient1, ingredient2); }
 
-    for (const [artId, art] of activeArts) {
-      if (removedArts.includes(artId)) continue; // already marked
-      for (const entry of art.entries) {
-        if (!knownIngs.includes(entry.ingredient)) continue;
-        const trueSgn = trueSign(solution, entry.ingredient, art.aspect);
-        const entrySgn = entry.sign === '+' ? 1 : 0;
-        if (entrySgn !== trueSgn) {
-          removedArts.push(artId);
-          break;
+    // Articles: a single demonstration can only disprove the result-color article.
+    if (resultColor !== null) {
+      const knownIngs: IngredientId[] = [];
+      if (ing1Known) knownIngs.push(ingredient1);
+      if (ing2Known) knownIngs.push(ingredient2);
+
+      for (const [artId, art] of activeArts) {
+        if (art.aspect !== resultColor) continue;
+        // Definitively-known ingredient check: wrong aspect entry in the result-color article.
+        for (const entry of art.entries) {
+          if (!knownIngs.includes(entry.ingredient)) continue;
+          const trueSgn = trueSign(solution, entry.ingredient, art.aspect);
+          const entrySgn = entry.sign === '+' ? 1 : 0;
+          if (entrySgn !== trueSgn) { removedArts.push(artId); break; }
         }
+        if (removedArts.includes(artId)) continue;
+        // Two-color rule: different claimed signs on result color predict no result-color output,
+        // but the result IS result-color — article is false.
+        const e1 = art.entries.find(e => e.ingredient === ingredient1);
+        const e2 = art.entries.find(e => e.ingredient === ingredient2);
+        if (e1 && e2 && e1.sign !== e2.sign) removedArts.push(artId);
       }
     }
+
     for (const artId of removedArts) activeArts.delete(artId);
   }
 
@@ -242,14 +272,30 @@ export function simulateExpandedPlanForDisplay(
     } else if (step.kind === 'master') {
       const { ingredient1, ingredient2 } = step;
       const trueCode = trueMixCode(solution, ingredient1, ingredient2);
-      // Direct disproval — only when result is deterministically known from clues.
+      // Phase 1 + Phase 2 — only when result is deterministically known from clues.
       if (isMixResultDetermined(worlds, ingredient1, ingredient2)) {
+        // Phase 1: Direct disproval (result-incompatibility)
         if (activePubs.has(ingredient1) && !canProduceResult(activePubs.get(ingredient1)!, trueCode)) {
           removedPubs.push(ingredient1); activePubs.delete(ingredient1);
         }
         if (activePubs.has(ingredient2) && !canProduceResult(activePubs.get(ingredient2)!, trueCode)) {
           removedPubs.push(ingredient2); activePubs.delete(ingredient2);
         }
+        // Phase 2: Blame-based disproval (requires other ingredient definitively known)
+        const ing1Known = isDefinitivelyKnown(worlds, ingredient1);
+        const ing2Known = isDefinitivelyKnown(worlds, ingredient2);
+        let blame1 = false, blame2 = false;
+        if (activePubs.has(ingredient1) && ing2Known) {
+          const true2 = getDefinitiveAlch(worlds, ingredient2);
+          if (MIX_TABLE[(activePubs.get(ingredient1)! - 1) * 8 + true2] !== trueCode) blame1 = true;
+        }
+        if (activePubs.has(ingredient2) && ing1Known) {
+          const true1 = getDefinitiveAlch(worlds, ingredient1);
+          if (MIX_TABLE[true1 * 8 + (activePubs.get(ingredient2)! - 1)] !== trueCode) blame2 = true;
+        }
+        if (blame1 && !blame2) { removedPubs.push(ingredient1); activePubs.delete(ingredient1); }
+        else if (blame2 && !blame1) { removedPubs.push(ingredient2); activePubs.delete(ingredient2); }
+        else if (blame1 && blame2) { conflicts.push(ingredient1, ingredient2); }
       }
       // Conflict — no isMixResultDetermined guard; observed result suffices.
       if (activePubs.has(ingredient1) && activePubs.has(ingredient2)) {
