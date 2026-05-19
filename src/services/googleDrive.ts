@@ -318,6 +318,7 @@ function mergeSettings(a: Settings | undefined, b: Settings | undefined): Settin
     showInterfaceRef:  a.showInterfaceRef  || b.showInterfaceRef,  // true = shown wins
     showPuzzleOnly:    a.showPuzzleOnly    || b.showPuzzleOnly,    // true = enabled wins
     penColor:          a.penColor ?? b.penColor,                   // keep whichever is set
+    showTimer:         a.showTimer         || b.showTimer,         // true = enabled wins
   };
 }
 

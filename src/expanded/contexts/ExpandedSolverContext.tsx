@@ -20,6 +20,7 @@ import { validateExpandedMinStepsAnswer, validateExpandedApprenticePlanAnswer, v
 import { WORLD_DATA } from '../../logic/worldPack';
 import { makeDisplayMap, loadDisplayMap, saveDisplayMap, emptyGrid, mergeIntoUnifiedStore } from '../../utils/solverStorage';
 import { normalizeStroke, type DrawStroke } from '../../utils/penColors';
+import { loadSettings } from '../../utils/settings';
 import type { CellState, WorldSet, AlchemicalId } from '../../types';
 import type { ExpandedPuzzle, AnyAnswer, SolarLunarMark, SolarLunarMarks } from '../types';
 import type { Color, Size } from '../../types';
@@ -106,6 +107,7 @@ type SavedState = {
   solarLunarMarks: SolarLunarMarks;
   golemNotepad: GolemNotepad;
   drawStrokes: DrawStroke[];
+  timerElapsed: number;
 };
 
 export type GolemSlotMark = 'reacts' | 'no-react' | 'possible' | null;
@@ -134,6 +136,7 @@ function loadSolverState(puzzleId: string): SavedState | null {
           solarLunarMarks: (entry.solarLunarMarks ?? emptySolarLunarMarks()) as SolarLunarMarks,
           golemNotepad:    (entry.golemNotepad    ?? emptyGolemNotepad())    as GolemNotepad,
           drawStrokes:     ((entry.drawStrokes ?? []) as (string | DrawStroke)[]).map(normalizeStroke),
+          timerElapsed:    typeof entry.timerElapsed === 'number' ? entry.timerElapsed : 0,
         };
       }
     }
@@ -149,6 +152,7 @@ function loadSolverState(puzzleId: string): SavedState | null {
       solarLunarMarks: (p.solarLunarMarks ?? emptySolarLunarMarks()) as SolarLunarMarks,
       golemNotepad:    (p.golemNotepad ?? emptyGolemNotepad()) as GolemNotepad,
       drawStrokes:     ((p.drawStrokes ?? []) as (string | DrawStroke)[]).map(normalizeStroke),
+      timerElapsed:    typeof p.timerElapsed === 'number' ? p.timerElapsed : 0,
     };
   } catch { return null; }
 }
@@ -171,6 +175,8 @@ export type ExpandedSolverState = {
   completed:       boolean;
   showSolution:    boolean;
   undoStack:       ExpandedUndoSnapshot[];
+  timerElapsed:    number;
+  timerPaused:     boolean;
   redoStack:       ExpandedUndoSnapshot[];
 };
 
@@ -196,7 +202,10 @@ export type ExpandedAction =
   | { type: 'ADD_DRAW_STROKE'; d: string; color: string }
   | { type: 'CLEAR_DRAW_STROKES' }
   | { type: 'UNDO' }
-  | { type: 'REDO' };
+  | { type: 'REDO' }
+  | { type: 'TIMER_TICK' }
+  | { type: 'TIMER_PAUSE' }
+  | { type: 'TIMER_RESUME' };
 
 // ─── Solar/lunar hint computation (exported for grid component) ───────────────
 
@@ -268,7 +277,7 @@ function reducer(state: ExpandedSolverState, action: ExpandedAction): ExpandedSo
       } else {
         correct = checkExpandedAnswers(state.puzzle, action.answers);
       }
-      if (correct) return { ...state, answers: action.answers, completed: true };
+      if (correct) return { ...state, answers: action.answers, completed: true, timerPaused: true };
       const wrongAttempts = state.wrongAttempts + 1;
       return {
         ...state,
@@ -301,6 +310,8 @@ function reducer(state: ExpandedSolverState, action: ExpandedAction): ExpandedSo
         completed:       false,
         showSolution:    false,
         notes:           {},
+        timerElapsed:    0,
+        timerPaused:     false,
         undoStack,
         redoStack:       [],
       });
@@ -451,6 +462,16 @@ function reducer(state: ExpandedSolverState, action: ExpandedAction): ExpandedSo
       };
     }
 
+    case 'TIMER_TICK':
+      if (state.timerPaused || state.completed) return state;
+      return { ...state, timerElapsed: state.timerElapsed + 1 };
+
+    case 'TIMER_PAUSE':
+      return { ...state, timerPaused: true };
+
+    case 'TIMER_RESUME':
+      return { ...state, timerPaused: false };
+
     default:
       return state;
   }
@@ -479,6 +500,8 @@ export function ExpandedSolverProvider({ puzzle, children, initialDisplayMap }: 
 
   const savedState = useMemo(() => loadSolverState(puzzle.id), [puzzle.id]);
 
+  const showTimer = useMemo(() => loadSettings().showTimer, []);
+
   const initialState: ExpandedSolverState = applyAutoDeduction({
     puzzle,
     worlds,
@@ -496,9 +519,17 @@ export function ExpandedSolverProvider({ puzzle, children, initialDisplayMap }: 
     showSolution:    false,
     undoStack:       [],
     redoStack:       [],
+    timerElapsed:    savedState?.timerElapsed ?? 0,
+    timerPaused:     false,
   });
 
   const [state, dispatch] = useReducer(reducer, initialState);
+
+  useEffect(() => {
+    if (!showTimer || state.completed) return;
+    const id = setInterval(() => dispatch({ type: 'TIMER_TICK' }), 1000);
+    return () => clearInterval(id);
+  }, [showTimer, state.completed]);
 
   // Persist on every relevant state change
   useEffect(() => {
@@ -514,6 +545,7 @@ export function ExpandedSolverProvider({ puzzle, children, initialDisplayMap }: 
           solarLunarMarks: state.solarLunarMarks,
           golemNotepad:    state.golemNotepad,
           drawStrokes:     state.drawStrokes,
+          timerElapsed:    state.timerElapsed,
         };
         // Legacy per-puzzle key (backwards compat)
         localStorage.setItem(`exp-solver-${puzzle.id}`, JSON.stringify(progress));
@@ -521,7 +553,7 @@ export function ExpandedSolverProvider({ puzzle, children, initialDisplayMap }: 
         mergeIntoUnifiedStore('alch-save-expanded', puzzle.id, progress);
       }
     } catch { /**/ }
-  }, [state.gridState, state.notes, state.hintLevel, state.wrongAttempts, state.answers, state.solarLunarMarks, state.golemNotepad, state.drawStrokes, state.completed, puzzle.id]);
+  }, [state.gridState, state.notes, state.hintLevel, state.wrongAttempts, state.answers, state.solarLunarMarks, state.golemNotepad, state.drawStrokes, state.timerElapsed, state.completed, puzzle.id]);
 
   return (
     <ExpandedSolverContext.Provider value={{ state, dispatch }}>

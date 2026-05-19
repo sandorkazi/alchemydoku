@@ -30,6 +30,7 @@ export const RELEASE_NOTES: ReleaseEntry[] = [
           'Added "extreme" difficulty tier for unrealistic expert-level puzzles',
           'Merged the ? mark tool into the cell mark tool as a third state',
           'Synced horizontal scroll between ingredient grid and Golem panel',
+          'Added optional solve timer — enable in Settings to show elapsed time in the toolbar; pause hides puzzle content behind an overlay',
         ],
       },
       {

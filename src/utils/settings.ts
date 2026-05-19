@@ -10,6 +10,7 @@ export type Settings = {
   showInterfaceRef: boolean;   // show Interface quick reference section (default: false)
   showPuzzleOnly: boolean;     // show non-board-game (puzzle-only) collections (default: false)
   penColor: string;            // default pen color for draw tool (default: orange-500)
+  showTimer: boolean;          // show solve timer in puzzle toolbar (default: false)
 };
 
 export const DEFAULT_SETTINGS: Settings = {
@@ -18,6 +19,7 @@ export const DEFAULT_SETTINGS: Settings = {
   showInterfaceRef: false,
   showPuzzleOnly: false,
   penColor: DEFAULT_PEN_COLOR,
+  showTimer: false,
 };
 
 const SETTINGS_KEY = 'alch-settings';

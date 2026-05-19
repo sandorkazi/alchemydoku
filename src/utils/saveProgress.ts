@@ -106,6 +106,7 @@ export const ID_RENAMES: Record<string, string> = {
 
 export type PuzzleProgress = {
   savedAt: string;
+  timerElapsed?: number;
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   gridState: Record<number, Record<number, string>>;
   notes: Record<string, string>;
