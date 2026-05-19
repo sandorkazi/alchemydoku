@@ -10,7 +10,7 @@
  * The Cell component and marker logic are identical to the base grid.
  */
 
-import { useState, useRef, useEffect, useCallback, useMemo } from 'react';
+import { useState, useRef, useEffect, useCallback, useMemo, type CSSProperties } from 'react';
 import { INGREDIENTS } from '../../data/ingredients';
 import { ALCHEMICALS } from '../../data/alchemicals';
 import { PEN_COLORS, DEFAULT_PEN_COLOR } from '../../utils/penColors';
@@ -65,11 +65,9 @@ const GOLEM_CELL_STATE: Record<CellState, { bg: string; border: string }> = {
 
 // ─── Solar/Lunar row styling ──────────────────────────────────────────────────
 
-// border-l doubled in thickness compared to previous version
-function rowBorderStyle(alchId: AlchemicalId): string {
-  return isSolar(alchId)
-    ? 'border-l-4 border-l-amber-400'
-    : 'border-l-4 border-l-blue-400';
+// box-shadow instead of border-l to avoid shifting the table 4px right in border-collapse mode
+function rowStripeStyle(alchId: AlchemicalId): CSSProperties {
+  return { boxShadow: isSolar(alchId) ? 'inset 4px 0 0 #fbbf24' : 'inset 4px 0 0 #60a5fa' };
 }
 
 // ─── Cell (pure — no context dependency) ─────────────────────────────────────
@@ -673,8 +671,8 @@ export function ExpandedIngredientGrid({ onRandomize, onLongPressRandomize, acti
               {ALCH_IDS.map(alchId => {
                 const solar = isSolar(alchId);
                 return (
-                  <tr key={alchId} className={rowBorderStyle(alchId)}>
-                    <td className="pr-1 py-0 align-middle">
+                  <tr key={alchId}>
+                    <td className="pr-1 py-0 align-middle" style={rowStripeStyle(alchId)}>
                       <div className="flex items-center justify-end">
                         <AlchemicalDisplay id={alchId} elemWidth={48} />
                       </div>
