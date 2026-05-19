@@ -54,6 +54,7 @@ export const RELEASE_NOTES: ReleaseEntry[] = [
           'Fixed mobile grid left-edge clipping on narrow screens',
           'Fixed encyclopedia which-aspect sign distribution to enforce 4-0 or 2-2 only',
           'Fixed Google Drive settings sync to merge per-field instead of overwriting',
+          'Fixed Golem panel column alignment — ingredient columns now pixel-align with the main grid across all viewports',
         ],
       },
     ],

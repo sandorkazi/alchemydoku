@@ -651,7 +651,7 @@ export function ExpandedIngredientGrid({ onRandomize, onLongPressRandomize, acti
                   const name = INGREDIENTS[displayId as 1]?.name ?? '';
                   const slotMark = solarLunarMarks[slotId] ?? null;
                   return (
-                    <th key={slotId} className="px-0.5 pb-0.5 text-center align-bottom">
+                    <th key={slotId} className="pb-0.5 text-center align-bottom">
                       <div className="mx-auto mb-0.5 rounded-full h-1" style={{ backgroundColor: tint, width: 20 }} />
                       <span title={name} aria-label={name}>
                         <IngredientIcon index={index} width={36} />
@@ -689,7 +689,7 @@ export function ExpandedIngredientGrid({ onRandomize, onLongPressRandomize, acti
                         (!hintCells.has(key) && (hintValCorner === 'confirmed' || hintValCorner === 'eliminated'))
                           ? hintValCorner : undefined;
                       return (
-                        <td key={slotId} className="px-0.5 py-0 text-center align-middle">
+                        <td key={slotId} className="py-0 text-center align-middle">
                           <div className="relative">
                             <Cell
                               cellState={gridState[slotId]?.[alchId] ?? 'unknown'}
@@ -976,47 +976,53 @@ export function GolemPanel({ activeTool }: { activeTool: GridTool }) {
   }
 
   return (
-    <div className="pt-1 space-y-4 pr-[10px]">
+    <div className="pt-1 space-y-4">
 
       {/* ── Top grid: per-ingredient reactions ─────────────────────────────── */}
-      <div>
-        <div className="flex gap-1 mt-1" style={{ paddingLeft: HDR_W + 4 }}>
-          {ingColumns.map(({ slotId, index, tint }) => (
-            <div key={slotId} style={{ width: CELL_W, flexShrink: 0 }}
-              className="flex flex-col items-center pb-1 gap-0.5">
-              <div className="rounded-full h-1" style={{ width: 20, backgroundColor: tint }} />
-              <IngredientIcon index={index} width={36} />
-            </div>
+      <table className="border-collapse text-xs">
+        <thead>
+          <tr>
+            <th className="pr-1" />
+            {ingColumns.map(({ slotId, index, tint }) => (
+              <th key={slotId} className="pb-0.5 text-center align-bottom">
+                <div className="mx-auto mb-0.5 rounded-full h-1" style={{ backgroundColor: tint, width: 20 }} />
+                <IngredientIcon index={index} width={36} />
+              </th>
+            ))}
+          </tr>
+        </thead>
+        <tbody>
+          {rows.map(({ part, img, label }) => (
+            <tr key={part}>
+              <td className="pr-1 py-0 align-middle">
+                <GolemRowHeader img={img} label={label} />
+              </td>
+              {ingColumns.map(({ slotId, tint }) => {
+                const isClue = clueMap[slotId]?.[part] != null;
+                const mark = golemNotepad.ingredientMarks?.[slotId]?.[part] ?? null;
+                return (
+                  <td key={slotId} className="py-0 align-middle">
+                    <GolemCell
+                      mark={mark}
+                      isClue={isClue && mark !== null}
+                      img={img}
+                      noteKey={`g1-${slotId}-${part}`}
+                      tint={tint}
+                      isBottomGrid={false}
+                      hint={ingHints[`${slotId}-${part}`]}
+                      onMark={() => dispatch({
+                        type: 'SET_GOLEM_INGREDIENT_MARK',
+                        slot: slotId, part,
+                        mark: cycleIngMark(mark),
+                      })}
+                    />
+                  </td>
+                );
+              })}
+            </tr>
           ))}
-        </div>
-        {rows.map(({ part, img, label }) => (
-          <div key={part} className="flex gap-1 mt-1">
-            <GolemRowHeader img={img} label={label} />
-            {ingColumns.map(({ slotId, tint }) => {
-              const isClue = clueMap[slotId]?.[part] != null;
-              const mark = golemNotepad.ingredientMarks?.[slotId]?.[part] ?? null;
-              return (
-                <div key={slotId}>
-                  <GolemCell
-                    mark={mark}
-                    isClue={isClue && mark !== null}
-                    img={img}
-                    noteKey={`g1-${slotId}-${part}`}
-                    tint={tint}
-                    isBottomGrid={false}
-                    hint={ingHints[`${slotId}-${part}`]}
-                    onMark={() => dispatch({
-                      type: 'SET_GOLEM_INGREDIENT_MARK',
-                      slot: slotId, part,
-                      mark: cycleIngMark(mark),
-                    })}
-                  />
-                </div>
-              );
-            })}
-          </div>
-        ))}
-      </div>
+        </tbody>
+      </table>
 
       {/* ── Bottom grid: alch property deduction ───────────────────────────── */}
       {/* paddingBottom reserves space for the peeking decorators — no overflow */}
@@ -1024,8 +1030,8 @@ export function GolemPanel({ activeTool }: { activeTool: GridTool }) {
         {/* Aspect sign decorators — peek out 2/3 below the grid, 1/3 behind */}
         {ALCH_COLS.map((col, colIdx) => {
           const sign: Sign = col.size === 'L' ? '+' : '-';
-          // Column centre: header(HDR_W) + (colIdx+1) gaps of 4px + colIdx full cells + half cell
-          const left = HDR_W + (colIdx + 1) * 4 + colIdx * CELL_W + CELL_W / 2 - 14;
+          // Column centre: header td (HDR_W + pr-1=4) + colIdx full cells + half cell
+          const left = HDR_W + 4 + colIdx * CELL_W + CELL_W / 2 - 14;
           return (
             <div key={`sdec-${col.color}${col.size}`} style={{
               position: 'absolute', bottom: 0, left,
@@ -1037,34 +1043,41 @@ export function GolemPanel({ activeTool }: { activeTool: GridTool }) {
         })}
         {/* Grid rows sit above the decorators */}
         <div style={{ position: 'relative', zIndex: 1 }}>
-          {rows.map(({ part, img, label }) => (
-            <div key={part} className="flex gap-1 mt-1">
-              <GolemRowHeader img={img} label={label} />
-              {ALCH_COLS.map(col => {
-                const orbSize = col.size === 'L' ? Math.round(CELL_W * 0.70) : Math.round(CELL_W * 0.25);
-                const colKey = `${col.color}${col.size}`;
-                const cellKey = `${part}-${colKey}`;
-                const mark = golemNotepad.bottomGrid?.[cellKey] ?? null;
-                return (
-                  <GolemCell
-                    key={colKey}
-                    mark={mark}
-                    img={img}
-                    noteKey={`g2-${part}-${colKey}`}
-                    orbColor={col.color}
-                    orbSize={orbSize}
-                    isBottomGrid={true}
-                    hint={bottomHints[cellKey]}
-                    onMark={() => dispatch({
-                      type: 'SET_GOLEM_BOTTOM_MARK',
-                      key: cellKey,
-                      mark: cycleIngMark(mark),
-                    })}
-                  />
-                );
-              })}
-            </div>
-          ))}
+          <table className="border-collapse text-xs">
+            <tbody>
+              {rows.map(({ part, img, label }) => (
+                <tr key={part}>
+                  <td className="pr-1 py-0 align-middle">
+                    <GolemRowHeader img={img} label={label} />
+                  </td>
+                  {ALCH_COLS.map(col => {
+                    const orbSize = col.size === 'L' ? Math.round(CELL_W * 0.70) : Math.round(CELL_W * 0.25);
+                    const colKey = `${col.color}${col.size}`;
+                    const cellKey = `${part}-${colKey}`;
+                    const mark = golemNotepad.bottomGrid?.[cellKey] ?? null;
+                    return (
+                      <td key={colKey} className="py-0 align-middle">
+                        <GolemCell
+                          mark={mark}
+                          img={img}
+                          noteKey={`g2-${part}-${colKey}`}
+                          orbColor={col.color}
+                          orbSize={orbSize}
+                          isBottomGrid={true}
+                          hint={bottomHints[cellKey]}
+                          onMark={() => dispatch({
+                            type: 'SET_GOLEM_BOTTOM_MARK',
+                            key: cellKey,
+                            mark: cycleIngMark(mark),
+                          })}
+                        />
+                      </td>
+                    );
+                  })}
+                </tr>
+              ))}
+            </tbody>
+          </table>
         </div>
       </div>
 
