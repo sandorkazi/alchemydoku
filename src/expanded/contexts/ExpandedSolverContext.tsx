@@ -19,6 +19,7 @@ import { checkExpandedAnswers, computeAllExpandedAnswers, getExpandedPuzzleWorld
 import { validateExpandedMinStepsAnswer, validateExpandedApprenticePlanAnswer, validateExpandedConflictOnlyAnswer } from '../logic/debunkExpanded';
 import { WORLD_DATA } from '../../logic/worldPack';
 import { makeDisplayMap, loadDisplayMap, saveDisplayMap, emptyGrid, mergeIntoUnifiedStore } from '../../utils/solverStorage';
+import { normalizeStroke, type DrawStroke } from '../../utils/penColors';
 import type { CellState, WorldSet, AlchemicalId } from '../../types';
 import type { ExpandedPuzzle, AnyAnswer, SolarLunarMark, SolarLunarMarks } from '../types';
 import type { Color, Size } from '../../types';
@@ -27,10 +28,12 @@ export type { DisplayMap, GridState } from '../../utils/solverStorage';
 
 // ─── Undo / Redo ──────────────────────────────────────────────────────────────
 
+export type { DrawStroke } from '../../utils/penColors';
+
 export type UndoSnapshot = {
   gridState:   import('../../utils/solverStorage').GridState;
   notes:       Record<string, string>;
-  drawStrokes: string[];
+  drawStrokes: DrawStroke[];
 };
 
 export type ExpandedUndoSnapshot = UndoSnapshot & {
@@ -102,7 +105,7 @@ type SavedState = {
   hintLevel: number;
   solarLunarMarks: SolarLunarMarks;
   golemNotepad: GolemNotepad;
-  drawStrokes: string[];
+  drawStrokes: DrawStroke[];
 };
 
 export type GolemSlotMark = 'reacts' | 'no-react' | 'possible' | null;
@@ -130,7 +133,7 @@ function loadSolverState(puzzleId: string): SavedState | null {
           hintLevel:       typeof entry.hintLevel === 'number' ? entry.hintLevel : 0,
           solarLunarMarks: (entry.solarLunarMarks ?? emptySolarLunarMarks()) as SolarLunarMarks,
           golemNotepad:    (entry.golemNotepad    ?? emptyGolemNotepad())    as GolemNotepad,
-          drawStrokes:     (entry.drawStrokes ?? []) as string[],
+          drawStrokes:     ((entry.drawStrokes ?? []) as (string | DrawStroke)[]).map(normalizeStroke),
         };
       }
     }
@@ -145,7 +148,7 @@ function loadSolverState(puzzleId: string): SavedState | null {
       hintLevel:       typeof p.hintLevel === 'number' ? p.hintLevel : 0,
       solarLunarMarks: (p.solarLunarMarks ?? emptySolarLunarMarks()) as SolarLunarMarks,
       golemNotepad:    (p.golemNotepad ?? emptyGolemNotepad()) as GolemNotepad,
-      drawStrokes:     (p.drawStrokes ?? []) as string[],
+      drawStrokes:     ((p.drawStrokes ?? []) as (string | DrawStroke)[]).map(normalizeStroke),
     };
   } catch { return null; }
 }
@@ -164,7 +167,7 @@ export type ExpandedSolverState = {
   answers:         (AnyAnswer | null)[];
   solarLunarMarks: SolarLunarMarks;
   golemNotepad:    GolemNotepad;
-  drawStrokes:     string[];
+  drawStrokes:     DrawStroke[];
   completed:       boolean;
   showSolution:    boolean;
   undoStack:       ExpandedUndoSnapshot[];
@@ -190,7 +193,7 @@ export type ExpandedAction =
   | { type: 'SET_GOLEM_INGREDIENT_MARK'; slot: number; part: 'chest' | 'ears'; mark: GolemSlotMark }
   | { type: 'SET_GOLEM_BOTTOM_MARK'; key: string; mark: GolemSlotMark }
   | { type: 'LOAD_PROGRESS'; gridState: GridState; notes: Record<string,string>; hintLevel: number; wrongAttempts: number; answers: (AnyAnswer | null)[]; solarLunarMarks: SolarLunarMarks; golemNotepad: GolemNotepad }
-  | { type: 'ADD_DRAW_STROKE'; d: string }
+  | { type: 'ADD_DRAW_STROKE'; d: string; color: string }
   | { type: 'CLEAR_DRAW_STROKES' }
   | { type: 'UNDO' }
   | { type: 'REDO' };
@@ -418,7 +421,7 @@ function reducer(state: ExpandedSolverState, action: ExpandedAction): ExpandedSo
 
     case 'ADD_DRAW_STROKE': {
       const undoStack = [snap(state), ...state.undoStack].slice(0, MAX_UNDO);
-      return { ...state, drawStrokes: [...state.drawStrokes, action.d], undoStack, redoStack: [] };
+      return { ...state, drawStrokes: [...state.drawStrokes, { d: action.d, color: action.color }], undoStack, redoStack: [] };
     }
 
     case 'CLEAR_DRAW_STROKES': {

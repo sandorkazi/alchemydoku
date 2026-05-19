@@ -6,6 +6,8 @@ import { getEliminatedCells } from '../logic/deducer';
 import { AlchemicalDisplay } from './AlchemicalDisplay';
 import { AlchemicalImage, IngredientIcon, PotionImage } from './GameSprites';
 import { StarBurst } from './StarBurst';
+import { PEN_COLORS, DEFAULT_PEN_COLOR } from '../utils/penColors';
+import { loadSettings } from '../utils/settings';
 import type { AlchemicalId, IngredientId, CellState } from '../types';
 
 // Fixed visual column order by display-ingredient ID (mushroom → fern → toad → bird claw → mandrake → scorpion → raven's feather → flower)
@@ -213,7 +215,11 @@ export function IngredientGrid({ onRandomize, onLongPressRandomize }: { onRandom
 
   const [showConfirm, setShowConfirm] = useState(false);
   const [activeTool, setActiveTool] = useState<GridTool>('mark');
+  const [activePenColor, setActivePenColor] = useState<string>(() => loadSettings().penColor ?? DEFAULT_PEN_COLOR);
+  const [showColorPicker, setShowColorPicker] = useState(false);
   const [editingCell, setEditingCell] = useState<{ ing: IngredientId; alch: AlchemicalId } | null>(null);
+  const drawLongPressTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const drawLongFired = useRef(false);
 
   // ── Visual hint circles (worlds-derived, never touch gridState) ───────────
   const hintCells = useMemo(() => {
@@ -270,6 +276,14 @@ export function IngredientGrid({ onRandomize, onLongPressRandomize }: { onRandom
     }
   }, [activeTool]);
 
+  // ── Close color picker when clicking outside ──────────────────────────────
+  useEffect(() => {
+    if (!showColorPicker) return;
+    const close = () => setShowColorPicker(false);
+    document.addEventListener('pointerdown', close);
+    return () => document.removeEventListener('pointerdown', close);
+  }, [showColorPicker]);
+
   // ── SVG draw helpers ───────────────────────────────────────────────────────
   const toSvgPoint = (e: React.PointerEvent) => {
     const rect = svgRef.current!.getBoundingClientRect();
@@ -295,7 +309,7 @@ export function IngredientGrid({ onRandomize, onLongPressRandomize }: { onRandom
     if (!isDrawingRef.current) return;
     isDrawingRef.current = false;
     const d = buildPath(drawPointsRef.current);
-    if (d) dispatch({ type: 'ADD_DRAW_STROKE', d });
+    if (d) dispatch({ type: 'ADD_DRAW_STROKE', d, color: activePenColor });
     drawPointsRef.current = [];
     if (livePathRef.current) livePathRef.current.setAttribute('d', '');
   };
@@ -361,25 +375,99 @@ export function IngredientGrid({ onRandomize, onLongPressRandomize }: { onRandom
           <div className="flex items-center gap-2 flex-wrap">
 
             {/* Tool selector */}
-            <div className="flex items-center rounded-lg border border-gray-200 overflow-hidden">
-              {TOOL_DEFS.map(({ id, label, title }) => (
-                <button
-                  key={id}
-                  title={title}
-                  aria-pressed={activeTool === id}
-                  onClick={() => { setActiveTool(id); setEditingCell(null); }}
-                  className={`px-2.5 py-1 text-xs font-bold transition-colors focus-visible:outline-none
-                    focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-indigo-400
-                    ${activeTool === id
-                      ? 'bg-indigo-600 text-white'
-                      : 'bg-white text-gray-500 hover:bg-gray-50'
-                    }
-                    ${id === 'mark' ? '' : 'border-l border-gray-200'}
-                  `}
+            <div className="relative">
+              <div className="flex items-center rounded-lg border border-gray-200 overflow-hidden">
+                {TOOL_DEFS.map(({ id, label, title }) => (
+                  id === 'draw' ? (
+                    <button
+                      key={id}
+                      title={`${title} · hold for color picker`}
+                      aria-pressed={activeTool === id}
+                      onPointerDown={() => {
+                        drawLongFired.current = false;
+                        drawLongPressTimer.current = setTimeout(() => {
+                          drawLongFired.current = true;
+                          setActiveTool('draw');
+                          setEditingCell(null);
+                          setShowColorPicker(p => !p);
+                        }, 500);
+                      }}
+                      onPointerUp={() => {
+                        if (drawLongPressTimer.current) clearTimeout(drawLongPressTimer.current);
+                        if (!drawLongFired.current) {
+                          setActiveTool('draw');
+                          setEditingCell(null);
+                          setShowColorPicker(false);
+                        }
+                        drawLongFired.current = false;
+                      }}
+                      onPointerLeave={() => {
+                        if (drawLongPressTimer.current) clearTimeout(drawLongPressTimer.current);
+                        drawLongFired.current = false;
+                      }}
+                      onContextMenu={e => e.preventDefault()}
+                      className={`px-2.5 py-1 text-xs font-bold transition-colors focus-visible:outline-none
+                        focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-indigo-400 select-none
+                        ${activeTool === 'draw'
+                          ? 'bg-indigo-600 text-white'
+                          : 'bg-white text-gray-500 hover:bg-gray-50'
+                        }
+                        border-l border-gray-200
+                      `}
+                    >
+                      <span className="inline-flex items-center gap-0.5 leading-none">
+                        <span>✏</span>
+                        <span
+                          className="w-2 h-2 rounded-full shrink-0"
+                          style={{
+                            backgroundColor: activePenColor,
+                            outline: `1.5px solid ${activeTool === 'draw' ? 'rgba(255,255,255,0.55)' : '#e5e7eb'}`,
+                          }}
+                        />
+                      </span>
+                    </button>
+                  ) : (
+                    <button
+                      key={id}
+                      title={title}
+                      aria-pressed={activeTool === id}
+                      onClick={() => { setActiveTool(id); setEditingCell(null); }}
+                      className={`px-2.5 py-1 text-xs font-bold transition-colors focus-visible:outline-none
+                        focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-indigo-400
+                        ${activeTool === id
+                          ? 'bg-indigo-600 text-white'
+                          : 'bg-white text-gray-500 hover:bg-gray-50'
+                        }
+                        ${id === 'mark' ? '' : 'border-l border-gray-200'}
+                      `}
+                    >
+                      {label}
+                    </button>
+                  )
+                ))}
+              </div>
+
+              {/* Color picker popover — anchored below the tool group */}
+              {showColorPicker && (
+                <div
+                  onPointerDown={e => e.stopPropagation()}
+                  className="absolute top-full left-0 mt-1 flex gap-1.5 p-2 rounded-lg border border-gray-200 bg-white shadow-lg z-50"
                 >
-                  {label}
-                </button>
-              ))}
+                  {PEN_COLORS.map(color => (
+                    <button
+                      key={color}
+                      aria-pressed={activePenColor === color}
+                      onClick={() => { setActivePenColor(color); setShowColorPicker(false); }}
+                      className={`w-5 h-5 rounded-full transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-indigo-400
+                        ${activePenColor === color
+                          ? 'ring-2 ring-offset-1 ring-gray-600 scale-110'
+                          : 'ring-1 ring-gray-300 hover:scale-110'
+                        }`}
+                      style={{ backgroundColor: color }}
+                    />
+                  ))}
+                </div>
+              )}
             </div>
 
             <button
@@ -558,10 +646,10 @@ export function IngredientGrid({ onRandomize, onLongPressRandomize }: { onRandom
             onPointerUp={finalizeDraw}
             onPointerLeave={finalizeDraw}
           >
-            {state.drawStrokes.map((d, i) => (
-              <path key={i} d={d} fill="none" stroke="rgba(249,115,22,0.85)" strokeWidth="5" strokeLinecap="round" strokeLinejoin="round" />
+            {state.drawStrokes.map((stroke, i) => (
+              <path key={i} d={stroke.d} fill="none" stroke={stroke.color} strokeOpacity={0.85} strokeWidth="5" strokeLinecap="round" strokeLinejoin="round" />
             ))}
-            <path ref={livePathRef} d="" fill="none" stroke="rgba(249,115,22,0.85)" strokeWidth="5" strokeLinecap="round" strokeLinejoin="round" />
+            <path ref={livePathRef} d="" fill="none" stroke={activePenColor} strokeOpacity={0.85} strokeWidth="5" strokeLinecap="round" strokeLinejoin="round" />
           </svg>
           </div>{/* /neutral-pair wrapper */}
           </div>{/* /centering wrapper */}

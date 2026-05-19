@@ -1,5 +1,6 @@
 import { useState, useRef, type ReactNode } from 'react';
 import { type Settings } from '../utils/settings';
+import { PEN_COLORS } from '../utils/penColors';
 import { useDrive } from '../contexts/DriveContext';
 import { downloadSaveFile, uploadSaveFile } from '../utils/saveFileTransfer';
 
@@ -209,6 +210,30 @@ export function SettingsModal({
               value={settings.showPuzzleOnly}
               onChange={v => set({ showPuzzleOnly: v })}
             />
+          </div>
+
+          {/* Drawing section */}
+          <p className="text-[10px] uppercase tracking-widest text-gray-400 font-semibold mt-5 mb-0.5">
+            Drawing
+          </p>
+          <div className="py-3">
+            <p className="text-sm font-medium text-gray-800 mb-2">Default pen color</p>
+            <div className="flex items-center gap-2">
+              {PEN_COLORS.map(color => (
+                <button
+                  key={color}
+                  title={`Default pen color`}
+                  aria-pressed={settings.penColor === color}
+                  onClick={() => set({ penColor: color })}
+                  className={`w-6 h-6 rounded-full transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-indigo-400
+                    ${settings.penColor === color
+                      ? 'ring-2 ring-offset-1 ring-gray-600 scale-110'
+                      : 'ring-1 ring-gray-300 hover:scale-110'
+                    }`}
+                  style={{ backgroundColor: color }}
+                />
+              ))}
+            </div>
           </div>
 
           {/* Save file section */}
