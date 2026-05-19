@@ -107,39 +107,27 @@ npx tsc --noEmit 2>&1 | head -20
 ```
 and report any type errors (there should be none).
 
-## Step 7 — Push branch and open PR
+## Step 7 — Commit and provide PR URL
 
-After the type check passes, ask the user: "Shall I commit and push this to a new branch so you can open a PR?"
+After the type check passes, ask the user: "Shall I commit these changes?"
 
 If the user confirms:
 
-1. Determine the remote URL:
+1. Commit on the current branch:
 ```bash
-git remote get-url origin
-```
-
-2. Use `git worktree` to create the branch without touching the current working tree (avoids stash conflicts with any uncommitted changes):
-```bash
-CURRENT=$(git branch --show-current)
-git worktree add /tmp/rn-pr main
-cd /tmp/rn-pr
-git checkout -b release-notes/<TODAY>
-git checkout "$CURRENT" -- src/data/releaseNotes.ts src/utils/releaseNotes.ts
 git add src/data/releaseNotes.ts src/utils/releaseNotes.ts
 git commit -m "chore(release): bump RELEASE_VERSION to <TODAY>"
-git push -u origin release-notes/<TODAY>
-cd -
-git worktree remove /tmp/rn-pr
 ```
 
-4. Derive the GitHub repo path from the remote URL (strip `.git`, convert SSH → HTTPS if needed), then build a pre-filled PR URL using Python:
+2. Derive the GitHub repo path from the remote URL, then build a pre-filled PR URL:
 
 ```bash
 python3 - <<'EOF'
 import urllib.parse
 
-repo = "<owner>/<repo>"   # derived from remote URL
+repo = "<owner>/<repo>"   # derived from `git remote get-url origin` (strip .git, SSH→HTTPS)
 today = "<TODAY>"
+branch = "<CURRENT_BRANCH>"  # from `git branch --show-current`
 entry_title = "<entry title>"
 
 body_lines = ["## Summary", ""]
@@ -152,7 +140,7 @@ body_lines += ["", "---", "🤖 Generated with [Claude Code](https://claude.com/
 body = "\n".join(body_lines)
 pr_title = f"chore(release): release notes {today} — {entry_title}"
 params = urllib.parse.urlencode({"expand": "1", "title": pr_title, "body": body})
-print(f"https://github.com/{repo}/compare/main...release-notes/{today}?{params}")
+print(f"https://github.com/{repo}/compare/main...{branch}?{params}")
 EOF
 ```
 
