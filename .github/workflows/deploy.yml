@@ -12,14 +12,7 @@ jobs:
 
       - name: Set deploy config
         id: config
-        run: |
-          if [ "${{ github.ref_name }}" = "main" ]; then
-            echo "base=/alchemydoku/" >> "$GITHUB_OUTPUT"
-            echo "dest=" >> "$GITHUB_OUTPUT"
-          else
-            echo "base=/alchemydoku/preview/" >> "$GITHUB_OUTPUT"
-            echo "dest=preview" >> "$GITHUB_OUTPUT"
-          fi
+        run: if [ "${{ github.ref_name }}" = "main" ]; then echo "base=/alchemydoku/" >> "$GITHUB_OUTPUT"; echo "dest=" >> "$GITHUB_OUTPUT"; else echo "base=/alchemydoku/preview/" >> "$GITHUB_OUTPUT"; echo "dest=preview" >> "$GITHUB_OUTPUT"; fi          if [ "${{ github.ref_name }}" = "main" ]; then
 
       - uses: actions/setup-node@v4
         with:
