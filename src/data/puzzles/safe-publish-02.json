@@ -1,7 +1,7 @@
 {
   "id": "safe-publish-02",
   "title": "The Calculated Risk",
-  "description": "Red is positive. Blue is negative. But something is still uncertain — what?",
+  "description": "Red is positive. Blue is negative. But something is still uncertain \u2014 what?",
   "difficulty": "easy",
   "clues": [
     {
@@ -51,5 +51,79 @@
     "question_score": 0,
     "world_score": 5,
     "residual_worlds": 10080
-  }
+  },
+  "hint_steps": [
+    {
+      "look_at": "clue 1: ing1 has R+.",
+      "means": "This directly tells us the R sign of ing1.",
+      "so": "ing1 has R+; cross off NNN, Nnp, nPp, npN from ing1.",
+      "highlight": {
+        "clue_indices": [
+          0
+        ],
+        "ingredients": [
+          1
+        ]
+      },
+      "impact": {
+        "confirmed_alchemicals": [],
+        "confirmed_aspects": [
+          {
+            "ingredient": 1,
+            "color": "R",
+            "sign": "+"
+          }
+        ],
+        "eliminated_cells": [
+          {
+            "ingredient": 1,
+            "alchemicals": [
+              "NNN",
+              "Nnp",
+              "nPp",
+              "npN"
+            ]
+          }
+        ]
+      },
+      "reveals_answer": false,
+      "worlds_before": 40320,
+      "worlds_after": 20160
+    },
+    {
+      "look_at": "clue 2: ing1 has B-.",
+      "means": "This directly tells us the B sign of ing1.",
+      "so": "ing1 has B-; cross off PPP, pnP from ing1.",
+      "highlight": {
+        "clue_indices": [
+          1
+        ],
+        "ingredients": [
+          1
+        ]
+      },
+      "impact": {
+        "confirmed_alchemicals": [],
+        "confirmed_aspects": [
+          {
+            "ingredient": 1,
+            "color": "B",
+            "sign": "-"
+          }
+        ],
+        "eliminated_cells": [
+          {
+            "ingredient": 1,
+            "alchemicals": [
+              "PPP",
+              "pnP"
+            ]
+          }
+        ]
+      },
+      "reveals_answer": true,
+      "worlds_before": 20160,
+      "worlds_after": 10080
+    }
+  ]
 }

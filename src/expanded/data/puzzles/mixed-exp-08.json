@@ -66,5 +66,129 @@
     "question_score": 0,
     "world_score": 0,
     "residual_worlds": 444
-  }
+  },
+  "hint_steps": [
+    {
+      "look_at": "clue 3: sell constraint among {ing1, ing3, ing8}.",
+      "means": "Selling results among {ing1, ing3, ing8} constrain possible alchemicals.",
+      "so": "ing1 has R+; ing3 has R+; ing8 has R+; cross off NNN, Nnp, nPp, npN from ing1; cross off PPP, Ppn from ing2; cross off NNN, Nnp, nPp, npN from ing3; cross off PPP, Ppn from ing4; cross off PPP, Ppn from ing5; cross off PPP, Ppn from ing6; cross off PPP, Ppn from ing7; cross off NNN, Nnp, nPp, npN from ing8.",
+      "highlight": {
+        "clue_indices": [
+          2
+        ],
+        "ingredients": [
+          1,
+          3,
+          8
+        ]
+      },
+      "impact": {
+        "confirmed_alchemicals": [],
+        "confirmed_aspects": [
+          {
+            "ingredient": 1,
+            "color": "R",
+            "sign": "+"
+          },
+          {
+            "ingredient": 3,
+            "color": "R",
+            "sign": "+"
+          },
+          {
+            "ingredient": 8,
+            "color": "R",
+            "sign": "+"
+          }
+        ],
+        "eliminated_cells": [
+          {
+            "ingredient": 1,
+            "alchemicals": [
+              "NNN",
+              "Nnp",
+              "nPp",
+              "npN"
+            ]
+          },
+          {
+            "ingredient": 2,
+            "alchemicals": [
+              "PPP",
+              "Ppn"
+            ]
+          },
+          {
+            "ingredient": 3,
+            "alchemicals": [
+              "NNN",
+              "Nnp",
+              "nPp",
+              "npN"
+            ]
+          },
+          {
+            "ingredient": 4,
+            "alchemicals": [
+              "PPP",
+              "Ppn"
+            ]
+          },
+          {
+            "ingredient": 5,
+            "alchemicals": [
+              "PPP",
+              "Ppn"
+            ]
+          },
+          {
+            "ingredient": 6,
+            "alchemicals": [
+              "PPP",
+              "Ppn"
+            ]
+          },
+          {
+            "ingredient": 7,
+            "alchemicals": [
+              "PPP",
+              "Ppn"
+            ]
+          },
+          {
+            "ingredient": 8,
+            "alchemicals": [
+              "NNN",
+              "Nnp",
+              "nPp",
+              "npN"
+            ]
+          }
+        ]
+      },
+      "reveals_answer": false,
+      "worlds_before": 40320,
+      "worlds_after": 1440
+    },
+    {
+      "look_at": "Suppose ing1 were Ppn.",
+      "means": "If ing1 = Ppn, then after applying all clues, the answer becomes deducible.",
+      "so": "Under this assumption, the answer is 3.",
+      "highlight": {
+        "clue_indices": [],
+        "ingredients": [
+          1
+        ]
+      },
+      "impact": {
+        "confirmed_alchemicals": [],
+        "confirmed_aspects": [],
+        "eliminated_cells": []
+      },
+      "reveals_answer": true,
+      "bifurcation": true,
+      "worlds_before": 444,
+      "worlds_after": 96
+    }
+  ]
 }

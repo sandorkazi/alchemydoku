@@ -11,6 +11,27 @@ export interface ReleaseEntry {
 
 export const RELEASE_NOTES: ReleaseEntry[] = [
   {
+    version: '2026-05-20',
+    title: 'Step-by-step hints, timer & pen colours',
+    sections: [
+      {
+        heading: 'New Features',
+        items: [
+          'Added step-by-step reasoning hints: the hint button now walks through each deduction one step at a time ("Look at / That means / So"), available for all 423 puzzles',
+          'Added an optional solve timer — shown as a chip in the toolbar with a pause overlay; toggle it in Settings',
+          'Added a pen colour picker — tap and hold the ✏ icon to choose your annotation colour, with a default colour setting',
+        ],
+      },
+      {
+        heading: 'Bug Fixes',
+        items: [
+          'Fixed golem grid columns not aligning pixel-perfectly with the ingredient grid in expanded mode',
+          'Fixed the solar/lunar stripe misaligning the ingredient grid relative to the golem grid in expanded mode',
+        ],
+      },
+    ],
+  },
+  {
     version: '2026-05-19',
     title: 'Golem Rework, Mixed Puzzles & Settings Overhaul',
     sections: [

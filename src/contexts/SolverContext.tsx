@@ -75,6 +75,7 @@ export type SolverState = {
   notes: Record<string, string>;
   autoDeduction: boolean;
   hintLevel: number;
+  hintStepIndex: number;
   wrongAttempts: number;
   /** One entry per puzzle.questions — null means not yet answered */
   answers: (PuzzleAnswer | null)[];
@@ -94,6 +95,7 @@ export type Action =
   | { type: 'SET_CELL'; ingredient: number; alchemical: number; state: CellState }
   | { type: 'SUBMIT_ANSWER'; answers: (PuzzleAnswer | null)[] }
   | { type: 'REQUEST_HINT' }
+  | { type: 'NEXT_HINT_STEP' }
   | { type: 'TOGGLE_AUTO_DEDUCTION' }
   | { type: 'REVEAL_SOLUTION' }
   | { type: 'RESET' }
@@ -166,6 +168,15 @@ function reducer(state: SolverState, action: Action): SolverState {
     case 'REQUEST_HINT':
       return { ...state, hintLevel: Math.min(state.hintLevel + 1, 3) };
 
+    case 'NEXT_HINT_STEP':
+      return {
+        ...state,
+        hintStepIndex: Math.min(
+          state.hintStepIndex + 1,
+          state.puzzle.hint_steps?.length ?? 0,
+        ),
+      };
+
     case 'TOGGLE_AUTO_DEDUCTION':
       return { ...state, autoDeduction: !state.autoDeduction };
 
@@ -178,6 +189,7 @@ function reducer(state: SolverState, action: Action): SolverState {
         ...state,
         gridState: emptyGrid(),
         hintLevel: 0,
+        hintStepIndex: 0,
         wrongAttempts: 0,
         answers: state.puzzle.questions.map(() => null),
         completed: false,
@@ -325,6 +337,7 @@ export function SolverProvider({ puzzle, children, initialDisplayMap }: { puzzle
     notes:     savedState?.notes     ?? {},
     autoDeduction: false,
     hintLevel: savedState?.hintLevel ?? 0,
+    hintStepIndex: 0,
     wrongAttempts: 0,
     answers: puzzle.questions.map(() => null),
     completed: false,

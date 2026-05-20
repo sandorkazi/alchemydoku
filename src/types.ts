@@ -213,6 +213,32 @@ export type Publication = {
   claimedAlchemical: AlchemicalId;
 };
 
+// ─── Structured hint steps ────────────────────────────────────────────────────
+
+export type HintHighlight = {
+  clue_indices?: number[];
+  ingredients?: IngredientId[];
+  grid_cells?: Array<{ ingredient: IngredientId; alchemical: string }>;
+};
+
+export type HintImpact = {
+  confirmed_alchemicals?: Array<{ ingredient: IngredientId; alchemical: string }>;
+  confirmed_aspects?: Array<{ ingredient: IngredientId; color: Color; sign: Sign }>;
+  eliminated_cells?: Array<{ ingredient: IngredientId; alchemicals: string[] }>;
+};
+
+export type HintStep = {
+  look_at: string;
+  means: string;
+  so: string;
+  highlight: HintHighlight;
+  impact: HintImpact;
+  reveals_answer?: boolean;
+  bifurcation?: boolean;
+  worlds_before?: number;
+  worlds_after?: number;
+};
+
 export type Puzzle = {
   id: string;
   title: string;
@@ -222,6 +248,7 @@ export type Puzzle = {
   questions: QuestionTarget[];
   solution: Assignment;
   hints?: { level: number; text: string }[];
+  hint_steps?: HintStep[];
   metadata?: {
     generatedAt?: string;
     worldsAfterClues?: number;

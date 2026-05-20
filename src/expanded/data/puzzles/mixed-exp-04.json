@@ -53,5 +53,27 @@
     "question_score": 0,
     "world_score": 0,
     "residual_worlds": 16416
-  }
+  },
+  "hint_steps": [
+    {
+      "look_at": "Suppose ing1 were pnP.",
+      "means": "If ing1 = pnP, then after applying all clues, the answer becomes deducible.",
+      "so": "Under this assumption, the answer is 4.",
+      "highlight": {
+        "clue_indices": [],
+        "ingredients": [
+          1
+        ]
+      },
+      "impact": {
+        "confirmed_alchemicals": [],
+        "confirmed_aspects": [],
+        "eliminated_cells": []
+      },
+      "reveals_answer": true,
+      "bifurcation": true,
+      "worlds_before": 16416,
+      "worlds_after": 1344
+    }
+  ]
 }

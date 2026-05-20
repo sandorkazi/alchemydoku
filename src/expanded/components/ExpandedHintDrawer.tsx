@@ -11,6 +11,7 @@ import { useExpandedSolver } from '../contexts/ExpandedSolverContext';
 import { INGREDIENTS } from '../../data/ingredients';
 import type { AlchemicalId, Color, Sign } from '../../types';
 import type { DisplayMap } from '../contexts/ExpandedSolverContext';
+import { HintStepViewer } from '../../components/HintStepViewer';
 
 // ─── Token helpers (copied verbatim from HintDrawer) ─────────────────────────
 
@@ -95,7 +96,20 @@ function renderHint(text: string, displayMap: DisplayMap): React.ReactNode {
 
 export function ExpandedHintDrawer({ hints }: { hints?: { level: number; text: string }[] }) {
   const { state, dispatch } = useExpandedSolver();
-  const { hintLevel, completed, displayMap } = state;
+  const { hintLevel, hintStepIndex, completed, displayMap, puzzle } = state;
+
+  // Prefer structured hint_steps when available
+  if (puzzle.hint_steps && puzzle.hint_steps.length > 0) {
+    return (
+      <HintStepViewer
+        steps={puzzle.hint_steps}
+        hintStepIndex={hintStepIndex}
+        displayMap={displayMap}
+        onNext={() => dispatch({ type: 'NEXT_HINT_STEP' })}
+        completed={completed}
+      />
+    );
+  }
 
   if (!hints || hints.length === 0) return null;
 

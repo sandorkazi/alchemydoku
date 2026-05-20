@@ -48,5 +48,160 @@
     "question_score": 0,
     "world_score": 0,
     "residual_worlds": 5040
-  }
+  },
+  "hint_steps": [
+    {
+      "look_at": "clue 1: ing1 has R+.",
+      "means": "This directly tells us the R sign of ing1.",
+      "so": "ing1 has R+; cross off NNN, Nnp, nPp, npN from ing1.",
+      "highlight": {
+        "clue_indices": [
+          0
+        ],
+        "ingredients": [
+          1
+        ]
+      },
+      "impact": {
+        "confirmed_alchemicals": [],
+        "confirmed_aspects": [
+          {
+            "ingredient": 1,
+            "color": "R",
+            "sign": "+"
+          }
+        ],
+        "eliminated_cells": [
+          {
+            "ingredient": 1,
+            "alchemicals": [
+              "NNN",
+              "Nnp",
+              "nPp",
+              "npN"
+            ]
+          }
+        ]
+      },
+      "reveals_answer": false,
+      "worlds_before": 40320,
+      "worlds_after": 20160
+    },
+    {
+      "look_at": "clue 2: ing1 has G+.",
+      "means": "This directly tells us the G sign of ing1.",
+      "so": "ing1 has G+; cross off pNn, pnP from ing1.",
+      "highlight": {
+        "clue_indices": [
+          1
+        ],
+        "ingredients": [
+          1
+        ]
+      },
+      "impact": {
+        "confirmed_alchemicals": [],
+        "confirmed_aspects": [
+          {
+            "ingredient": 1,
+            "color": "G",
+            "sign": "+"
+          }
+        ],
+        "eliminated_cells": [
+          {
+            "ingredient": 1,
+            "alchemicals": [
+              "pNn",
+              "pnP"
+            ]
+          }
+        ]
+      },
+      "reveals_answer": false,
+      "worlds_before": 20160,
+      "worlds_after": 10080
+    },
+    {
+      "look_at": "clue 3: ing1 has B-.",
+      "means": "This directly tells us the B sign of ing1.",
+      "so": "ing1 is Ppn; ing1 has B-; cross off PPP from ing1; cross off Ppn from ing2; cross off Ppn from ing3; cross off Ppn from ing4; cross off Ppn from ing5; cross off Ppn from ing6; cross off Ppn from ing7; cross off Ppn from ing8.",
+      "highlight": {
+        "clue_indices": [
+          2
+        ],
+        "ingredients": [
+          1
+        ]
+      },
+      "impact": {
+        "confirmed_alchemicals": [
+          {
+            "ingredient": 1,
+            "alchemical": "Ppn"
+          }
+        ],
+        "confirmed_aspects": [
+          {
+            "ingredient": 1,
+            "color": "B",
+            "sign": "-"
+          }
+        ],
+        "eliminated_cells": [
+          {
+            "ingredient": 1,
+            "alchemicals": [
+              "PPP"
+            ]
+          },
+          {
+            "ingredient": 2,
+            "alchemicals": [
+              "Ppn"
+            ]
+          },
+          {
+            "ingredient": 3,
+            "alchemicals": [
+              "Ppn"
+            ]
+          },
+          {
+            "ingredient": 4,
+            "alchemicals": [
+              "Ppn"
+            ]
+          },
+          {
+            "ingredient": 5,
+            "alchemicals": [
+              "Ppn"
+            ]
+          },
+          {
+            "ingredient": 6,
+            "alchemicals": [
+              "Ppn"
+            ]
+          },
+          {
+            "ingredient": 7,
+            "alchemicals": [
+              "Ppn"
+            ]
+          },
+          {
+            "ingredient": 8,
+            "alchemicals": [
+              "Ppn"
+            ]
+          }
+        ]
+      },
+      "reveals_answer": true,
+      "worlds_before": 10080,
+      "worlds_after": 5040
+    }
+  ]
 }

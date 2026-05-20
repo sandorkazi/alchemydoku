@@ -53,5 +53,27 @@
     "question_score": 0,
     "world_score": 0,
     "residual_worlds": 15984
-  }
+  },
+  "hint_steps": [
+    {
+      "look_at": "Suppose ing1 were npN.",
+      "means": "If ing1 = npN, then after applying all clues, the answer becomes deducible.",
+      "so": "Under this assumption, the answer is 2.",
+      "highlight": {
+        "clue_indices": [],
+        "ingredients": [
+          1
+        ]
+      },
+      "impact": {
+        "confirmed_alchemicals": [],
+        "confirmed_aspects": [],
+        "eliminated_cells": []
+      },
+      "reveals_answer": true,
+      "bifurcation": true,
+      "worlds_before": 15984,
+      "worlds_after": 1392
+    }
+  ]
 }

@@ -3130,6 +3130,545 @@ def gen_hints(raw: dict) -> list:
 
     return hints
 
+
+# ══════════════════════════════════════════════════════════════════════════════
+# STRUCTURED HINT STEPS  (hint_steps)
+# ══════════════════════════════════════════════════════════════════════════════
+
+def _ded_report(worlds: frozenset) -> dict:
+    """Snapshot of what is known for each ingredient slot (0-based indices)."""
+    report = {}
+    for si in range(8):
+        possible = frozenset(w[si] for w in worlds)
+        report[si] = {
+            'possible': possible,
+            'confirmed_alch': next(iter(possible)) if len(possible) == 1 else None,
+            'confirmed_aspects': {},  # color -> sign (only if unanimous)
+        }
+        possible_alch = possible
+        for col in COLORS:
+            signs = {ALCH_DATA[a][col][0] for a in possible_alch}
+            if len(signs) == 1:
+                report[si]['confirmed_aspects'][col] = signs.pop()
+    return report
+
+
+def _ded_delta(prev: dict, new: dict) -> dict:
+    """Compute what changed between two deduction reports.
+
+    Returns dict with:
+      confirmed_alch    : list of {ingredient (1-based), alchemical code}
+      confirmed_aspects : list of {ingredient (1-based), color, sign (+/-)}
+      eliminated_cells  : list of {ingredient (1-based), alchemicals [codes]}
+      has_change        : bool
+    """
+    confirmed_alch = []
+    confirmed_aspects = []
+    eliminated_cells = []
+
+    for si in range(8):
+        ing = si + 1
+        p = prev[si]
+        n = new[si]
+
+        # Newly confirmed alchemical
+        if p['confirmed_alch'] is None and n['confirmed_alch'] is not None:
+            confirmed_alch.append({'ingredient': ing, 'alchemical': ALCH_CODES[n['confirmed_alch']]})
+
+        # Newly confirmed aspects
+        for col in COLORS:
+            if col not in p['confirmed_aspects'] and col in n['confirmed_aspects']:
+                sgn = n['confirmed_aspects'][col]
+                confirmed_aspects.append({'ingredient': ing, 'color': col, 'sign': sgn_str(sgn)})
+
+        # Eliminated cells: alchemicals in prev.possible but not in new.possible
+        removed = p['possible'] - n['possible']
+        if removed:
+            eliminated_cells.append({
+                'ingredient': ing,
+                'alchemicals': sorted(ALCH_CODES[a] for a in removed),
+            })
+
+    has_change = bool(confirmed_alch or confirmed_aspects or eliminated_cells)
+    return {
+        'confirmed_alch': confirmed_alch,
+        'confirmed_aspects': confirmed_aspects,
+        'eliminated_cells': eliminated_cells,
+        'has_change': has_change,
+    }
+
+
+def _delta_to_impact(delta: dict) -> dict:
+    return {
+        'confirmed_alchemicals': delta['confirmed_alch'],
+        'confirmed_aspects':     delta['confirmed_aspects'],
+        'eliminated_cells':      delta['eliminated_cells'],
+    }
+
+
+def _so_text(delta: dict) -> str:
+    """Generate the 'So...' sentence from a delta."""
+    parts = []
+    for ca in delta['confirmed_alch']:
+        parts.append(f"ing{ca['ingredient']} is {ca['alchemical']}")
+    for ca in delta['confirmed_aspects']:
+        parts.append(f"ing{ca['ingredient']} has {ca['color']}{ca['sign']}")
+    for ec in delta['eliminated_cells']:
+        alch_list = ', '.join(ec['alchemicals'])
+        parts.append(
+            f"cross off {alch_list} from ing{ec['ingredient']}"
+        )
+    if not parts:
+        return "No new eliminations."
+    return '; '.join(parts) + '.'
+
+
+def _step_texts(clue: dict, orig_idx: int, delta: dict, running_worlds: frozenset, sol: dict) -> tuple:
+    """Return (look_at, means, so) for a clue step."""
+    k = clue['kind']
+    so = _so_text(delta)
+
+    if k == 'aspect':
+        ing = clue['ingredient']
+        col = clue['color']
+        sgn = clue['sign']
+        look_at = f"clue {orig_idx + 1}: ing{ing} has {col}{sgn}."
+        means   = f"This directly tells us the {col} sign of ing{ing}."
+
+    elif k == 'mixing':
+        i1, i2 = clue['ingredient1'], clue['ingredient2']
+        r = d2r(clue['result'])
+        r_str = fmt_r(r)
+        look_at = f"clue {orig_idx + 1}: ing{i1} + ing{i2} = {r_str}."
+        if r == 'neutral':
+            means = (
+                f"A neutral result means ing{i1} and ing{i2} have opposite signs "
+                f"in every color."
+            )
+        else:
+            col, sgn = r
+            sgn_s = sgn_str(sgn)
+            means = (
+                f"When two ingredients mix to {col}{sgn_s}, both share {col}{sgn_s}. "
+                f"Any candidate without {col}{sgn_s} is impossible for either slot."
+            )
+
+    elif k == 'full_assignment':
+        ing = clue['ingredient']
+        alch_code = ALCH_CODES[clue['alchemical']]
+        look_at = f"clue {orig_idx + 1}: ing{ing} is {alch_code}."
+        means   = f"This directly identifies ing{ing}'s alchemical."
+
+    elif k in ('mixing_among', 'mixing_count_among'):
+        ings = clue.get('ingredients', [])
+        ing_str = ', '.join(f"ing{i}" for i in ings)
+        r_str = fmt_r(d2r(clue['result']))
+        cnt = clue.get('count', '≥1')
+        if k == 'mixing_among':
+            look_at = f"clue {orig_idx + 1}: at least one pair among {{{ing_str}}} mixes to {r_str}."
+            means   = (
+                f"Every world must contain at least one pair in {{{ing_str}}} "
+                f"whose mix result is {r_str}."
+            )
+        else:
+            look_at = f"clue {orig_idx + 1}: exactly {cnt} pairs among {{{ing_str}}} mix to {r_str}."
+            means   = (
+                f"Exactly {cnt} pair(s) in {{{ing_str}}} must mix to {r_str}; "
+                f"any world with a different count is impossible."
+            )
+
+    elif k in ('sell_among', 'sell_result_among'):
+        ings = clue.get('ingredients', [])
+        ing_str = ', '.join(f"ing{i}" for i in ings)
+        r_str = fmt_r(d2r(clue.get('result', clue.get('sellResult', {}))))
+        look_at = f"clue {orig_idx + 1}: sell constraint among {{{ing_str}}}."
+        means   = f"Selling results among {{{ing_str}}} constrain possible alchemicals."
+
+    elif k == 'golem_test':
+        ing = clue['ingredient']
+        cr = '✓' if clue['chest_reacted'] else '✗'
+        er = '✓' if clue['ears_reacted'] else '✗'
+        look_at = f"clue {orig_idx + 1}: golem test on ing{ing} (chest={cr}, ears={er})."
+        means   = f"The golem's reaction reveals which alchemicals are possible for ing{ing}."
+
+    elif k == 'book':
+        ing = clue['ingredient']
+        sl = 'solar' if clue.get('is_solar') else 'lunar'
+        look_at = f"clue {orig_idx + 1}: ing{ing} is {sl}."
+        means   = f"Solar/lunar status constrains which alchemicals ing{ing} can be."
+
+    elif k == 'book_among':
+        ings = clue.get('ingredients', [])
+        ing_str = ', '.join(f"ing{i}" for i in ings)
+        cnt = clue.get('count', '?')
+        sl = 'solar' if clue.get('is_solar') else 'lunar'
+        look_at = f"clue {orig_idx + 1}: exactly {cnt} of {{{ing_str}}} are {sl}."
+        means   = f"Exactly {cnt} ingredient(s) in {{{ing_str}}} must be {sl}."
+
+    else:
+        # Generic fallback
+        look_at = f"clue {orig_idx + 1}."
+        means   = "Apply this clue to eliminate impossible alchemical assignments."
+
+    return look_at, means, so
+
+
+def _clue_to_highlight(clue: dict, orig_idx: int, delta: dict) -> dict:
+    """Build the highlight dict for a clue step."""
+    k = clue['kind']
+    h = {'clue_indices': [orig_idx]}
+
+    if k == 'aspect':
+        h['ingredients'] = [clue['ingredient']]
+    elif k == 'mixing':
+        h['ingredients'] = [clue['ingredient1'], clue['ingredient2']]
+    elif k == 'full_assignment':
+        ing = clue['ingredient']
+        alch_code = ALCH_CODES[clue['alchemical']]
+        h['ingredients'] = [ing]
+        h['grid_cells'] = [{'ingredient': ing, 'alchemical': alch_code}]
+    elif k in ('mixing_among', 'mixing_count_among', 'sell_among', 'sell_result_among', 'book_among'):
+        h['ingredients'] = list(clue.get('ingredients', []))
+    elif k in ('golem_test',):
+        h['ingredients'] = [clue['ingredient']]
+    elif k == 'book':
+        h['ingredients'] = [clue['ingredient']]
+
+    return h
+
+
+def _pedagogical_order(clues: list, golem) -> list:
+    """Sort clues greedily: at each step pick the clue that most reduces the worldset."""
+    remaining = list(enumerate(clues))  # (orig_idx, clue)
+    ordered   = []
+    worlds    = all_worlds()
+
+    while remaining:
+        best_idx   = None
+        best_size  = len(worlds) + 1
+        best_entry = None
+
+        for i, (orig_idx, clue) in enumerate(remaining):
+            new_w = filter_clue(worlds, clue, golem)
+            if len(new_w) < best_size:
+                best_size  = len(new_w)
+                best_idx   = i
+                best_entry = (orig_idx, clue)
+
+        ordered.append(best_entry)
+        _, chosen_clue = best_entry
+        worlds = filter_clue(worlds, chosen_clue, golem)
+        remaining.pop(best_idx)
+
+    return ordered
+
+
+def _is_answer_deducible(worlds: frozenset, q: dict, golem) -> bool:
+    return answer(worlds, q, golem) is not None
+
+
+def gen_hint_steps(raw: dict) -> list:
+    """Generate structured hint steps for one question (raw must include 'q')."""
+    clues      = raw['clues']
+    sol        = raw['sol']
+    golem      = raw.get('golem')
+    q          = raw['q']
+    steps      = []
+    already_revealed = False
+
+    # Phase 0: fully-restricted worldview (for reference)
+    full_worlds = raw['worlds']
+
+    # Phase 1: pedagogical clue ordering
+    ordered_clues = _pedagogical_order(clues, golem)  # [(orig_idx, clue), ...]
+
+    # Phase 2: step walk — one step per clue that changes the worldview
+    running_worlds = all_worlds()
+    prev_report    = _ded_report(running_worlds)
+
+    for orig_idx, clue in ordered_clues:
+        new_worlds  = filter_clue(running_worlds, clue, golem)
+        new_report  = _ded_report(new_worlds)
+        delta       = _ded_delta(prev_report, new_report)
+
+        if delta['has_change']:
+            look_at, means, so = _step_texts(clue, orig_idx, delta, running_worlds, sol)
+            reveals = (
+                not already_revealed
+                and _is_answer_deducible(new_worlds, q, golem)
+            )
+            if reveals:
+                already_revealed = True
+            steps.append({
+                'look_at':      look_at,
+                'means':        means,
+                'so':           so,
+                'highlight':    _clue_to_highlight(clue, orig_idx, delta),
+                'impact':       _delta_to_impact(delta),
+                'reveals_answer': reveals,
+                'worlds_before': len(running_worlds),
+                'worlds_after':  len(new_worlds),
+            })
+
+        running_worlds = new_worlds
+        prev_report    = new_report
+
+    # Phase 3: derived (transitive) deductions — facts confirmed by elimination
+    final_report = _ded_report(full_worlds)
+    derived_delta = _ded_delta(prev_report, final_report)
+    if derived_delta['has_change']:
+        so = _so_text(derived_delta)
+        # Pick ingredients involved
+        ings_involved = sorted({
+            item['ingredient']
+            for key in ('confirmed_alch', 'confirmed_aspects', 'eliminated_cells')
+            for item in derived_delta.get(key, [])
+        })
+        reveals = not already_revealed and _is_answer_deducible(full_worlds, q, golem)
+        if reveals:
+            already_revealed = True
+        steps.append({
+            'look_at': f"The remaining candidates for {', '.join(f'ing{i}' for i in ings_involved)}.",
+            'means':   "After applying all clues, elimination narrows down the possibilities further.",
+            'so':      so,
+            'highlight': {'clue_indices': [], 'ingredients': ings_involved},
+            'impact':    _delta_to_impact(derived_delta),
+            'reveals_answer': reveals,
+            'worlds_before': len(running_worlds),
+            'worlds_after':  len(full_worlds),
+        })
+        running_worlds = full_worlds
+        prev_report    = final_report
+
+    # Phase 4: bifurcation (last resort) — only if answer not yet revealed
+    if not already_revealed:
+        bif_steps = _bifurcation_steps(running_worlds, q, golem, sol, clues, orig_idx_offset=len(clues))
+        for s in bif_steps:
+            steps.append(s)
+            if s.get('reveals_answer'):
+                already_revealed = True
+
+    # Phase 5: mark answer-revealing step if not yet done (fallback)
+    if not already_revealed and steps:
+        # Mark last step as the reveal
+        steps[-1]['reveals_answer'] = True
+
+    return steps
+
+
+def _bifurcation_steps(worlds: frozenset, q: dict, golem, sol: dict, clues: list,
+                       orig_idx_offset: int) -> list:
+    """Generate bifurcation (indirect proof) steps if needed."""
+    # Find ingredient with fewest remaining candidates (prefer 2-3)
+    best_slot = None
+    best_cands = None
+    for si in range(8):
+        cands = frozenset(w[si] for w in worlds)
+        if len(cands) >= 2:
+            if best_cands is None or len(cands) < len(best_cands):
+                best_slot  = si
+                best_cands = cands
+
+    if best_slot is None:
+        return []
+
+    ing = best_slot + 1
+    steps = []
+
+    for cand_alch in sorted(best_cands):
+        cand_code = ALCH_CODES[cand_alch]
+        # Simulate: suppose ing(best_slot+1) = cand_alch
+        assumed_worlds = frozenset(w for w in worlds if w[best_slot] == cand_alch)
+
+        # Apply remaining clues
+        sim_worlds = apply_all(assumed_worlds, clues, golem)
+
+        if len(sim_worlds) == 0:
+            # Contradiction — this candidate is impossible
+            other_codes = sorted(ALCH_CODES[a] for a in best_cands if a != cand_alch)
+            steps.append({
+                'look_at': f"Suppose ing{ing} were {cand_code}.",
+                'means':   (
+                    f"Assuming ing{ing} = {cand_code} and applying all clues leads to "
+                    f"a contradiction — no valid assignment exists."
+                ),
+                'so': (
+                    f"ing{ing} cannot be {cand_code}. "
+                    + (f"ing{ing} must be one of: {', '.join(other_codes)}."
+                       if len(other_codes) > 1
+                       else f"ing{ing} must be {other_codes[0]}.")
+                ),
+                'highlight': {'clue_indices': [], 'ingredients': [ing]},
+                'impact': {
+                    'confirmed_alchemicals': [],
+                    'confirmed_aspects':     [],
+                    'eliminated_cells': [{'ingredient': ing, 'alchemicals': [cand_code]}],
+                },
+                'reveals_answer': False,
+                'bifurcation':    True,
+                'worlds_before':  len(worlds),
+                'worlds_after':   len(worlds) - len(assumed_worlds),
+            })
+        elif _is_answer_deducible(sim_worlds, q, golem):
+            ans = answer(sim_worlds, q, golem)
+            ans_str = str(ans) if ans is not None else '?'
+            steps.append({
+                'look_at': f"Suppose ing{ing} were {cand_code}.",
+                'means':   (
+                    f"If ing{ing} = {cand_code}, then after applying all clues, "
+                    f"the answer becomes deducible."
+                ),
+                'so': f"Under this assumption, the answer is {ans_str}.",
+                'highlight': {'clue_indices': [], 'ingredients': [ing]},
+                'impact': {
+                    'confirmed_alchemicals': [],
+                    'confirmed_aspects':     [],
+                    'eliminated_cells':      [],
+                },
+                'reveals_answer': True,
+                'bifurcation':    True,
+                'worlds_before':  len(worlds),
+                'worlds_after':   len(sim_worlds),
+            })
+            break  # Found a valid branch that yields the answer
+
+    return steps
+
+
+# ══════════════════════════════════════════════════════════════════════════════
+# SUBCOMMAND: regen-hint-steps
+# ══════════════════════════════════════════════════════════════════════════════
+
+def cmd_regen_hint_steps(args):
+    files   = _puzzle_files(args)
+    updated = skipped = 0
+
+    for f in files:
+        puz = json.loads(f.read_text())
+        pid = puz.get('id', f.stem)
+
+        if not args.include_tutorials and puz.get('difficulty') == 'tutorial':
+            skipped += 1
+            continue
+
+        if args.missing_only and puz.get('hint_steps'):
+            skipped += 1
+            continue
+
+        questions = puz.get('questions', [])
+        if not questions:
+            skipped += 1
+            continue
+
+        raw = _build_raw_for_puzzle(puz)
+        if raw is None:
+            print(f"  SKIP {pid}: no solution")
+            skipped += 1
+            continue
+
+        all_steps = []
+        for q in questions:
+            q_raw   = dict(raw, q=q)
+            q_steps = gen_hint_steps(q_raw)
+            all_steps.extend(q_steps)
+
+        puz['hint_steps'] = all_steps
+        f.write_text(json.dumps(puz, indent=2))
+        print(f"  ✓  {pid}: {len(all_steps)} step(s)")
+        updated += 1
+
+    print(f"\nUpdated {updated} file(s), skipped {skipped}.")
+
+
+# ══════════════════════════════════════════════════════════════════════════════
+# SUBCOMMAND: check-hint-steps
+# ══════════════════════════════════════════════════════════════════════════════
+
+def cmd_check_hint_steps(args):
+    files = _puzzle_files(args)
+    wrong = checked = 0
+
+    for f in files:
+        puz   = json.loads(f.read_text())
+        pid   = puz.get('id', f.stem)
+        steps = puz.get('hint_steps')
+        if not steps:
+            continue
+
+        questions = puz.get('questions', [])
+        if not questions:
+            continue
+
+        sol_raw = puz.get('solution', {})
+        if not sol_raw:
+            continue
+        sol   = {int(k): v for k, v in sol_raw.items()}
+        golem = puz.get('golem')
+        clues = puz.get('clues', [])
+        worlds = apply_all(all_worlds(), clues, golem)
+
+        # Assign steps to questions: split at reveals_answer boundaries
+        q_steps_list = []
+        cur = []
+        for s in steps:
+            cur.append(s)
+            if s.get('reveals_answer'):
+                q_steps_list.append(cur)
+                cur = []
+        if cur:
+            q_steps_list.append(cur)
+
+        for qi, q in enumerate(questions):
+            k   = q['kind']
+            ans = answer(worlds, q, golem)
+            if ans is None:
+                checked += 1
+                continue
+
+            # Check exactly one reveals_answer per question
+            q_steps = q_steps_list[qi] if qi < len(q_steps_list) else []
+            reveal_count = sum(1 for s in q_steps if s.get('reveals_answer'))
+            if reveal_count != 1:
+                print(f"  WRONG  {pid}  q={k}  reveals_answer count={reveal_count} (expected 1)")
+                wrong += 1
+                continue
+
+            # Check that so text of revealing step contains answer token
+            reveal_step = next(s for s in q_steps if s.get('reveals_answer'))
+            so_text = reveal_step.get('so', '').replace('−', '-')
+
+            expected = []
+            if k == 'mixing-result':
+                expected.append(fmt_r(ans))
+            elif k == 'possible-potions':
+                expected.extend(fmt_r(r) for r in ans)
+            elif k == 'aspect':
+                expected.append(q['color'] + sgn_str(ans))
+            elif k == 'alchemical':
+                expected.append(ALCH_CODES[ans])
+            elif k == 'neutral-partner':
+                expected.append(f"ing{ans}")
+            elif k == 'safe-publish':
+                expected.append(ans)
+            elif k == 'encyclopedia_which_aspect':
+                expected.append(ans)
+            else:
+                checked += 1
+                continue
+
+            missing = [t for t in expected
+                       if t not in so_text and t.lower() not in so_text.lower()]
+            if missing:
+                print(f"  WRONG  {pid}  q={k}  missing={missing}  so={so_text[:120]!r}")
+                wrong += 1
+            else:
+                checked += 1
+
+    print(f"\nChecked {checked} question(s). Wrong/stale hint_steps: {wrong}.")
+    if wrong > 0:
+        sys.exit(1)
+
+
 # ── Assembly ──────────────────────────────────────────────────────────────────
 
 TITLES = [
@@ -4071,6 +4610,18 @@ if __name__ == '__main__':
     ch_p.add_argument('files', nargs='*', help='Puzzle JSON file paths')
     ch_p.add_argument('--all', action='store_true', help='Check all base + expanded puzzles')
 
+    # regen-hint-steps
+    rhs_p = sub.add_parser('regen-hint-steps', help='Regenerate structured hint_steps for puzzle files')
+    rhs_p.add_argument('files', nargs='*', help='Puzzle JSON file paths')
+    rhs_p.add_argument('--all',               action='store_true', help='Process all base + expanded puzzles')
+    rhs_p.add_argument('--missing-only',      action='store_true', help='Only update puzzles with no hint_steps')
+    rhs_p.add_argument('--include-tutorials', action='store_true', help='Allow overwriting tutorial-difficulty puzzles')
+
+    # check-hint-steps
+    chs_p = sub.add_parser('check-hint-steps', help='Validate hint_steps fields in puzzle files')
+    chs_p.add_argument('files', nargs='*', help='Puzzle JSON file paths')
+    chs_p.add_argument('--all', action='store_true', help='Check all base + expanded puzzles')
+
     # migrate-conflict-answers
     sub.add_parser('migrate-conflict-answers',
                    help='Recompute debunk_conflict_only reference answers for all puzzles')
@@ -4097,6 +4648,10 @@ if __name__ == '__main__':
         cmd_regen_hints(args)
     elif args.cmd == 'check-hints':
         cmd_check_hints(args)
+    elif args.cmd == 'regen-hint-steps':
+        cmd_regen_hint_steps(args)
+    elif args.cmd == 'check-hint-steps':
+        cmd_check_hint_steps(args)
     elif args.cmd == 'migrate-conflict-answers':
         cmd_migrate_conflict_answers(args)
     elif args.cmd == 'recompute-debunk-answers':

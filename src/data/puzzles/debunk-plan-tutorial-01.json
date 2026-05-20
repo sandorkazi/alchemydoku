@@ -1,7 +1,7 @@
 {
   "id": "debunk-plan-tutorial-01",
   "title": "The First Deception",
-  "description": "A theory has been published about ing1. Your aspect clues reveal the true signs — compare them against the claim and expose any contradiction.",
+  "description": "A theory has been published about ing1. Your aspect clues reveal the true signs \u2014 compare them against the claim and expose any contradiction.",
   "difficulty": "easy",
   "clues": [
     {
@@ -74,5 +74,160 @@
     "question_score": 10,
     "world_score": 15,
     "residual_worlds": 5040
-  }
+  },
+  "hint_steps": [
+    {
+      "look_at": "clue 1: ing1 has R-.",
+      "means": "This directly tells us the R sign of ing1.",
+      "so": "ing1 has R-; cross off PPP, Ppn, pNn, pnP from ing1.",
+      "highlight": {
+        "clue_indices": [
+          0
+        ],
+        "ingredients": [
+          1
+        ]
+      },
+      "impact": {
+        "confirmed_alchemicals": [],
+        "confirmed_aspects": [
+          {
+            "ingredient": 1,
+            "color": "R",
+            "sign": "-"
+          }
+        ],
+        "eliminated_cells": [
+          {
+            "ingredient": 1,
+            "alchemicals": [
+              "PPP",
+              "Ppn",
+              "pNn",
+              "pnP"
+            ]
+          }
+        ]
+      },
+      "reveals_answer": true,
+      "worlds_before": 40320,
+      "worlds_after": 20160
+    },
+    {
+      "look_at": "clue 2: ing1 has G+.",
+      "means": "This directly tells us the G sign of ing1.",
+      "so": "ing1 has G+; cross off NNN, Nnp from ing1.",
+      "highlight": {
+        "clue_indices": [
+          1
+        ],
+        "ingredients": [
+          1
+        ]
+      },
+      "impact": {
+        "confirmed_alchemicals": [],
+        "confirmed_aspects": [
+          {
+            "ingredient": 1,
+            "color": "G",
+            "sign": "+"
+          }
+        ],
+        "eliminated_cells": [
+          {
+            "ingredient": 1,
+            "alchemicals": [
+              "NNN",
+              "Nnp"
+            ]
+          }
+        ]
+      },
+      "reveals_answer": false,
+      "worlds_before": 20160,
+      "worlds_after": 10080
+    },
+    {
+      "look_at": "clue 3: ing1 has B-.",
+      "means": "This directly tells us the B sign of ing1.",
+      "so": "ing1 is npN; ing1 has B-; cross off nPp from ing1; cross off npN from ing2; cross off npN from ing3; cross off npN from ing4; cross off npN from ing5; cross off npN from ing6; cross off npN from ing7; cross off npN from ing8.",
+      "highlight": {
+        "clue_indices": [
+          2
+        ],
+        "ingredients": [
+          1
+        ]
+      },
+      "impact": {
+        "confirmed_alchemicals": [
+          {
+            "ingredient": 1,
+            "alchemical": "npN"
+          }
+        ],
+        "confirmed_aspects": [
+          {
+            "ingredient": 1,
+            "color": "B",
+            "sign": "-"
+          }
+        ],
+        "eliminated_cells": [
+          {
+            "ingredient": 1,
+            "alchemicals": [
+              "nPp"
+            ]
+          },
+          {
+            "ingredient": 2,
+            "alchemicals": [
+              "npN"
+            ]
+          },
+          {
+            "ingredient": 3,
+            "alchemicals": [
+              "npN"
+            ]
+          },
+          {
+            "ingredient": 4,
+            "alchemicals": [
+              "npN"
+            ]
+          },
+          {
+            "ingredient": 5,
+            "alchemicals": [
+              "npN"
+            ]
+          },
+          {
+            "ingredient": 6,
+            "alchemicals": [
+              "npN"
+            ]
+          },
+          {
+            "ingredient": 7,
+            "alchemicals": [
+              "npN"
+            ]
+          },
+          {
+            "ingredient": 8,
+            "alchemicals": [
+              "npN"
+            ]
+          }
+        ]
+      },
+      "reveals_answer": false,
+      "worlds_before": 10080,
+      "worlds_after": 5040
+    }
+  ]
 }

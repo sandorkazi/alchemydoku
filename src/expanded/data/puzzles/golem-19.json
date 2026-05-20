@@ -51,5 +51,6 @@
     "question_score": 0,
     "world_score": 0,
     "residual_worlds": 40320
-  }
+  },
+  "hint_steps": []
 }

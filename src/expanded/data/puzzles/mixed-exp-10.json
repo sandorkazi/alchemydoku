@@ -81,5 +81,194 @@
     "question_score": 0,
     "world_score": 0,
     "residual_worlds": 42
-  }
+  },
+  "hint_steps": [
+    {
+      "look_at": "clue 3: sell constraint among {ing3, ing5, ing7}.",
+      "means": "Selling results among {ing3, ing5, ing7} constrain possible alchemicals.",
+      "so": "ing3 has G+; ing5 has G+; ing7 has G+; cross off PPP, nPp from ing1; cross off PPP, nPp from ing2; cross off NNN, Nnp, pNn, pnP from ing3; cross off PPP, nPp from ing4; cross off NNN, Nnp, pNn, pnP from ing5; cross off PPP, nPp from ing6; cross off NNN, Nnp, pNn, pnP from ing7; cross off PPP, nPp from ing8.",
+      "highlight": {
+        "clue_indices": [
+          2
+        ],
+        "ingredients": [
+          3,
+          5,
+          7
+        ]
+      },
+      "impact": {
+        "confirmed_alchemicals": [],
+        "confirmed_aspects": [
+          {
+            "ingredient": 3,
+            "color": "G",
+            "sign": "+"
+          },
+          {
+            "ingredient": 5,
+            "color": "G",
+            "sign": "+"
+          },
+          {
+            "ingredient": 7,
+            "color": "G",
+            "sign": "+"
+          }
+        ],
+        "eliminated_cells": [
+          {
+            "ingredient": 1,
+            "alchemicals": [
+              "PPP",
+              "nPp"
+            ]
+          },
+          {
+            "ingredient": 2,
+            "alchemicals": [
+              "PPP",
+              "nPp"
+            ]
+          },
+          {
+            "ingredient": 3,
+            "alchemicals": [
+              "NNN",
+              "Nnp",
+              "pNn",
+              "pnP"
+            ]
+          },
+          {
+            "ingredient": 4,
+            "alchemicals": [
+              "PPP",
+              "nPp"
+            ]
+          },
+          {
+            "ingredient": 5,
+            "alchemicals": [
+              "NNN",
+              "Nnp",
+              "pNn",
+              "pnP"
+            ]
+          },
+          {
+            "ingredient": 6,
+            "alchemicals": [
+              "PPP",
+              "nPp"
+            ]
+          },
+          {
+            "ingredient": 7,
+            "alchemicals": [
+              "NNN",
+              "Nnp",
+              "pNn",
+              "pnP"
+            ]
+          },
+          {
+            "ingredient": 8,
+            "alchemicals": [
+              "PPP",
+              "nPp"
+            ]
+          }
+        ]
+      },
+      "reveals_answer": false,
+      "worlds_before": 40320,
+      "worlds_after": 1440
+    },
+    {
+      "look_at": "clue 4: sell constraint among {ing1, ing4, ing5, ing7}.",
+      "means": "Selling results among {ing1, ing4, ing5, ing7} constrain possible alchemicals.",
+      "so": "cross off NNN from ing1; cross off PPP from ing3; cross off NNN from ing4; cross off npN from ing5; cross off npN from ing7.",
+      "highlight": {
+        "clue_indices": [
+          3
+        ],
+        "ingredients": [
+          1,
+          4,
+          5,
+          7
+        ]
+      },
+      "impact": {
+        "confirmed_alchemicals": [],
+        "confirmed_aspects": [],
+        "eliminated_cells": [
+          {
+            "ingredient": 1,
+            "alchemicals": [
+              "NNN"
+            ]
+          },
+          {
+            "ingredient": 3,
+            "alchemicals": [
+              "PPP"
+            ]
+          },
+          {
+            "ingredient": 4,
+            "alchemicals": [
+              "NNN"
+            ]
+          },
+          {
+            "ingredient": 5,
+            "alchemicals": [
+              "npN"
+            ]
+          },
+          {
+            "ingredient": 7,
+            "alchemicals": [
+              "npN"
+            ]
+          }
+        ]
+      },
+      "reveals_answer": false,
+      "worlds_before": 1440,
+      "worlds_after": 144
+    },
+    {
+      "look_at": "clue 1: sell constraint among {ing1, ing2, ing7}.",
+      "means": "Selling results among {ing1, ing2, ing7} constrain possible alchemicals.",
+      "so": "cross off Ppn from ing2.",
+      "highlight": {
+        "clue_indices": [
+          0
+        ],
+        "ingredients": [
+          1,
+          2,
+          7
+        ]
+      },
+      "impact": {
+        "confirmed_alchemicals": [],
+        "confirmed_aspects": [],
+        "eliminated_cells": [
+          {
+            "ingredient": 2,
+            "alchemicals": [
+              "Ppn"
+            ]
+          }
+        ]
+      },
+      "reveals_answer": true,
+      "worlds_before": 56,
+      "worlds_after": 42
+    }
+  ]
 }

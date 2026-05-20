@@ -66,5 +66,94 @@
     "question_score": 0,
     "world_score": 0,
     "residual_worlds": 1080
-  }
+  },
+  "hint_steps": [
+    {
+      "look_at": "clue 3: exactly 2 pairs among {ing1, ing5, ing8} mix to B+.",
+      "means": "Exactly 2 pair(s) in {ing1, ing5, ing8} must mix to B+; any world with a different count is impossible.",
+      "so": "ing1 has B+; ing5 has B+; ing8 has B+; cross off NNN, Ppn, npN, pNn from ing1; cross off NNN, Ppn, npN, pNn from ing5; cross off NNN, Ppn, npN, pNn from ing8.",
+      "highlight": {
+        "clue_indices": [
+          2
+        ],
+        "ingredients": [
+          1,
+          5,
+          8
+        ]
+      },
+      "impact": {
+        "confirmed_alchemicals": [],
+        "confirmed_aspects": [
+          {
+            "ingredient": 1,
+            "color": "B",
+            "sign": "+"
+          },
+          {
+            "ingredient": 5,
+            "color": "B",
+            "sign": "+"
+          },
+          {
+            "ingredient": 8,
+            "color": "B",
+            "sign": "+"
+          }
+        ],
+        "eliminated_cells": [
+          {
+            "ingredient": 1,
+            "alchemicals": [
+              "NNN",
+              "Ppn",
+              "npN",
+              "pNn"
+            ]
+          },
+          {
+            "ingredient": 5,
+            "alchemicals": [
+              "NNN",
+              "Ppn",
+              "npN",
+              "pNn"
+            ]
+          },
+          {
+            "ingredient": 8,
+            "alchemicals": [
+              "NNN",
+              "Ppn",
+              "npN",
+              "pNn"
+            ]
+          }
+        ]
+      },
+      "reveals_answer": false,
+      "worlds_before": 40320,
+      "worlds_after": 2880
+    },
+    {
+      "look_at": "Suppose ing1 were pnP.",
+      "means": "If ing1 = pnP, then after applying all clues, the answer becomes deducible.",
+      "so": "Under this assumption, the answer is 7.",
+      "highlight": {
+        "clue_indices": [],
+        "ingredients": [
+          1
+        ]
+      },
+      "impact": {
+        "confirmed_alchemicals": [],
+        "confirmed_aspects": [],
+        "eliminated_cells": []
+      },
+      "reveals_answer": true,
+      "bifurcation": true,
+      "worlds_before": 1080,
+      "worlds_after": 322
+    }
+  ]
 }

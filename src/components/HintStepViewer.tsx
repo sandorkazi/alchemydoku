@@ -1,38 +1,29 @@
 import React from 'react';
 import { AlchemicalImage, IngredientIcon, SignedElemImage } from './GameSprites';
-import { useSolver } from '../contexts/SolverContext';
 import { INGREDIENTS } from '../data/ingredients';
-import type { AlchemicalId, Color, Sign } from '../types';
+import type { AlchemicalId, Color, Sign, HintStep } from '../types';
 import type { DisplayMap } from '../contexts/SolverContext';
-import { HintStepViewer } from './HintStepViewer';
 
-// ─── Alch code → ID ──────────────────────────────────────────────────────────
+// ─── Token rendering (shared with HintDrawer) ─────────────────────────────────
 
 const ALCH_CODE_MAP: Record<string, AlchemicalId> = {
   npN: 1, pnP: 2, pNn: 3, nPp: 4, Nnp: 5, Ppn: 6, NNN: 7, PPP: 8,
 };
 
-// Friendly short labels shown next to alchemical images in hint text
 const ALCH_LABEL: Record<AlchemicalId, string> = {
   1: 'R−G+B−', 2: 'R+G−B+', 3: 'R+G−B−', 4: 'R−G+B+',
   5: 'R−G−B+', 6: 'R+G+B−', 7: 'All−',    8: 'All+',
 };
 
-// Friendly color names for potion / sign tokens
 const COLOR_NAME: Record<Color, string> = { R: 'Red', G: 'Green', B: 'Blue' };
 
-// ─── Token rendering ──────────────────────────────────────────────────────────
-
-function renderHint(text: string, displayMap: DisplayMap): React.ReactNode {
-  // Order matters: longer / more specific patterns first
-  const TOKEN = /([Ii]ngredient\s+[1-8]|ing[1-8]|NNN|PPP|npN|pnP|pNn|nPp|Nnp|Ppn|[RGB][+\-\u2212])/g;
+export function renderHintTokens(text: string, displayMap: DisplayMap): React.ReactNode {
+  const TOKEN = /([Ii]ngredient\s+[1-8]|ing[1-8]|NNN|PPP|npN|pnP|pNn|nPp|Nnp|Ppn|[RGB][+\-−])/g;
   const parts = text.split(TOKEN);
 
   return (
     <>
       {parts.map((part, i) => {
-        // ── Alchemical code ──────────────────────────────────────────────────
-        // Normalise case for lookup (codes are mixed-case)
         const normalised = part.replace(/nnn/i, 'NNN').replace(/ppp/i, 'PPP')
           .replace(/npn/i, 'npN').replace(/pnp/i, 'pnP')
           .replace(/pnn/i, 'pNn').replace(/npp/i, 'nPp')
@@ -51,7 +42,6 @@ function renderHint(text: string, displayMap: DisplayMap): React.ReactNode {
           );
         }
 
-        // ── ingredient N / ingN ───────────────────────────────────────────────
         const ingMatch = part.match(/^(?:ingredient\s+|ing)([1-8])$/i);
         if (ingMatch) {
           const slotId    = parseInt(ingMatch[1], 10);
@@ -71,10 +61,9 @@ function renderHint(text: string, displayMap: DisplayMap): React.ReactNode {
           );
         }
 
-        // ── Color + sign  e.g. R−  G+  B- ───────────────────────────────────
-        if (/^[RGB][+\-\u2212]$/.test(part)) {
+        if (/^[RGB][+\-−]$/.test(part)) {
           const color = part[0].toUpperCase() as Color;
-          const sign  = (part[1] === '\u2212' ? '-' : part[1]) as Sign;
+          const sign  = (part[1] === '−' ? '-' : part[1]) as Sign;
           const label = `${COLOR_NAME[color]}${sign === '+' ? '+' : '−'}`;
           return (
             <span
@@ -94,67 +83,121 @@ function renderHint(text: string, displayMap: DisplayMap): React.ReactNode {
   );
 }
 
+// ─── Single step display ──────────────────────────────────────────────────────
+
+function StepCard({
+  step,
+  stepNumber,
+  displayMap,
+}: {
+  step: HintStep;
+  stepNumber: number;
+  displayMap: DisplayMap;
+}) {
+  return (
+    <div
+      className={`rounded-lg border px-3 py-2.5 text-sm leading-relaxed space-y-1.5
+                  ${step.bifurcation
+                    ? 'bg-indigo-50 border-indigo-200 ml-3'
+                    : 'bg-amber-50 border-amber-200'}`}
+      data-worlds-before={step.worlds_before}
+      data-worlds-after={step.worlds_after}
+    >
+      {step.bifurcation && (
+        <p className="text-[10px] font-semibold uppercase tracking-wide text-indigo-400">
+          Suppose…
+        </p>
+      )}
+
+      <div className="flex gap-2">
+        <span className="shrink-0 text-[10px] font-semibold uppercase tracking-wide text-amber-500 pt-0.5 w-20">
+          👁 Look at:
+        </span>
+        <span className="text-amber-900">
+          {renderHintTokens(step.look_at, displayMap)}
+        </span>
+      </div>
+
+      <div className="flex gap-2">
+        <span className="shrink-0 text-[10px] font-semibold uppercase tracking-wide text-amber-500 pt-0.5 w-20">
+          💡 Means:
+        </span>
+        <span className="text-amber-900">
+          {renderHintTokens(step.means, displayMap)}
+        </span>
+      </div>
+
+      <div className="flex gap-2">
+        <span className="shrink-0 text-[10px] font-semibold uppercase tracking-wide text-amber-500 pt-0.5 w-20">
+          ✏️ So:
+        </span>
+        <span className="text-amber-900">
+          {renderHintTokens(step.so, displayMap)}
+        </span>
+      </div>
+
+      {step.reveals_answer && (
+        <p className="text-[10px] font-semibold uppercase tracking-wide text-emerald-600 pt-0.5">
+          ✓ Answer is now deducible
+        </p>
+      )}
+
+      <p className="text-[9px] text-gray-300 text-right">step {stepNumber}</p>
+    </div>
+  );
+}
+
 // ─── Component ────────────────────────────────────────────────────────────────
 
-export function HintDrawer({ hints }: { hints?: { level: number; text: string }[] }) {
-  const { state, dispatch } = useSolver();
-  const { hintLevel, hintStepIndex, completed, displayMap, puzzle } = state;
+export function HintStepViewer({
+  steps,
+  hintStepIndex,
+  displayMap,
+  onNext,
+  completed,
+}: {
+  steps: HintStep[];
+  hintStepIndex: number;
+  displayMap: DisplayMap;
+  onNext: () => void;
+  completed: boolean;
+}) {
+  const visibleSteps = steps.slice(0, hintStepIndex);
+  const hasMore      = hintStepIndex < steps.length && !completed;
 
-  // Prefer structured hint_steps when available
-  if (puzzle.hint_steps && puzzle.hint_steps.length > 0) {
-    return (
-      <HintStepViewer
-        steps={puzzle.hint_steps}
-        hintStepIndex={hintStepIndex}
-        displayMap={displayMap}
-        onNext={() => dispatch({ type: 'NEXT_HINT_STEP' })}
-        completed={completed}
-      />
-    );
-  }
-
-  if (!hints || hints.length === 0) return null;
-
-  const maxLevel     = hints.length;
-  const visibleHints = hints.filter(h => h.level <= hintLevel);
-  const hasMore      = hintLevel < maxLevel && !completed;
-
-  if (hintLevel === 0 && completed) return null;
+  if (hintStepIndex === 0 && completed) return null;
 
   return (
     <div className="space-y-2">
       <h2 className="text-xs font-semibold uppercase tracking-widest text-gray-400">Hints</h2>
 
-      {visibleHints.length > 0 && (
+      {visibleSteps.length > 0 && (
         <div className="space-y-2">
-          {visibleHints.map(h => (
-            <div
-              key={h.level}
-              className="bg-amber-50 border border-amber-200 rounded-lg px-3 py-2 text-sm text-amber-900 leading-relaxed"
-            >
-              <span className="text-xs font-semibold text-amber-500 uppercase tracking-wide mr-2">
-                Hint {h.level}
-              </span>
-              {renderHint(h.text, displayMap)}
-            </div>
+          {visibleSteps.map((step, i) => (
+            <StepCard
+              key={i}
+              step={step}
+              stepNumber={i + 1}
+              displayMap={displayMap}
+            />
           ))}
         </div>
       )}
 
       {hasMore && (
         <button
-          onClick={() => dispatch({ type: 'REQUEST_HINT' })}
+          onClick={onNext}
           className="text-xs text-amber-600 border border-amber-300 rounded-lg px-3 py-1.5
                      hover:bg-amber-50 transition-colors focus-visible:outline-none
                      focus-visible:ring-2 focus-visible:ring-amber-400"
         >
-          {hintLevel === 0 ? '💡 Show hint' : '💡 Next hint'}
-          {' '}({maxLevel - hintLevel} remaining)
+          {hintStepIndex === 0 ? '💡 Show hint' : '💡 Next reasoning step'}
+          {' '}({steps.length - hintStepIndex} remaining)
         </button>
       )}
 
-      {hintLevel >= maxLevel && !completed && (
-        <p className="text-[10px] text-gray-400">All hints shown.</p>
+      {hintStepIndex >= steps.length && !completed && (
+        <p className="text-[10px] text-gray-400">All reasoning steps shown.</p>
       )}
     </div>
   );
