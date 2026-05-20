@@ -72,5 +72,163 @@
     "question_score": 5,
     "world_score": 0,
     "residual_worlds": 384
-  }
+  },
+  "hint_steps": [
+    {
+      "look_at": "clue 1.",
+      "means": "Apply this clue to eliminate impossible alchemical assignments.",
+      "so": "ing2 has G+; ing3 has G+; ing8 has G+; cross off NNN, Nnp, pNn, pnP from ing2; cross off NNN, Nnp, pNn, pnP from ing3; cross off NNN, Nnp, pNn, pnP from ing8.",
+      "highlight": {
+        "clue_indices": [
+          0
+        ]
+      },
+      "impact": {
+        "confirmed_alchemicals": [],
+        "confirmed_aspects": [
+          {
+            "ingredient": 2,
+            "color": "G",
+            "sign": "+"
+          },
+          {
+            "ingredient": 3,
+            "color": "G",
+            "sign": "+"
+          },
+          {
+            "ingredient": 8,
+            "color": "G",
+            "sign": "+"
+          }
+        ],
+        "eliminated_cells": [
+          {
+            "ingredient": 2,
+            "alchemicals": [
+              "NNN",
+              "Nnp",
+              "pNn",
+              "pnP"
+            ]
+          },
+          {
+            "ingredient": 3,
+            "alchemicals": [
+              "NNN",
+              "Nnp",
+              "pNn",
+              "pnP"
+            ]
+          },
+          {
+            "ingredient": 8,
+            "alchemicals": [
+              "NNN",
+              "Nnp",
+              "pNn",
+              "pnP"
+            ]
+          }
+        ]
+      },
+      "reveals_answer": false,
+      "worlds_before": 40320,
+      "worlds_after": 2880
+    },
+    {
+      "look_at": "clue 2: ing1 + ing3 = G+.",
+      "means": "When two ingredients mix to G+, both share G+. Any candidate without G+ is impossible for either slot.",
+      "so": "ing1 has G+; ing4 has G-; ing5 has G-; ing6 has G-; ing7 has G-; cross off NNN, Nnp, pNn, pnP from ing1; cross off PPP, Ppn, nPp, npN from ing4; cross off PPP, Ppn, nPp, npN from ing5; cross off PPP, Ppn, nPp, npN from ing6; cross off PPP, Ppn, nPp, npN from ing7.",
+      "highlight": {
+        "clue_indices": [
+          1
+        ],
+        "ingredients": [
+          1,
+          3
+        ]
+      },
+      "impact": {
+        "confirmed_alchemicals": [],
+        "confirmed_aspects": [
+          {
+            "ingredient": 1,
+            "color": "G",
+            "sign": "+"
+          },
+          {
+            "ingredient": 4,
+            "color": "G",
+            "sign": "-"
+          },
+          {
+            "ingredient": 5,
+            "color": "G",
+            "sign": "-"
+          },
+          {
+            "ingredient": 6,
+            "color": "G",
+            "sign": "-"
+          },
+          {
+            "ingredient": 7,
+            "color": "G",
+            "sign": "-"
+          }
+        ],
+        "eliminated_cells": [
+          {
+            "ingredient": 1,
+            "alchemicals": [
+              "NNN",
+              "Nnp",
+              "pNn",
+              "pnP"
+            ]
+          },
+          {
+            "ingredient": 4,
+            "alchemicals": [
+              "PPP",
+              "Ppn",
+              "nPp",
+              "npN"
+            ]
+          },
+          {
+            "ingredient": 5,
+            "alchemicals": [
+              "PPP",
+              "Ppn",
+              "nPp",
+              "npN"
+            ]
+          },
+          {
+            "ingredient": 6,
+            "alchemicals": [
+              "PPP",
+              "Ppn",
+              "nPp",
+              "npN"
+            ]
+          },
+          {
+            "ingredient": 7,
+            "alchemicals": [
+              "PPP",
+              "Ppn",
+              "nPp",
+              "npN"
+            ]
+          }
+        ]
+      },
+      "reveals_answer": true,
+      "worlds_before": 2880,
+      "worlds_after": 384
+    }
+  ]
 }

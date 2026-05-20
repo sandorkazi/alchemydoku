@@ -90,5 +90,374 @@
     "world_score": 15,
     "residual_worlds": 6
   },
-  "hints": []
+  "hints": [],
+  "hint_steps": [
+    {
+      "look_at": "clue 1: ing2 + ing5 = B+.",
+      "means": "When two ingredients mix to B+, both share B+. Any candidate without B+ is impossible for either slot.",
+      "so": "ing2 has B+; ing5 has B+; cross off NNN, Ppn, npN, pNn from ing2; cross off NNN, Ppn, npN, pNn from ing5.",
+      "highlight": {
+        "clue_indices": [
+          0
+        ],
+        "ingredients": [
+          2,
+          5
+        ]
+      },
+      "impact": {
+        "confirmed_alchemicals": [],
+        "confirmed_aspects": [
+          {
+            "ingredient": 2,
+            "color": "B",
+            "sign": "+"
+          },
+          {
+            "ingredient": 5,
+            "color": "B",
+            "sign": "+"
+          }
+        ],
+        "eliminated_cells": [
+          {
+            "ingredient": 2,
+            "alchemicals": [
+              "NNN",
+              "Ppn",
+              "npN",
+              "pNn"
+            ]
+          },
+          {
+            "ingredient": 5,
+            "alchemicals": [
+              "NNN",
+              "Ppn",
+              "npN",
+              "pNn"
+            ]
+          }
+        ]
+      },
+      "reveals_answer": false,
+      "worlds_before": 40320,
+      "worlds_after": 5760
+    },
+    {
+      "look_at": "clue 4: ing3 + ing7 = R+.",
+      "means": "When two ingredients mix to R+, both share R+. Any candidate without R+ is impossible for either slot.",
+      "so": "ing3 has R+; ing7 has R+; cross off NNN, Nnp, nPp, npN from ing3; cross off NNN, Nnp, nPp, npN from ing7.",
+      "highlight": {
+        "clue_indices": [
+          3
+        ],
+        "ingredients": [
+          3,
+          7
+        ]
+      },
+      "impact": {
+        "confirmed_alchemicals": [],
+        "confirmed_aspects": [
+          {
+            "ingredient": 3,
+            "color": "R",
+            "sign": "+"
+          },
+          {
+            "ingredient": 7,
+            "color": "R",
+            "sign": "+"
+          }
+        ],
+        "eliminated_cells": [
+          {
+            "ingredient": 3,
+            "alchemicals": [
+              "NNN",
+              "Nnp",
+              "nPp",
+              "npN"
+            ]
+          },
+          {
+            "ingredient": 7,
+            "alchemicals": [
+              "NNN",
+              "Nnp",
+              "nPp",
+              "npN"
+            ]
+          }
+        ]
+      },
+      "reveals_answer": false,
+      "worlds_before": 5760,
+      "worlds_after": 768
+    },
+    {
+      "look_at": "clue 3: ing1 + ing2 = neutral.",
+      "means": "A neutral result means ing1 and ing2 have opposite signs in every color.",
+      "so": "ing1 has B-; cross off Nnp, PPP, nPp, pnP from ing1.",
+      "highlight": {
+        "clue_indices": [
+          2
+        ],
+        "ingredients": [
+          1,
+          2
+        ]
+      },
+      "impact": {
+        "confirmed_alchemicals": [],
+        "confirmed_aspects": [
+          {
+            "ingredient": 1,
+            "color": "B",
+            "sign": "-"
+          }
+        ],
+        "eliminated_cells": [
+          {
+            "ingredient": 1,
+            "alchemicals": [
+              "Nnp",
+              "PPP",
+              "nPp",
+              "pnP"
+            ]
+          }
+        ]
+      },
+      "reveals_answer": false,
+      "worlds_before": 768,
+      "worlds_after": 120
+    },
+    {
+      "look_at": "clue 2: ing2 + ing3 = G-.",
+      "means": "When two ingredients mix to G-, both share G-. Any candidate without G- is impossible for either slot.",
+      "so": "ing3 is pNn; ing1 has G+; ing2 has G-; ing3 has G-; ing3 has B-; ing7 has G+; cross off NNN, pNn from ing1; cross off PPP, nPp from ing2; cross off PPP, Ppn, pnP from ing3; cross off pNn, pnP from ing4; cross off PPP from ing5; cross off pNn, pnP from ing6; cross off pNn, pnP from ing7; cross off pNn, pnP from ing8.",
+      "highlight": {
+        "clue_indices": [
+          1
+        ],
+        "ingredients": [
+          2,
+          3
+        ]
+      },
+      "impact": {
+        "confirmed_alchemicals": [
+          {
+            "ingredient": 3,
+            "alchemical": "pNn"
+          }
+        ],
+        "confirmed_aspects": [
+          {
+            "ingredient": 1,
+            "color": "G",
+            "sign": "+"
+          },
+          {
+            "ingredient": 2,
+            "color": "G",
+            "sign": "-"
+          },
+          {
+            "ingredient": 3,
+            "color": "G",
+            "sign": "-"
+          },
+          {
+            "ingredient": 3,
+            "color": "B",
+            "sign": "-"
+          },
+          {
+            "ingredient": 7,
+            "color": "G",
+            "sign": "+"
+          }
+        ],
+        "eliminated_cells": [
+          {
+            "ingredient": 1,
+            "alchemicals": [
+              "NNN",
+              "pNn"
+            ]
+          },
+          {
+            "ingredient": 2,
+            "alchemicals": [
+              "PPP",
+              "nPp"
+            ]
+          },
+          {
+            "ingredient": 3,
+            "alchemicals": [
+              "PPP",
+              "Ppn",
+              "pnP"
+            ]
+          },
+          {
+            "ingredient": 4,
+            "alchemicals": [
+              "pNn",
+              "pnP"
+            ]
+          },
+          {
+            "ingredient": 5,
+            "alchemicals": [
+              "PPP"
+            ]
+          },
+          {
+            "ingredient": 6,
+            "alchemicals": [
+              "pNn",
+              "pnP"
+            ]
+          },
+          {
+            "ingredient": 7,
+            "alchemicals": [
+              "pNn",
+              "pnP"
+            ]
+          },
+          {
+            "ingredient": 8,
+            "alchemicals": [
+              "pNn",
+              "pnP"
+            ]
+          }
+        ]
+      },
+      "reveals_answer": false,
+      "worlds_before": 120,
+      "worlds_after": 30
+    },
+    {
+      "look_at": "clue 5: ing5 + ing7 = neutral.",
+      "means": "A neutral result means ing5 and ing7 have opposite signs in every color.",
+      "so": "ing1 is npN; ing2 is pnP; ing5 is Nnp; ing7 is Ppn; ing1 has R-; ing2 has R+; ing5 has R-; ing5 has G-; ing7 has B-; cross off Ppn from ing1; cross off Nnp from ing2; cross off Nnp, Ppn, npN from ing4; cross off nPp, pnP from ing5; cross off Nnp, Ppn, npN from ing6; cross off PPP from ing7; cross off Nnp, Ppn, npN from ing8.",
+      "highlight": {
+        "clue_indices": [
+          4
+        ],
+        "ingredients": [
+          5,
+          7
+        ]
+      },
+      "impact": {
+        "confirmed_alchemicals": [
+          {
+            "ingredient": 1,
+            "alchemical": "npN"
+          },
+          {
+            "ingredient": 2,
+            "alchemical": "pnP"
+          },
+          {
+            "ingredient": 5,
+            "alchemical": "Nnp"
+          },
+          {
+            "ingredient": 7,
+            "alchemical": "Ppn"
+          }
+        ],
+        "confirmed_aspects": [
+          {
+            "ingredient": 1,
+            "color": "R",
+            "sign": "-"
+          },
+          {
+            "ingredient": 2,
+            "color": "R",
+            "sign": "+"
+          },
+          {
+            "ingredient": 5,
+            "color": "R",
+            "sign": "-"
+          },
+          {
+            "ingredient": 5,
+            "color": "G",
+            "sign": "-"
+          },
+          {
+            "ingredient": 7,
+            "color": "B",
+            "sign": "-"
+          }
+        ],
+        "eliminated_cells": [
+          {
+            "ingredient": 1,
+            "alchemicals": [
+              "Ppn"
+            ]
+          },
+          {
+            "ingredient": 2,
+            "alchemicals": [
+              "Nnp"
+            ]
+          },
+          {
+            "ingredient": 4,
+            "alchemicals": [
+              "Nnp",
+              "Ppn",
+              "npN"
+            ]
+          },
+          {
+            "ingredient": 5,
+            "alchemicals": [
+              "nPp",
+              "pnP"
+            ]
+          },
+          {
+            "ingredient": 6,
+            "alchemicals": [
+              "Nnp",
+              "Ppn",
+              "npN"
+            ]
+          },
+          {
+            "ingredient": 7,
+            "alchemicals": [
+              "PPP"
+            ]
+          },
+          {
+            "ingredient": 8,
+            "alchemicals": [
+              "Nnp",
+              "Ppn",
+              "npN"
+            ]
+          }
+        ]
+      },
+      "reveals_answer": true,
+      "worlds_before": 30,
+      "worlds_after": 6
+    }
+  ]
 }

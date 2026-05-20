@@ -53,5 +53,6 @@
     "question_score": 0,
     "world_score": 0,
     "residual_worlds": 16416
-  }
+  },
+  "hint_steps": []
 }

@@ -1,7 +1,7 @@
 {
   "id": "combo-b-pp-05",
   "title": "The Contradicting Record",
-  "description": "The evidence narrows things down — but not all the way. Mark every potion this pair could still produce.",
+  "description": "The evidence narrows things down \u2014 but not all the way. Mark every potion this pair could still produce.",
   "difficulty": "easy",
   "clues": [
     {
@@ -52,5 +52,103 @@
     "question_score": 5,
     "world_score": 20,
     "residual_worlds": 768
-  }
+  },
+  "hint_steps": [
+    {
+      "look_at": "clue 1.",
+      "means": "Apply this clue to eliminate impossible alchemical assignments.",
+      "so": "ing4 has R-; ing5 has R-; cross off PPP, Ppn, pNn, pnP from ing4; cross off PPP, Ppn, pNn, pnP from ing5.",
+      "highlight": {
+        "clue_indices": [
+          0
+        ]
+      },
+      "impact": {
+        "confirmed_alchemicals": [],
+        "confirmed_aspects": [
+          {
+            "ingredient": 4,
+            "color": "R",
+            "sign": "-"
+          },
+          {
+            "ingredient": 5,
+            "color": "R",
+            "sign": "-"
+          }
+        ],
+        "eliminated_cells": [
+          {
+            "ingredient": 4,
+            "alchemicals": [
+              "PPP",
+              "Ppn",
+              "pNn",
+              "pnP"
+            ]
+          },
+          {
+            "ingredient": 5,
+            "alchemicals": [
+              "PPP",
+              "Ppn",
+              "pNn",
+              "pnP"
+            ]
+          }
+        ]
+      },
+      "reveals_answer": false,
+      "worlds_before": 40320,
+      "worlds_after": 5760
+    },
+    {
+      "look_at": "clue 2.",
+      "means": "Apply this clue to eliminate impossible alchemical assignments.",
+      "so": "ing1 has G-; ing6 has G-; cross off PPP, Ppn, nPp, npN from ing1; cross off PPP, Ppn, nPp, npN from ing6.",
+      "highlight": {
+        "clue_indices": [
+          1
+        ]
+      },
+      "impact": {
+        "confirmed_alchemicals": [],
+        "confirmed_aspects": [
+          {
+            "ingredient": 1,
+            "color": "G",
+            "sign": "-"
+          },
+          {
+            "ingredient": 6,
+            "color": "G",
+            "sign": "-"
+          }
+        ],
+        "eliminated_cells": [
+          {
+            "ingredient": 1,
+            "alchemicals": [
+              "PPP",
+              "Ppn",
+              "nPp",
+              "npN"
+            ]
+          },
+          {
+            "ingredient": 6,
+            "alchemicals": [
+              "PPP",
+              "Ppn",
+              "nPp",
+              "npN"
+            ]
+          }
+        ]
+      },
+      "reveals_answer": true,
+      "worlds_before": 5760,
+      "worlds_after": 768
+    }
+  ]
 }

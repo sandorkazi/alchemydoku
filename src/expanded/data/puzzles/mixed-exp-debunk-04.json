@@ -207,5 +207,396 @@
         }
       ]
     }
+  ],
+  "hint_steps": [
+    {
+      "look_at": "clue 3: sell constraint among {ing1, ing2, ing4, ing5}.",
+      "means": "Selling results among {ing1, ing2, ing4, ing5} constrain possible alchemicals.",
+      "so": "cross off NNN, npN from ing1; cross off NNN, npN from ing2; cross off PPP, pnP from ing3; cross off NNN, npN from ing4; cross off NNN, npN from ing5; cross off PPP, pnP from ing6; cross off PPP, pnP from ing7; cross off PPP, pnP from ing8.",
+      "highlight": {
+        "clue_indices": [
+          2
+        ],
+        "ingredients": [
+          1,
+          2,
+          4,
+          5
+        ]
+      },
+      "impact": {
+        "confirmed_alchemicals": [],
+        "confirmed_aspects": [],
+        "eliminated_cells": [
+          {
+            "ingredient": 1,
+            "alchemicals": [
+              "NNN",
+              "npN"
+            ]
+          },
+          {
+            "ingredient": 2,
+            "alchemicals": [
+              "NNN",
+              "npN"
+            ]
+          },
+          {
+            "ingredient": 3,
+            "alchemicals": [
+              "PPP",
+              "pnP"
+            ]
+          },
+          {
+            "ingredient": 4,
+            "alchemicals": [
+              "NNN",
+              "npN"
+            ]
+          },
+          {
+            "ingredient": 5,
+            "alchemicals": [
+              "NNN",
+              "npN"
+            ]
+          },
+          {
+            "ingredient": 6,
+            "alchemicals": [
+              "PPP",
+              "pnP"
+            ]
+          },
+          {
+            "ingredient": 7,
+            "alchemicals": [
+              "PPP",
+              "pnP"
+            ]
+          },
+          {
+            "ingredient": 8,
+            "alchemicals": [
+              "PPP",
+              "pnP"
+            ]
+          }
+        ]
+      },
+      "reveals_answer": true,
+      "worlds_before": 40320,
+      "worlds_after": 2880
+    },
+    {
+      "look_at": "clue 4: sell constraint among {ing1, ing2, ing3, ing8}.",
+      "means": "Selling results among {ing1, ing2, ing3, ing8} constrain possible alchemicals.",
+      "so": "ing1 has R+; ing1 has B+; ing2 has R+; ing2 has B+; ing6 has R-; ing6 has B-; ing7 has R-; ing7 has B-; cross off Nnp, Ppn, nPp, pNn from ing1; cross off Nnp, Ppn, nPp, pNn from ing2; cross off NNN, npN from ing3; cross off PPP, pnP from ing4; cross off PPP, pnP from ing5; cross off Nnp, Ppn, nPp, pNn from ing6; cross off Nnp, Ppn, nPp, pNn from ing7; cross off NNN, npN from ing8.",
+      "highlight": {
+        "clue_indices": [
+          3
+        ],
+        "ingredients": [
+          1,
+          2,
+          3,
+          8
+        ]
+      },
+      "impact": {
+        "confirmed_alchemicals": [],
+        "confirmed_aspects": [
+          {
+            "ingredient": 1,
+            "color": "R",
+            "sign": "+"
+          },
+          {
+            "ingredient": 1,
+            "color": "B",
+            "sign": "+"
+          },
+          {
+            "ingredient": 2,
+            "color": "R",
+            "sign": "+"
+          },
+          {
+            "ingredient": 2,
+            "color": "B",
+            "sign": "+"
+          },
+          {
+            "ingredient": 6,
+            "color": "R",
+            "sign": "-"
+          },
+          {
+            "ingredient": 6,
+            "color": "B",
+            "sign": "-"
+          },
+          {
+            "ingredient": 7,
+            "color": "R",
+            "sign": "-"
+          },
+          {
+            "ingredient": 7,
+            "color": "B",
+            "sign": "-"
+          }
+        ],
+        "eliminated_cells": [
+          {
+            "ingredient": 1,
+            "alchemicals": [
+              "Nnp",
+              "Ppn",
+              "nPp",
+              "pNn"
+            ]
+          },
+          {
+            "ingredient": 2,
+            "alchemicals": [
+              "Nnp",
+              "Ppn",
+              "nPp",
+              "pNn"
+            ]
+          },
+          {
+            "ingredient": 3,
+            "alchemicals": [
+              "NNN",
+              "npN"
+            ]
+          },
+          {
+            "ingredient": 4,
+            "alchemicals": [
+              "PPP",
+              "pnP"
+            ]
+          },
+          {
+            "ingredient": 5,
+            "alchemicals": [
+              "PPP",
+              "pnP"
+            ]
+          },
+          {
+            "ingredient": 6,
+            "alchemicals": [
+              "Nnp",
+              "Ppn",
+              "nPp",
+              "pNn"
+            ]
+          },
+          {
+            "ingredient": 7,
+            "alchemicals": [
+              "Nnp",
+              "Ppn",
+              "nPp",
+              "pNn"
+            ]
+          },
+          {
+            "ingredient": 8,
+            "alchemicals": [
+              "NNN",
+              "npN"
+            ]
+          }
+        ]
+      },
+      "reveals_answer": false,
+      "worlds_before": 2880,
+      "worlds_after": 64
+    },
+    {
+      "look_at": "clue 5: sell constraint among {ing2, ing5, ing7}.",
+      "means": "Selling results among {ing2, ing5, ing7} constrain possible alchemicals.",
+      "so": "ing1 is PPP; ing2 is pnP; ing5 is pNn; ing6 is npN; ing7 is NNN; ing1 has G+; ing2 has G-; ing4 has R-; ing4 has B+; ing5 has R+; ing5 has G-; ing5 has B-; ing6 has G+; ing7 has G-; cross off pnP from ing1; cross off PPP from ing2; cross off pNn from ing3; cross off Ppn, pNn from ing4; cross off Nnp, Ppn, nPp from ing5; cross off NNN from ing6; cross off npN from ing7; cross off pNn from ing8.",
+      "highlight": {
+        "clue_indices": [
+          4
+        ],
+        "ingredients": [
+          2,
+          5,
+          7
+        ]
+      },
+      "impact": {
+        "confirmed_alchemicals": [
+          {
+            "ingredient": 1,
+            "alchemical": "PPP"
+          },
+          {
+            "ingredient": 2,
+            "alchemical": "pnP"
+          },
+          {
+            "ingredient": 5,
+            "alchemical": "pNn"
+          },
+          {
+            "ingredient": 6,
+            "alchemical": "npN"
+          },
+          {
+            "ingredient": 7,
+            "alchemical": "NNN"
+          }
+        ],
+        "confirmed_aspects": [
+          {
+            "ingredient": 1,
+            "color": "G",
+            "sign": "+"
+          },
+          {
+            "ingredient": 2,
+            "color": "G",
+            "sign": "-"
+          },
+          {
+            "ingredient": 4,
+            "color": "R",
+            "sign": "-"
+          },
+          {
+            "ingredient": 4,
+            "color": "B",
+            "sign": "+"
+          },
+          {
+            "ingredient": 5,
+            "color": "R",
+            "sign": "+"
+          },
+          {
+            "ingredient": 5,
+            "color": "G",
+            "sign": "-"
+          },
+          {
+            "ingredient": 5,
+            "color": "B",
+            "sign": "-"
+          },
+          {
+            "ingredient": 6,
+            "color": "G",
+            "sign": "+"
+          },
+          {
+            "ingredient": 7,
+            "color": "G",
+            "sign": "-"
+          }
+        ],
+        "eliminated_cells": [
+          {
+            "ingredient": 1,
+            "alchemicals": [
+              "pnP"
+            ]
+          },
+          {
+            "ingredient": 2,
+            "alchemicals": [
+              "PPP"
+            ]
+          },
+          {
+            "ingredient": 3,
+            "alchemicals": [
+              "pNn"
+            ]
+          },
+          {
+            "ingredient": 4,
+            "alchemicals": [
+              "Ppn",
+              "pNn"
+            ]
+          },
+          {
+            "ingredient": 5,
+            "alchemicals": [
+              "Nnp",
+              "Ppn",
+              "nPp"
+            ]
+          },
+          {
+            "ingredient": 6,
+            "alchemicals": [
+              "NNN"
+            ]
+          },
+          {
+            "ingredient": 7,
+            "alchemicals": [
+              "npN"
+            ]
+          },
+          {
+            "ingredient": 8,
+            "alchemicals": [
+              "pNn"
+            ]
+          }
+        ]
+      },
+      "reveals_answer": false,
+      "worlds_before": 64,
+      "worlds_after": 4
+    },
+    {
+      "look_at": "clue 2: exactly 1 of {ing2, ing3, ing5} are lunar.",
+      "means": "Exactly 1 ingredient(s) in {ing2, ing3, ing5} must be lunar.",
+      "so": "ing3 has G+; cross off Nnp from ing3.",
+      "highlight": {
+        "clue_indices": [
+          1
+        ],
+        "ingredients": [
+          2,
+          3,
+          5
+        ]
+      },
+      "impact": {
+        "confirmed_alchemicals": [],
+        "confirmed_aspects": [
+          {
+            "ingredient": 3,
+            "color": "G",
+            "sign": "+"
+          }
+        ],
+        "eliminated_cells": [
+          {
+            "ingredient": 3,
+            "alchemicals": [
+              "Nnp"
+            ]
+          }
+        ]
+      },
+      "reveals_answer": false,
+      "worlds_before": 4,
+      "worlds_after": 3
+    }
   ]
 }

@@ -2,7 +2,7 @@
   "id": "combo-exp-wha-04",
   "mode": "expanded",
   "title": "The Infinite Volume",
-  "description": "Four ingredient–sign pairs form a valid encyclopedia article. All the clue types are in play — deduce which aspect colour they share.",
+  "description": "Four ingredient\u2013sign pairs form a valid encyclopedia article. All the clue types are in play \u2014 deduce which aspect colour they share.",
   "difficulty": "easy",
   "clues": [
     {
@@ -123,5 +123,405 @@
     "question_score": 5,
     "world_score": 0,
     "residual_worlds": 2
-  }
+  },
+  "hint_steps": [
+    {
+      "look_at": "clue 1.",
+      "means": "Apply this clue to eliminate impossible alchemical assignments.",
+      "so": "ing2 has B+; ing7 has B+; ing8 has B+; cross off NNN, Ppn, npN, pNn from ing2; cross off NNN, Ppn, npN, pNn from ing7; cross off NNN, Ppn, npN, pNn from ing8.",
+      "highlight": {
+        "clue_indices": [
+          0
+        ]
+      },
+      "impact": {
+        "confirmed_alchemicals": [],
+        "confirmed_aspects": [
+          {
+            "ingredient": 2,
+            "color": "B",
+            "sign": "+"
+          },
+          {
+            "ingredient": 7,
+            "color": "B",
+            "sign": "+"
+          },
+          {
+            "ingredient": 8,
+            "color": "B",
+            "sign": "+"
+          }
+        ],
+        "eliminated_cells": [
+          {
+            "ingredient": 2,
+            "alchemicals": [
+              "NNN",
+              "Ppn",
+              "npN",
+              "pNn"
+            ]
+          },
+          {
+            "ingredient": 7,
+            "alchemicals": [
+              "NNN",
+              "Ppn",
+              "npN",
+              "pNn"
+            ]
+          },
+          {
+            "ingredient": 8,
+            "alchemicals": [
+              "NNN",
+              "Ppn",
+              "npN",
+              "pNn"
+            ]
+          }
+        ]
+      },
+      "reveals_answer": false,
+      "worlds_before": 40320,
+      "worlds_after": 2880
+    },
+    {
+      "look_at": "clue 2.",
+      "means": "Apply this clue to eliminate impossible alchemical assignments.",
+      "so": "ing1 has G+; ing3 has G+; ing4 has G-; ing4 has B-; ing5 has G-; ing5 has B-; ing6 has G+; cross off NNN, Nnp, pNn, pnP from ing1; cross off NNN, Nnp, pNn, pnP from ing3; cross off Nnp, PPP, Ppn, nPp, npN, pnP from ing4; cross off Nnp, PPP, Ppn, nPp, npN, pnP from ing5; cross off NNN, Nnp, pNn, pnP from ing6.",
+      "highlight": {
+        "clue_indices": [
+          1
+        ]
+      },
+      "impact": {
+        "confirmed_alchemicals": [],
+        "confirmed_aspects": [
+          {
+            "ingredient": 1,
+            "color": "G",
+            "sign": "+"
+          },
+          {
+            "ingredient": 3,
+            "color": "G",
+            "sign": "+"
+          },
+          {
+            "ingredient": 4,
+            "color": "G",
+            "sign": "-"
+          },
+          {
+            "ingredient": 4,
+            "color": "B",
+            "sign": "-"
+          },
+          {
+            "ingredient": 5,
+            "color": "G",
+            "sign": "-"
+          },
+          {
+            "ingredient": 5,
+            "color": "B",
+            "sign": "-"
+          },
+          {
+            "ingredient": 6,
+            "color": "G",
+            "sign": "+"
+          }
+        ],
+        "eliminated_cells": [
+          {
+            "ingredient": 1,
+            "alchemicals": [
+              "NNN",
+              "Nnp",
+              "pNn",
+              "pnP"
+            ]
+          },
+          {
+            "ingredient": 3,
+            "alchemicals": [
+              "NNN",
+              "Nnp",
+              "pNn",
+              "pnP"
+            ]
+          },
+          {
+            "ingredient": 4,
+            "alchemicals": [
+              "Nnp",
+              "PPP",
+              "Ppn",
+              "nPp",
+              "npN",
+              "pnP"
+            ]
+          },
+          {
+            "ingredient": 5,
+            "alchemicals": [
+              "Nnp",
+              "PPP",
+              "Ppn",
+              "nPp",
+              "npN",
+              "pnP"
+            ]
+          },
+          {
+            "ingredient": 6,
+            "alchemicals": [
+              "NNN",
+              "Nnp",
+              "pNn",
+              "pnP"
+            ]
+          }
+        ]
+      },
+      "reveals_answer": false,
+      "worlds_before": 2880,
+      "worlds_after": 144
+    },
+    {
+      "look_at": "clue 3: exactly 1 of {ing2, ing3, ing7, ing8} are lunar.",
+      "means": "Exactly 1 ingredient(s) in {ing2, ing3, ing7, ing8} must be lunar.",
+      "so": "ing3 is Ppn; ing3 has R+; ing3 has B-; cross off Ppn, nPp from ing1; cross off PPP from ing2; cross off PPP, nPp, npN from ing3; cross off Ppn, nPp from ing6; cross off PPP from ing7; cross off PPP from ing8.",
+      "highlight": {
+        "clue_indices": [
+          2
+        ],
+        "ingredients": [
+          2,
+          3,
+          7,
+          8
+        ]
+      },
+      "impact": {
+        "confirmed_alchemicals": [
+          {
+            "ingredient": 3,
+            "alchemical": "Ppn"
+          }
+        ],
+        "confirmed_aspects": [
+          {
+            "ingredient": 3,
+            "color": "R",
+            "sign": "+"
+          },
+          {
+            "ingredient": 3,
+            "color": "B",
+            "sign": "-"
+          }
+        ],
+        "eliminated_cells": [
+          {
+            "ingredient": 1,
+            "alchemicals": [
+              "Ppn",
+              "nPp"
+            ]
+          },
+          {
+            "ingredient": 2,
+            "alchemicals": [
+              "PPP"
+            ]
+          },
+          {
+            "ingredient": 3,
+            "alchemicals": [
+              "PPP",
+              "nPp",
+              "npN"
+            ]
+          },
+          {
+            "ingredient": 6,
+            "alchemicals": [
+              "Ppn",
+              "nPp"
+            ]
+          },
+          {
+            "ingredient": 7,
+            "alchemicals": [
+              "PPP"
+            ]
+          },
+          {
+            "ingredient": 8,
+            "alchemicals": [
+              "PPP"
+            ]
+          }
+        ]
+      },
+      "reveals_answer": false,
+      "worlds_before": 144,
+      "worlds_after": 24
+    },
+    {
+      "look_at": "clue 4: exactly 1 of {ing1, ing2, ing3, ing5} are lunar.",
+      "means": "Exactly 1 ingredient(s) in {ing1, ing2, ing3, ing5} must be lunar.",
+      "so": "ing2 is Nnp; ing4 is NNN; ing5 is pNn; ing2 has R-; ing2 has G-; ing4 has R-; ing5 has R+; cross off nPp, pnP from ing2; cross off pNn from ing4; cross off NNN from ing5; cross off Nnp from ing7; cross off Nnp from ing8.",
+      "highlight": {
+        "clue_indices": [
+          3
+        ],
+        "ingredients": [
+          1,
+          2,
+          3,
+          5
+        ]
+      },
+      "impact": {
+        "confirmed_alchemicals": [
+          {
+            "ingredient": 2,
+            "alchemical": "Nnp"
+          },
+          {
+            "ingredient": 4,
+            "alchemical": "NNN"
+          },
+          {
+            "ingredient": 5,
+            "alchemical": "pNn"
+          }
+        ],
+        "confirmed_aspects": [
+          {
+            "ingredient": 2,
+            "color": "R",
+            "sign": "-"
+          },
+          {
+            "ingredient": 2,
+            "color": "G",
+            "sign": "-"
+          },
+          {
+            "ingredient": 4,
+            "color": "R",
+            "sign": "-"
+          },
+          {
+            "ingredient": 5,
+            "color": "R",
+            "sign": "+"
+          }
+        ],
+        "eliminated_cells": [
+          {
+            "ingredient": 2,
+            "alchemicals": [
+              "nPp",
+              "pnP"
+            ]
+          },
+          {
+            "ingredient": 4,
+            "alchemicals": [
+              "pNn"
+            ]
+          },
+          {
+            "ingredient": 5,
+            "alchemicals": [
+              "NNN"
+            ]
+          },
+          {
+            "ingredient": 7,
+            "alchemicals": [
+              "Nnp"
+            ]
+          },
+          {
+            "ingredient": 8,
+            "alchemicals": [
+              "Nnp"
+            ]
+          }
+        ]
+      },
+      "reveals_answer": false,
+      "worlds_before": 24,
+      "worlds_after": 4
+    },
+    {
+      "look_at": "clue 5.",
+      "means": "Apply this clue to eliminate impossible alchemical assignments.",
+      "so": "ing1 is npN; ing6 is PPP; ing1 has R-; ing1 has B-; ing6 has R+; ing6 has B+; cross off PPP from ing1; cross off npN from ing6.",
+      "highlight": {
+        "clue_indices": [
+          4
+        ]
+      },
+      "impact": {
+        "confirmed_alchemicals": [
+          {
+            "ingredient": 1,
+            "alchemical": "npN"
+          },
+          {
+            "ingredient": 6,
+            "alchemical": "PPP"
+          }
+        ],
+        "confirmed_aspects": [
+          {
+            "ingredient": 1,
+            "color": "R",
+            "sign": "-"
+          },
+          {
+            "ingredient": 1,
+            "color": "B",
+            "sign": "-"
+          },
+          {
+            "ingredient": 6,
+            "color": "R",
+            "sign": "+"
+          },
+          {
+            "ingredient": 6,
+            "color": "B",
+            "sign": "+"
+          }
+        ],
+        "eliminated_cells": [
+          {
+            "ingredient": 1,
+            "alchemicals": [
+              "PPP"
+            ]
+          },
+          {
+            "ingredient": 6,
+            "alchemicals": [
+              "npN"
+            ]
+          }
+        ]
+      },
+      "reveals_answer": true,
+      "worlds_before": 4,
+      "worlds_after": 2
+    }
+  ]
 }

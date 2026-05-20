@@ -1,7 +1,7 @@
 {
   "id": "combo-b-pp-02",
   "title": "The Possible Outcomes",
-  "description": "The evidence narrows things down — but not all the way. Mark every potion this pair could still produce.",
+  "description": "The evidence narrows things down \u2014 but not all the way. Mark every potion this pair could still produce.",
   "difficulty": "easy",
   "clues": [
     {
@@ -41,5 +41,55 @@
     "question_score": 5,
     "world_score": 20,
     "residual_worlds": 5760
-  }
+  },
+  "hint_steps": [
+    {
+      "look_at": "clue 1.",
+      "means": "Apply this clue to eliminate impossible alchemical assignments.",
+      "so": "ing4 has G-; ing8 has G-; cross off PPP, Ppn, nPp, npN from ing4; cross off PPP, Ppn, nPp, npN from ing8.",
+      "highlight": {
+        "clue_indices": [
+          0
+        ]
+      },
+      "impact": {
+        "confirmed_alchemicals": [],
+        "confirmed_aspects": [
+          {
+            "ingredient": 4,
+            "color": "G",
+            "sign": "-"
+          },
+          {
+            "ingredient": 8,
+            "color": "G",
+            "sign": "-"
+          }
+        ],
+        "eliminated_cells": [
+          {
+            "ingredient": 4,
+            "alchemicals": [
+              "PPP",
+              "Ppn",
+              "nPp",
+              "npN"
+            ]
+          },
+          {
+            "ingredient": 8,
+            "alchemicals": [
+              "PPP",
+              "Ppn",
+              "nPp",
+              "npN"
+            ]
+          }
+        ]
+      },
+      "reveals_answer": true,
+      "worlds_before": 40320,
+      "worlds_after": 5760
+    }
+  ]
 }

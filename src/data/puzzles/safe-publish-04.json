@@ -59,5 +59,121 @@
     "question_score": 0,
     "world_score": 10,
     "residual_worlds": 960
-  }
+  },
+  "hint_steps": [
+    {
+      "look_at": "clue 1: ing3 + ing6 = B+.",
+      "means": "When two ingredients mix to B+, both share B+. Any candidate without B+ is impossible for either slot.",
+      "so": "ing3 has B+; ing6 has B+; cross off NNN, Ppn, npN, pNn from ing3; cross off NNN, Ppn, npN, pNn from ing6.",
+      "highlight": {
+        "clue_indices": [
+          0
+        ],
+        "ingredients": [
+          3,
+          6
+        ]
+      },
+      "impact": {
+        "confirmed_alchemicals": [],
+        "confirmed_aspects": [
+          {
+            "ingredient": 3,
+            "color": "B",
+            "sign": "+"
+          },
+          {
+            "ingredient": 6,
+            "color": "B",
+            "sign": "+"
+          }
+        ],
+        "eliminated_cells": [
+          {
+            "ingredient": 3,
+            "alchemicals": [
+              "NNN",
+              "Ppn",
+              "npN",
+              "pNn"
+            ]
+          },
+          {
+            "ingredient": 6,
+            "alchemicals": [
+              "NNN",
+              "Ppn",
+              "npN",
+              "pNn"
+            ]
+          }
+        ]
+      },
+      "reveals_answer": false,
+      "worlds_before": 40320,
+      "worlds_after": 5760
+    },
+    {
+      "look_at": "clue 2: ing3 + ing5 = R+.",
+      "means": "When two ingredients mix to R+, both share R+. Any candidate without R+ is impossible for either slot.",
+      "so": "ing3 has R+; ing5 has R+; ing6 has R-; cross off Nnp, nPp from ing3; cross off NNN, Nnp, nPp, npN from ing5; cross off PPP, pnP from ing6.",
+      "highlight": {
+        "clue_indices": [
+          1
+        ],
+        "ingredients": [
+          3,
+          5
+        ]
+      },
+      "impact": {
+        "confirmed_alchemicals": [],
+        "confirmed_aspects": [
+          {
+            "ingredient": 3,
+            "color": "R",
+            "sign": "+"
+          },
+          {
+            "ingredient": 5,
+            "color": "R",
+            "sign": "+"
+          },
+          {
+            "ingredient": 6,
+            "color": "R",
+            "sign": "-"
+          }
+        ],
+        "eliminated_cells": [
+          {
+            "ingredient": 3,
+            "alchemicals": [
+              "Nnp",
+              "nPp"
+            ]
+          },
+          {
+            "ingredient": 5,
+            "alchemicals": [
+              "NNN",
+              "Nnp",
+              "nPp",
+              "npN"
+            ]
+          },
+          {
+            "ingredient": 6,
+            "alchemicals": [
+              "PPP",
+              "pnP"
+            ]
+          }
+        ]
+      },
+      "reveals_answer": true,
+      "worlds_before": 5760,
+      "worlds_after": 960
+    }
+  ]
 }

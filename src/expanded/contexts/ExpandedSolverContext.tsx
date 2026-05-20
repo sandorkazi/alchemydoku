@@ -167,6 +167,7 @@ export type ExpandedSolverState = {
   notes:           Record<string, string>;
   autoDeduction:   boolean;
   hintLevel:       number;
+  hintStepIndex:   number;
   wrongAttempts:   number;
   answers:         (AnyAnswer | null)[];
   solarLunarMarks: SolarLunarMarks;
@@ -187,6 +188,7 @@ export type ExpandedAction =
   | { type: 'SET_CELL';            ingredient: number; alchemical: number; state: CellState }
   | { type: 'SUBMIT_ANSWER';       answers: (AnyAnswer | null)[] }
   | { type: 'REQUEST_HINT' }
+  | { type: 'NEXT_HINT_STEP' }
   | { type: 'TOGGLE_AUTO_DEDUCTION' }
   | { type: 'REVEAL_SOLUTION' }
   | { type: 'RESET' }
@@ -291,6 +293,15 @@ function reducer(state: ExpandedSolverState, action: ExpandedAction): ExpandedSo
     case 'REQUEST_HINT':
       return { ...state, hintLevel: Math.min(state.hintLevel + 1, 3) };
 
+    case 'NEXT_HINT_STEP':
+      return {
+        ...state,
+        hintStepIndex: Math.min(
+          state.hintStepIndex + 1,
+          state.puzzle.hint_steps?.length ?? 0,
+        ),
+      };
+
     case 'TOGGLE_AUTO_DEDUCTION':
       return applyAutoDeduction({ ...state, autoDeduction: !state.autoDeduction });
 
@@ -305,6 +316,7 @@ function reducer(state: ExpandedSolverState, action: ExpandedAction): ExpandedSo
         solarLunarMarks: emptySolarLunarMarks(),
         golemNotepad:    emptyGolemNotepad(),
         hintLevel:       0,
+        hintStepIndex:   0,
         wrongAttempts:   0,
         answers:         state.puzzle.questions.map(() => null),
         completed:       false,
@@ -513,6 +525,7 @@ export function ExpandedSolverProvider({ puzzle, children, initialDisplayMap }: 
     drawStrokes:     savedState?.drawStrokes     ?? [],
     autoDeduction:   false,
     hintLevel:       savedState?.hintLevel ?? 0,
+    hintStepIndex:   0,
     wrongAttempts:   0,
     answers:         puzzle.questions.map(() => null),
     completed:       false,
