@@ -11,6 +11,21 @@ export interface ReleaseEntry {
 
 export const RELEASE_NOTES: ReleaseEntry[] = [
   {
+    version: '2026-05-21',
+    title: 'Hint polish & persistence',
+    sections: [
+      {
+        heading: 'Bug Fixes',
+        items: [
+          'Fixed step-by-step hints to explicitly state the deduced answer at the step where it first becomes provable',
+          'Fixed hint progress (steps revealed) not being remembered when leaving and returning to a puzzle',
+          'Fixed aspect sign badges at the bottom of the Golem panel being mis-positioned in expanded mode',
+          'Fixed puzzles with more than 3 legacy hint levels truncating at level 3',
+        ],
+      },
+    ],
+  },
+  {
     version: '2026-05-20',
     title: 'Step-by-step hints, timer & pen colours',
     sections: [

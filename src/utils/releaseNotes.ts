@@ -1,7 +1,7 @@
 import { RELEASE_NOTES } from '../data/releaseNotes';
 import type { ReleaseEntry } from '../data/releaseNotes';
 
-export const RELEASE_VERSION = '2026-05-20';
+export const RELEASE_VERSION = '2026-05-21';
 
 export function shouldShowReleaseNotes(): boolean {
   try {
