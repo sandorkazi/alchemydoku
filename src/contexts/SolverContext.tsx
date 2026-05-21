@@ -32,7 +32,7 @@ function snap(s: SolverState): UndoSnapshot {
 
 // ─── State ────────────────────────────────────────────────────────────────────
 
-function loadSolverState(puzzleId: string): { gridState: GridState; notes: Record<string,string>; hintLevel: number; drawStrokes: DrawStroke[]; timerElapsed: number } | null {
+function loadSolverState(puzzleId: string): { gridState: GridState; notes: Record<string,string>; hintLevel: number; hintStepIndex: number; drawStrokes: DrawStroke[]; timerElapsed: number } | null {
   try {
     // 1. Try new unified key (written by save-file load + auto-save)
     const unified = localStorage.getItem('alch-save-base');
@@ -41,11 +41,12 @@ function loadSolverState(puzzleId: string): { gridState: GridState; notes: Recor
       const entry = file?.puzzles?.[puzzleId];
       if (entry?.gridState) {
         return {
-          gridState:    entry.gridState as GridState,
-          notes:        (entry.notes ?? {}) as Record<string,string>,
-          hintLevel:    typeof entry.hintLevel === 'number' ? entry.hintLevel : 0,
-          drawStrokes:  ((entry.drawStrokes ?? []) as (string | DrawStroke)[]).map(normalizeStroke),
-          timerElapsed: typeof entry.timerElapsed === 'number' ? entry.timerElapsed : 0,
+          gridState:     entry.gridState as GridState,
+          notes:         (entry.notes ?? {}) as Record<string,string>,
+          hintLevel:     typeof entry.hintLevel === 'number' ? entry.hintLevel : 0,
+          hintStepIndex: typeof entry.hintStepIndex === 'number' ? entry.hintStepIndex : 0,
+          drawStrokes:   ((entry.drawStrokes ?? []) as (string | DrawStroke)[]).map(normalizeStroke),
+          timerElapsed:  typeof entry.timerElapsed === 'number' ? entry.timerElapsed : 0,
         };
       }
     }
@@ -55,11 +56,12 @@ function loadSolverState(puzzleId: string): { gridState: GridState; notes: Recor
     const parsed = JSON.parse(raw);
     if (typeof parsed !== 'object' || !parsed.gridState) return null;
     return {
-      gridState:    parsed.gridState  as GridState,
-      notes:        (parsed.notes ?? {}) as Record<string,string>,
-      hintLevel:    typeof parsed.hintLevel === 'number' ? parsed.hintLevel : 0,
-      drawStrokes:  ((parsed.drawStrokes ?? []) as (string | DrawStroke)[]).map(normalizeStroke),
-      timerElapsed: typeof parsed.timerElapsed === 'number' ? parsed.timerElapsed : 0,
+      gridState:     parsed.gridState  as GridState,
+      notes:         (parsed.notes ?? {}) as Record<string,string>,
+      hintLevel:     typeof parsed.hintLevel === 'number' ? parsed.hintLevel : 0,
+      hintStepIndex: typeof parsed.hintStepIndex === 'number' ? parsed.hintStepIndex : 0,
+      drawStrokes:   ((parsed.drawStrokes ?? []) as (string | DrawStroke)[]).map(normalizeStroke),
+      timerElapsed:  typeof parsed.timerElapsed === 'number' ? parsed.timerElapsed : 0,
     };
   } catch { return null; }
 }
@@ -160,13 +162,13 @@ function reducer(state: SolverState, action: Action): SolverState {
         ...state,
         answers: action.answers,
         wrongAttempts,
-        hintLevel: Math.min(state.hintLevel + 1, 3),
+        hintLevel: Math.min(state.hintLevel + 1, state.puzzle.hints?.length ?? 3),
         showSolution: wrongAttempts >= 3,
       };
     }
 
     case 'REQUEST_HINT':
-      return { ...state, hintLevel: Math.min(state.hintLevel + 1, 3) };
+      return { ...state, hintLevel: Math.min(state.hintLevel + 1, state.puzzle.hints?.length ?? 3) };
 
     case 'NEXT_HINT_STEP':
       return {
@@ -337,7 +339,7 @@ export function SolverProvider({ puzzle, children, initialDisplayMap }: { puzzle
     notes:     savedState?.notes     ?? {},
     autoDeduction: false,
     hintLevel: savedState?.hintLevel ?? 0,
-    hintStepIndex: 0,
+    hintStepIndex: Math.min(savedState?.hintStepIndex ?? 0, puzzle.hint_steps?.length ?? 0),
     wrongAttempts: 0,
     answers: puzzle.questions.map(() => null),
     completed: false,
@@ -365,6 +367,7 @@ export function SolverProvider({ puzzle, children, initialDisplayMap }: { puzzle
           gridState:     state.gridState,
           notes:         state.notes,
           hintLevel:     state.hintLevel,
+          hintStepIndex: state.hintStepIndex,
           wrongAttempts: state.wrongAttempts,
           answers:       state.answers,
           drawStrokes:   state.drawStrokes,
@@ -376,7 +379,7 @@ export function SolverProvider({ puzzle, children, initialDisplayMap }: { puzzle
         mergeIntoUnifiedStore('alch-save-base', puzzle.id, progress);
       }
     } catch { /* ignore */ }
-  }, [state.gridState, state.notes, state.completed, state.hintLevel, state.wrongAttempts, state.answers, state.drawStrokes, state.timerElapsed, puzzle.id]);
+  }, [state.gridState, state.notes, state.completed, state.hintLevel, state.hintStepIndex, state.wrongAttempts, state.answers, state.drawStrokes, state.timerElapsed, puzzle.id]);
 
   return (
     <SolverContext.Provider value={{ state, dispatch }}>

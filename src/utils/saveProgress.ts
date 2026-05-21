@@ -111,6 +111,7 @@ export type PuzzleProgress = {
   gridState: Record<number, Record<number, string>>;
   notes: Record<string, string>;
   hintLevel: number;
+  hintStepIndex?: number;
   wrongAttempts: number;
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   answers: (any | null)[];

@@ -1025,61 +1025,79 @@ export function GolemPanel({ activeTool }: { activeTool: GridTool }) {
       </table>
 
       {/* ── Bottom grid: alch property deduction ───────────────────────────── */}
-      {/* paddingBottom reserves space for the peeking decorators — no overflow */}
-      <div style={{ position: 'relative', paddingBottom: 19 }}>
-        {/* Aspect sign decorators — peek out 2/3 below the grid, 1/3 behind */}
-        {ALCH_COLS.map((col, colIdx) => {
-          const sign: Sign = col.size === 'L' ? '+' : '-';
-          // Column centre: header td (HDR_W + pr-1=4) + colIdx full cells + half cell
-          const left = HDR_W + 4 + colIdx * CELL_W + CELL_W / 2 - 14;
-          return (
-            <div key={`sdec-${col.color}${col.size}`} style={{
-              position: 'absolute', bottom: 0, left,
-              zIndex: 0, opacity: 0.40, pointerEvents: 'none',
-            }}>
-              <SignedElemImage color={col.color} sign={sign} width={28} />
-            </div>
-          );
-        })}
-        {/* Grid rows sit above the decorators */}
-        <div style={{ position: 'relative', zIndex: 1 }}>
-          <table className="border-collapse text-xs">
-            <tbody>
-              {rows.map(({ part, img, label }) => (
-                <tr key={part}>
-                  <td className="pr-1 py-0 align-middle">
-                    <GolemRowHeader img={img} label={label} />
+      {/* SignedElemImage decorators live in <tfoot> so the table engine aligns
+          them perfectly with their columns — no manual pixel arithmetic needed. */}
+      <table className="border-collapse text-xs">
+        <tbody>
+          {rows.map(({ part, img, label }) => (
+            <tr key={part}>
+              <td className="pr-1 py-0 align-middle">
+                <GolemRowHeader img={img} label={label} />
+              </td>
+              {ALCH_COLS.map(col => {
+                const orbSize = col.size === 'L' ? Math.round(CELL_W * 0.70) : Math.round(CELL_W * 0.25);
+                const colKey = `${col.color}${col.size}`;
+                const cellKey = `${part}-${colKey}`;
+                const mark = golemNotepad.bottomGrid?.[cellKey] ?? null;
+                return (
+                  <td key={colKey} className="py-0 align-middle">
+                    <GolemCell
+                      mark={mark}
+                      img={img}
+                      noteKey={`g2-${part}-${colKey}`}
+                      orbColor={col.color}
+                      orbSize={orbSize}
+                      isBottomGrid={true}
+                      hint={bottomHints[cellKey]}
+                      onMark={() => dispatch({
+                        type: 'SET_GOLEM_BOTTOM_MARK',
+                        key: cellKey,
+                        mark: cycleIngMark(mark),
+                      })}
+                    />
                   </td>
-                  {ALCH_COLS.map(col => {
-                    const orbSize = col.size === 'L' ? Math.round(CELL_W * 0.70) : Math.round(CELL_W * 0.25);
-                    const colKey = `${col.color}${col.size}`;
-                    const cellKey = `${part}-${colKey}`;
-                    const mark = golemNotepad.bottomGrid?.[cellKey] ?? null;
-                    return (
-                      <td key={colKey} className="py-0 align-middle">
-                        <GolemCell
-                          mark={mark}
-                          img={img}
-                          noteKey={`g2-${part}-${colKey}`}
-                          orbColor={col.color}
-                          orbSize={orbSize}
-                          isBottomGrid={true}
-                          hint={bottomHints[cellKey]}
-                          onMark={() => dispatch({
-                            type: 'SET_GOLEM_BOTTOM_MARK',
-                            key: cellKey,
-                            mark: cycleIngMark(mark),
-                          })}
-                        />
-                      </td>
-                    );
-                  })}
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
-      </div>
+                );
+              })}
+            </tr>
+          ))}
+        </tbody>
+        <tfoot>
+          <tr>
+            <td className="pr-1" /> {/* matches the header-column td */}
+
+            {ALCH_COLS.map(col => {
+              const sign: Sign = col.size === 'L' ? '+' : '-';
+
+              return (
+                <td
+                  key={`${col.color}${col.size}`}
+                  className="pt-0.5 text-center align-top"
+                  style={{ opacity: 0.4, pointerEvents: 'none' }}
+                >
+                  {/* clipping wrapper */}
+                  <div
+                    style={{
+                      height: 28,          // original image height
+                      overflow: 'hidden',
+                      display: 'flex',
+                      justifyContent: 'center',
+                    }}
+                  >
+                    {/* shifted image */}
+                    <div style={{ transform: 'translateY(-30%)' }}>
+                      <SignedElemImage
+                        color={col.color}
+                        sign={sign}
+                        width={28}
+                      />
+                    </div>
+                  </div>
+                </td>
+              );
+            })}
+          </tr>
+        </tfoot>
+      </table>
 
     </div>
   );

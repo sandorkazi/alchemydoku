@@ -104,6 +104,7 @@ type SavedState = {
   gridState: GridState;
   notes: Record<string, string>;
   hintLevel: number;
+  hintStepIndex: number;
   solarLunarMarks: SolarLunarMarks;
   golemNotepad: GolemNotepad;
   drawStrokes: DrawStroke[];
@@ -133,6 +134,7 @@ function loadSolverState(puzzleId: string): SavedState | null {
           gridState:       entry.gridState      as GridState,
           notes:           (entry.notes ?? {})  as Record<string, string>,
           hintLevel:       typeof entry.hintLevel === 'number' ? entry.hintLevel : 0,
+          hintStepIndex:   typeof entry.hintStepIndex === 'number' ? entry.hintStepIndex : 0,
           solarLunarMarks: (entry.solarLunarMarks ?? emptySolarLunarMarks()) as SolarLunarMarks,
           golemNotepad:    (entry.golemNotepad    ?? emptyGolemNotepad())    as GolemNotepad,
           drawStrokes:     ((entry.drawStrokes ?? []) as (string | DrawStroke)[]).map(normalizeStroke),
@@ -149,6 +151,7 @@ function loadSolverState(puzzleId: string): SavedState | null {
       gridState:       p.gridState      as GridState,
       notes:           (p.notes ?? {})  as Record<string, string>,
       hintLevel:       typeof p.hintLevel === 'number' ? p.hintLevel : 0,
+      hintStepIndex:   typeof p.hintStepIndex === 'number' ? p.hintStepIndex : 0,
       solarLunarMarks: (p.solarLunarMarks ?? emptySolarLunarMarks()) as SolarLunarMarks,
       golemNotepad:    (p.golemNotepad ?? emptyGolemNotepad()) as GolemNotepad,
       drawStrokes:     ((p.drawStrokes ?? []) as (string | DrawStroke)[]).map(normalizeStroke),
@@ -285,13 +288,13 @@ function reducer(state: ExpandedSolverState, action: ExpandedAction): ExpandedSo
         ...state,
         answers: action.answers,
         wrongAttempts,
-        hintLevel: Math.min(state.hintLevel + 1, 3),
+        hintLevel: Math.min(state.hintLevel + 1, state.puzzle.hints?.length ?? 3),
         showSolution: wrongAttempts >= 3,
       };
     }
 
     case 'REQUEST_HINT':
-      return { ...state, hintLevel: Math.min(state.hintLevel + 1, 3) };
+      return { ...state, hintLevel: Math.min(state.hintLevel + 1, state.puzzle.hints?.length ?? 3) };
 
     case 'NEXT_HINT_STEP':
       return {
@@ -525,7 +528,7 @@ export function ExpandedSolverProvider({ puzzle, children, initialDisplayMap }: 
     drawStrokes:     savedState?.drawStrokes     ?? [],
     autoDeduction:   false,
     hintLevel:       savedState?.hintLevel ?? 0,
-    hintStepIndex:   0,
+    hintStepIndex:   Math.min(savedState?.hintStepIndex ?? 0, puzzle.hint_steps?.length ?? 0),
     wrongAttempts:   0,
     answers:         puzzle.questions.map(() => null),
     completed:       false,
@@ -553,6 +556,7 @@ export function ExpandedSolverProvider({ puzzle, children, initialDisplayMap }: 
           gridState:       state.gridState,
           notes:           state.notes,
           hintLevel:       state.hintLevel,
+          hintStepIndex:   state.hintStepIndex,
           wrongAttempts:   state.wrongAttempts,
           answers:         state.answers,
           solarLunarMarks: state.solarLunarMarks,
@@ -566,7 +570,7 @@ export function ExpandedSolverProvider({ puzzle, children, initialDisplayMap }: 
         mergeIntoUnifiedStore('alch-save-expanded', puzzle.id, progress);
       }
     } catch { /**/ }
-  }, [state.gridState, state.notes, state.hintLevel, state.wrongAttempts, state.answers, state.solarLunarMarks, state.golemNotepad, state.drawStrokes, state.timerElapsed, state.completed, puzzle.id]);
+  }, [state.gridState, state.notes, state.hintLevel, state.hintStepIndex, state.wrongAttempts, state.answers, state.solarLunarMarks, state.golemNotepad, state.drawStrokes, state.timerElapsed, state.completed, puzzle.id]);
 
   return (
     <ExpandedSolverContext.Provider value={{ state, dispatch }}>
