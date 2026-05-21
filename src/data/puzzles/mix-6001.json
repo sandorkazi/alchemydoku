@@ -305,7 +305,7 @@
     {
       "look_at": "clue 1.",
       "means": "Apply this clue to eliminate impossible alchemical assignments.",
-      "so": "ing1 has R-; ing3 has R+; cross off Ppn, pNn from ing1; cross off NNN, npN from ing3.",
+      "so": "ing1 has R-; ing3 has R+; cross off Ppn, pNn from ing1; cross off NNN, npN from ing3 ing1 + ing6 = B-.",
       "highlight": {
         "clue_indices": [
           0

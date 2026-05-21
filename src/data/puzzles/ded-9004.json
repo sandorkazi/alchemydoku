@@ -328,7 +328,7 @@
     {
       "look_at": "clue 4: ing3 + ing8 = B-.",
       "means": "When two ingredients mix to B-, both share B-. Any candidate without B- is impossible for either slot.",
-      "so": "ing3 is npN; ing4 is pnP; ing7 is pNn; ing8 is Ppn; ing3 has B-; ing4 has B+; ing5 has B+; ing7 has B-; ing8 has B-; cross off Ppn, npN from ing1; cross off Ppn, npN from ing2; cross off nPp from ing3; cross off pNn from ing4; cross off Ppn, npN from ing5; cross off Ppn, npN from ing6; cross off pnP from ing7; cross off PPP from ing8.",
+      "so": "ing3 is npN; ing4 is pnP; ing7 is pNn; ing8 is Ppn; ing3 has B-; ing4 has B+; ing5 has B+; ing7 has B-; ing8 has B-; cross off Ppn, npN from ing1; cross off Ppn, npN from ing2; cross off nPp from ing3; cross off pNn from ing4; cross off Ppn, npN from ing5; cross off Ppn, npN from ing6; cross off pnP from ing7; cross off PPP from ing8 ing3 + ing5 = G+.",
       "highlight": {
         "clue_indices": [
           3
@@ -681,7 +681,7 @@
     {
       "look_at": "clue 4: ing3 + ing8 = B-.",
       "means": "When two ingredients mix to B-, both share B-. Any candidate without B- is impossible for either slot.",
-      "so": "ing3 is npN; ing4 is pnP; ing7 is pNn; ing8 is Ppn; ing3 has B-; ing4 has B+; ing5 has B+; ing7 has B-; ing8 has B-; cross off Ppn, npN from ing1; cross off Ppn, npN from ing2; cross off nPp from ing3; cross off pNn from ing4; cross off Ppn, npN from ing5; cross off Ppn, npN from ing6; cross off pnP from ing7; cross off PPP from ing8.",
+      "so": "ing3 is npN; ing4 is pnP; ing7 is pNn; ing8 is Ppn; ing3 has B-; ing4 has B+; ing5 has B+; ing7 has B-; ing8 has B-; cross off Ppn, npN from ing1; cross off Ppn, npN from ing2; cross off nPp from ing3; cross off pNn from ing4; cross off Ppn, npN from ing5; cross off Ppn, npN from ing6; cross off pnP from ing7; cross off PPP from ing8 ing3 + ing7 = B-.",
       "highlight": {
         "clue_indices": [
           3
@@ -927,7 +927,7 @@
     {
       "look_at": "clue 5: ing5 + ing8 = G+.",
       "means": "When two ingredients mix to G+, both share G+. Any candidate without G+ is impossible for either slot.",
-      "so": "ing3 has G+; ing4 has G-; ing5 has G+; ing7 has G-; ing8 has G+; cross off pNn, pnP from ing1; cross off pNn, pnP from ing2; cross off NNN, Nnp from ing3; cross off PPP, Ppn from ing4; cross off NNN, Nnp, pNn, pnP from ing5; cross off pNn, pnP from ing6; cross off PPP, Ppn from ing7; cross off pNn, pnP from ing8.",
+      "so": "ing3 has G+; ing4 has G-; ing5 has G+; ing7 has G-; ing8 has G+; cross off pNn, pnP from ing1; cross off pNn, pnP from ing2; cross off NNN, Nnp from ing3; cross off PPP, Ppn from ing4; cross off NNN, Nnp, pNn, pnP from ing5; cross off pNn, pnP from ing6; cross off PPP, Ppn from ing7; cross off pNn, pnP from ing8 ing4 + ing7 = G-.",
       "highlight": {
         "clue_indices": [
           4

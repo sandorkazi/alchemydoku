@@ -385,7 +385,7 @@
     {
       "look_at": "clue 1: sell constraint among {ing4, ing5, ing6, ing7}.",
       "means": "Selling results among {ing4, ing5, ing6, ing7} constrain possible alchemicals.",
-      "so": "ing1 is nPp; ing2 is Nnp; ing3 is NNN; ing4 is pnP; ing5 is npN; ing6 is PPP; ing7 is pNn; ing8 is Ppn; ing1 has R-; ing1 has G+; ing1 has B+; ing2 has G-; ing3 has G-; ing4 has G-; ing5 has R-; ing5 has G+; ing6 has G+; ing7 has R+; ing7 has G-; ing7 has B-; ing8 has R+; ing8 has G+; cross off Nnp, Ppn, pNn from ing1; cross off nPp from ing2; cross off npN from ing3; cross off PPP from ing4; cross off Ppn, pNn from ing5; cross off pnP from ing6; cross off Nnp, Ppn, nPp from ing7; cross off NNN, npN from ing8.",
+      "so": "ing1 is nPp; ing2 is Nnp; ing3 is NNN; ing4 is pnP; ing5 is npN; ing6 is PPP; ing7 is pNn; ing8 is Ppn; ing1 has R-; ing1 has G+; ing1 has B+; ing2 has G-; ing3 has G-; ing4 has G-; ing5 has R-; ing5 has G+; ing6 has G+; ing7 has R+; ing7 has G-; ing7 has B-; ing8 has R+; ing8 has G+; cross off Nnp, Ppn, pNn from ing1; cross off nPp from ing2; cross off npN from ing3; cross off PPP from ing4; cross off Ppn, pNn from ing5; cross off pnP from ing6; cross off Nnp, Ppn, nPp from ing7; cross off NNN, npN from ing8 ing5 + ing7 = B-.",
       "highlight": {
         "clue_indices": [
           0

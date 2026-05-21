@@ -570,7 +570,7 @@
     {
       "look_at": "clue 14: ing2 has G+.",
       "means": "This directly tells us the G sign of ing2.",
-      "so": "ing1 is pNn; ing2 is Ppn; ing1 has G-; ing2 has G+; cross off Ppn from ing1; cross off pNn from ing2.",
+      "so": "ing1 is pNn; ing2 is Ppn; ing1 has G-; ing2 has G+; cross off Ppn from ing1; cross off pNn from ing2 ing2 + ing4 = G+.",
       "highlight": {
         "clue_indices": [
           13
@@ -748,7 +748,7 @@
     {
       "look_at": "clue 13: ing2 has R+.",
       "means": "This directly tells us the R sign of ing2.",
-      "so": "ing2 has R+; ing2 has B-; ing4 has R+; ing4 has B+; ing7 has R-; cross off NNN, Nnp, nPp, npN from ing2; cross off NNN, Nnp, Ppn, nPp, npN, pNn from ing4; cross off PPP, Ppn, pNn, pnP from ing7.",
+      "so": "ing2 has R+; ing2 has B-; ing4 has R+; ing4 has B+; ing7 has R-; cross off NNN, Nnp, nPp, npN from ing2; cross off NNN, Nnp, Ppn, nPp, npN, pNn from ing4; cross off PPP, Ppn, pNn, pnP from ing7 ing4 + ing8 = B+.",
       "highlight": {
         "clue_indices": [
           12
@@ -1194,7 +1194,7 @@
     {
       "look_at": "clue 13: ing2 has R+.",
       "means": "This directly tells us the R sign of ing2.",
-      "so": "ing2 has R+; ing2 has B-; ing4 has R+; ing4 has B+; ing7 has R-; cross off NNN, Nnp, nPp, npN from ing2; cross off NNN, Nnp, Ppn, nPp, npN, pNn from ing4; cross off PPP, Ppn, pNn, pnP from ing7.",
+      "so": "ing2 has R+; ing2 has B-; ing4 has R+; ing4 has B+; ing7 has R-; cross off NNN, Nnp, nPp, npN from ing2; cross off NNN, Nnp, Ppn, nPp, npN, pNn from ing4; cross off PPP, Ppn, pNn, pnP from ing7 ing7 + ing8 = R-.",
       "highlight": {
         "clue_indices": [
           12

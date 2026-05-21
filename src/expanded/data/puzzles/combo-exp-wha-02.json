@@ -436,7 +436,7 @@
     {
       "look_at": "clue 5: ing4 is lunar.",
       "means": "Solar/lunar status constrains which alchemicals ing4 can be.",
-      "so": "ing1 is Ppn; ing2 is pnP; ing4 is Nnp; ing5 is npN; ing1 has R+; ing2 has G-; ing2 has B+; ing4 has R-; ing5 has G+; ing5 has B-; cross off npN from ing1; cross off Ppn from ing2; cross off pnP from ing4; cross off Nnp from ing5.",
+      "so": "ing1 is Ppn; ing2 is pnP; ing4 is Nnp; ing5 is npN; ing1 has R+; ing2 has G-; ing2 has B+; ing4 has R-; ing5 has G+; ing5 has B-; cross off npN from ing1; cross off Ppn from ing2; cross off pnP from ing4; cross off Nnp from ing5 The matching aspect color is R.",
       "highlight": {
         "clue_indices": [
           4

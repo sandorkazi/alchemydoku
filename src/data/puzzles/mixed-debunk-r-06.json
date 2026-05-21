@@ -127,7 +127,7 @@
     {
       "look_at": "clue 1.",
       "means": "Apply this clue to eliminate impossible alchemical assignments.",
-      "so": "ing2 has B+; ing8 has B+; cross off NNN, Ppn, npN, pNn from ing2; cross off NNN, Ppn, npN, pNn from ing8.",
+      "so": "ing2 has B+; ing8 has B+; cross off NNN, Ppn, npN, pNn from ing2; cross off NNN, Ppn, npN, pNn from ing8",
       "highlight": {
         "clue_indices": [
           0

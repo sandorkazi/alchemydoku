@@ -94,7 +94,7 @@
     {
       "look_at": "clue 2: ing4 + ing7 = B+.",
       "means": "When two ingredients mix to B+, both share B+. Any candidate without B+ is impossible for either slot.",
-      "so": "ing4 has B+; ing7 has B+; cross off NNN, Ppn, npN, pNn from ing4; cross off NNN, Ppn, npN, pNn from ing7.",
+      "so": "ing4 has B+; ing7 has B+; cross off NNN, Ppn, npN, pNn from ing4; cross off NNN, Ppn, npN, pNn from ing7 ing1 + ing2 can produce: B-, G-, G+, R-, R+, neutral.",
       "highlight": {
         "clue_indices": [
           1

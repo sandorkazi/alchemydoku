@@ -346,7 +346,7 @@
     {
       "look_at": "clue 8: ing6 + ing7 = G+.",
       "means": "When two ingredients mix to G+, both share G+. Any candidate without G+ is impossible for either slot.",
-      "so": "ing1 is pNn; ing2 is pnP; ing3 is Nnp; ing4 is nPp; ing5 is Ppn; ing6 is PPP; ing7 is npN; ing8 is NNN; ing1 has R+; ing1 has B-; ing2 has R+; ing2 has G-; ing2 has B+; ing3 has B+; ing4 has B+; ing5 has R+; ing5 has G+; ing6 has R+; ing6 has G+; ing7 has R-; ing7 has G+; ing7 has B-; ing8 has R-; ing8 has G-; cross off NNN, Nnp, pnP from ing1; cross off NNN, PPP, Ppn, nPp, npN, pNn from ing2; cross off NNN from ing3; cross off npN from ing4; cross off npN, pNn from ing5; cross off Nnp, pnP from ing6; cross off NNN, PPP, Ppn, nPp, pNn, pnP from ing7; cross off Ppn, npN from ing8.",
+      "so": "ing1 is pNn; ing2 is pnP; ing3 is Nnp; ing4 is nPp; ing5 is Ppn; ing6 is PPP; ing7 is npN; ing8 is NNN; ing1 has R+; ing1 has B-; ing2 has R+; ing2 has G-; ing2 has B+; ing3 has B+; ing4 has B+; ing5 has R+; ing5 has G+; ing6 has R+; ing6 has G+; ing7 has R-; ing7 has G+; ing7 has B-; ing8 has R-; ing8 has G-; cross off NNN, Nnp, pnP from ing1; cross off NNN, PPP, Ppn, nPp, npN, pNn from ing2; cross off NNN from ing3; cross off npN from ing4; cross off npN, pNn from ing5; cross off Nnp, pnP from ing6; cross off NNN, PPP, Ppn, nPp, pNn, pnP from ing7; cross off Ppn, npN from ing8 ing3 + ing5 = neutral.",
       "highlight": {
         "clue_indices": [
           7
@@ -756,7 +756,7 @@
     {
       "look_at": "clue 8: ing6 + ing7 = G+.",
       "means": "When two ingredients mix to G+, both share G+. Any candidate without G+ is impossible for either slot.",
-      "so": "ing1 is pNn; ing2 is pnP; ing3 is Nnp; ing4 is nPp; ing5 is Ppn; ing6 is PPP; ing7 is npN; ing8 is NNN; ing1 has R+; ing1 has B-; ing2 has R+; ing2 has G-; ing2 has B+; ing3 has B+; ing4 has B+; ing5 has R+; ing5 has G+; ing6 has R+; ing6 has G+; ing7 has R-; ing7 has G+; ing7 has B-; ing8 has R-; ing8 has G-; cross off NNN, Nnp, pnP from ing1; cross off NNN, PPP, Ppn, nPp, npN, pNn from ing2; cross off NNN from ing3; cross off npN from ing4; cross off npN, pNn from ing5; cross off Nnp, pnP from ing6; cross off NNN, PPP, Ppn, nPp, pNn, pnP from ing7; cross off Ppn, npN from ing8.",
+      "so": "ing1 is pNn; ing2 is pnP; ing3 is Nnp; ing4 is nPp; ing5 is Ppn; ing6 is PPP; ing7 is npN; ing8 is NNN; ing1 has R+; ing1 has B-; ing2 has R+; ing2 has G-; ing2 has B+; ing3 has B+; ing4 has B+; ing5 has R+; ing5 has G+; ing6 has R+; ing6 has G+; ing7 has R-; ing7 has G+; ing7 has B-; ing8 has R-; ing8 has G-; cross off NNN, Nnp, pnP from ing1; cross off NNN, PPP, Ppn, nPp, npN, pNn from ing2; cross off NNN from ing3; cross off npN from ing4; cross off npN, pNn from ing5; cross off Nnp, pnP from ing6; cross off NNN, PPP, Ppn, nPp, pNn, pnP from ing7; cross off Ppn, npN from ing8 ing3 + ing6 = B+.",
       "highlight": {
         "clue_indices": [
           7
@@ -1166,7 +1166,7 @@
     {
       "look_at": "clue 8: ing6 + ing7 = G+.",
       "means": "When two ingredients mix to G+, both share G+. Any candidate without G+ is impossible for either slot.",
-      "so": "ing1 is pNn; ing2 is pnP; ing3 is Nnp; ing4 is nPp; ing5 is Ppn; ing6 is PPP; ing7 is npN; ing8 is NNN; ing1 has R+; ing1 has B-; ing2 has R+; ing2 has G-; ing2 has B+; ing3 has B+; ing4 has B+; ing5 has R+; ing5 has G+; ing6 has R+; ing6 has G+; ing7 has R-; ing7 has G+; ing7 has B-; ing8 has R-; ing8 has G-; cross off NNN, Nnp, pnP from ing1; cross off NNN, PPP, Ppn, nPp, npN, pNn from ing2; cross off NNN from ing3; cross off npN from ing4; cross off npN, pNn from ing5; cross off Nnp, pnP from ing6; cross off NNN, PPP, Ppn, nPp, pNn, pnP from ing7; cross off Ppn, npN from ing8.",
+      "so": "ing1 is pNn; ing2 is pnP; ing3 is Nnp; ing4 is nPp; ing5 is Ppn; ing6 is PPP; ing7 is npN; ing8 is NNN; ing1 has R+; ing1 has B-; ing2 has R+; ing2 has G-; ing2 has B+; ing3 has B+; ing4 has B+; ing5 has R+; ing5 has G+; ing6 has R+; ing6 has G+; ing7 has R-; ing7 has G+; ing7 has B-; ing8 has R-; ing8 has G-; cross off NNN, Nnp, pnP from ing1; cross off NNN, PPP, Ppn, nPp, npN, pNn from ing2; cross off NNN from ing3; cross off npN from ing4; cross off npN, pNn from ing5; cross off Nnp, pnP from ing6; cross off NNN, PPP, Ppn, nPp, pNn, pnP from ing7; cross off Ppn, npN from ing8 ing4 + ing8 = R-.",
       "highlight": {
         "clue_indices": [
           7

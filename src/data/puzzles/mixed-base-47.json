@@ -163,7 +163,7 @@
     {
       "look_at": "clue 1: at least one pair among {ing1, ing2, ing8} mixes to B-.",
       "means": "Every world must contain at least one pair in {ing1, ing2, ing8} whose mix result is B-.",
-      "so": "ing1 has R-; ing3 has B+; ing5 has B+; ing7 has B+; cross off Ppn, pNn from ing1; cross off Ppn, pNn from ing3; cross off Ppn, pNn from ing5; cross off Ppn, pNn from ing7.",
+      "so": "ing1 has R-; ing3 has B+; ing5 has B+; ing7 has B+; cross off Ppn, pNn from ing1; cross off Ppn, pNn from ing3; cross off Ppn, pNn from ing5; cross off Ppn, pNn from ing7 ing4 + ing6 = B-.",
       "highlight": {
         "clue_indices": [
           0

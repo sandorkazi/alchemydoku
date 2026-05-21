@@ -44,7 +44,7 @@
     {
       "look_at": "clue 1: ing4 + ing5 = G-.",
       "means": "When two ingredients mix to G-, both share G-. Any candidate without G- is impossible for either slot.",
-      "so": "ing4 has G-; ing5 has G-; cross off PPP, Ppn, nPp, npN from ing4; cross off PPP, Ppn, nPp, npN from ing5.",
+      "so": "ing4 has G-; ing5 has G-; cross off PPP, Ppn, nPp, npN from ing4; cross off PPP, Ppn, nPp, npN from ing5 ing4 + ing6 can produce: B-, B+, G-, R-, R+, neutral.",
       "highlight": {
         "clue_indices": [
           0

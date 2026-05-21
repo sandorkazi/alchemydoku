@@ -506,7 +506,7 @@
     {
       "look_at": "clue 6: ing5 is lunar.",
       "means": "Solar/lunar status constrains which alchemicals ing5 can be.",
-      "so": "ing1 is pNn; ing5 is Ppn; ing1 has G-; ing5 has G+; cross off Ppn from ing1; cross off pNn from ing5.",
+      "so": "ing1 is pNn; ing5 is Ppn; ing1 has G-; ing5 has G+; cross off Ppn from ing1; cross off pNn from ing5 The matching aspect color is G.",
       "highlight": {
         "clue_indices": [
           5

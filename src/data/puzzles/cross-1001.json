@@ -500,7 +500,7 @@
     {
       "look_at": "clue 5.",
       "means": "Apply this clue to eliminate impossible alchemical assignments.",
-      "so": "ing1 is nPp; ing3 is Ppn; ing1 has R-; ing1 has B+; ing3 has R+; ing3 has B-; cross off Ppn from ing1; cross off nPp from ing3.",
+      "so": "ing1 is nPp; ing3 is Ppn; ing1 has R-; ing1 has B+; ing3 has R+; ing3 has B-; cross off Ppn from ing1; cross off nPp from ing3 ing1 + ing2 = B+.",
       "highlight": {
         "clue_indices": [
           4
@@ -993,7 +993,7 @@
     {
       "look_at": "clue 5.",
       "means": "Apply this clue to eliminate impossible alchemical assignments.",
-      "so": "ing1 is nPp; ing3 is Ppn; ing1 has R-; ing1 has B+; ing3 has R+; ing3 has B-; cross off Ppn from ing1; cross off nPp from ing3.",
+      "so": "ing1 is nPp; ing3 is Ppn; ing1 has R-; ing1 has B+; ing3 has R+; ing3 has B-; cross off Ppn from ing1; cross off nPp from ing3 ing1 + ing6 = B+.",
       "highlight": {
         "clue_indices": [
           4
@@ -1486,7 +1486,7 @@
     {
       "look_at": "clue 5.",
       "means": "Apply this clue to eliminate impossible alchemical assignments.",
-      "so": "ing1 is nPp; ing3 is Ppn; ing1 has R-; ing1 has B+; ing3 has R+; ing3 has B-; cross off Ppn from ing1; cross off nPp from ing3.",
+      "so": "ing1 is nPp; ing3 is Ppn; ing1 has R-; ing1 has B+; ing3 has R+; ing3 has B-; cross off Ppn from ing1; cross off nPp from ing3 ing1 + ing4 = R-.",
       "highlight": {
         "clue_indices": [
           4

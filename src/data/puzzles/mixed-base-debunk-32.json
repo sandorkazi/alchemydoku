@@ -150,7 +150,7 @@
     {
       "look_at": "clue 2: exactly 2 pairs among {ing2, ing5, ing7} mix to B+.",
       "means": "Exactly 2 pair(s) in {ing2, ing5, ing7} must mix to B+; any world with a different count is impossible.",
-      "so": "ing2 has B+; ing5 has B+; ing7 has B+; cross off NNN, Ppn, npN, pNn from ing2; cross off NNN, Ppn, npN, pNn from ing5; cross off NNN, Ppn, npN, pNn from ing7.",
+      "so": "ing2 has B+; ing5 has B+; ing7 has B+; cross off NNN, Ppn, npN, pNn from ing2; cross off NNN, Ppn, npN, pNn from ing5; cross off NNN, Ppn, npN, pNn from ing7",
       "highlight": {
         "clue_indices": [
           1

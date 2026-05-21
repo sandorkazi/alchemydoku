@@ -3367,6 +3367,45 @@ def _is_answer_deducible(worlds: frozenset, q: dict, golem) -> bool:
     return answer(worlds, q, golem) is not None
 
 
+def _answer_suffix(q: dict, worlds: frozenset, golem) -> str:
+    """Return a short sentence stating the now-deducible answer using visual tokens."""
+    k   = q['kind']
+    ans = answer(worlds, q, golem)
+    if ans is None:
+        return ''
+
+    if k == 'mixing-result':
+        i1, i2 = q['ingredient1'], q['ingredient2']
+        return f" ing{i1} + ing{i2} = {fmt_r(ans)}."
+    if k == 'aspect':
+        ing = q['ingredient']
+        col = q['color']
+        return f" ing{ing} has {col}{sgn_str(ans)}."
+    if k == 'alchemical':
+        ing = q['ingredient']
+        return f" ing{ing} is {ALCH_CODES[ans]}."
+    if k == 'neutral-partner':
+        ing = q['ingredient']
+        return f" ing{ing} and ing{ans} always mix neutrally."
+    if k == 'safe-publish':
+        ing = q['ingredient']
+        return f" The safe-publish color for ing{ing} is {ans}."
+    if k == 'possible-potions':
+        i1, i2 = q['ingredient1'], q['ingredient2']
+        pot_str = ', '.join(fmt_r(r) for r in sorted(ans, key=str))
+        return f" ing{i1} + ing{i2} can produce: {pot_str}."
+    if k == 'encyclopedia_which_aspect':
+        return f" The matching aspect color is {ans}."
+    if k == 'encyclopedia_fourth':
+        col = q['aspect']
+        msign = q['missing_sign']
+        return f" The missing {col}{msign} ingredient is ing{ans}."
+    if k == 'solar_lunar':
+        ing = q['ingredient']
+        return f" ing{ing} is {ans}."
+    return ''
+
+
 def gen_hint_steps(raw: dict) -> list:
     """Generate structured hint steps for one question (raw must include 'q')."""
     clues      = raw['clues']
@@ -3399,6 +3438,7 @@ def gen_hint_steps(raw: dict) -> list:
             )
             if reveals:
                 already_revealed = True
+                so = so.rstrip('.') + _answer_suffix(q, new_worlds, golem)
             steps.append({
                 'look_at':      look_at,
                 'means':        means,
@@ -3427,6 +3467,7 @@ def gen_hint_steps(raw: dict) -> list:
         reveals = not already_revealed and _is_answer_deducible(full_worlds, q, golem)
         if reveals:
             already_revealed = True
+            so = so.rstrip('.') + _answer_suffix(q, full_worlds, golem)
         steps.append({
             'look_at': f"The remaining candidates for {', '.join(f'ing{i}' for i in ings_involved)}.",
             'means':   "After applying all clues, elimination narrows down the possibilities further.",
@@ -3450,8 +3491,10 @@ def gen_hint_steps(raw: dict) -> list:
 
     # Phase 5: mark answer-revealing step if not yet done (fallback)
     if not already_revealed and steps:
-        # Mark last step as the reveal
         steps[-1]['reveals_answer'] = True
+        suffix = _answer_suffix(q, full_worlds, golem)
+        if suffix:
+            steps[-1]['so'] = steps[-1]['so'].rstrip('.') + suffix
 
     return steps
 
@@ -3510,15 +3553,15 @@ def _bifurcation_steps(worlds: frozenset, q: dict, golem, sol: dict, clues: list
                 'worlds_after':   len(worlds) - len(assumed_worlds),
             })
         elif _is_answer_deducible(sim_worlds, q, golem):
-            ans = answer(sim_worlds, q, golem)
-            ans_str = str(ans) if ans is not None else '?'
+            suffix = _answer_suffix(q, sim_worlds, golem)
+            so_text = f"Under this assumption the answer is deducible.{suffix}"
             steps.append({
                 'look_at': f"Suppose ing{ing} were {cand_code}.",
                 'means':   (
                     f"If ing{ing} = {cand_code}, then after applying all clues, "
                     f"the answer becomes deducible."
                 ),
-                'so': f"Under this assumption, the answer is {ans_str}.",
+                'so': so_text,
                 'highlight': {'clue_indices': [], 'ingredients': [ing]},
                 'impact': {
                     'confirmed_alchemicals': [],

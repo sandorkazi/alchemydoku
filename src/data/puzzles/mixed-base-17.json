@@ -477,7 +477,7 @@
     {
       "look_at": "clue 2: at least one pair among {ing2, ing3, ing5, ing7} mixes to G-.",
       "means": "Every world must contain at least one pair in {ing2, ing3, ing5, ing7} whose mix result is G-.",
-      "so": "ing4 is nPp; ing7 is Nnp; ing4 has G+; ing7 has G-; cross off Nnp from ing4; cross off nPp from ing7.",
+      "so": "ing4 is nPp; ing7 is Nnp; ing4 has G+; ing7 has G-; cross off Nnp from ing4; cross off nPp from ing7 ing3 + ing7 = R-.",
       "highlight": {
         "clue_indices": [
           1

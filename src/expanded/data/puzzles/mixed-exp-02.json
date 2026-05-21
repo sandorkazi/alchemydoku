@@ -385,7 +385,7 @@
     {
       "look_at": "clue 1: sell constraint among {ing1, ing5, ing6, ing8}.",
       "means": "Selling results among {ing1, ing5, ing6, ing8} constrain possible alchemicals.",
-      "so": "ing2 has B+; cross off Ppn from ing2.",
+      "so": "ing2 has B+; cross off Ppn from ing2",
       "highlight": {
         "clue_indices": [
           0

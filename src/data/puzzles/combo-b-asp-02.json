@@ -105,7 +105,7 @@
     {
       "look_at": "clue 2.",
       "means": "Apply this clue to eliminate impossible alchemical assignments.",
-      "so": "ing1 has G-; ing3 has G+; ing4 has G+; ing6 has G+; ing7 has G-; ing8 has G+; cross off PPP, Ppn, nPp, npN from ing1; cross off NNN, Nnp, pNn, pnP from ing3; cross off NNN, Nnp, pNn, pnP from ing4; cross off NNN, Nnp, pNn, pnP from ing6; cross off PPP, Ppn, nPp, npN from ing7; cross off NNN, Nnp, pNn, pnP from ing8.",
+      "so": "ing1 has G-; ing3 has G+; ing4 has G+; ing6 has G+; ing7 has G-; ing8 has G+; cross off PPP, Ppn, nPp, npN from ing1; cross off NNN, Nnp, pNn, pnP from ing3; cross off NNN, Nnp, pNn, pnP from ing4; cross off NNN, Nnp, pNn, pnP from ing6; cross off PPP, Ppn, nPp, npN from ing7; cross off NNN, Nnp, pNn, pnP from ing8 ing6 has G+.",
       "highlight": {
         "clue_indices": [
           1

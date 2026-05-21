@@ -112,7 +112,7 @@
     {
       "look_at": "clue 3: ing2 + ing6 = G+.",
       "means": "When two ingredients mix to G+, both share G+. Any candidate without G+ is impossible for either slot.",
-      "so": "ing1 has G-; ing2 has G+; ing5 has G-; ing6 has G+; ing7 has G-; ing8 has G-; cross off PPP, Ppn, nPp, npN from ing1; cross off NNN, Nnp, pNn, pnP from ing2; cross off PPP, Ppn, nPp, npN from ing5; cross off NNN, Nnp, pNn, pnP from ing6; cross off PPP, Ppn, nPp, npN from ing7; cross off PPP, Ppn, nPp, npN from ing8.",
+      "so": "ing1 has G-; ing2 has G+; ing5 has G-; ing6 has G+; ing7 has G-; ing8 has G-; cross off PPP, Ppn, nPp, npN from ing1; cross off NNN, Nnp, pNn, pnP from ing2; cross off PPP, Ppn, nPp, npN from ing5; cross off NNN, Nnp, pNn, pnP from ing6; cross off PPP, Ppn, nPp, npN from ing7; cross off PPP, Ppn, nPp, npN from ing8",
       "highlight": {
         "clue_indices": [
           2

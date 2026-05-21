@@ -419,7 +419,7 @@
     {
       "look_at": "clue 3.",
       "means": "Apply this clue to eliminate impossible alchemical assignments.",
-      "so": "ing4 is Ppn; ing6 is pnP; ing4 has G+; ing4 has B-; ing6 has G-; ing6 has B+; cross off pnP from ing4; cross off Ppn from ing6.",
+      "so": "ing4 is Ppn; ing6 is pnP; ing4 has G+; ing4 has B-; ing6 has G-; ing6 has B+; cross off pnP from ing4; cross off Ppn from ing6 ing1 + ing6 = R+.",
       "highlight": {
         "clue_indices": [
           2
@@ -789,7 +789,7 @@
     {
       "look_at": "clue 3.",
       "means": "Apply this clue to eliminate impossible alchemical assignments.",
-      "so": "ing4 is Ppn; ing6 is pnP; ing4 has G+; ing4 has B-; ing6 has G-; ing6 has B+; cross off pnP from ing4; cross off Ppn from ing6.",
+      "so": "ing4 is Ppn; ing6 is pnP; ing4 has G+; ing4 has B-; ing6 has G-; ing6 has B+; cross off pnP from ing4; cross off Ppn from ing6 ing2 + ing4 = R+.",
       "highlight": {
         "clue_indices": [
           2
@@ -1159,7 +1159,7 @@
     {
       "look_at": "clue 3.",
       "means": "Apply this clue to eliminate impossible alchemical assignments.",
-      "so": "ing4 is Ppn; ing6 is pnP; ing4 has G+; ing4 has B-; ing6 has G-; ing6 has B+; cross off pnP from ing4; cross off Ppn from ing6.",
+      "so": "ing4 is Ppn; ing6 is pnP; ing4 has G+; ing4 has B-; ing6 has G-; ing6 has B+; cross off pnP from ing4; cross off Ppn from ing6 ing2 + ing6 = G-.",
       "highlight": {
         "clue_indices": [
           2

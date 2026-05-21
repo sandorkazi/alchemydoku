@@ -480,7 +480,7 @@
     {
       "look_at": "clue 5.",
       "means": "Apply this clue to eliminate impossible alchemical assignments.",
-      "so": "ing3 is pnP; ing6 is PPP; ing3 has G-; ing6 has G+; cross off PPP from ing3; cross off pnP from ing6.",
+      "so": "ing3 is pnP; ing6 is PPP; ing3 has G-; ing6 has G+; cross off PPP from ing3; cross off pnP from ing6 ing4 + ing6 = G+.",
       "highlight": {
         "clue_indices": [
           4

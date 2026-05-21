@@ -394,7 +394,7 @@
     {
       "look_at": "clue 4: exactly 1 of {ing1, ing5, ing7, ing8} are lunar.",
       "means": "Exactly 1 ingredient(s) in {ing1, ing5, ing7, ing8} must be lunar.",
-      "so": "ing1 is nPp; ing2 is pNn; ing3 is npN; ing4 is PPP; ing7 is NNN; ing8 is pnP; ing1 has R-; ing2 has B-; ing3 has G+; ing4 has R+; ing7 has G-; ing8 has B+; cross off PPP from ing1; cross off pnP from ing2; cross off NNN from ing3; cross off nPp from ing4; cross off npN from ing7; cross off pNn from ing8.",
+      "so": "ing1 is nPp; ing2 is pNn; ing3 is npN; ing4 is PPP; ing7 is NNN; ing8 is pnP; ing1 has R-; ing2 has B-; ing3 has G+; ing4 has R+; ing7 has G-; ing8 has B+; cross off PPP from ing1; cross off pnP from ing2; cross off NNN from ing3; cross off nPp from ing4; cross off npN from ing7; cross off pNn from ing8 The missing R+ ingredient is ing4.",
       "highlight": {
         "clue_indices": [
           3

@@ -536,7 +536,7 @@
     {
       "look_at": "clue 5: exactly 1 of {ing2, ing3, ing6, ing8} are lunar.",
       "means": "Exactly 1 ingredient(s) in {ing2, ing3, ing6, ing8} must be lunar.",
-      "so": "ing1 is npN; ing3 is nPp; ing1 has B-; ing3 has B+; cross off nPp from ing1; cross off npN from ing3.",
+      "so": "ing1 is npN; ing3 is nPp; ing1 has B-; ing3 has B+; cross off nPp from ing1; cross off npN from ing3 ing1 + ing8 = B-.",
       "highlight": {
         "clue_indices": [
           4

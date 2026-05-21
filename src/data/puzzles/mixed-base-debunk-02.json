@@ -156,7 +156,7 @@
     {
       "look_at": "clue 5: exactly 2 pairs among {ing1, ing4, ing8} mix to B-.",
       "means": "Exactly 2 pair(s) in {ing1, ing4, ing8} must mix to B-; any world with a different count is impossible.",
-      "so": "ing1 has B-; ing4 has B-; ing8 has B-; cross off Nnp, PPP, nPp, pnP from ing1; cross off Nnp, PPP, nPp, pnP from ing4; cross off Nnp, PPP, nPp, pnP from ing8.",
+      "so": "ing1 has B-; ing4 has B-; ing8 has B-; cross off Nnp, PPP, nPp, pnP from ing1; cross off Nnp, PPP, nPp, pnP from ing4; cross off Nnp, PPP, nPp, pnP from ing8",
       "highlight": {
         "clue_indices": [
           4

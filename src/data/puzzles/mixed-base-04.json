@@ -222,7 +222,7 @@
     {
       "look_at": "clue 1: sell constraint among {ing1, ing5, ing8}.",
       "means": "Selling results among {ing1, ing5, ing8} constrain possible alchemicals.",
-      "so": "ing8 is nPp; ing2 has G-; ing7 has G-; ing8 has G+; ing8 has B+; cross off nPp from ing1; cross off nPp, npN from ing2; cross off nPp from ing3; cross off nPp from ing4; cross off nPp from ing5; cross off nPp from ing6; cross off nPp, npN from ing7; cross off Nnp, npN from ing8.",
+      "so": "ing8 is nPp; ing2 has G-; ing7 has G-; ing8 has G+; ing8 has B+; cross off nPp from ing1; cross off nPp, npN from ing2; cross off nPp from ing3; cross off nPp from ing4; cross off nPp from ing5; cross off nPp from ing6; cross off nPp, npN from ing7; cross off Nnp, npN from ing8 ing7 + ing8 = R-.",
       "highlight": {
         "clue_indices": [
           0

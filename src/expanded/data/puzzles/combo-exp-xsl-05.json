@@ -255,7 +255,7 @@
     {
       "look_at": "clue 3.",
       "means": "Apply this clue to eliminate impossible alchemical assignments.",
-      "so": "ing7 is NNN; ing8 is PPP; ing1 has G+; ing2 has G+; ing4 has G-; ing5 has G-; ing7 has G-; ing7 has B-; ing8 has R+; ing8 has G+; cross off NNN, Nnp from ing1; cross off NNN, Nnp from ing2; cross off PPP, nPp from ing4; cross off PPP, nPp from ing5; cross off Nnp, nPp, npN from ing7; cross off Nnp, nPp, pnP from ing8.",
+      "so": "ing7 is NNN; ing8 is PPP; ing1 has G+; ing2 has G+; ing4 has G-; ing5 has G-; ing7 has G-; ing7 has B-; ing8 has R+; ing8 has G+; cross off NNN, Nnp from ing1; cross off NNN, Nnp from ing2; cross off PPP, nPp from ing4; cross off PPP, nPp from ing5; cross off Nnp, nPp, npN from ing7; cross off Nnp, nPp, pnP from ing8 ing7 is lunar.",
       "highlight": {
         "clue_indices": [
           2

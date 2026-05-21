@@ -316,7 +316,7 @@
     {
       "look_at": "clue 3.",
       "means": "Apply this clue to eliminate impossible alchemical assignments.",
-      "so": "ing3 is Ppn; ing4 is pnP; ing8 is pNn; ing3 has G+; ing3 has B-; ing4 has G-; ing4 has B+; ing5 has R-; ing7 has R-; ing8 has R+; ing8 has B-; cross off pnP from ing3; cross off Ppn from ing4; cross off pNn from ing5; cross off pNn from ing7; cross off NNN, Nnp from ing8.",
+      "so": "ing3 is Ppn; ing4 is pnP; ing8 is pNn; ing3 has G+; ing3 has B-; ing4 has G-; ing4 has B+; ing5 has R-; ing7 has R-; ing8 has R+; ing8 has B-; cross off pnP from ing3; cross off Ppn from ing4; cross off pNn from ing5; cross off pNn from ing7; cross off NNN, Nnp from ing8 ing1 + ing5 = R-.",
       "highlight": {
         "clue_indices": [
           2

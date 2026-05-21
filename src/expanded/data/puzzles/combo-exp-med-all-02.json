@@ -509,7 +509,7 @@
     {
       "look_at": "clue 5.",
       "means": "Apply this clue to eliminate impossible alchemical assignments.",
-      "so": "ing2 is npN; ing3 is pNn; ing2 has R-; ing2 has G+; ing3 has R+; ing3 has G-; cross off pNn from ing2; cross off npN from ing3.",
+      "so": "ing2 is npN; ing3 is pNn; ing2 has R-; ing2 has G+; ing3 has R+; ing3 has G-; cross off pNn from ing2; cross off npN from ing3 The missing G+ ingredient is ing2.",
       "highlight": {
         "clue_indices": [
           4

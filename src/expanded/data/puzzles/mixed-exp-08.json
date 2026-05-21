@@ -173,7 +173,7 @@
     {
       "look_at": "Suppose ing1 were Ppn.",
       "means": "If ing1 = Ppn, then after applying all clues, the answer becomes deducible.",
-      "so": "Under this assumption, the answer is 3.",
+      "so": "Under this assumption the answer is deducible.",
       "highlight": {
         "clue_indices": [],
         "ingredients": [

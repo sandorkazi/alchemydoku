@@ -289,7 +289,7 @@
     {
       "look_at": "clue 4: ing2 + ing4 = neutral.",
       "means": "A neutral result means ing2 and ing4 have opposite signs in every color.",
-      "so": "ing3 has B-; ing4 has B+; ing7 has B-; cross off Nnp, pnP from ing3; cross off NNN, pNn from ing4; cross off Nnp, pnP from ing7.",
+      "so": "ing3 has B-; ing4 has B+; ing7 has B-; cross off Nnp, pnP from ing3; cross off NNN, pNn from ing4; cross off Nnp, pnP from ing7",
       "highlight": {
         "clue_indices": [
           3

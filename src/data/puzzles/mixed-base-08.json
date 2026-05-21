@@ -387,7 +387,7 @@
     {
       "look_at": "clue 5: sell constraint among {ing1, ing4, ing5, ing7}.",
       "means": "Selling results among {ing1, ing4, ing5, ing7} constrain possible alchemicals.",
-      "so": "ing1 is NNN; ing2 is nPp; ing3 is Ppn; ing4 is npN; ing5 is PPP; ing6 is pNn; ing7 is Nnp; ing8 is pnP; ing1 has R-; ing2 has B+; ing3 has B-; ing4 has R-; ing4 has G+; ing4 has B-; ing5 has G+; ing5 has B+; ing6 has B-; ing7 has B+; ing8 has R+; ing8 has G-; ing8 has B+; cross off pNn from ing1; cross off npN from ing2; cross off PPP from ing3; cross off Nnp, PPP, pnP from ing4; cross off Ppn, pnP from ing5; cross off pnP from ing6; cross off NNN from ing7; cross off PPP, nPp, npN from ing8.",
+      "so": "ing1 is NNN; ing2 is nPp; ing3 is Ppn; ing4 is npN; ing5 is PPP; ing6 is pNn; ing7 is Nnp; ing8 is pnP; ing1 has R-; ing2 has B+; ing3 has B-; ing4 has R-; ing4 has G+; ing4 has B-; ing5 has G+; ing5 has B+; ing6 has B-; ing7 has B+; ing8 has R+; ing8 has G-; ing8 has B+; cross off pNn from ing1; cross off npN from ing2; cross off PPP from ing3; cross off Nnp, PPP, pnP from ing4; cross off Ppn, pnP from ing5; cross off pnP from ing6; cross off NNN from ing7; cross off PPP, nPp, npN from ing8 ing3 + ing5 = G+.",
       "highlight": {
         "clue_indices": [
           4

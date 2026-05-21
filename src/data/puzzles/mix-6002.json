@@ -334,7 +334,7 @@
     {
       "look_at": "clue 3: ing4 + ing7 = G-.",
       "means": "When two ingredients mix to G-, both share G-. Any candidate without G- is impossible for either slot.",
-      "so": "ing2 is Nnp; ing2 has G-; ing5 has G+; ing5 has B+; ing7 has G-; ing7 has B-; cross off nPp from ing2; cross off NNN, Nnp, Ppn, pNn from ing5; cross off Nnp, PPP, Ppn, nPp from ing7.",
+      "so": "ing2 is Nnp; ing2 has G-; ing5 has G+; ing5 has B+; ing7 has G-; ing7 has B-; cross off nPp from ing2; cross off NNN, Nnp, Ppn, pNn from ing5; cross off Nnp, PPP, Ppn, nPp from ing7 ing2 + ing7 = G-.",
       "highlight": {
         "clue_indices": [
           2

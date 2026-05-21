@@ -380,7 +380,7 @@
     {
       "look_at": "clue 5.",
       "means": "Apply this clue to eliminate impossible alchemical assignments.",
-      "so": "ing3 is Nnp; ing4 is pnP; ing5 is nPp; ing6 is npN; ing7 is NNN; ing8 is pNn; ing3 has B+; ing4 has B+; ing5 has B+; ing6 has B-; ing7 has B-; ing8 has B-; cross off NNN from ing3; cross off pNn from ing4; cross off npN from ing5; cross off nPp from ing6; cross off Nnp from ing7; cross off pnP from ing8.",
+      "so": "ing3 is Nnp; ing4 is pnP; ing5 is nPp; ing6 is npN; ing7 is NNN; ing8 is pNn; ing3 has B+; ing4 has B+; ing5 has B+; ing6 has B-; ing7 has B-; ing8 has B-; cross off NNN from ing3; cross off pNn from ing4; cross off npN from ing5; cross off nPp from ing6; cross off Nnp from ing7; cross off pnP from ing8 ing3 + ing4 = B+.",
       "highlight": {
         "clue_indices": [
           4

@@ -287,7 +287,7 @@
     {
       "look_at": "clue 4.",
       "means": "Apply this clue to eliminate impossible alchemical assignments.",
-      "so": "ing2 has R-; ing3 has R-; ing5 has R+; ing7 has R+; ing8 has R+; cross off PPP, pnP from ing2; cross off Ppn, pNn from ing3; cross off NNN, npN from ing5; cross off Nnp, nPp from ing7; cross off Nnp, nPp from ing8.",
+      "so": "ing2 has R-; ing3 has R-; ing5 has R+; ing7 has R+; ing8 has R+; cross off PPP, pnP from ing2; cross off Ppn, pNn from ing3; cross off NNN, npN from ing5; cross off Nnp, nPp from ing7; cross off Nnp, nPp from ing8 ing1 + ing7 = B+.",
       "highlight": {
         "clue_indices": [
           3

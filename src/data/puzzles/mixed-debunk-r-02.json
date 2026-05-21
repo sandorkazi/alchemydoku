@@ -130,7 +130,7 @@
     {
       "look_at": "clue 1.",
       "means": "Apply this clue to eliminate impossible alchemical assignments.",
-      "so": "ing5 has R-; ing6 has R-; cross off PPP, Ppn, pNn, pnP from ing5; cross off PPP, Ppn, pNn, pnP from ing6.",
+      "so": "ing5 has R-; ing6 has R-; cross off PPP, Ppn, pNn, pnP from ing5; cross off PPP, Ppn, pNn, pnP from ing6",
       "highlight": {
         "clue_indices": [
           0

@@ -243,7 +243,7 @@
     {
       "look_at": "clue 3: ing8 is lunar.",
       "means": "Solar/lunar status constrains which alchemicals ing8 can be.",
-      "so": "ing2 is Nnp; ing8 is pnP; ing2 has R-; ing8 has R+; cross off pnP from ing2; cross off Nnp from ing8.",
+      "so": "ing2 is Nnp; ing8 is pnP; ing2 has R-; ing8 has R+; cross off pnP from ing2; cross off Nnp from ing8 ing2 is solar.",
       "highlight": {
         "clue_indices": [
           2

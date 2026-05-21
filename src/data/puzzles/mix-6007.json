@@ -489,7 +489,7 @@
     {
       "look_at": "clue 6: ing2 has R+.",
       "means": "This directly tells us the R sign of ing2.",
-      "so": "ing2 is pnP; ing7 is Nnp; ing2 has R+; ing7 has R-; cross off Nnp from ing2; cross off pnP from ing7.",
+      "so": "ing2 is pnP; ing7 is Nnp; ing2 has R+; ing7 has R-; cross off Nnp from ing2; cross off pnP from ing7 ing2 is pnP.",
       "highlight": {
         "clue_indices": [
           5

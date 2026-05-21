@@ -352,7 +352,7 @@
     {
       "look_at": "clue 5.",
       "means": "Apply this clue to eliminate impossible alchemical assignments.",
-      "so": "ing7 has G+; ing8 has G-; cross off NNN, Nnp from ing7; cross off nPp, npN from ing8.",
+      "so": "ing7 has G+; ing8 has G-; cross off NNN, Nnp from ing7; cross off nPp, npN from ing8 ing8 and ing6 always mix neutrally.",
       "highlight": {
         "clue_indices": [
           4

@@ -392,7 +392,7 @@
     {
       "look_at": "clue 4: ing1 + ing4 = B-.",
       "means": "When two ingredients mix to B-, both share B-. Any candidate without B- is impossible for either slot.",
-      "so": "ing4 is NNN; ing7 is Nnp; ing4 has B-; ing7 has B+; cross off Nnp from ing4; cross off NNN from ing7.",
+      "so": "ing4 is NNN; ing7 is Nnp; ing4 has B-; ing7 has B+; cross off Nnp from ing4; cross off NNN from ing7 The missing B+ ingredient is ing7.",
       "highlight": {
         "clue_indices": [
           3

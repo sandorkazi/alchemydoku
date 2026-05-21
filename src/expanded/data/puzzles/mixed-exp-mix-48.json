@@ -397,7 +397,7 @@
     {
       "look_at": "clue 6: exactly 1 of {ing1, ing2, ing6} are lunar.",
       "means": "Exactly 1 ingredient(s) in {ing1, ing2, ing6} must be lunar.",
-      "so": "ing4 is Nnp; ing5 is PPP; ing4 has R-; ing4 has G-; ing5 has R+; cross off Nnp, PPP from ing2; cross off PPP from ing4; cross off nPp from ing5.",
+      "so": "ing4 is Nnp; ing5 is PPP; ing4 has R-; ing4 has G-; ing5 has R+; cross off Nnp, PPP from ing2; cross off PPP from ing4; cross off nPp from ing5 ing4 + ing5 = B+.",
       "highlight": {
         "clue_indices": [
           5

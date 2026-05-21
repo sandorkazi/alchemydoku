@@ -217,7 +217,7 @@
     {
       "look_at": "clue 5: ing4 + ing7 = neutral.",
       "means": "A neutral result means ing4 and ing7 have opposite signs in every color.",
-      "so": "ing4 has R+; ing4 has B+; cross off NNN, Nnp, Ppn, nPp, npN, pNn from ing4.",
+      "so": "ing4 has R+; ing4 has B+; cross off NNN, Nnp, Ppn, nPp, npN, pNn from ing4 ing4 + ing8 can produce: B+, G-, G+, R+.",
       "highlight": {
         "clue_indices": [
           4

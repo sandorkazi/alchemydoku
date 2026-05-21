@@ -260,7 +260,7 @@
     {
       "look_at": "clue 3: ing1 + ing2 = neutral.",
       "means": "A neutral result means ing1 and ing2 have opposite signs in every color.",
-      "so": "ing1 has G+; ing4 has G-; ing8 has G-; cross off pNn, pnP from ing1; cross off PPP, Ppn from ing4; cross off PPP, Ppn from ing8.",
+      "so": "ing1 has G+; ing4 has G-; ing8 has G-; cross off pNn, pnP from ing1; cross off PPP, Ppn from ing4; cross off PPP, Ppn from ing8 The missing G+ ingredient is ing1.",
       "highlight": {
         "clue_indices": [
           2

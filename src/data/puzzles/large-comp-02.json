@@ -358,7 +358,7 @@
     {
       "look_at": "clue 5: ing1 + ing4 = R+.",
       "means": "When two ingredients mix to R+, both share R+. Any candidate without R+ is impossible for either slot.",
-      "so": "ing4 has R+; ing5 has R-; cross off NNN, npN from ing4; cross off Ppn, pNn from ing5.",
+      "so": "ing4 has R+; ing5 has R-; cross off NNN, npN from ing4; cross off Ppn, pNn from ing5",
       "highlight": {
         "clue_indices": [
           4

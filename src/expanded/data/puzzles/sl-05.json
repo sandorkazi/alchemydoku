@@ -172,7 +172,7 @@
     {
       "look_at": "clue 3: ing1 is lunar.",
       "means": "Solar/lunar status constrains which alchemicals ing1 can be.",
-      "so": "ing1 is NNN; ing1 has B-; ing3 has B+; cross off Nnp from ing1; cross off NNN, pNn from ing3; cross off NNN from ing4; cross off NNN from ing5; cross off NNN from ing6; cross off NNN from ing7; cross off NNN from ing8.",
+      "so": "ing1 is NNN; ing1 has B-; ing3 has B+; cross off Nnp from ing1; cross off NNN, pNn from ing3; cross off NNN from ing4; cross off NNN from ing5; cross off NNN from ing6; cross off NNN from ing7; cross off NNN from ing8 ing1 is NNN.",
       "highlight": {
         "clue_indices": [
           2

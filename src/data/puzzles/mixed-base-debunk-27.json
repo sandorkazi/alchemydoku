@@ -187,7 +187,7 @@
     {
       "look_at": "clue 4: sell constraint among {ing2, ing5, ing8}.",
       "means": "Selling results among {ing2, ing5, ing8} constrain possible alchemicals.",
-      "so": "ing2 has R-; ing5 has R-; ing8 has R-; cross off PPP, Ppn, pNn, pnP from ing2; cross off PPP, Ppn, pNn, pnP from ing5; cross off PPP, Ppn, pNn, pnP from ing8.",
+      "so": "ing2 has R-; ing5 has R-; ing8 has R-; cross off PPP, Ppn, pNn, pnP from ing2; cross off PPP, Ppn, pNn, pnP from ing5; cross off PPP, Ppn, pNn, pnP from ing8",
       "highlight": {
         "clue_indices": [
           3
@@ -670,7 +670,7 @@
     {
       "look_at": "clue 4: sell constraint among {ing2, ing5, ing8}.",
       "means": "Selling results among {ing2, ing5, ing8} constrain possible alchemicals.",
-      "so": "ing2 has R-; ing5 has R-; ing8 has R-; cross off PPP, Ppn, pNn, pnP from ing2; cross off PPP, Ppn, pNn, pnP from ing5; cross off PPP, Ppn, pNn, pnP from ing8.",
+      "so": "ing2 has R-; ing5 has R-; ing8 has R-; cross off PPP, Ppn, pNn, pnP from ing2; cross off PPP, Ppn, pNn, pnP from ing5; cross off PPP, Ppn, pNn, pnP from ing8",
       "highlight": {
         "clue_indices": [
           3

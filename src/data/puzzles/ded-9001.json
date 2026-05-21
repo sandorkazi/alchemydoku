@@ -359,7 +359,7 @@
     {
       "look_at": "clue 4: ing2 + ing5 = R-.",
       "means": "When two ingredients mix to R-, both share R-. Any candidate without R- is impossible for either slot.",
-      "so": "ing1 is PPP; ing2 is Nnp; ing3 is npN; ing5 is nPp; ing6 is NNN; ing1 has R+; ing2 has G-; ing2 has B+; ing3 has G+; ing3 has B-; ing4 has R+; ing4 has G-; ing5 has R-; ing5 has G+; ing6 has R-; ing7 has R+; ing7 has G-; cross off nPp from ing1; cross off NNN, npN from ing2; cross off NNN, Nnp from ing3; cross off NNN, Nnp, PPP from ing4; cross off PPP, pnP from ing5; cross off pNn from ing6; cross off NNN, Nnp, PPP from ing7.",
+      "so": "ing1 is PPP; ing2 is Nnp; ing3 is npN; ing5 is nPp; ing6 is NNN; ing1 has R+; ing2 has G-; ing2 has B+; ing3 has G+; ing3 has B-; ing4 has R+; ing4 has G-; ing5 has R-; ing5 has G+; ing6 has R-; ing7 has R+; ing7 has G-; cross off nPp from ing1; cross off NNN, npN from ing2; cross off NNN, Nnp from ing3; cross off NNN, Nnp, PPP from ing4; cross off PPP, pnP from ing5; cross off pNn from ing6; cross off NNN, Nnp, PPP from ing7 ing1 + ing3 = G+.",
       "highlight": {
         "clue_indices": [
           3
@@ -769,7 +769,7 @@
     {
       "look_at": "clue 4: ing2 + ing5 = R-.",
       "means": "When two ingredients mix to R-, both share R-. Any candidate without R- is impossible for either slot.",
-      "so": "ing1 is PPP; ing2 is Nnp; ing3 is npN; ing5 is nPp; ing6 is NNN; ing1 has R+; ing2 has G-; ing2 has B+; ing3 has G+; ing3 has B-; ing4 has R+; ing4 has G-; ing5 has R-; ing5 has G+; ing6 has R-; ing7 has R+; ing7 has G-; cross off nPp from ing1; cross off NNN, npN from ing2; cross off NNN, Nnp from ing3; cross off NNN, Nnp, PPP from ing4; cross off PPP, pnP from ing5; cross off pNn from ing6; cross off NNN, Nnp, PPP from ing7.",
+      "so": "ing1 is PPP; ing2 is Nnp; ing3 is npN; ing5 is nPp; ing6 is NNN; ing1 has R+; ing2 has G-; ing2 has B+; ing3 has G+; ing3 has B-; ing4 has R+; ing4 has G-; ing5 has R-; ing5 has G+; ing6 has R-; ing7 has R+; ing7 has G-; cross off nPp from ing1; cross off NNN, npN from ing2; cross off NNN, Nnp from ing3; cross off NNN, Nnp, PPP from ing4; cross off PPP, pnP from ing5; cross off pNn from ing6; cross off NNN, Nnp, PPP from ing7 ing3 + ing5 = G+.",
       "highlight": {
         "clue_indices": [
           3
@@ -1179,7 +1179,7 @@
     {
       "look_at": "clue 4: ing2 + ing5 = R-.",
       "means": "When two ingredients mix to R-, both share R-. Any candidate without R- is impossible for either slot.",
-      "so": "ing1 is PPP; ing2 is Nnp; ing3 is npN; ing5 is nPp; ing6 is NNN; ing1 has R+; ing2 has G-; ing2 has B+; ing3 has G+; ing3 has B-; ing4 has R+; ing4 has G-; ing5 has R-; ing5 has G+; ing6 has R-; ing7 has R+; ing7 has G-; cross off nPp from ing1; cross off NNN, npN from ing2; cross off NNN, Nnp from ing3; cross off NNN, Nnp, PPP from ing4; cross off PPP, pnP from ing5; cross off pNn from ing6; cross off NNN, Nnp, PPP from ing7.",
+      "so": "ing1 is PPP; ing2 is Nnp; ing3 is npN; ing5 is nPp; ing6 is NNN; ing1 has R+; ing2 has G-; ing2 has B+; ing3 has G+; ing3 has B-; ing4 has R+; ing4 has G-; ing5 has R-; ing5 has G+; ing6 has R-; ing7 has R+; ing7 has G-; cross off nPp from ing1; cross off NNN, npN from ing2; cross off NNN, Nnp from ing3; cross off NNN, Nnp, PPP from ing4; cross off PPP, pnP from ing5; cross off pNn from ing6; cross off NNN, Nnp, PPP from ing7 ing5 + ing8 = G+.",
       "highlight": {
         "clue_indices": [
           3

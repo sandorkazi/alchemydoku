@@ -347,7 +347,7 @@
     {
       "look_at": "clue 5: ing5 + ing7 = neutral.",
       "means": "A neutral result means ing5 and ing7 have opposite signs in every color.",
-      "so": "ing1 is npN; ing2 is pnP; ing5 is Nnp; ing7 is Ppn; ing1 has R-; ing2 has R+; ing5 has R-; ing5 has G-; ing7 has B-; cross off Ppn from ing1; cross off Nnp from ing2; cross off Nnp, Ppn, npN from ing4; cross off nPp, pnP from ing5; cross off Nnp, Ppn, npN from ing6; cross off PPP from ing7; cross off Nnp, Ppn, npN from ing8.",
+      "so": "ing1 is npN; ing2 is pnP; ing5 is Nnp; ing7 is Ppn; ing1 has R-; ing2 has R+; ing5 has R-; ing5 has G-; ing7 has B-; cross off Ppn from ing1; cross off Nnp from ing2; cross off Nnp, Ppn, npN from ing4; cross off nPp, pnP from ing5; cross off Nnp, Ppn, npN from ing6; cross off PPP from ing7; cross off Nnp, Ppn, npN from ing8 ing1 + ing5 = R-.",
       "highlight": {
         "clue_indices": [
           4

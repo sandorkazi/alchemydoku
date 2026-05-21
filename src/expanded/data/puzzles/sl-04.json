@@ -355,7 +355,7 @@
     {
       "look_at": "clue 5: ing1 is lunar.",
       "means": "Solar/lunar status constrains which alchemicals ing1 can be.",
-      "so": "ing1 is pnP; ing2 is NNN; ing5 is PPP; ing8 is nPp; ing1 has R+; ing2 has R-; ing5 has R+; ing8 has R-; cross off Nnp from ing1; cross off pNn from ing2; cross off NNN, pnP from ing4; cross off nPp from ing5; cross off NNN, pnP from ing7; cross off PPP from ing8.",
+      "so": "ing1 is pnP; ing2 is NNN; ing5 is PPP; ing8 is nPp; ing1 has R+; ing2 has R-; ing5 has R+; ing8 has R-; cross off Nnp from ing1; cross off pNn from ing2; cross off NNN, pnP from ing4; cross off nPp from ing5; cross off NNN, pnP from ing7; cross off PPP from ing8 ing2 is NNN.",
       "highlight": {
         "clue_indices": [
           4

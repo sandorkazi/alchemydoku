@@ -239,7 +239,7 @@
     {
       "look_at": "Suppose ing1 were npN.",
       "means": "If ing1 = npN, then after applying all clues, the answer becomes deducible.",
-      "so": "Under this assumption, the answer is ('R', 1).",
+      "so": "Under this assumption the answer is deducible. ing3 + ing6 = R+.",
       "highlight": {
         "clue_indices": [],
         "ingredients": [

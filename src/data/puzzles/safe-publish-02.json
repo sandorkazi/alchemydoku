@@ -93,7 +93,7 @@
     {
       "look_at": "clue 2: ing1 has B-.",
       "means": "This directly tells us the B sign of ing1.",
-      "so": "ing1 has B-; cross off PPP, pnP from ing1.",
+      "so": "ing1 has B-; cross off PPP, pnP from ing1 The safe-publish color for ing1 is G.",
       "highlight": {
         "clue_indices": [
           1

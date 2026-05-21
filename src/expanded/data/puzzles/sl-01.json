@@ -125,7 +125,7 @@
     {
       "look_at": "clue 3: ing1 has B-.",
       "means": "This directly tells us the B sign of ing1.",
-      "so": "ing1 is Ppn; ing1 has B-; cross off PPP from ing1; cross off Ppn from ing2; cross off Ppn from ing3; cross off Ppn from ing4; cross off Ppn from ing5; cross off Ppn from ing6; cross off Ppn from ing7; cross off Ppn from ing8.",
+      "so": "ing1 is Ppn; ing1 has B-; cross off PPP from ing1; cross off Ppn from ing2; cross off Ppn from ing3; cross off Ppn from ing4; cross off Ppn from ing5; cross off Ppn from ing6; cross off Ppn from ing7; cross off Ppn from ing8 ing1 is lunar.",
       "highlight": {
         "clue_indices": [
           2

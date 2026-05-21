@@ -144,7 +144,7 @@
     {
       "look_at": "clue 4: exactly 4 pairs among {ing1, ing2, ing4, ing7} mix to R+.",
       "means": "Exactly 4 pair(s) in {ing1, ing2, ing4, ing7} must mix to R+; any world with a different count is impossible.",
-      "so": "ing1 has R+; ing2 has R+; ing3 has R-; ing4 has R+; ing5 has R-; ing6 has R-; ing7 has R+; ing8 has R-; cross off NNN, Nnp, nPp, npN from ing1; cross off NNN, Nnp, nPp, npN from ing2; cross off PPP, Ppn, pNn, pnP from ing3; cross off NNN, Nnp, nPp, npN from ing4; cross off PPP, Ppn, pNn, pnP from ing5; cross off PPP, Ppn, pNn, pnP from ing6; cross off NNN, Nnp, nPp, npN from ing7; cross off PPP, Ppn, pNn, pnP from ing8.",
+      "so": "ing1 has R+; ing2 has R+; ing3 has R-; ing4 has R+; ing5 has R-; ing6 has R-; ing7 has R+; ing8 has R-; cross off NNN, Nnp, nPp, npN from ing1; cross off NNN, Nnp, nPp, npN from ing2; cross off PPP, Ppn, pNn, pnP from ing3; cross off NNN, Nnp, nPp, npN from ing4; cross off PPP, Ppn, pNn, pnP from ing5; cross off PPP, Ppn, pNn, pnP from ing6; cross off NNN, Nnp, nPp, npN from ing7; cross off PPP, Ppn, pNn, pnP from ing8",
       "highlight": {
         "clue_indices": [
           3

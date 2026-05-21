@@ -459,7 +459,7 @@
     {
       "look_at": "clue 1: at least one pair among {ing1, ing6, ing7} mixes to R-.",
       "means": "Every world must contain at least one pair in {ing1, ing6, ing7} whose mix result is R-.",
-      "so": "ing1 is Nnp; ing5 is Ppn; ing1 has R-; ing1 has G-; ing1 has B+; ing5 has R+; ing5 has G+; ing5 has B-; cross off Ppn from ing1; cross off Nnp from ing5.",
+      "so": "ing1 is Nnp; ing5 is Ppn; ing1 has R-; ing1 has G-; ing1 has B+; ing5 has R+; ing5 has G+; ing5 has B-; cross off Ppn from ing1; cross off Nnp from ing5 ing1 + ing6 = B+.",
       "highlight": {
         "clue_indices": [
           0

@@ -432,7 +432,7 @@
     {
       "look_at": "clue 1: sell constraint among {ing2, ing6, ing7}.",
       "means": "Selling results among {ing2, ing6, ing7} constrain possible alchemicals.",
-      "so": "ing1 is Ppn; ing7 is pNn; ing1 has G+; ing7 has G-; cross off pNn from ing1; cross off Ppn from ing7.",
+      "so": "ing1 is Ppn; ing7 is pNn; ing1 has G+; ing7 has G-; cross off pNn from ing1; cross off Ppn from ing7 ing1 + ing6 = R+.",
       "highlight": {
         "clue_indices": [
           0

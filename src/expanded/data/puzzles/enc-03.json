@@ -260,7 +260,7 @@
     {
       "look_at": "clue 3: ing2 + ing3 = neutral.",
       "means": "A neutral result means ing2 and ing3 have opposite signs in every color.",
-      "so": "ing1 has R-; ing3 has R+; ing6 has R-; cross off PPP, Ppn from ing1; cross off nPp, npN from ing3; cross off PPP, Ppn from ing6.",
+      "so": "ing1 has R-; ing3 has R+; ing6 has R-; cross off PPP, Ppn from ing1; cross off nPp, npN from ing3; cross off PPP, Ppn from ing6 The missing R+ ingredient is ing3.",
       "highlight": {
         "clue_indices": [
           2

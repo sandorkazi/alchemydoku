@@ -202,7 +202,7 @@
     {
       "look_at": "clue 4.",
       "means": "Apply this clue to eliminate impossible alchemical assignments.",
-      "so": "ing8 is Nnp; ing4 has R+; ing5 has R+; ing7 has G-; ing8 has R-; ing8 has G-; cross off Nnp, Ppn from ing2; cross off Nnp, Ppn from ing3; cross off NNN, npN from ing4; cross off Nnp, nPp from ing5; cross off Ppn, npN from ing7; cross off PPP, nPp, pnP from ing8.",
+      "so": "ing8 is Nnp; ing4 has R+; ing5 has R+; ing7 has G-; ing8 has R-; ing8 has G-; cross off Nnp, Ppn from ing2; cross off Nnp, Ppn from ing3; cross off NNN, npN from ing4; cross off Nnp, nPp from ing5; cross off Ppn, npN from ing7; cross off PPP, nPp, pnP from ing8 The safe-publish color for ing4 is G.",
       "highlight": {
         "clue_indices": [
           3

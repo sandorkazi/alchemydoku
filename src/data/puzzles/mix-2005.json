@@ -243,7 +243,7 @@
     {
       "look_at": "clue 4: ing2 + ing8 = R+.",
       "means": "When two ingredients mix to R+, both share R+. Any candidate without R+ is impossible for either slot.",
-      "so": "ing2 is pnP; ing6 is PPP; ing8 is Ppn; ing2 has R+; ing5 has R-; ing6 has R+; ing8 has R+; ing8 has G+; ing8 has B-; cross off PPP, Ppn, pnP from ing1; cross off Nnp from ing2; cross off PPP, Ppn, pnP from ing4; cross off PPP, pnP from ing5; cross off nPp from ing6; cross off PPP, Ppn, pnP from ing7; cross off NNN, Nnp, PPP, nPp, npN, pNn, pnP from ing8.",
+      "so": "ing2 is pnP; ing6 is PPP; ing8 is Ppn; ing2 has R+; ing5 has R-; ing6 has R+; ing8 has R+; ing8 has G+; ing8 has B-; cross off PPP, Ppn, pnP from ing1; cross off Nnp from ing2; cross off PPP, Ppn, pnP from ing4; cross off PPP, pnP from ing5; cross off nPp from ing6; cross off PPP, Ppn, pnP from ing7; cross off NNN, Nnp, PPP, nPp, npN, pNn, pnP from ing8 ing2 + ing6 = R+.",
       "highlight": {
         "clue_indices": [
           3

@@ -388,7 +388,7 @@
     {
       "look_at": "clue 4: ing1 is lunar.",
       "means": "Solar/lunar status constrains which alchemicals ing1 can be.",
-      "so": "ing1 is NNN; ing3 is pNn; ing1 has R-; ing3 has R+; cross off pNn from ing1; cross off NNN from ing3.",
+      "so": "ing1 is NNN; ing3 is pNn; ing1 has R-; ing3 has R+; cross off pNn from ing1; cross off NNN from ing3 The missing R+ ingredient is ing3.",
       "highlight": {
         "clue_indices": [
           3

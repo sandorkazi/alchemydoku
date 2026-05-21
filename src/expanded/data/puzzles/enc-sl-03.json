@@ -388,7 +388,7 @@
     {
       "look_at": "clue 4: ing5 is lunar.",
       "means": "Solar/lunar status constrains which alchemicals ing5 can be.",
-      "so": "ing5 is pnP; ing8 is pNn; ing5 has B+; ing8 has B-; cross off pNn from ing5; cross off pnP from ing8.",
+      "so": "ing5 is pnP; ing8 is pNn; ing5 has B+; ing8 has B-; cross off pNn from ing5; cross off pnP from ing8 The missing B+ ingredient is ing5.",
       "highlight": {
         "clue_indices": [
           3

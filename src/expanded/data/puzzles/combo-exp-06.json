@@ -388,7 +388,7 @@
     {
       "look_at": "clue 4: ing4 is lunar.",
       "means": "Solar/lunar status constrains which alchemicals ing4 can be.",
-      "so": "ing4 is pNn; ing8 is Ppn; ing4 has G-; ing8 has G+; cross off Ppn from ing4; cross off pNn from ing8.",
+      "so": "ing4 is pNn; ing8 is Ppn; ing4 has G-; ing8 has G+; cross off Ppn from ing4; cross off pNn from ing8 The missing G+ ingredient is ing8.",
       "highlight": {
         "clue_indices": [
           3

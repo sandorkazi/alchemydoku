@@ -502,7 +502,7 @@
     {
       "look_at": "clue 6.",
       "means": "Apply this clue to eliminate impossible alchemical assignments.",
-      "so": "ing4 is npN; ing5 is NNN; ing4 has G+; ing5 has G-; cross off NNN from ing4; cross off npN from ing5.",
+      "so": "ing4 is npN; ing5 is NNN; ing4 has G+; ing5 has G-; cross off NNN from ing4; cross off npN from ing5 ing4 + ing6 = neutral.",
       "highlight": {
         "clue_indices": [
           5

@@ -58,7 +58,7 @@
     {
       "look_at": "Suppose ing1 were pnP.",
       "means": "If ing1 = pnP, then after applying all clues, the answer becomes deducible.",
-      "so": "Under this assumption, the answer is 4.",
+      "so": "Under this assumption the answer is deducible.",
       "highlight": {
         "clue_indices": [],
         "ingredients": [

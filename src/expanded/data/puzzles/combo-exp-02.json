@@ -261,7 +261,7 @@
     {
       "look_at": "clue 3: ing1 + ing5 = G-.",
       "means": "When two ingredients mix to G-, both share G-. Any candidate without G- is impossible for either slot.",
-      "so": "ing1 is pNn; ing5 is Nnp; ing8 is Ppn; ing1 has G-; ing2 has B-; ing5 has G-; ing5 has B+; ing6 has B-; ing8 has G+; cross off Ppn from ing1; cross off Nnp, nPp from ing2; cross off Nnp from ing3; cross off Nnp from ing4; cross off NNN, nPp, npN from ing5; cross off Nnp, nPp from ing6; cross off Nnp from ing7; cross off pNn from ing8.",
+      "so": "ing1 is pNn; ing5 is Nnp; ing8 is Ppn; ing1 has G-; ing2 has B-; ing5 has G-; ing5 has B+; ing6 has B-; ing8 has G+; cross off Ppn from ing1; cross off Nnp, nPp from ing2; cross off Nnp from ing3; cross off Nnp from ing4; cross off NNN, nPp, npN from ing5; cross off Nnp, nPp from ing6; cross off Nnp from ing7; cross off pNn from ing8 The missing B+ ingredient is ing5.",
       "highlight": {
         "clue_indices": [
           2

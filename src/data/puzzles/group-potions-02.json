@@ -362,7 +362,7 @@
     {
       "look_at": "clue 5: ing2 + ing5 = B+.",
       "means": "When two ingredients mix to B+, both share B+. Any candidate without B+ is impossible for either slot.",
-      "so": "ing1 is PPP; ing2 is pnP; ing3 is Nnp; ing4 is NNN; ing5 is nPp; ing6 is npN; ing7 is pNn; ing8 is Ppn; ing1 has B+; ing2 has B+; ing3 has B+; ing4 has G-; ing4 has B-; ing5 has G+; ing5 has B+; ing6 has B-; ing7 has B-; ing8 has B-; cross off Ppn from ing1; cross off pNn from ing2; cross off NNN from ing3; cross off Nnp, nPp, npN from ing4; cross off NNN, Nnp, npN from ing5; cross off nPp from ing6; cross off pnP from ing7; cross off PPP from ing8.",
+      "so": "ing1 is PPP; ing2 is pnP; ing3 is Nnp; ing4 is NNN; ing5 is nPp; ing6 is npN; ing7 is pNn; ing8 is Ppn; ing1 has B+; ing2 has B+; ing3 has B+; ing4 has G-; ing4 has B-; ing5 has G+; ing5 has B+; ing6 has B-; ing7 has B-; ing8 has B-; cross off Ppn from ing1; cross off pNn from ing2; cross off NNN from ing3; cross off Nnp, nPp, npN from ing4; cross off NNN, Nnp, npN from ing5; cross off nPp from ing6; cross off pnP from ing7; cross off PPP from ing8",
       "highlight": {
         "clue_indices": [
           4

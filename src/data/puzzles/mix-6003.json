@@ -329,7 +329,7 @@
     {
       "look_at": "clue 4: ing3 has B+.",
       "means": "This directly tells us the B sign of ing3.",
-      "so": "ing3 has B+; cross off NNN, pNn from ing3.",
+      "so": "ing3 has B+; cross off NNN, pNn from ing3 ing3 + ing5 = G-.",
       "highlight": {
         "clue_indices": [
           3

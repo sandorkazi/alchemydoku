@@ -523,7 +523,7 @@
     {
       "look_at": "clue 1: at least one pair among {ing3, ing4, ing6, ing7} mixes to B+.",
       "means": "Every world must contain at least one pair in {ing3, ing4, ing6, ing7} whose mix result is B+.",
-      "so": "ing4 is PPP; ing8 is Nnp; ing4 has R+; ing4 has G+; ing8 has R-; ing8 has G-; cross off Nnp from ing4; cross off PPP from ing8.",
+      "so": "ing4 is PPP; ing8 is Nnp; ing4 has R+; ing4 has G+; ing8 has R-; ing8 has G-; cross off Nnp from ing4; cross off PPP from ing8 ing6 + ing8 = G-.",
       "highlight": {
         "clue_indices": [
           0

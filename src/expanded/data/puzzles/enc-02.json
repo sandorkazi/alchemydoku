@@ -261,7 +261,7 @@
     {
       "look_at": "clue 3: ing1 + ing2 = G-.",
       "means": "When two ingredients mix to G-, both share G-. Any candidate without G- is impossible for either slot.",
-      "so": "ing1 has G-; ing2 has G-; ing4 has G+; cross off PPP, Ppn from ing1; cross off PPP, Ppn from ing2; cross off pNn, pnP from ing4.",
+      "so": "ing1 has G-; ing2 has G-; ing4 has G+; cross off PPP, Ppn from ing1; cross off PPP, Ppn from ing2; cross off pNn, pnP from ing4 The missing G+ ingredient is ing4.",
       "highlight": {
         "clue_indices": [
           2

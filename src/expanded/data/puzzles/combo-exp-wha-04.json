@@ -465,7 +465,7 @@
     {
       "look_at": "clue 5.",
       "means": "Apply this clue to eliminate impossible alchemical assignments.",
-      "so": "ing1 is npN; ing6 is PPP; ing1 has R-; ing1 has B-; ing6 has R+; ing6 has B+; cross off PPP from ing1; cross off npN from ing6.",
+      "so": "ing1 is npN; ing6 is PPP; ing1 has R-; ing1 has B-; ing6 has R+; ing6 has B+; cross off PPP from ing1; cross off npN from ing6 The matching aspect color is R.",
       "highlight": {
         "clue_indices": [
           4

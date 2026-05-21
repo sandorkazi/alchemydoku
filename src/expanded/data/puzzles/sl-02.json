@@ -287,7 +287,7 @@
     {
       "look_at": "clue 4: ing6 is lunar.",
       "means": "Solar/lunar status constrains which alchemicals ing6 can be.",
-      "so": "ing1 is pnP; ing6 is Ppn; ing1 has G-; ing6 has G+; cross off PPP from ing1; cross off pnP from ing3; cross off Ppn from ing4; cross off Ppn from ing5; cross off pNn from ing6; cross off pnP from ing7; cross off Ppn from ing8.",
+      "so": "ing1 is pnP; ing6 is Ppn; ing1 has G-; ing6 has G+; cross off PPP from ing1; cross off pnP from ing3; cross off Ppn from ing4; cross off Ppn from ing5; cross off pNn from ing6; cross off pnP from ing7; cross off Ppn from ing8 ing1 is pnP.",
       "highlight": {
         "clue_indices": [
           3

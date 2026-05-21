@@ -169,7 +169,7 @@
     {
       "look_at": "clue 1: ing1 has G+.",
       "means": "This directly tells us the G sign of ing1.",
-      "so": "ing1 has G+; cross off NNN, Nnp, pNn, pnP from ing1.",
+      "so": "ing1 has G+; cross off NNN, Nnp, pNn, pnP from ing1",
       "highlight": {
         "clue_indices": [
           0

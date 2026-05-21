@@ -172,7 +172,7 @@
     {
       "look_at": "clue 3: ing2 is lunar.",
       "means": "Solar/lunar status constrains which alchemicals ing2 can be.",
-      "so": "ing2 is Ppn; ing2 has G+; cross off pNn from ing2; cross off Ppn from ing3; cross off Ppn from ing4; cross off Ppn from ing5; cross off Ppn from ing6; cross off Ppn from ing8.",
+      "so": "ing2 is Ppn; ing2 has G+; cross off pNn from ing2; cross off Ppn from ing3; cross off Ppn from ing4; cross off Ppn from ing5; cross off Ppn from ing6; cross off Ppn from ing8 ing2 is Ppn.",
       "highlight": {
         "clue_indices": [
           2

@@ -389,7 +389,7 @@
     {
       "look_at": "clue 5: ing4 + ing8 = R+.",
       "means": "When two ingredients mix to R+, both share R+. Any candidate without R+ is impossible for either slot.",
-      "so": "ing7 is pNn; ing7 has G-; ing7 has B-; ing8 has G+; cross off PPP, Ppn from ing7; cross off pNn from ing8.",
+      "so": "ing7 is pNn; ing7 has G-; ing7 has B-; ing8 has G+; cross off PPP, Ppn from ing7; cross off pNn from ing8 ing1 + ing7 = R+.",
       "highlight": {
         "clue_indices": [
           4
@@ -782,7 +782,7 @@
     {
       "look_at": "clue 5: ing4 + ing8 = R+.",
       "means": "When two ingredients mix to R+, both share R+. Any candidate without R+ is impossible for either slot.",
-      "so": "ing7 is pNn; ing7 has G-; ing7 has B-; ing8 has G+; cross off PPP, Ppn from ing7; cross off pNn from ing8.",
+      "so": "ing7 is pNn; ing7 has G-; ing7 has B-; ing8 has G+; cross off PPP, Ppn from ing7; cross off pNn from ing8 ing1 + ing8 = G+.",
       "highlight": {
         "clue_indices": [
           4
@@ -1175,7 +1175,7 @@
     {
       "look_at": "clue 5: ing4 + ing8 = R+.",
       "means": "When two ingredients mix to R+, both share R+. Any candidate without R+ is impossible for either slot.",
-      "so": "ing7 is pNn; ing7 has G-; ing7 has B-; ing8 has G+; cross off PPP, Ppn from ing7; cross off pNn from ing8.",
+      "so": "ing7 is pNn; ing7 has G-; ing7 has B-; ing8 has G+; cross off PPP, Ppn from ing7; cross off pNn from ing8 ing4 + ing7 = G-.",
       "highlight": {
         "clue_indices": [
           4

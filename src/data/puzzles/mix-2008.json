@@ -303,7 +303,7 @@
     {
       "look_at": "clue 5: ing1 + ing7 = G+.",
       "means": "When two ingredients mix to G+, both share G+. Any candidate without G+ is impossible for either slot.",
-      "so": "ing1 is npN; ing2 is pnP; ing4 is nPp; ing5 is Nnp; ing7 is PPP; ing1 has G+; ing2 has G-; ing3 has B-; ing4 has G+; ing5 has G-; ing6 has B-; ing7 has R+; ing7 has G+; ing7 has B+; ing8 has B-; cross off NNN from ing1; cross off PPP from ing2; cross off PPP, npN, pnP from ing3; cross off Nnp from ing4; cross off nPp from ing5; cross off PPP, npN, pnP from ing6; cross off NNN, Ppn, npN, pNn, pnP from ing7; cross off PPP, npN, pnP from ing8.",
+      "so": "ing1 is npN; ing2 is pnP; ing4 is nPp; ing5 is Nnp; ing7 is PPP; ing1 has G+; ing2 has G-; ing3 has B-; ing4 has G+; ing5 has G-; ing6 has B-; ing7 has R+; ing7 has G+; ing7 has B+; ing8 has B-; cross off NNN from ing1; cross off PPP from ing2; cross off PPP, npN, pnP from ing3; cross off Nnp from ing4; cross off nPp from ing5; cross off PPP, npN, pnP from ing6; cross off NNN, Ppn, npN, pNn, pnP from ing7; cross off PPP, npN, pnP from ing8 ing1 + ing4 = G+.",
       "highlight": {
         "clue_indices": [
           4

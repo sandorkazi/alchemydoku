@@ -373,7 +373,7 @@
     {
       "look_at": "clue 4: ing1 is lunar.",
       "means": "Solar/lunar status constrains which alchemicals ing1 can be.",
-      "so": "ing1 is Ppn; ing5 is pNn; ing1 has G+; ing5 has G-; cross off pNn from ing1; cross off Ppn from ing5.",
+      "so": "ing1 is Ppn; ing5 is pNn; ing1 has G+; ing5 has G-; cross off pNn from ing1; cross off Ppn from ing5 ing5 is solar.",
       "highlight": {
         "clue_indices": [
           3

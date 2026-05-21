@@ -249,7 +249,7 @@
     {
       "look_at": "clue 3.",
       "means": "Apply this clue to eliminate impossible alchemical assignments.",
-      "so": "ing3 is nPp; ing3 has G+; ing3 has B+; ing4 has G+; cross off nPp from ing1; cross off NNN, Nnp, npN from ing3; cross off NNN, pNn from ing4; cross off nPp from ing8.",
+      "so": "ing3 is nPp; ing3 has G+; ing3 has B+; ing4 has G+; cross off nPp from ing1; cross off NNN, Nnp, npN from ing3; cross off NNN, pNn from ing4; cross off nPp from ing8 ing2 + ing3 = B+.",
       "highlight": {
         "clue_indices": [
           2

@@ -264,7 +264,7 @@
     {
       "look_at": "clue 1: at least one pair among {ing3, ing5, ing6} mixes to G+.",
       "means": "Every world must contain at least one pair in {ing3, ing5, ing6} whose mix result is G+.",
-      "so": "ing3 has G+; ing6 has G+; cross off NNN, pNn from ing3; cross off Nnp, pnP from ing6.",
+      "so": "ing3 has G+; ing6 has G+; cross off NNN, pNn from ing3; cross off Nnp, pnP from ing6 ing3 + ing6 = G+.",
       "highlight": {
         "clue_indices": [
           0

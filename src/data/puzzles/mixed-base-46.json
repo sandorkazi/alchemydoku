@@ -331,7 +331,7 @@
     {
       "look_at": "clue 1: at least one pair among {ing1, ing2, ing3, ing8} mixes to R-.",
       "means": "Every world must contain at least one pair in {ing1, ing2, ing3, ing8} whose mix result is R-.",
-      "so": "ing4 is Nnp; ing2 has R-; ing2 has G+; ing4 has R-; ing4 has G-; ing4 has B+; cross off Nnp, PPP, Ppn from ing2; cross off PPP, Ppn, nPp, npN from ing4.",
+      "so": "ing4 is Nnp; ing2 has R-; ing2 has G+; ing4 has R-; ing4 has G-; ing4 has B+; cross off Nnp, PPP, Ppn from ing2; cross off PPP, Ppn, nPp, npN from ing4 ing2 + ing3 = G+.",
       "highlight": {
         "clue_indices": [
           0

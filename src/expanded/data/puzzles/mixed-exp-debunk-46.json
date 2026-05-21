@@ -223,7 +223,7 @@
     {
       "look_at": "clue 3: exactly 4 pairs among {ing3, ing4, ing7, ing8} mix to G+.",
       "means": "Exactly 4 pair(s) in {ing3, ing4, ing7, ing8} must mix to G+; any world with a different count is impossible.",
-      "so": "ing1 has G-; ing2 has G-; ing3 has G+; ing4 has G+; ing5 has G-; ing6 has G-; ing7 has G+; ing8 has G+; cross off PPP, Ppn, nPp, npN from ing1; cross off PPP, Ppn, nPp, npN from ing2; cross off NNN, Nnp, pNn, pnP from ing3; cross off NNN, Nnp, pNn, pnP from ing4; cross off PPP, Ppn, nPp, npN from ing5; cross off PPP, Ppn, nPp, npN from ing6; cross off NNN, Nnp, pNn, pnP from ing7; cross off NNN, Nnp, pNn, pnP from ing8.",
+      "so": "ing1 has G-; ing2 has G-; ing3 has G+; ing4 has G+; ing5 has G-; ing6 has G-; ing7 has G+; ing8 has G+; cross off PPP, Ppn, nPp, npN from ing1; cross off PPP, Ppn, nPp, npN from ing2; cross off NNN, Nnp, pNn, pnP from ing3; cross off NNN, Nnp, pNn, pnP from ing4; cross off PPP, Ppn, nPp, npN from ing5; cross off PPP, Ppn, nPp, npN from ing6; cross off NNN, Nnp, pNn, pnP from ing7; cross off NNN, Nnp, pNn, pnP from ing8",
       "highlight": {
         "clue_indices": [
           2
@@ -622,7 +622,7 @@
     {
       "look_at": "clue 3: exactly 4 pairs among {ing3, ing4, ing7, ing8} mix to G+.",
       "means": "Exactly 4 pair(s) in {ing3, ing4, ing7, ing8} must mix to G+; any world with a different count is impossible.",
-      "so": "ing1 has G-; ing2 has G-; ing3 has G+; ing4 has G+; ing5 has G-; ing6 has G-; ing7 has G+; ing8 has G+; cross off PPP, Ppn, nPp, npN from ing1; cross off PPP, Ppn, nPp, npN from ing2; cross off NNN, Nnp, pNn, pnP from ing3; cross off NNN, Nnp, pNn, pnP from ing4; cross off PPP, Ppn, nPp, npN from ing5; cross off PPP, Ppn, nPp, npN from ing6; cross off NNN, Nnp, pNn, pnP from ing7; cross off NNN, Nnp, pNn, pnP from ing8.",
+      "so": "ing1 has G-; ing2 has G-; ing3 has G+; ing4 has G+; ing5 has G-; ing6 has G-; ing7 has G+; ing8 has G+; cross off PPP, Ppn, nPp, npN from ing1; cross off PPP, Ppn, nPp, npN from ing2; cross off NNN, Nnp, pNn, pnP from ing3; cross off NNN, Nnp, pNn, pnP from ing4; cross off PPP, Ppn, nPp, npN from ing5; cross off PPP, Ppn, nPp, npN from ing6; cross off NNN, Nnp, pNn, pnP from ing7; cross off NNN, Nnp, pNn, pnP from ing8",
       "highlight": {
         "clue_indices": [
           2

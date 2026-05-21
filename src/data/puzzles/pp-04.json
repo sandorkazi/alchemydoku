@@ -109,7 +109,7 @@
     {
       "look_at": "clue 3: ing1 + ing3 = G+.",
       "means": "When two ingredients mix to G+, both share G+. Any candidate without G+ is impossible for either slot.",
-      "so": "ing1 has G+; ing3 has G+; cross off NNN, Nnp, pNn, pnP from ing1; cross off NNN, Nnp, pNn, pnP from ing3.",
+      "so": "ing1 has G+; ing3 has G+; cross off NNN, Nnp, pNn, pnP from ing1; cross off NNN, Nnp, pNn, pnP from ing3 ing1 + ing8 can produce: B-, B+, G+, R-, R+, neutral.",
       "highlight": {
         "clue_indices": [
           2

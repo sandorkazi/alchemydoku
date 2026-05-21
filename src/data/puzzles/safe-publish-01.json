@@ -93,7 +93,7 @@
     {
       "look_at": "clue 2: ing1 has G+.",
       "means": "This directly tells us the G sign of ing1.",
-      "so": "ing1 has G+; cross off NNN, Nnp from ing1.",
+      "so": "ing1 has G+; cross off NNN, Nnp from ing1 The safe-publish color for ing1 is B.",
       "highlight": {
         "clue_indices": [
           1

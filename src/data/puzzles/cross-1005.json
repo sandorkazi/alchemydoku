@@ -338,7 +338,7 @@
     {
       "look_at": "clue 2.",
       "means": "Apply this clue to eliminate impossible alchemical assignments.",
-      "so": "ing1 is NNN; ing4 is pnP; ing5 is nPp; ing6 is PPP; ing8 is Nnp; ing1 has B-; ing4 has B+; ing5 has B+; ing6 has R+; ing6 has G+; ing7 has B-; ing8 has R-; ing8 has G-; cross off Nnp from ing1; cross off NNN from ing2; cross off NNN from ing3; cross off pNn from ing4; cross off npN from ing5; cross off Nnp, nPp, pnP from ing6; cross off PPP, pnP from ing7; cross off PPP, nPp, pnP from ing8.",
+      "so": "ing1 is NNN; ing4 is pnP; ing5 is nPp; ing6 is PPP; ing8 is Nnp; ing1 has B-; ing4 has B+; ing5 has B+; ing6 has R+; ing6 has G+; ing7 has B-; ing8 has R-; ing8 has G-; cross off Nnp from ing1; cross off NNN from ing2; cross off NNN from ing3; cross off pNn from ing4; cross off npN from ing5; cross off Nnp, nPp, pnP from ing6; cross off PPP, pnP from ing7; cross off PPP, nPp, pnP from ing8 ing1 + ing6 = neutral.",
       "highlight": {
         "clue_indices": [
           1
@@ -712,7 +712,7 @@
     {
       "look_at": "clue 2.",
       "means": "Apply this clue to eliminate impossible alchemical assignments.",
-      "so": "ing1 is NNN; ing4 is pnP; ing5 is nPp; ing6 is PPP; ing8 is Nnp; ing1 has B-; ing4 has B+; ing5 has B+; ing6 has R+; ing6 has G+; ing7 has B-; ing8 has R-; ing8 has G-; cross off Nnp from ing1; cross off NNN from ing2; cross off NNN from ing3; cross off pNn from ing4; cross off npN from ing5; cross off Nnp, nPp, pnP from ing6; cross off PPP, pnP from ing7; cross off PPP, nPp, pnP from ing8.",
+      "so": "ing1 is NNN; ing4 is pnP; ing5 is nPp; ing6 is PPP; ing8 is Nnp; ing1 has B-; ing4 has B+; ing5 has B+; ing6 has R+; ing6 has G+; ing7 has B-; ing8 has R-; ing8 has G-; cross off Nnp from ing1; cross off NNN from ing2; cross off NNN from ing3; cross off pNn from ing4; cross off npN from ing5; cross off Nnp, nPp, pnP from ing6; cross off PPP, pnP from ing7; cross off PPP, nPp, pnP from ing8 ing1 + ing8 = G-.",
       "highlight": {
         "clue_indices": [
           1
@@ -1086,7 +1086,7 @@
     {
       "look_at": "clue 2.",
       "means": "Apply this clue to eliminate impossible alchemical assignments.",
-      "so": "ing1 is NNN; ing4 is pnP; ing5 is nPp; ing6 is PPP; ing8 is Nnp; ing1 has B-; ing4 has B+; ing5 has B+; ing6 has R+; ing6 has G+; ing7 has B-; ing8 has R-; ing8 has G-; cross off Nnp from ing1; cross off NNN from ing2; cross off NNN from ing3; cross off pNn from ing4; cross off npN from ing5; cross off Nnp, nPp, pnP from ing6; cross off PPP, pnP from ing7; cross off PPP, nPp, pnP from ing8.",
+      "so": "ing1 is NNN; ing4 is pnP; ing5 is nPp; ing6 is PPP; ing8 is Nnp; ing1 has B-; ing4 has B+; ing5 has B+; ing6 has R+; ing6 has G+; ing7 has B-; ing8 has R-; ing8 has G-; cross off Nnp from ing1; cross off NNN from ing2; cross off NNN from ing3; cross off pNn from ing4; cross off npN from ing5; cross off Nnp, nPp, pnP from ing6; cross off PPP, pnP from ing7; cross off PPP, nPp, pnP from ing8 ing4 + ing5 = B+.",
       "highlight": {
         "clue_indices": [
           1

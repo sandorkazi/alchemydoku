@@ -226,7 +226,7 @@
     {
       "look_at": "clue 3: exactly 2 pairs among {ing1, ing2, ing6} mix to R-.",
       "means": "Exactly 2 pair(s) in {ing1, ing2, ing6} must mix to R-; any world with a different count is impossible.",
-      "so": "ing1 has R-; ing2 has R-; ing6 has R-; cross off PPP, Ppn, pNn, pnP from ing1; cross off PPP, Ppn, pNn, pnP from ing2; cross off PPP, Ppn, pNn, pnP from ing6.",
+      "so": "ing1 has R-; ing2 has R-; ing6 has R-; cross off PPP, Ppn, pNn, pnP from ing1; cross off PPP, Ppn, pNn, pnP from ing2; cross off PPP, Ppn, pNn, pnP from ing6",
       "highlight": {
         "clue_indices": [
           2

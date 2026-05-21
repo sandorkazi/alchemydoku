@@ -411,7 +411,7 @@
     {
       "look_at": "clue 2.",
       "means": "Apply this clue to eliminate impossible alchemical assignments.",
-      "so": "ing1 is Ppn; ing2 is pnP; ing4 is npN; ing6 is Nnp; ing7 is nPp; ing8 is pNn; ing1 has G+; ing2 has R+; ing4 has B-; ing6 has R-; ing7 has B+; ing8 has G-; cross off pNn from ing1; cross off Nnp from ing2; cross off nPp from ing4; cross off pnP from ing6; cross off npN from ing7; cross off Ppn from ing8.",
+      "so": "ing1 is Ppn; ing2 is pnP; ing4 is npN; ing6 is Nnp; ing7 is nPp; ing8 is pNn; ing1 has G+; ing2 has R+; ing4 has B-; ing6 has R-; ing7 has B+; ing8 has G-; cross off pNn from ing1; cross off Nnp from ing2; cross off nPp from ing4; cross off pnP from ing6; cross off npN from ing7; cross off Ppn from ing8 The missing B+ ingredient is ing7.",
       "highlight": {
         "clue_indices": [
           1

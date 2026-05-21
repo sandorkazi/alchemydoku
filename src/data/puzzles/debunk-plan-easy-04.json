@@ -115,7 +115,7 @@
     {
       "look_at": "clue 1: ing1 has R-.",
       "means": "This directly tells us the R sign of ing1.",
-      "so": "ing1 has R-; cross off PPP, Ppn, pNn, pnP from ing1.",
+      "so": "ing1 has R-; cross off PPP, Ppn, pNn, pnP from ing1",
       "highlight": {
         "clue_indices": [
           0

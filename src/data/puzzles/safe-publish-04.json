@@ -116,7 +116,7 @@
     {
       "look_at": "clue 2: ing3 + ing5 = R+.",
       "means": "When two ingredients mix to R+, both share R+. Any candidate without R+ is impossible for either slot.",
-      "so": "ing3 has R+; ing5 has R+; ing6 has R-; cross off Nnp, nPp from ing3; cross off NNN, Nnp, nPp, npN from ing5; cross off PPP, pnP from ing6.",
+      "so": "ing3 has R+; ing5 has R+; ing6 has R-; cross off Nnp, nPp from ing3; cross off NNN, Nnp, nPp, npN from ing5; cross off PPP, pnP from ing6 The safe-publish color for ing3 is G.",
       "highlight": {
         "clue_indices": [
           1

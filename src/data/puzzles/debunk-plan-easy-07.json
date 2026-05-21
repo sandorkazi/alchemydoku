@@ -134,7 +134,7 @@
     {
       "look_at": "clue 1.",
       "means": "Apply this clue to eliminate impossible alchemical assignments.",
-      "so": "ing4 has G-; ing5 has G-; cross off PPP, Ppn, nPp, npN from ing4; cross off PPP, Ppn, nPp, npN from ing5.",
+      "so": "ing4 has G-; ing5 has G-; cross off PPP, Ppn, nPp, npN from ing4; cross off PPP, Ppn, nPp, npN from ing5",
       "highlight": {
         "clue_indices": [
           0

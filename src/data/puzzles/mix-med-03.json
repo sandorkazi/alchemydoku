@@ -300,7 +300,7 @@
     {
       "look_at": "clue 5.",
       "means": "Apply this clue to eliminate impossible alchemical assignments.",
-      "so": "ing2 is PPP; ing3 is Ppn; ing4 is npN; ing5 is nPp; ing6 is Nnp; ing7 is NNN; ing1 has R+; ing2 has R+; ing2 has B+; ing3 has G+; ing4 has G+; ing5 has R-; ing5 has B+; ing6 has G-; ing7 has G-; ing7 has B-; ing8 has R+; cross off NNN from ing1; cross off Ppn, nPp, npN from ing2; cross off pNn from ing3; cross off NNN from ing4; cross off PPP, Ppn, npN from ing5; cross off nPp from ing6; cross off Nnp, nPp, npN from ing7; cross off NNN from ing8.",
+      "so": "ing2 is PPP; ing3 is Ppn; ing4 is npN; ing5 is nPp; ing6 is Nnp; ing7 is NNN; ing1 has R+; ing2 has R+; ing2 has B+; ing3 has G+; ing4 has G+; ing5 has R-; ing5 has B+; ing6 has G-; ing7 has G-; ing7 has B-; ing8 has R+; cross off NNN from ing1; cross off Ppn, nPp, npN from ing2; cross off pNn from ing3; cross off NNN from ing4; cross off PPP, Ppn, npN from ing5; cross off nPp from ing6; cross off Nnp, nPp, npN from ing7; cross off NNN from ing8 ing2 + ing6 = B+.",
       "highlight": {
         "clue_indices": [
           4

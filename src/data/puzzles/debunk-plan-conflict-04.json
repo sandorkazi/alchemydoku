@@ -122,7 +122,7 @@
     {
       "look_at": "clue 1.",
       "means": "Apply this clue to eliminate impossible alchemical assignments.",
-      "so": "ing4 has G+; ing6 has G+; cross off NNN, Nnp, pNn, pnP from ing4; cross off NNN, Nnp, pNn, pnP from ing6.",
+      "so": "ing4 has G+; ing6 has G+; cross off NNN, Nnp, pNn, pnP from ing4; cross off NNN, Nnp, pNn, pnP from ing6",
       "highlight": {
         "clue_indices": [
           0

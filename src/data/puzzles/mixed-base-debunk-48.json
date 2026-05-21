@@ -163,7 +163,7 @@
     {
       "look_at": "clue 2: exactly 2 pairs among {ing1, ing5, ing8} mix to R+.",
       "means": "Exactly 2 pair(s) in {ing1, ing5, ing8} must mix to R+; any world with a different count is impossible.",
-      "so": "ing1 has R+; ing5 has R+; ing8 has R+; cross off NNN, Nnp, nPp, npN from ing1; cross off NNN, Nnp, nPp, npN from ing5; cross off NNN, Nnp, nPp, npN from ing8.",
+      "so": "ing1 has R+; ing5 has R+; ing8 has R+; cross off NNN, Nnp, nPp, npN from ing1; cross off NNN, Nnp, nPp, npN from ing5; cross off NNN, Nnp, nPp, npN from ing8",
       "highlight": {
         "clue_indices": [
           1

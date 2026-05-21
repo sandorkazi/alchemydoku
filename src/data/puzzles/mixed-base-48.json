@@ -416,7 +416,7 @@
     {
       "look_at": "clue 2: at least one pair among {ing2, ing3, ing4, ing8} mixes to neutral.",
       "means": "Every world must contain at least one pair in {ing2, ing3, ing4, ing8} whose mix result is neutral.",
-      "so": "ing3 is pnP; ing1 has B-; ing3 has B+; ing8 has G+; cross off pnP from ing1; cross off pNn from ing3; cross off Ppn from ing6; cross off Ppn from ing7; cross off pNn from ing8.",
+      "so": "ing3 is pnP; ing1 has B-; ing3 has B+; ing8 has G+; cross off pnP from ing1; cross off pNn from ing3; cross off Ppn from ing6; cross off Ppn from ing7; cross off pNn from ing8 ing5 + ing8 = G+.",
       "highlight": {
         "clue_indices": [
           1

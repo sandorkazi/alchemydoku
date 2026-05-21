@@ -392,7 +392,7 @@
     {
       "look_at": "clue 4: ing1 + ing3 = R+.",
       "means": "When two ingredients mix to R+, both share R+. Any candidate without R+ is impossible for either slot.",
-      "so": "ing1 is pnP; ing3 is Ppn; ing4 is npN; ing5 is PPP; ing1 has G-; ing3 has R+; ing4 has R-; ing5 has G+; cross off PPP from ing1; cross off npN from ing3; cross off Ppn from ing4; cross off pnP from ing5.",
+      "so": "ing1 is pnP; ing3 is Ppn; ing4 is npN; ing5 is PPP; ing1 has G-; ing3 has R+; ing4 has R-; ing5 has G+; cross off PPP from ing1; cross off npN from ing3; cross off Ppn from ing4; cross off pnP from ing5 The missing G+ ingredient is ing5.",
       "highlight": {
         "clue_indices": [
           3
