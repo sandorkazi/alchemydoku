@@ -99,17 +99,17 @@ That can narrow the unknown ingredient down to a single alchemical.`,
     kind: 'puzzle',
     id: 'tc-puzzle-3',
     puzzleId: 'tutorial-two-color-03',
-    banner: 'You know ing1 is G−, you know ing2 is PPP, and you know their mix is B+. Use the two-colour rule in reverse to identify ing1\'s alchemical.',
+    banner: 'One ingredient has G−. The other is PPP. Their mix is B+. Use the two-colour rule in reverse to identify the unknown alchemical.',
   },
   {
     kind: 'explain',
     id: 'tc-after-3',
     title: 'Working Backwards',
-    body: `The result B+ told you Blue resolved — so both ingredients share B+ sign, and their Blue sizes differ.
+    body: `The result is B+, so Blue resolved. For Blue to be the result, Red signs must be different — if both ingredients shared the same Red sign, the two-colour rule would give Red or Green, not Blue.
 
-Since PPP has B+Large, ing1 must be B+Small. The G− clue then pinpointed the exact alchemical: only Nnp is G− with B+Small.
+Blue resolved also means both ingredients share B+ sign, and their Blue sizes differ. PPP is B+Large, so the unknown must be B+Small.
 
-Every result you observe is a free constraint on both ingredients simultaneously. The two-colour rule works just as well in reverse — and combined with even one aspect clue, it can fully identify an unknown alchemical.`,
+The G− clue then pinpoints the exact alchemical: only Nnp is G− with B+Small. And Nnp (R−L) paired with PPP (R+L) confirms opposite Red signs — which is exactly why the result was Blue and not Red or Green.`,
     emoji: '✅',
   },
 ];

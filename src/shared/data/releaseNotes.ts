@@ -22,6 +22,13 @@ export const RELEASE_NOTES: ReleaseEntry[] = [
         ],
       },
       {
+        heading: 'Puzzle Content',
+        items: [
+          'Added a third Two-Colour Rule tutorial puzzle: practise identifying an unknown alchemical by working backwards from the observed result colour and a single aspect clue',
+          'Revised the second Two-Colour Rule tutorial puzzle to illustrate how opposite signs on the other axis eliminate one candidate without checking sizes',
+        ],
+      },
+      {
         heading: 'UI / UX',
         items: [
           'Removed the "Show solution" link from the wrong-answer error box; solutions are still accessible via the Reveal button',
