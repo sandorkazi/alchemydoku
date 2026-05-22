@@ -11,6 +11,25 @@ export interface ReleaseEntry {
 
 export const RELEASE_NOTES: ReleaseEntry[] = [
   {
+    version: '2026-05-22',
+    title: 'Save reliability & tutorial fixes',
+    sections: [
+      {
+        heading: 'Bug Fixes',
+        items: [
+          'Fixed puzzle progress not surviving game updates — all 440 puzzles now have stable internal IDs and saves are migrated automatically',
+          'Corrected Two-Colour Rule tutorial steps and answer validation',
+        ],
+      },
+      {
+        heading: 'UI / UX',
+        items: [
+          'Removed the "Show solution" link from the wrong-answer error box; solutions are still accessible via the Reveal button',
+        ],
+      },
+    ],
+  },
+  {
     version: '2026-05-21',
     title: 'Hint polish & persistence',
     sections: [
