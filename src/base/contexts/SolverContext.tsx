@@ -163,7 +163,6 @@ function reducer(state: SolverState, action: Action): SolverState {
         answers: action.answers,
         wrongAttempts,
         hintLevel: Math.min(state.hintLevel + 1, state.puzzle.hints?.length ?? 3),
-        showSolution: wrongAttempts >= 3,
       };
     }
 

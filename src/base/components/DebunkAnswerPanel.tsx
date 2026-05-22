@@ -7,6 +7,7 @@
 
 import { useState } from 'react';
 import { useSolver, useIngredient } from '@base/contexts/SolverContext';
+import { useCheatMode } from '@shared/contexts/CheatContext';
 import { IngredientIcon, AlchemicalImage, ElemImage, PotionImage, CorrectIcon, IncorrectIcon } from '@shared/components/GameSprites';
 import { PotionPicker } from '@base/components/AnswerPickers';
 import { simulatePlanForDisplay, isPublicationDefinitelyFalse } from '@base/logic/debunk';
@@ -346,6 +347,8 @@ export function DebunkAnswerPanel({ onNext, isTutorial = false }: {
 }) {
   const { state, dispatch } = useSolver();
   const { puzzle, completed, wrongAttempts, showSolution, worlds } = state;
+  const cheatMode = useCheatMode();
+  const reveal = showSolution || cheatMode;
 
   const publications: Publication[] = (puzzle.publications ?? []).filter(Boolean) as Publication[];
 
@@ -474,7 +477,7 @@ export function DebunkAnswerPanel({ onNext, isTutorial = false }: {
       )}
 
       {/* Plan builders — one per debunk question */}
-      {!completed && !showSolution && perQ.map(({
+      {!completed && !reveal && perQ.map(({
         q, drafts, isConflictOnly, isApprenticeOnly, isMasterOnly,
         refLen, displayOutcomes, completedSteps, removedSet,
         allStepsComplete: qComplete, allConflictsCovered,
@@ -564,7 +567,7 @@ export function DebunkAnswerPanel({ onNext, isTutorial = false }: {
           </div>
 
           {/* Per-question wrong-attempt feedback (only when length is off) */}
-          {!completed && wrongAttempts > 0 && !showSolution && (
+          {!completed && wrongAttempts > 0 && !reveal && (
             drafts.length !== refLen && (
               <div className="text-xs text-red-500 font-semibold">
                 {isConflictOnly
@@ -586,7 +589,7 @@ export function DebunkAnswerPanel({ onNext, isTutorial = false }: {
       ))}
 
       {/* Solution reveal */}
-      {showSolution && perQ.map(({ q, refAnswer }, qi) => {
+      {reveal && perQ.map(({ q, refAnswer }, qi) => {
         const solutionSteps = refAnswer ?? [];
         return (
           <div key={qi} className="bg-indigo-50 border border-indigo-200 rounded-xl px-4 py-3 space-y-2">
@@ -624,8 +627,8 @@ export function DebunkAnswerPanel({ onNext, isTutorial = false }: {
       )}
 
       {/* Wrong attempt — overall message when all lengths are correct but plan fails */}
-      {!completed && wrongAttempts > 0 && !showSolution && perQ.every(p => p.drafts.length === p.refLen) && (
-        <div className="rounded-xl bg-red-50 border border-red-200 p-4 space-y-2 animate-fadein">
+      {!completed && wrongAttempts > 0 && !reveal && perQ.every(p => p.drafts.length === p.refLen) && (
+        <div className="rounded-xl bg-red-50 border border-red-200 p-4 animate-fadein">
           <div className="flex items-center gap-2 text-red-700 font-semibold">
             <IncorrectIcon width={24} />
             {perQ.some(p => p.isConflictOnly)
@@ -633,17 +636,11 @@ export function DebunkAnswerPanel({ onNext, isTutorial = false }: {
               : "A plan doesn't work — check each step removes at least one publication."
             }
           </div>
-          {wrongAttempts >= 3 && (
-            <button onClick={() => dispatch({ type: 'REVEAL_SOLUTION' })}
-              className="text-xs text-red-600 underline hover:no-underline">
-              Show solution
-            </button>
-          )}
         </div>
       )}
 
       {/* Submit */}
-      {!completed && !showSolution && (
+      {!completed && !reveal && (
         <button
           onClick={handleSubmit}
           disabled={!allAnswersComplete}

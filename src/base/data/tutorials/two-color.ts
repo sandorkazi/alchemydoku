@@ -82,13 +82,15 @@ The two-colour rule gave you the pair. Sizes inside that pair decided the winner
     kind: 'explain',
     id: 'tc-reverse',
     title: 'Using the Rule in Reverse',
-    body: `You can also use the two-colour rule backwards: if you observe a result colour, you know which sign must have matched.
+    body: `You can also use the two-colour rule backwards: if you observe a result colour, you learn something about the NEXT colour in the cycle.
 
-Saw a Red potion? → Either Red or Green sign matched on the two ingredients.
-Saw a Green potion? → Either Green or Blue sign matched.
-Saw a Blue potion? → Either Blue or Red sign matched.
+🔴 Saw Red → Green signs are different on the two ingredients (one G+, the other G−).
+🟢 Saw Green → Blue signs are different on the two ingredients (one B+, the other B−).
+🔵 Saw Blue → Red signs are different on the two ingredients (one R+, the other R−).
 
-This is powerful when combined with aspect clues: if you know an ingredient has R−, and the observed result was Red, then the other ingredient must have R− too (matching Red) or G± matching Green — and Blue is ruled out entirely.`,
+This is powerful when combined with aspect clues: if you know an ingredient has R−, and the observed result was Red, then the other ingredient must also have R− (Red resolved, both share the same Red sign). And you now know their Green signs are different — if this ingredient has G+, the other has G−.
+
+That extra constraint on Green comes for free from the result colour alone.`,
     emoji: '🔍',
   },
 ];

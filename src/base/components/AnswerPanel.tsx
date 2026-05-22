@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { PotionImage, AlchemicalImage, ElemImage, SignedElemImage, CorrectIcon, IncorrectIcon, IngredientIcon } from '@shared/components/GameSprites';
 import { PotionPicker, AlchemicalPicker, AspectPicker, HedgeColorPicker, PossiblePotionsPicker, LOGICAL_POTIONS, potionKey } from '@base/components/AnswerPickers';
 import { useSolver, useIngredient } from '@base/contexts/SolverContext';
+import { useCheatMode } from '@shared/contexts/CheatContext';
 import { computeAnswers } from '@base/puzzles/schema';
 import { DebunkAnswerPanel } from '@base/components/DebunkAnswerPanel';
 import type { PotionResult, AlchemicalId, Color, IngredientId } from '@shared/types';
@@ -442,6 +443,7 @@ function StandardAnswerPanel({ onNext, isTutorial = false }: {
 }) {
   const { state, dispatch } = useSolver();
   const { puzzle, completed, wrongAttempts, showSolution, answers } = state;
+  const cheatMode = useCheatMode();
   const qs = puzzle.questions;
   void answers;
 
@@ -450,7 +452,8 @@ function StandardAnswerPanel({ onNext, isTutorial = false }: {
     setPending(prev => prev.map((x, j) => j === i ? a : x));
 
   const allAnswered = pending.every(a => a !== null);
-  const correctAnswers = (showSolution || completed) ? computeAnswers(puzzle) : null;
+  const reveal = showSolution || completed || cheatMode;
+  const correctAnswers = reveal ? computeAnswers(puzzle) : null;
 
   return (
     <div className="space-y-4">
@@ -464,7 +467,7 @@ function StandardAnswerPanel({ onNext, isTutorial = false }: {
             value={pending[i]}
             onChange={a => setPendingAt(i, a)}
             correctAnswer={correctAnswers ? correctAnswers[i] : null}
-            showSolution={showSolution || completed}
+            showSolution={reveal}
           />
         ))}
       </div>
@@ -487,17 +490,11 @@ function StandardAnswerPanel({ onNext, isTutorial = false }: {
       )}
 
       {/* Wrong attempt */}
-      {!completed && wrongAttempts > 0 && !showSolution && (
-        <div className="rounded-xl bg-red-50 border border-red-200 p-4 space-y-2 animate-fadein">
+      {!completed && wrongAttempts > 0 && !reveal && (
+        <div className="rounded-xl bg-red-50 border border-red-200 p-4 animate-fadein">
           <div className="flex items-center gap-2 text-red-700 font-semibold">
             <IncorrectIcon width={24} /> Not quite — try again.
           </div>
-          {wrongAttempts >= 3 && (
-            <button onClick={() => dispatch({ type: 'REVEAL_SOLUTION' })}
-              className="text-xs text-red-600 underline hover:no-underline">
-              Show solution
-            </button>
-          )}
         </div>
       )}
 
