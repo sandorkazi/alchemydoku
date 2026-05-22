@@ -8,9 +8,9 @@
 import {
   AlchemicalImage, IngredientIcon,
   ElemImage, SignedElemImage, CorrectIcon, IncorrectIcon,
-} from '../../components/GameSprites';
-import { RuleCard, BaseRulesCards } from '../../components/RulesQuickReference';
-import type { AlchemicalId } from '../../types';
+} from '@shared/components/GameSprites';
+import { RuleCard, BaseRulesCards } from '@base/components/RulesQuickReference';
+import type { AlchemicalId } from '@shared/types';
 
 // ─── Expanded rule cards ─────────────────────────────────────────────────────
 

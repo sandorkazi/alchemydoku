@@ -16,7 +16,7 @@ Usage:
   python scripts/alchemydoku.py analyze
   python scripts/alchemydoku.py validate
   python scripts/alchemydoku.py regen-hints --all --missing-only
-  python scripts/alchemydoku.py regen-hints src/data/puzzles/medium-pp-01.json
+  python scripts/alchemydoku.py regen-hints src/base/data/puzzles/medium-pp-01.json
   python scripts/alchemydoku.py check-hints --all
 
 Available generate profiles:
@@ -3886,7 +3886,7 @@ DESCS = {
 }
 
 EXP_PUZZLE_DIR = Path(__file__).parent.parent / 'src' / 'expanded' / 'data' / 'puzzles'
-BASE_PUZZLE_DIR = Path(__file__).parent.parent / 'src' / 'data' / 'puzzles'
+BASE_PUZZLE_DIR = Path(__file__).parent.parent / 'src' / 'base' / 'data' / 'puzzles'
 
 # Mapping from expanded puzzle id_prefix → EXPANDED_COLLECTIONS id in puzzlesIndex.ts.
 # Only prefixes whose puzzles belong to a clearly defined auto-managed collection are listed.
@@ -3921,12 +3921,12 @@ def _to_camel_case(s: str) -> str:
 
 
 def _register_base_puzzle(filename: str) -> None:
-    """Insert a new puzzle import and array reference into src/data/puzzles/index.ts.
+    """Insert a new puzzle import and array reference into src/base/data/index.ts.
 
     filename: human-readable stem (e.g. 'mix-easy-23'), used for the import
     path and JS variable name.  The stable UUID lives inside the JSON itself.
     """
-    index_path = BASE_PUZZLE_DIR / 'index.ts'
+    index_path = BASE_PUZZLE_DIR.parent / 'index.ts'
     content = index_path.read_text('utf-8')
     var = filename.replace('-', '_')
     new_import = f"import {var} from './{filename}.json';\n"
@@ -4471,7 +4471,7 @@ def cmd_migrate_conflict_answers(_args):
     using the new multi-step _find_conflict_cover logic."""
     import pathlib
     dirs = [
-        pathlib.Path('src/data/puzzles'),
+        pathlib.Path('src/base/data/puzzles'),
         pathlib.Path('src/expanded/data/puzzles'),
     ]
     updated = 0
@@ -4587,7 +4587,7 @@ def cmd_recompute_debunk_answers(_args):
     using the fixed _find_removal_plan / _find_removal_plan_expanded logic."""
     import pathlib
     dirs = [
-        pathlib.Path('src/data/puzzles'),
+        pathlib.Path('src/base/data/puzzles'),
         pathlib.Path('src/expanded/data/puzzles'),
     ]
     updated = 0

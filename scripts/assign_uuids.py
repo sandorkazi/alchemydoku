@@ -5,10 +5,10 @@ Run once from the repo root:
   python3 scripts/assign_uuids.py
 
 What it does:
-  1. Reads every puzzle JSON in src/data/puzzles/ and src/expanded/data/puzzles/
+  1. Reads every puzzle JSON in src/base/data/puzzles/ and src/expanded/data/puzzles/
   2. Captures the current human-readable 'id' as the legacy ID
   3. Generates a fresh UUID v4 for each puzzle
-  4. Writes src/utils/legacyPuzzleIds.ts with the full legacy→UUID mapping
+  4. Writes src/shared/utils/legacyPuzzleIds.ts with the full legacy→UUID mapping
      (written BEFORE any JSON is touched)
   5. Rewrites each puzzle JSON in-place: 'id' field becomes the UUID
   6. Updates puzzleIds arrays in collections.json and puzzlesIndex.ts to use UUIDs
@@ -24,11 +24,11 @@ import uuid
 from pathlib import Path
 
 REPO_ROOT       = Path(__file__).parent.parent
-BASE_PUZZLE_DIR = REPO_ROOT / "src" / "data" / "puzzles"
+BASE_PUZZLE_DIR = REPO_ROOT / "src" / "base" / "data" / "puzzles"
 EXP_PUZZLE_DIR  = REPO_ROOT / "src" / "expanded" / "data" / "puzzles"
-COLLECTIONS_JSON = BASE_PUZZLE_DIR / "collections.json"
+COLLECTIONS_JSON = BASE_PUZZLE_DIR.parent / "collections.json"
 EXP_INDEX_TS    = REPO_ROOT / "src" / "expanded" / "data" / "puzzlesIndex.ts"
-LEGACY_IDS_TS   = REPO_ROOT / "src" / "utils" / "legacyPuzzleIds.ts"
+LEGACY_IDS_TS   = REPO_ROOT / "src" / "shared" / "utils" / "legacyPuzzleIds.ts"
 
 
 def main() -> None:
@@ -97,7 +97,7 @@ def main() -> None:
 
     print("\nDone.")
     print("Next steps:")
-    print("  1. Update src/utils/saveProgress.ts — bump SAVE_VERSION, add v5→v6 migration")
+    print("  1. Update src/shared/utils/saveProgress.ts — bump SAVE_VERSION, add v5→v6 migration")
     print("  2. Run: npm run test && python3 scripts/check_puzzles.py")
 
 

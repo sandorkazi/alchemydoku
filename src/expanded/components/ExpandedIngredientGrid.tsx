@@ -11,20 +11,20 @@
  */
 
 import { useState, useRef, useEffect, useCallback, useMemo, type CSSProperties } from 'react';
-import { INGREDIENTS } from '../../data/ingredients';
-import { ALCHEMICALS } from '../../data/alchemicals';
-import { PEN_COLORS, DEFAULT_PEN_COLOR } from '../../utils/penColors';
-import { loadSettings } from '../../utils/settings';
+import { INGREDIENTS } from '@shared/data/ingredients';
+import { ALCHEMICALS } from '@shared/data/alchemicals';
+import { PEN_COLORS, DEFAULT_PEN_COLOR } from '@shared/utils/penColors';
+import { loadSettings } from '@shared/utils/settings';
 import { useExpandedSolver, useExpandedIngredient, computeSolarLunarAutoMarks } from '../contexts/ExpandedSolverContext';
 import type { GolemSlotMark } from '../contexts/ExpandedSolverContext';
-import type { Color, Size } from '../../types';
+import type { Color, Size } from '@shared/types';
 import { isSolar } from '../logic/solarLunar';
 import { ALL_GOLEM_CONFIGS } from '../logic/golem';
 import { getExpandedPuzzleGolemState } from '../puzzles/schemaExpanded';
-import { getEliminatedCells } from '../../logic/deducer';
-import { AlchemicalDisplay } from '../../components/AlchemicalDisplay';
-import { AlchemicalImage, IngredientIcon, ElemImage, PotionImage, SignedElemImage } from '../../components/GameSprites';
-import type { AlchemicalId, IngredientId, CellState, Sign } from '../../types';
+import { getEliminatedCells } from '@shared/logic/deducer';
+import { AlchemicalDisplay } from '@shared/components/AlchemicalDisplay';
+import { AlchemicalImage, IngredientIcon, ElemImage, PotionImage, SignedElemImage } from '@shared/components/GameSprites';
+import type { AlchemicalId, IngredientId, CellState, Sign } from '@shared/types';
 import type { SolarLunarMark } from '../types';
 
 // Fixed visual column order by display-ingredient ID

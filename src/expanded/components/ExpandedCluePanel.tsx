@@ -8,7 +8,7 @@
  */
 
 import { ExpandedClueCard } from './ExpandedClueCard';
-import { groupClues, MultiAspectGroupCard, InferredAlchemicalGroupCard, CollapsibleClueWrapper, clueGroupLabel } from '../../components/ClueGrouping';
+import { groupClues, MultiAspectGroupCard, InferredAlchemicalGroupCard, CollapsibleClueWrapper, clueGroupLabel } from '@base/components/ClueGrouping';
 import { useExpandedIngredient } from '../contexts/ExpandedSolverContext';
 import type { AnyClue } from '../types';
 

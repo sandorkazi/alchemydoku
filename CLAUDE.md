@@ -28,21 +28,22 @@ python scripts/alchemydoku.py validate
 # Structural + integrity checks (fast, ~0.1 s) — also run by pre-commit
 python scripts/check_puzzles.py
 python scripts/check_puzzles.py --deep    # + logical validation (slow)
-python scripts/check_puzzles.py --files src/data/puzzles/easy-2000.json
+python scripts/check_puzzles.py --files src/base/data/puzzles/easy-2000.json
 
 # Recompute complexity scores for base-game puzzles
 python scripts/alchemydoku.py analyze
 ```
 
-**After generating a base puzzle**, register it in `src/data/puzzles/index.ts`.
+**After generating a base puzzle**, register it in `src/base/data/index.ts`.
 **After generating an expanded puzzle**, register it in `src/expanded/data/puzzlesIndex.ts`: add an import and add the puzzle to `ALL_EXPANDED_PUZZLES` and optionally to `EXPANDED_COLLECTIONS`.
 
 ### Pre-commit hook (Husky)
 
 The `.husky/pre-commit` hook runs on every commit:
-1. `npx tsc --noEmit` — type-check
-2. `python3 scripts/check_puzzles.py` — structural + trivial-answer + hint-token checks
-3. `npm run test` — full vitest suite (181 tests)
+1. `npm run build` — type-check + production build
+2. `python3 scripts/check_boundaries.py` — module boundary enforcement
+3. `python3 scripts/check_puzzles.py` — structural + trivial-answer + hint-token checks
+4. `npm run test` — full vitest suite
 
 ## Deployment
 
@@ -58,12 +59,13 @@ The `.husky/pre-commit` hook runs on every commit:
 
 The app has two completely separate runtime paths toggled by `alch-mode` in `localStorage`:
 
-- **Base mode** (`src/`) — the original 8-ingredient, 8-alchemical puzzle set
+- **Base mode** (`src/base/`) — the original 8-ingredient, 8-alchemical puzzle set
 - **Expanded mode** (`src/expanded/`) — adds three new mechanics on top of the base rules
+- **Shared engine** (`src/shared/`) — logic, utils, data, and components used by both modes
 
 `App.tsx` is the single-file router/home shell; it renders `PuzzleSolverPage` for base puzzles or hands off to `ExpandedHome` for expanded mode. There is no React Router — navigation is managed via a plain `View` union type in component state.
 
-### Core domain model (`src/types.ts`)
+### Core domain model (`src/shared/types.ts`)
 
 - **Alchemical**: 8 unique symbols, each with R/G/B aspects (sign: `+`/`-`, size: `L`/`S`)
 - **Assignment**: bijection from 8 ingredient slots → 8 alchemical IDs
@@ -93,7 +95,7 @@ The app has two completely separate runtime paths toggled by `alch-mode` in `loc
 
 Debunk question types return `null` from `computeAnswerFromWorlds` — their answers are validated via `debunk_answers` in the puzzle JSON.
 
-### Logic layer (`src/logic/`)
+### Logic layer (`src/shared/logic/`)
 
 Performance-critical code using precomputed lookup tables:
 
@@ -101,23 +103,23 @@ Performance-critical code using precomputed lookup tables:
 - `worldSet.ts` — one `filterBy*` function per clue kind; `applyClues` chains them. Each filter calls `filterWorlds(worlds, predicate)` which returns a new `Uint16Array`.
 - `deducer.ts` — reads a `WorldSet` to answer questions (deduce mixing result, alchemical, aspect sign, possible potions, neutral partner, potion profile, best mix, non-producers, etc.)
 - `mixer.ts` — implements the mixing rule for a single pair of alchemicals
-- `debunk.ts` — validates debunk-plan answers (min steps, conflict-only)
 - `alchemicals.ts` — `getAlchemical`, `getAspect`, `isDirectOpposite` helpers
 - `sellValidator.ts` — `isSellSuccess(claimed, actual, tier)` for weak/average/strong sell tiers
+- `debunk.ts` (`src/base/logic/`) — validates debunk-plan answers (min steps, conflict-only); base-only
 
-### Solver state machine (`src/contexts/SolverContext.tsx`)
+### Solver state machine (`src/base/contexts/SolverContext.tsx`)
 
 `SolverProvider` wraps each puzzle page. State is managed by a `useReducer` with actions: `TOGGLE_CELL`, `SET_CELL`, `SUBMIT_ANSWER`, `REQUEST_HINT`, `TOGGLE_AUTO_DEDUCTION`, `REVEAL_SOLUTION`, `RESET`, `RESHUFFLE`, `CLEAR_GRID`, `SET_NOTE`, `LOAD_PROGRESS`, `ADD_DRAW_STROKE`, `CLEAR_DRAW_STROKES`.
 
-Shared utilities (display map, grid state, unified store writes) live in `src/utils/solverStorage.ts`.
+Shared utilities (display map, grid state, unified store writes) live in `src/shared/utils/solverStorage.ts`.
 
 Auto-deduction (`applyAutoDeduction`) runs after any state change when the toggle is on — it eliminates cells whose world-sets have no matching assignment and confirms the sole remaining possibility per ingredient.
 
-### Tutorial system (`src/contexts/TutorialContext.tsx`)
+### Tutorial system (`src/shared/contexts/TutorialContext.tsx`)
 
 `TutorialProvider` wraps the entire app (inside `main.tsx`). Tracks completion of tutorial collections (`TutorialId`: `'mixing' | 'selling' | 'two-color' | 'debunk-apprentice' | 'debunk-master'`). Persists to `alch-tutorials-done` in localStorage.
 
-### Progress persistence (`src/utils/saveProgress.ts`)
+### Progress persistence (`src/shared/utils/saveProgress.ts`)
 
 `SAVE_VERSION` is the canonical version number — bump it to trigger a one-time migration on the next page load.
 
@@ -132,8 +134,6 @@ localStorage keys:
 
 ### Expanded mechanics (`src/expanded/`)
 
-Mirrors the base `src/` structure:
-
 - `expanded/types.ts` — adds `ExpandedClue` (book/solar-lunar, encyclopedia, golem tests, encyclopedia_uncertain, golem_reaction_among) and `ExpandedQuestion` types (encyclopedia_fourth, encyclopedia_which_aspect, solar_lunar, golem_group, golem_animate_potion, golem_mix_potion, golem_possible_potions); `ExpandedPuzzle` extends base `Puzzle`
 - `expanded/logic/` — `solarLunar.ts`, `golem.ts`, `worldSetExpanded.ts` (filter functions for expanded clues), `debunkExpanded.ts`
 - `expanded/puzzles/schemaExpanded.ts` — `getExpandedPuzzleWorlds`, `computeExpandedAnswer`, `computeAllExpandedAnswers`, `checkExpandedAnswers`
@@ -142,50 +142,59 @@ Mirrors the base `src/` structure:
 
 ### Puzzle JSON schema
 
-Base puzzles live in `src/data/puzzles/*.json` and are registered in `src/data/puzzles/index.ts`. Expanded puzzles live in `src/expanded/data/puzzles/*.json`. Both share the shape described in `src/types.ts` (`Puzzle`) / `src/expanded/types.ts` (`ExpandedPuzzle`). The `solution` field is the ground-truth `Assignment`.
+Base puzzles live in `src/base/data/puzzles/*.json` and are registered in `src/base/data/index.ts`. Expanded puzzles live in `src/expanded/data/puzzles/*.json`. Both share the shape described in `src/shared/types.ts` (`Puzzle`) / `src/expanded/types.ts` (`ExpandedPuzzle`). The `solution` field is the ground-truth `Assignment`.
 
 Puzzle difficulties: `tutorial`, `easy`, `medium`, `hard`, `expert`.
 
 Add `"trivial_answer_ok": true` to suppress the trivial-answer pre-commit check for puzzles where a clue intentionally gives away the answer (e.g. `tutorial-sell-01`).
 
-### Google Drive sync (`src/services/googleDrive.ts`)
+### Google Drive sync (`src/shared/services/googleDrive.ts`)
 
 Optional cloud save using GIS implicit token flow — no backend. Requires `VITE_GOOGLE_CLIENT_ID` in `.env`. The app saves to `drive.appDataFolder` (invisible in Drive UI). The `DriveProvider` / `DriveContext` wrap the entire app and expose `onPuzzleComplete` which triggers a sync.
+
+### Module boundaries
+
+Enforced by `scripts/check_boundaries.py` (runs in pre-commit):
+- `src/shared/` — no imports from `@base/` or `@expanded/`
+- `src/base/` — no imports from `@expanded/`
+- `src/expanded/` — may import from `@shared/` and `@base/` (for pure logic like `debunk`)
 
 ### Tests
 
 Tests live in `tests/`:
-- `tests/logic/` — unit tests for `mixer`, `worldSet`, `deducer`
-- `tests/puzzles/answers.test.ts` — integration test: all base puzzles must have consistent clues and uniquely-answerable non-debunk questions
-- `tests/puzzles/expanded-answers.test.ts` — same for all expanded puzzles
+- `tests/shared/logic/` — unit tests for `mixer`, `worldSet`, `deducer`
+- `tests/base/puzzles/answers.test.ts` — integration test: all base puzzles must have consistent clues and uniquely-answerable non-debunk questions
+- `tests/expanded/puzzles/expanded-answers.test.ts` — same for all expanded puzzles
+- `tests/expanded/logic/` — expanded logic unit tests
+- `tests/utils/` — shared utility tests (migrations, etc.)
 
 Run a single file with:
 
 ```bash
-npx vitest run tests/logic/mixer.test.ts
+npx vitest run tests/shared/logic/mixer.test.ts
 ```
 
-TypeScript is strict (`strict`, `noUnusedLocals`, `noUnusedParameters`). Path alias `@/*` maps to `src/*`.
+TypeScript is strict (`strict`, `noUnusedLocals`, `noUnusedParameters`). Path aliases: `@/*` → `src/*`, `@shared/*` → `src/shared/*`, `@base/*` → `src/base/*`, `@expanded/*` → `src/expanded/*`.
 
 ## Board-game compliance
 
-`src/compliance.ts` is the authoritative registry of non-compliant clue kinds:
+`src/shared/compliance.ts` is the authoritative registry of non-compliant clue kinds:
 
 - `NON_COMPLIANT_BASE_CLUE_KINDS` — clue kinds that have no board-game equivalent in base mode
 - `NON_COMPLIANT_EXPANDED_CLUE_KINDS` — same, extended for expanded mode
 
 **Protocol for new clue kinds:**
 1. Decide whether it maps to a real Alchemists board game action.
-2. If NOT — add its `kind` string to the appropriate set in `src/compliance.ts`.
-3. Tag any collection containing such puzzles with `boardGameCompliant: false` in `src/data/puzzles/collections.json` (base) or `src/expanded/data/puzzlesIndex.ts` (expanded).
+2. If NOT — add its `kind` string to the appropriate set in `src/shared/compliance.ts`.
+3. Tag any collection containing such puzzles with `boardGameCompliant: false` in `src/base/data/collections.json` (base) or `src/expanded/data/puzzlesIndex.ts` (expanded).
 
 The "Allow unrealistic (extra) puzzles" toggle is part of the **Settings modal** (⚙️ button in the mode-switcher row). When off (default), non-compliant collections are greyed out with a 🧩 icon. The "Among / Group Clues" card in `RulesQuickReference` is hidden unless the toggle is on.
 
 ## Settings
 
-`src/utils/settings.ts` — `Settings` type with three booleans: `showLatestUpdates`, `showQuickRef`, `showPuzzleOnly`. Persisted to `alch-settings` in localStorage and included in the Google Drive save snapshot.
+`src/shared/utils/settings.ts` — `Settings` type with three booleans: `showLatestUpdates`, `showQuickRef`, `showPuzzleOnly`. Persisted to `alch-settings` in localStorage and included in the Google Drive save snapshot.
 
-`src/components/SettingsModal.tsx` — modal rendered from both `AppInner` (base) and `ExpandedHome` (expanded) via a ⚙️ gear button next to the mode switcher. Contains the three display toggles plus Reset Progress buttons (base / expanded / all) with a two-step confirmation dialog. After a reset, if the user is signed into Drive, `uploadSnapshot()` is called to push the cleared state without downloading first.
+`src/shared/components/SettingsModal.tsx` — modal rendered from both `AppInner` (base) and `ExpandedHome` (expanded) via a ⚙️ gear button next to the mode switcher. Contains the three display toggles plus Reset Progress buttons (base / expanded / all) with a two-step confirmation dialog. After a reset, if the user is signed into Drive, `uploadSnapshot()` is called to push the cleared state without downloading first.
 
 ## Hint text conventions
 

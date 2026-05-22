@@ -8,8 +8,8 @@ import type {
   IngredientId, AlchemicalId, Color, Sign, Size, CellState,
   Clue as BaseClue, QuestionTarget as BaseQuestion,
   PotionResult,
-} from '../types';
-import type { PuzzleAnswer } from '../puzzles/schema';
+} from '@shared/types';
+import type { PuzzleAnswer } from '@base/puzzles/schema';
 
 // ─── Solar / Lunar ────────────────────────────────────────────────────────────
 
@@ -385,7 +385,7 @@ export type GolemSolverState = ReadonlyArray<Uint16Array | null>;
 
 // ─── Expanded puzzle ──────────────────────────────────────────────────────────
 
-import type { Puzzle } from '../types';
+import type { Puzzle } from '@shared/types';
 
 /**
  * A debunkable encyclopedia article (expanded-mode debunk puzzles only).
@@ -394,8 +394,8 @@ import type { Puzzle } from '../types';
  */
 export type DebunkArticle = {
   id: string;
-  aspect: import('../types').Color;
-  entries: { ingredient: import('../types').IngredientId; sign: '+' | '-' }[];
+  aspect: import('@shared/types').Color;
+  entries: { ingredient: import('@shared/types').IngredientId; sign: '+' | '-' }[];
 };
 
 export type ExpandedPuzzle = Omit<Puzzle, 'clues' | 'questions'> & {

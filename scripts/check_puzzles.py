@@ -35,7 +35,7 @@ Additional checks with --deep (~2–5 s per puzzle, runs world simulation):
 Usage:
   python scripts/check_puzzles.py           # structural checks (fast)
   python scripts/check_puzzles.py --deep    # + logical validation (slow)
-  python scripts/check_puzzles.py --files src/data/puzzles/easy-2000.json
+  python scripts/check_puzzles.py --files src/base/data/puzzles/easy-2000.json
 
 Exit codes: 0 = pass (warnings may appear), 1 = one or more errors.
 """
@@ -51,9 +51,9 @@ from pathlib import Path
 # ── Paths ──────────────────────────────────────────────────────────────────────
 
 ROOT     = Path(__file__).resolve().parent.parent
-BASE_DIR = ROOT / "src" / "data" / "puzzles"
+BASE_DIR = ROOT / "src" / "base" / "data" / "puzzles"
 EXP_DIR  = ROOT / "src" / "expanded" / "data" / "puzzles"
-BASE_IDX = ROOT / "src" / "data" / "puzzles" / "index.ts"
+BASE_IDX = ROOT / "src" / "base" / "data" / "index.ts"
 EXP_IDX  = ROOT / "src" / "expanded" / "data" / "puzzlesIndex.ts"
 
 REQUIRED_BASE = {"id", "title", "difficulty", "clues", "questions", "solution", "complexity"}
@@ -514,7 +514,7 @@ def check_permalink_uniqueness(all_puzzles: list, r: Results):
 
     # ── Base: collections.json ───────────────────────────────────────────────
     base_pid_to_col: dict[str, str] = {}
-    collections_json = BASE_DIR / "collections.json"
+    collections_json = BASE_DIR.parent / "collections.json"
     if collections_json.exists():
         try:
             data = json.loads(collections_json.read_text(encoding="utf-8"))

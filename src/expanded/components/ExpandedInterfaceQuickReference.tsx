@@ -7,10 +7,10 @@
  * the Golem Panel.
  */
 
-import { AlchemicalImage, IngredientIcon, ElemImage, SignedElemImage } from '../../components/GameSprites';
-import { RuleCard } from '../../components/RulesQuickReference';
-import { BaseInterfaceCards } from '../../components/InterfaceQuickReference';
-import type { AlchemicalId, Color, Sign } from '../../types';
+import { AlchemicalImage, IngredientIcon, ElemImage, SignedElemImage } from '@shared/components/GameSprites';
+import { RuleCard } from '@base/components/RulesQuickReference';
+import { BaseInterfaceCards } from '@base/components/InterfaceQuickReference';
+import type { AlchemicalId, Color, Sign } from '@shared/types';
 
 // ─── Expanded interface cards ─────────────────────────────────────────────────
 

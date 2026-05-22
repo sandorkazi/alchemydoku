@@ -9,9 +9,9 @@
  * 2. Joint world × config mode (GolemSolverState): 24 configs × world-sets.
  */
 
-import { WORLD_DATA, SIZE_TABLE, SIGN_TABLE, MIX_TABLE, COLOR_INDEX, INDEX_COLOR, filterWorlds } from '../../logic/worldPack';
-import { getPossibleResults } from '../../logic/deducer';
-import type { WorldSet, IngredientId, AlchemicalId, PotionResult, Color, Size } from '../../types';
+import { WORLD_DATA, SIZE_TABLE, SIGN_TABLE, MIX_TABLE, COLOR_INDEX, INDEX_COLOR, filterWorlds } from '@shared/logic/worldPack';
+import { getPossibleResults } from '@shared/logic/deducer';
+import type { WorldSet, IngredientId, AlchemicalId, PotionResult, Color, Size } from '@shared/types';
 import type {
   GolemParams, GolemReactionGroup,
   GolemGroupQuestion, GolemMixPotionQuestion, GolemPossiblePotionsQuestion,

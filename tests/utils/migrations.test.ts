@@ -14,8 +14,8 @@ import {
   SAVE_VERSION,
   type SaveFile,
   type PuzzleProgress,
-} from '../../src/utils/saveProgress';
-import { LEGACY_ID_TO_UUID } from '../../src/utils/legacyPuzzleIds';
+} from '@shared/utils/saveProgress';
+import { LEGACY_ID_TO_UUID } from '@shared/utils/legacyPuzzleIds';
 
 // ─── Mock localStorage ────────────────────────────────────────────────────────
 

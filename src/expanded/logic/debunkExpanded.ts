@@ -14,11 +14,11 @@
  *     it only enables article disproof when the ingredient is already known.
  */
 
-import { ALCHEMICALS } from '../../data/alchemicals';
-import { isDefinitivelyKnown, isMixResultDetermined, isPublicationDefinitelyFalse, getDefinitiveAlch } from '../../logic/debunk';
-import { MIX_TABLE } from '../../logic/worldPack';
-import type { IngredientId, AlchemicalId, Color, Assignment, WorldSet } from '../../types';
-import type { DebunkStep, Publication } from '../../types';
+import { ALCHEMICALS } from '@shared/data/alchemicals';
+import { isDefinitivelyKnown, isMixResultDetermined, isPublicationDefinitelyFalse, getDefinitiveAlch } from '@base/logic/debunk';
+import { MIX_TABLE } from '@shared/logic/worldPack';
+import type { IngredientId, AlchemicalId, Color, Assignment, WorldSet } from '@shared/types';
+import type { DebunkStep, Publication } from '@shared/types';
 import type { DebunkArticle } from '../types';
 
 // ─── Helpers ──────────────────────────────────────────────────────────────────

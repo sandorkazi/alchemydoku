@@ -1,8 +1,8 @@
 import React from 'react';
 import ReactDOM from 'react-dom/client';
 import App from './App';
-import { TutorialProvider } from './contexts/TutorialContext';
-import { runMigrations } from './utils/saveProgress';
+import { TutorialProvider } from '@shared/contexts/TutorialContext';
+import { runMigrations } from '@shared/utils/saveProgress';
 import './index.css';
 
 runMigrations();

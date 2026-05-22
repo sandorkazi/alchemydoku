@@ -12,8 +12,8 @@
  * and 8 (PPP, 0 negatives) are the exceptions.
  */
 
-import { WORLD_DATA } from '../../logic/worldPack';
-import type { AlchemicalId, IngredientId, WorldSet } from '../../types';
+import { WORLD_DATA } from '@shared/logic/worldPack';
+import type { AlchemicalId, IngredientId, WorldSet } from '@shared/types';
 import type { SolarLunar } from '../types';
 
 export const SOLAR_ALCH_IDS: AlchemicalId[] = [1, 3, 5, 8];

@@ -8,11 +8,11 @@
 
 import { useState } from 'react';
 import { useExpandedSolver, useExpandedIngredient } from '../contexts/ExpandedSolverContext';
-import { IngredientIcon, AlchemicalImage, ElemImage, SignedElemImage, PotionImage, CorrectIcon, IncorrectIcon } from '../../components/GameSprites';
-import { PotionPicker } from '../../components/AnswerPickers';
+import { IngredientIcon, AlchemicalImage, ElemImage, SignedElemImage, PotionImage, CorrectIcon, IncorrectIcon } from '@shared/components/GameSprites';
+import { PotionPicker } from '@base/components/AnswerPickers';
 import { simulateExpandedPlan, simulateExpandedPlanForDisplay } from '../logic/debunkExpanded';
-import { isPublicationDefinitelyFalse } from '../../logic/debunk';
-import type { DebunkStep, IngredientId, Color, Publication, PotionResult } from '../../types';
+import { isPublicationDefinitelyFalse } from '@base/logic/debunk';
+import type { DebunkStep, IngredientId, Color, Publication, PotionResult } from '@shared/types';
 import type { DebunkArticle } from '../types';
 
 // ─── Ingredient picker ────────────────────────────────────────────────────────

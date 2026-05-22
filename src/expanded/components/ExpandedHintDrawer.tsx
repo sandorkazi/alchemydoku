@@ -6,12 +6,12 @@
  */
 
 import React from 'react';
-import { AlchemicalImage, IngredientIcon, SignedElemImage } from '../../components/GameSprites';
+import { AlchemicalImage, IngredientIcon, SignedElemImage } from '@shared/components/GameSprites';
 import { useExpandedSolver } from '../contexts/ExpandedSolverContext';
-import { INGREDIENTS } from '../../data/ingredients';
-import type { AlchemicalId, Color, Sign } from '../../types';
+import { INGREDIENTS } from '@shared/data/ingredients';
+import type { AlchemicalId, Color, Sign } from '@shared/types';
 import type { DisplayMap } from '../contexts/ExpandedSolverContext';
-import { HintStepViewer } from '../../components/HintStepViewer';
+import { HintStepViewer } from '@shared/components/HintStepViewer';
 
 // ─── Token helpers (copied verbatim from HintDrawer) ─────────────────────────
 

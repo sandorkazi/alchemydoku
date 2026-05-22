@@ -9,10 +9,10 @@
  */
 
 import { useState } from 'react';
-import { PotionImage, AlchemicalImage, ElemImage, CorrectIcon, IncorrectIcon, IngredientIcon, SignedElemImage } from '../../components/GameSprites';
-import { PotionPicker, AlchemicalPicker, AspectPicker, PossiblePotionsPicker, LOGICAL_POTIONS, potionKey } from '../../components/AnswerPickers';
+import { PotionImage, AlchemicalImage, ElemImage, CorrectIcon, IncorrectIcon, IngredientIcon, SignedElemImage } from '@shared/components/GameSprites';
+import { PotionPicker, AlchemicalPicker, AspectPicker, PossiblePotionsPicker, LOGICAL_POTIONS, potionKey } from '@base/components/AnswerPickers';
 import { useExpandedSolver, useExpandedIngredient, computeAllExpandedAnswers } from '../contexts/ExpandedSolverContext';
-import type { PotionResult, AlchemicalId, Color, Size, IngredientId } from '../../types';
+import type { PotionResult, AlchemicalId, Color, Size, IngredientId } from '@shared/types';
 import type {
   AnyQuestion, AnyAnswer,
   AspectColorAnswer, SolarLunarAnswer, IngredientSetAnswer,

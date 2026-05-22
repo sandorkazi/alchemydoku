@@ -17,22 +17,22 @@ import {
 import { isSolar } from '../logic/solarLunar';
 import { checkExpandedAnswers, computeAllExpandedAnswers, getExpandedPuzzleWorlds } from '../puzzles/schemaExpanded';
 import { validateExpandedMinStepsAnswer, validateExpandedApprenticePlanAnswer, validateExpandedConflictOnlyAnswer } from '../logic/debunkExpanded';
-import { WORLD_DATA } from '../../logic/worldPack';
-import { makeDisplayMap, loadDisplayMap, saveDisplayMap, emptyGrid, mergeIntoUnifiedStore } from '../../utils/solverStorage';
-import { normalizeStroke, type DrawStroke } from '../../utils/penColors';
-import { loadSettings } from '../../utils/settings';
-import type { CellState, WorldSet, AlchemicalId } from '../../types';
+import { WORLD_DATA } from '@shared/logic/worldPack';
+import { makeDisplayMap, loadDisplayMap, saveDisplayMap, emptyGrid, mergeIntoUnifiedStore } from '@shared/utils/solverStorage';
+import { normalizeStroke, type DrawStroke } from '@shared/utils/penColors';
+import { loadSettings } from '@shared/utils/settings';
+import type { CellState, WorldSet, AlchemicalId } from '@shared/types';
 import type { ExpandedPuzzle, AnyAnswer, SolarLunarMark, SolarLunarMarks } from '../types';
-import type { Color, Size } from '../../types';
+import type { Color, Size } from '@shared/types';
 
-export type { DisplayMap, GridState } from '../../utils/solverStorage';
+export type { DisplayMap, GridState } from '@shared/utils/solverStorage';
 
 // ─── Undo / Redo ──────────────────────────────────────────────────────────────
 
-export type { DrawStroke } from '../../utils/penColors';
+export type { DrawStroke } from '@shared/utils/penColors';
 
 export type UndoSnapshot = {
-  gridState:   import('../../utils/solverStorage').GridState;
+  gridState:   import('@shared/utils/solverStorage').GridState;
   notes:       Record<string, string>;
   drawStrokes: DrawStroke[];
 };
@@ -61,7 +61,7 @@ function checkExpandedDebunkAnswers(
   worlds: WorldSet,
   playerAnswers: (AnyAnswer | null)[],
 ): boolean {
-  const publications = (puzzle.publications ?? []).filter(Boolean) as import('../../types').Publication[];
+  const publications = (puzzle.publications ?? []).filter(Boolean) as import('@shared/types').Publication[];
   const articles = puzzle.articles ?? [];
   const solution = puzzle.solution;
 
@@ -69,7 +69,7 @@ function checkExpandedDebunkAnswers(
     const q = puzzle.questions[i];
     const a = playerAnswers[i];
     if (!a || typeof a !== 'object' || !('kind' in a) || (a as {kind:string}).kind !== 'debunk-plan') return false;
-    const steps = (a as { kind: 'debunk-plan'; steps: import('../../types').DebunkStep[] }).steps;
+    const steps = (a as { kind: 'debunk-plan'; steps: import('@shared/types').DebunkStep[] }).steps;
 
     if (q.kind === 'debunk_min_steps') {
       const refLen = (puzzle.debunk_answers?.debunk_min_steps ?? []).length;
@@ -89,8 +89,8 @@ function checkExpandedDebunkAnswers(
 
 // ─── Grid + solar/lunar state ─────────────────────────────────────────────────
 
-type GridState = import('../../utils/solverStorage').GridState;
-type DisplayMap = import('../../utils/solverStorage').DisplayMap;
+type GridState = import('@shared/utils/solverStorage').GridState;
+type DisplayMap = import('@shared/utils/solverStorage').DisplayMap;
 
 function emptySolarLunarMarks(): SolarLunarMarks {
   const m: SolarLunarMarks = {};
@@ -196,7 +196,7 @@ export type ExpandedAction =
   | { type: 'REVEAL_SOLUTION' }
   | { type: 'RESET' }
   | { type: 'RESHUFFLE' }
-  | { type: 'RESHUFFLE_CUSTOM'; map: import('../../utils/solverStorage').DisplayMap }
+  | { type: 'RESHUFFLE_CUSTOM'; map: import('@shared/utils/solverStorage').DisplayMap }
   | { type: 'CLEAR_GRID' }
   | { type: 'SET_NOTE';            key: string; value: string }
   | { type: 'SET_SOLAR_LUNAR_MARK'; slot: number; mark: SolarLunarMark }
@@ -497,7 +497,7 @@ function reducer(state: ExpandedSolverState, action: ExpandedAction): ExpandedSo
 type ContextValue = { state: ExpandedSolverState; dispatch: React.Dispatch<ExpandedAction> };
 const ExpandedSolverContext = createContext<ContextValue | null>(null);
 
-export function ExpandedSolverProvider({ puzzle, children, initialDisplayMap }: { puzzle: ExpandedPuzzle; children: ReactNode; initialDisplayMap?: import('../../utils/solverStorage').DisplayMap }) {
+export function ExpandedSolverProvider({ puzzle, children, initialDisplayMap }: { puzzle: ExpandedPuzzle; children: ReactNode; initialDisplayMap?: import('@shared/utils/solverStorage').DisplayMap }) {
   const worlds = useMemo(() => getExpandedPuzzleWorlds(puzzle), [puzzle]);
 
   const displayMap = useMemo(() => {
