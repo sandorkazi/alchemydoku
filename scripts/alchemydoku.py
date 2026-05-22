@@ -28,7 +28,7 @@ Available generate profiles:
   mixed_base_debunk, mixed_exp_debunk
 """
 
-import json, math, random, itertools, argparse, sys
+import json, math, random, itertools, argparse, sys, uuid
 from pathlib import Path
 from dataclasses import dataclass, field
 from typing import Optional
@@ -3920,12 +3920,16 @@ def _to_camel_case(s: str) -> str:
     return out
 
 
-def _register_base_puzzle(puzzle_id: str) -> None:
-    """Insert puzzle_id import and reference into src/data/puzzles/index.ts."""
+def _register_base_puzzle(filename: str) -> None:
+    """Insert a new puzzle import and array reference into src/data/puzzles/index.ts.
+
+    filename: human-readable stem (e.g. 'mix-easy-23'), used for the import
+    path and JS variable name.  The stable UUID lives inside the JSON itself.
+    """
     index_path = BASE_PUZZLE_DIR / 'index.ts'
     content = index_path.read_text('utf-8')
-    var = puzzle_id.replace('-', '_')
-    new_import = f"import {var} from './{puzzle_id}.json';\n"
+    var = filename.replace('-', '_')
+    new_import = f"import {var} from './{filename}.json';\n"
     anchor = "import collectionsData from './collections.json';"
     if anchor not in content:
         print(f"  [register] WARNING: anchor not found in {index_path.name}")
@@ -3933,19 +3937,24 @@ def _register_base_puzzle(puzzle_id: str) -> None:
     content = content.replace(anchor, new_import + anchor)
     content = content.replace('] as unknown as Puzzle[];', f', {var}] as unknown as Puzzle[];')
     index_path.write_text(content, 'utf-8')
-    print(f"  [register] added {puzzle_id} to {index_path.name}")
+    print(f"  [register] added {filename} to {index_path.name}")
 
 
-def _register_expanded_puzzle(puzzle_id: str, prefix: str, num: int) -> None:
-    """Insert puzzle_id import and reference into src/expanded/data/puzzlesIndex.ts."""
+def _register_expanded_puzzle(filename: str, puzzle_id: str, prefix: str, num: int) -> None:
+    """Insert a new puzzle into src/expanded/data/puzzlesIndex.ts.
+
+    filename:  human-readable stem (e.g. 'enc-11'), used for the import path
+               and JS variable name.
+    puzzle_id: stable UUID, used for ALL_EXPANDED_PUZZLES and collection entries.
+    """
     index_path = EXP_PUZZLE_DIR.parent / 'puzzlesIndex.ts'
     content = index_path.read_text('utf-8')
-    var = _to_camel_case(puzzle_id)
+    var = _to_camel_case(filename)
 
     # ── Import line ──────────────────────────────────────────────────────────
-    prev_id = f"{prefix}-{num - 1:02d}"
-    prev_file_anchor = f"from './puzzles/{prev_id}.json';"
-    new_import = f"import {var:<20} from './puzzles/{puzzle_id}.json';"
+    prev_filename = f"{prefix}-{num - 1:02d}"
+    prev_file_anchor = f"from './puzzles/{prev_filename}.json';"
+    new_import = f"import {var:<20} from './puzzles/{filename}.json';"
     if prev_file_anchor in content:
         content = content.replace(prev_file_anchor, prev_file_anchor + '\n' + new_import)
     else:
@@ -3953,9 +3962,9 @@ def _register_expanded_puzzle(puzzle_id: str, prefix: str, num: int) -> None:
         content = content.replace('\nimport type ', '\n' + new_import + '\n\nimport type ')
 
     # ── ALL_EXPANDED_PUZZLES array entry ─────────────────────────────────────
-    prev_var = _to_camel_case(prev_id)
+    prev_var = _to_camel_case(prev_filename)
     if prev_var + ',' in content:
-        # Replace first occurrence: prev_var in the array (imports don't have trailing comma)
+        # Replace first occurrence (imports don't have trailing commas)
         content = content.replace(prev_var + ',', prev_var + f', {var},', 1)
     else:
         # Fallback: append before closing ] of ALL_EXPANDED_PUZZLES
@@ -3967,12 +3976,20 @@ def _register_expanded_puzzle(puzzle_id: str, prefix: str, num: int) -> None:
     # ── Collection puzzleIds ─────────────────────────────────────────────────
     collection_id = _EXP_PREFIX_COLLECTION.get(prefix)
     if collection_id is not None:
-        prev_pid_entry = f"'{prev_id}',"
-        if prev_pid_entry in content:
-            content = content.replace(prev_pid_entry, f"'{prev_id}', '{puzzle_id}',", 1)
+        # The previous puzzle's collection entry is its UUID; look it up from disk.
+        prev_path = EXP_PUZZLE_DIR / f"{prev_filename}.json"
+        if prev_path.exists():
+            prev_uuid = json.loads(prev_path.read_text('utf-8')).get('id', '')
+            prev_pid_entry = f"'{prev_uuid}',"
+            if prev_pid_entry in content:
+                content = content.replace(prev_pid_entry, f"'{prev_uuid}', '{puzzle_id}',", 1)
+            else:
+                print(f"  [register] WARNING: could not find prev UUID entry '{prev_uuid}' in collection")
+        else:
+            print(f"  [register] WARNING: {prev_filename}.json not found; skipping collection insert")
 
     index_path.write_text(content, 'utf-8')
-    print(f"  [register] added {puzzle_id} to {index_path.name}")
+    print(f"  [register] added {filename} (UUID …{puzzle_id[-8:]}) to {index_path.name}")
 
 
 def _next_num(prefix: str, out_dir: Path) -> int:
@@ -4101,16 +4118,17 @@ def cmd_generate(args):
         out_dir = BASE_PUZZLE_DIR if is_base_profile(profile) else EXP_PUZZLE_DIR
         num = _next_num(profile.id_prefix, out_dir)
         puz = assemble(raw, profile, num, rng, used_titles)
-        puz['id'] = f"{profile.id_prefix}-{num:02d}"
+        filename = f"{profile.id_prefix}-{num:02d}"
+        puz['id'] = str(uuid.uuid4())
         used_titles.add(puz['title'])
-        (out_dir / f"{puz['id']}.json").write_text(json.dumps(puz, indent=2))
+        (out_dir / f"{filename}.json").write_text(json.dumps(puz, indent=2))
         if is_base_profile(profile):
-            _register_base_puzzle(puz['id'])
+            _register_base_puzzle(filename)
         else:
-            _register_expanded_puzzle(puz['id'], profile.id_prefix, num)
+            _register_expanded_puzzle(filename, puz['id'], profile.id_prefix, num)
 
         warns = [e for e in errs if e.startswith('WARNING')]
-        print(f"  ✓  {puz['id']}  clues={len(raw['clues'])}  "
+        print(f"  ✓  {filename}  clues={len(raw['clues'])}  "
               f"worlds={len(raw['worlds'])}  raw={puz['complexity']['raw_score']:.2f}")
         for w in warns:
             print(f"     {w}")

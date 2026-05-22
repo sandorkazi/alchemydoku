@@ -4,7 +4,7 @@ scripts/check_puzzles.py — Alchemydoku puzzle integrity checker.
 
 Checks performed (always, ~0.1 s):
   1. registration   — every *.json in puzzle dirs is imported in index files
-  2. id-filename    — puzzle 'id' field matches filename stem
+  2. id-uuid        — puzzle 'id' field is a valid UUID v4
   3. duplicates     — no two puzzles share an id; warns on identical titles
   4. similar-titles — warns when titles share ≥80 % of their word tokens
   5. required-fields— id, title, difficulty, clues, questions, solution present
@@ -128,11 +128,13 @@ def check_structure(path: Path, puz: dict, is_expanded: bool, r: Results):
     if missing:
         r.error(f"[required-fields] {name}: missing {', '.join(sorted(missing))}")
 
-    # ID must match filename stem
-    pid  = puz.get("id", "")
-    stem = path.stem
-    if pid != stem:
-        r.error(f"[id-filename] {name}: id='{pid}' does not match filename stem '{stem}'")
+    # ID must be a valid UUID v4
+    pid = puz.get("id", "")
+    _UUID_RE = re.compile(
+        r'^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$'
+    )
+    if not _UUID_RE.match(pid):
+        r.error(f"[id-uuid] {name}: id='{pid}' is not a valid UUID v4")
 
     # Expanded puzzles must declare mode
     if is_expanded and puz.get("mode") != "expanded":

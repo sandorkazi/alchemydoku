@@ -14,7 +14,9 @@
  * per-puzzle keys for backwards compatibility).
  */
 
-export const SAVE_VERSION = 5;
+export const SAVE_VERSION = 6;
+
+import { LEGACY_ID_TO_UUID } from './legacyPuzzleIds';
 
 // ─── ID rename map (v3 → v4) ──────────────────────────────────────────────────
 
@@ -213,9 +215,17 @@ export function runMigrations(): void {
             try { localStorage.removeItem(`solver-${id}`); } catch { /* ignore */ }
           }
         }
-        // v3 → v4: rename puzzle IDs
+        // v3 → v4: rename puzzle IDs to difficulty-neutral names
         for (const oldId of Object.keys(file.puzzles)) {
           const newId = ID_RENAMES[oldId];
+          if (newId) {
+            file.puzzles[newId] = file.puzzles[oldId];
+            delete file.puzzles[oldId];
+          }
+        }
+        // v5 → v6: translate human-readable IDs to stable UUIDs
+        for (const oldId of Object.keys(file.puzzles)) {
+          const newId = LEGACY_ID_TO_UUID[oldId];
           if (newId) {
             file.puzzles[newId] = file.puzzles[oldId];
             delete file.puzzles[oldId];
@@ -229,19 +239,21 @@ export function runMigrations(): void {
     // Migrate the completed-set.
     // • Only invalidate BASE_QUESTIONS_CHANGED entries when coming from v2
     //   (they were validly re-completed by v3 users and must survive as-is).
-    // • Always apply ID_RENAMES (idempotent: new IDs are not in the map).
+    // • Always apply ID_RENAMES and LEGACY_ID_TO_UUID (both idempotent).
     const raw2 = localStorage.getItem('alch-completed-base');
     if (raw2 && originalVersion < SAVE_VERSION) {
       const ids: string[] = JSON.parse(raw2);
       const renamed = ids
         .filter(id => originalVersion >= 3 || !BASE_QUESTIONS_CHANGED.has(id))
-        .map(id => ID_RENAMES[id] ?? id);
+        .map(id => ID_RENAMES[id] ?? id)
+        .map(id => LEGACY_ID_TO_UUID[id] ?? id);
       localStorage.setItem('alch-completed-base', JSON.stringify(renamed));
     }
     // Rename last-puzzle key
     const lastRaw = localStorage.getItem('alch-last-puzzle-base');
-    if (lastRaw && ID_RENAMES[lastRaw]) {
-      localStorage.setItem('alch-last-puzzle-base', ID_RENAMES[lastRaw]);
+    if (lastRaw) {
+      const renamed = LEGACY_ID_TO_UUID[ID_RENAMES[lastRaw] ?? lastRaw] ?? ID_RENAMES[lastRaw] ?? lastRaw;
+      if (renamed !== lastRaw) localStorage.setItem('alch-last-puzzle-base', renamed);
     }
   } catch { /* ignore */ }
 
@@ -265,7 +277,7 @@ export function runMigrations(): void {
             try { localStorage.removeItem(`exp-solver-${id}`); } catch { /* ignore */ }
           }
         }
-        // v3 → v4: rename puzzle IDs
+        // v3 → v4: rename puzzle IDs to difficulty-neutral names
         for (const oldId of Object.keys(file.puzzles)) {
           const newId = ID_RENAMES[oldId];
           if (newId) {
@@ -276,6 +288,14 @@ export function runMigrations(): void {
         // v4 → v5: delete progress for legacy golem puzzles (replaced by joint-golem equivalents)
         for (const id of DELETED_IN_V5_EXPANDED) {
           delete file.puzzles[id];
+        }
+        // v5 → v6: translate human-readable IDs to stable UUIDs
+        for (const oldId of Object.keys(file.puzzles)) {
+          const newId = LEGACY_ID_TO_UUID[oldId];
+          if (newId) {
+            file.puzzles[newId] = file.puzzles[oldId];
+            delete file.puzzles[oldId];
+          }
         }
         file.version = SAVE_VERSION;
         localStorage.setItem(EXPANDED_KEY, JSON.stringify(file));
@@ -290,14 +310,16 @@ export function runMigrations(): void {
         const renamed = ids
           .filter(id => originalVersion >= 3 || !EXPANDED_QUESTIONS_CHANGED.has(id))
           .map(id => ID_RENAMES[id] ?? id)
-          .filter(id => !DELETED_IN_V5_EXPANDED.has(id));
+          .filter(id => !DELETED_IN_V5_EXPANDED.has(id))
+          .map(id => LEGACY_ID_TO_UUID[id] ?? id);
         localStorage.setItem(key, JSON.stringify(renamed));
       }
     }
     // Rename last-puzzle key
     const lastRaw = localStorage.getItem('alch-exp-last');
-    if (lastRaw && ID_RENAMES[lastRaw]) {
-      localStorage.setItem('alch-exp-last', ID_RENAMES[lastRaw]);
+    if (lastRaw) {
+      const renamed = LEGACY_ID_TO_UUID[ID_RENAMES[lastRaw] ?? lastRaw] ?? ID_RENAMES[lastRaw] ?? lastRaw;
+      if (renamed !== lastRaw) localStorage.setItem('alch-exp-last', renamed);
     }
   } catch { /* ignore */ }
 }
