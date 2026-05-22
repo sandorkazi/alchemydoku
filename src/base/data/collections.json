@@ -35,11 +35,12 @@
   {
     "id": "tutorial-two-color",
     "title": "The Two-Colour Rule",
-    "description": "Discover why a shared sign doesn't always produce the colour you expect \u2014 and how to use that to your advantage.",
+    "description": "Discover why a shared sign doesn't always produce the colour you expect — and how to use that to your advantage.",
     "difficulty": "tutorial",
     "puzzleIds": [
       "930b90e2-91b0-4061-b4c8-f4d8ebcacf89",
-      "35b29f6c-f3be-4038-8585-a58ae0a86466"
+      "de289e46-70b7-42f5-b899-4f4abfff2198",
+      "d5d792d4-6764-40e4-849e-bb6bd58ee546"
     ],
     "unlockedAfter": "tutorial-mixing"
   },
@@ -95,7 +96,7 @@
   {
     "id": "possible-outcomes",
     "title": "Possible Outcomes",
-    "description": "The evidence narrows things down \u2014 but not all the way. Mark every potion this pair could still produce.",
+    "description": "The evidence narrows things down — but not all the way. Mark every potion this pair could still produce.",
     "difficulty": "hard",
     "puzzleIds": [
       "48ea5158-8915-4165-9500-96695644c937",
@@ -128,7 +129,7 @@
   {
     "id": "tutorial-debunking-apprentice",
     "title": "Apprentice Debunking",
-    "description": "Learn how apprentice debunking reveals true aspect signs \u2014 whether the debunk succeeded or failed.",
+    "description": "Learn how apprentice debunking reveals true aspect signs — whether the debunk succeeded or failed.",
     "difficulty": "tutorial",
     "puzzleIds": [
       "5890e3a4-26ec-4a90-91dc-83888b1b2fe4",
@@ -139,7 +140,7 @@
   {
     "id": "tutorial-debunking-master",
     "title": "Master Debunking",
-    "description": "Learn how a witnessed mix constrains alchemicals \u2014 and what failure means.",
+    "description": "Learn how a witnessed mix constrains alchemicals — and what failure means.",
     "difficulty": "tutorial",
     "puzzleIds": [
       "b23c2960-746c-4216-b604-61f7383e632b",
@@ -164,7 +165,7 @@
   {
     "id": "expert-cross",
     "title": "All the Evidence",
-    "description": "Puzzles combining mixing, selling, and debunking clues \u2014 every tool at once.",
+    "description": "Puzzles combining mixing, selling, and debunking clues — every tool at once.",
     "difficulty": "hard",
     "puzzleIds": [
       "0f2eddb2-6e4d-4798-96b5-1c661ac77a23",
@@ -183,7 +184,7 @@
   {
     "id": "advanced-deduction",
     "title": "Aspect Deduction",
-    "description": "Identify which ingredients share a sign or size \u2014 a new kind of question using the same mixing logic.",
+    "description": "Identify which ingredients share a sign or size — a new kind of question using the same mixing logic.",
     "difficulty": "hard",
     "puzzleIds": [
       "08ad72a1-666e-4dd0-bcc7-fe1eb383339b",
@@ -211,7 +212,7 @@
   {
     "id": "debunk-master-planning",
     "title": "Advanced Debunk Planning",
-    "description": "Plans requiring master debunks \u2014 including the subtle conflict-only challenge.",
+    "description": "Plans requiring master debunks — including the subtle conflict-only challenge.",
     "difficulty": "medium",
     "puzzleIds": [
       "9193dabe-b122-477a-af3d-d55a16124249",
@@ -225,7 +226,7 @@
   {
     "id": "mixed-debunk-r",
     "title": "Witnessed Evidence, Master Debunk",
-    "description": "Use sell outcomes and revealed mix results \u2014 the same actions you'd perform at the table \u2014 to identify ingredients, then plan the shortest master debunk sequence.",
+    "description": "Use sell outcomes and revealed mix results — the same actions you'd perform at the table — to identify ingredients, then plan the shortest master debunk sequence.",
     "difficulty": "hard",
     "puzzleIds": [
       "ee718ef1-20f7-4ed6-a428-e53f1a0eac6a",
@@ -244,7 +245,7 @@
   {
     "id": "among-witnesses",
     "title": "Among Witnesses",
-    "description": "You never saw whose ingredients were involved \u2014 only overheard the outcomes. Deduce the full picture from fragmentary crowd knowledge.",
+    "description": "You never saw whose ingredients were involved — only overheard the outcomes. Deduce the full picture from fragmentary crowd knowledge.",
     "difficulty": "expert",
     "puzzleIds": [
       "bfbb8ae6-428b-42e5-b266-fdbb101f1e62",
@@ -278,7 +279,7 @@
   {
     "id": "entropy-mix",
     "title": "Best Experiment",
-    "description": "Find the single ingredient whose mixing result carries the most information \u2014 the Shannon-optimal experiment. Short puzzles, high precision required.",
+    "description": "Find the single ingredient whose mixing result carries the most information — the Shannon-optimal experiment. Short puzzles, high precision required.",
     "difficulty": "medium",
     "puzzleIds": [
       "f3ec5784-5204-48a5-ad9d-4bff1f4f93ec",
@@ -292,7 +293,7 @@
   {
     "id": "combo-base",
     "title": "The Full Arsenal",
-    "description": "Mixing, selling, debunking, and overheard reactions \u2014 all in play at once. No single clue type is sufficient; you'll need to cross-reference everything.",
+    "description": "Mixing, selling, debunking, and overheard reactions — all in play at once. No single clue type is sufficient; you'll need to cross-reference everything.",
     "difficulty": "hard",
     "puzzleIds": [
       "cfdf3deb-610e-4714-a680-774c095bf091",
@@ -326,7 +327,7 @@
   {
     "id": "mixed-clues",
     "title": "Mixed Clues",
-    "description": "Every puzzle has at least one ambiguous sell (opposite), one ambiguous sell (sign only), and one ambiguous mixing clue \u2014 overheard fragments that could point to any of 3 or 4 ingredients. Piece together the evidence.",
+    "description": "Every puzzle has at least one ambiguous sell (opposite), one ambiguous sell (sign only), and one ambiguous mixing clue — overheard fragments that could point to any of 3 or 4 ingredients. Piece together the evidence.",
     "difficulty": "medium",
     "puzzleIds": [
       "be957144-4c2c-46ec-b7d3-ca8abc04e0fb",
@@ -386,7 +387,7 @@
   {
     "id": "mixed-debunk",
     "title": "Mixed Evidence, Master Debunk",
-    "description": "These puzzles combine ambiguous sell clues, among-group observations, and master debunking. Use mixed evidence to identify which ingredients are wrong \u2014 then expose them.",
+    "description": "These puzzles combine ambiguous sell clues, among-group observations, and master debunking. Use mixed evidence to identify which ingredients are wrong — then expose them.",
     "difficulty": "extreme",
     "puzzleIds": [
       "24258308-6822-48cc-9250-40a31965d1ab",

@@ -58,24 +58,26 @@ The same logic applies cyclically: Green match → Green or Blue, Blue match →
 
 The two-colour rule correctly predicted the colour pair (Red or Green). Sizes determined which member of the pair won.
 
-Now let's see what happens when both Red signs match but the sizes also happen to be equal.`,
+Now let's see the rule at work when it's Blue signs that match — and how other clues let you eliminate one of the two candidates without checking sizes at all.`,
     emoji: '✅',
   },
   {
     kind: 'puzzle',
     id: 'tc-puzzle-2',
     puzzleId: 'tutorial-two-color-02',
-    banner: 'Red signs match again — but this time both Red aspects are the same size. The rule still narrows it to Red or Green. Which one?',
+    banner: 'Both ingredients are B+. The two-colour rule says the result is Blue or Red. The Red clues tell you which one wins.',
   },
   {
     kind: 'explain',
     id: 'tc-after-2',
-    title: 'Green Took Over',
-    body: `Red signs matched, so the result had to be Red or Green — and Green won.
+    title: 'Blue Wins When Red Signs Differ',
+    body: `Both ingredients were B+ — Blue signs matched — so the two-colour rule said: result is Blue or Red.
 
-Red couldn't resolve because both Red aspects had the same size. Green's signs also matched, and Green's sizes differed, so Green resolved instead.
+Then the Red clues did the work: one ingredient produced R− with its partner, the other produced R+. That means their Red signs are opposite, so Red cannot resolve.
 
-The two-colour rule gave you the pair. Sizes inside that pair decided the winner.`,
+With Red ruled out, Blue had to win. And since both ingredients were B+, the result is B+.
+
+You didn't need to know the Blue sizes at all — opposite Red signs eliminated the other candidate entirely.`,
     emoji: '✅',
   },
   {
@@ -88,9 +90,26 @@ The two-colour rule gave you the pair. Sizes inside that pair decided the winner
 🟢 Saw Green → Blue signs are different on the two ingredients (one B+, the other B−).
 🔵 Saw Blue → Red signs are different on the two ingredients (one R+, the other R−).
 
-This is powerful when combined with aspect clues: if you know an ingredient has R−, and the observed result was Red, then the other ingredient must also have R− (Red resolved, both share the same Red sign). And you now know their Green signs are different — if this ingredient has G+, the other has G−.
+This is powerful when combined with aspect clues: if you know the result was Blue and one ingredient is PPP (all large positive), then the other ingredient must have B+ (same Blue sign) and a different Blue size — and its Red sign must be opposite to PPP's R+, meaning R−.
 
-That extra constraint on Green comes for free from the result colour alone.`,
+That can narrow the unknown ingredient down to a single alchemical.`,
     emoji: '🔍',
+  },
+  {
+    kind: 'puzzle',
+    id: 'tc-puzzle-3',
+    puzzleId: 'tutorial-two-color-03',
+    banner: 'You know ing1 is G−, you know ing2 is PPP, and you know their mix is B+. Use the two-colour rule in reverse to identify ing1\'s alchemical.',
+  },
+  {
+    kind: 'explain',
+    id: 'tc-after-3',
+    title: 'Working Backwards',
+    body: `The result B+ told you Blue resolved — so both ingredients share B+ sign, and their Blue sizes differ.
+
+Since PPP has B+Large, ing1 must be B+Small. The G− clue then pinpointed the exact alchemical: only Nnp is G− with B+Small.
+
+Every result you observe is a free constraint on both ingredients simultaneously. The two-colour rule works just as well in reverse — and combined with even one aspect clue, it can fully identify an unknown alchemical.`,
+    emoji: '✅',
   },
 ];

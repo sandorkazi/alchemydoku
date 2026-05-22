@@ -440,5 +440,6 @@ export const LEGACY_ID_TO_UUID: Record<string, string> = {
   "tutorial-sell-01": "2f37baad-02d9-4446-a63a-2c2ec18f19b8",
   "tutorial-sell-02": "7c1bce7a-eb9a-4815-a0f7-d7c0b33a3573",
   "tutorial-two-color-01": "930b90e2-91b0-4061-b4c8-f4d8ebcacf89",
-  "tutorial-two-color-02": "35b29f6c-f3be-4038-8585-a58ae0a86466",
+  "tutorial-two-color-02": "de289e46-70b7-42f5-b899-4f4abfff2198",
+  "tutorial-two-color-03": "d5d792d4-6764-40e4-849e-bb6bd58ee546",
 };

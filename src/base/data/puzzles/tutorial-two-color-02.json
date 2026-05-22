@@ -1,18 +1,40 @@
 {
-  "id": "35b29f6c-f3be-4038-8585-a58ae0a86466",
-  "title": "Red Matches, Green Wins",
-  "description": "Both ingredients share Red+ again. The two-colour rule says Red or Green \u2014 but which one?",
+  "id": "de289e46-70b7-42f5-b899-4f4abfff2198",
+  "title": "Blue Wins When Red Splits",
+  "description": "Both ingredients are Blue+, but they give opposite Red results with their partners. Which colour wins?",
   "difficulty": "tutorial",
   "clues": [
     {
-      "kind": "assignment",
+      "kind": "aspect",
       "ingredient": 1,
-      "alchemical": 2
+      "color": "B",
+      "sign": "+"
     },
     {
-      "kind": "assignment",
+      "kind": "aspect",
       "ingredient": 2,
-      "alchemical": 3
+      "color": "B",
+      "sign": "+"
+    },
+    {
+      "kind": "mixing",
+      "ingredient1": 1,
+      "ingredient2": 3,
+      "result": {
+        "type": "potion",
+        "color": "R",
+        "sign": "-"
+      }
+    },
+    {
+      "kind": "mixing",
+      "ingredient1": 2,
+      "ingredient2": 4,
+      "result": {
+        "type": "potion",
+        "color": "R",
+        "sign": "+"
+      }
     }
   ],
   "questions": [
@@ -23,27 +45,27 @@
     }
   ],
   "solution": {
-    "1": 2,
-    "2": 3,
-    "3": 1,
-    "4": 4,
-    "5": 5,
-    "6": 6,
-    "7": 7,
-    "8": 8
+    "1": 4,
+    "2": 8,
+    "3": 5,
+    "4": 3,
+    "5": 1,
+    "6": 2,
+    "7": 6,
+    "8": 7
   },
   "hints": [
     {
       "level": 1,
-      "text": "Two-colour rule: pnP has R+, pNn has R+. Red signs match \u2192 result is Red or Green. Blue is still impossible."
+      "text": "Two-colour rule: ing1 is B+ and ing2 is B+. Blue signs match — the result must be Blue or Red."
     },
     {
       "level": 2,
-      "text": "Check if Red resolves: pnP has R+Small, pNn has R+Small. Signs match but sizes are BOTH Small \u2014 same size means Red cannot resolve. Move to Green."
+      "text": "Now check Red. ing1 mixes R- with ing3, so ing1 is R-. ing2 mixes R+ with ing4, so ing2 is R+. Opposite Red signs mean Red cannot resolve."
     },
     {
       "level": 3,
-      "text": "Green: pnP has G-Small, pNn has G-Large. Signs match (both \u2212), sizes differ \u2192 G\u2212 is the result. The two-colour rule was right: Red or Green. Red couldn't resolve, so Green took over."
+      "text": "Red is ruled out. Blue signs matched and sizes differ (ing1 is B+S, ing2 is B+L) — Blue resolves. Both are B+, so the result is B+."
     }
   ],
   "complexity": {
