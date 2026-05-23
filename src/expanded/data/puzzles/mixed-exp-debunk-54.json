@@ -1,5 +1,5 @@
 {
-  "id": "mixed-exp-debunk-54",
+  "id": "3a22ec67-7930-41aa-b059-bc24b214fd04",
   "mode": "expanded",
   "kind": "debunk",
   "title": "The Twist-Boat",
@@ -214,7 +214,7 @@
     {
       "look_at": "clue 3: sell constraint among {ing3, ing5, ing6}.",
       "means": "Selling results among {ing3, ing5, ing6} constrain possible alchemicals.",
-      "so": "ing3 has G-; ing5 has G-; ing6 has G-; cross off NNN, pNn from ing1; cross off NNN, pNn from ing2; cross off PPP, Ppn, nPp, npN from ing3; cross off NNN, pNn from ing4; cross off PPP, Ppn, nPp, npN from ing5; cross off PPP, Ppn, nPp, npN from ing6; cross off NNN, pNn from ing7; cross off NNN, pNn from ing8.",
+      "so": "ing3 has G-; ing5 has G-; ing6 has G-; cross off NNN, pNn from ing1; cross off NNN, pNn from ing2; cross off PPP, Ppn, nPp, npN from ing3; cross off NNN, pNn from ing4; cross off PPP, Ppn, nPp, npN from ing5; cross off PPP, Ppn, nPp, npN from ing6; cross off NNN, pNn from ing7; cross off NNN, pNn from ing8",
       "highlight": {
         "clue_indices": [
           2

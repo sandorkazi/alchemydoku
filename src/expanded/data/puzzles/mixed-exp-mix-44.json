@@ -1,5 +1,5 @@
 {
-  "id": "mixed-exp-mix-44",
+  "id": "0ba04176-6fa5-4095-a2cd-613fcf1bd611",
   "mode": "expanded",
   "title": "The Nucleation Site",
   "description": "Mixing, selling, and debunking records all point toward a single pair. Deduce what potion they produce.",
@@ -422,7 +422,7 @@
     {
       "look_at": "clue 5: exactly 1 of {ing1, ing7, ing8} are lunar.",
       "means": "Exactly 1 ingredient(s) in {ing1, ing7, ing8} must be lunar.",
-      "so": "ing2 is Nnp; ing3 is npN; ing8 is nPp; ing2 has G-; ing3 has R-; ing3 has G+; ing8 has G+; cross off nPp from ing2; cross off NNN, Ppn from ing3; cross off npN from ing4; cross off npN from ing5; cross off Nnp from ing8.",
+      "so": "ing2 is Nnp; ing3 is npN; ing8 is nPp; ing2 has G-; ing3 has R-; ing3 has G+; ing8 has G+; cross off nPp from ing2; cross off NNN, Ppn from ing3; cross off npN from ing4; cross off npN from ing5; cross off Nnp from ing8 ing3 + ing8 = G+.",
       "highlight": {
         "clue_indices": [
           4

@@ -1,5 +1,5 @@
 {
-  "id": "combo-exp-sl-04",
+  "id": "932f0fe0-c76b-466e-b9a7-2868d62b1f91",
   "mode": "expanded",
   "title": "The Initial Condition",
   "description": "Use the clues to determine whether the target ingredient is Solar or Lunar.",
@@ -255,7 +255,7 @@
     {
       "look_at": "clue 3.",
       "means": "Apply this clue to eliminate impossible alchemical assignments.",
-      "so": "ing1 is PPP; ing4 is NNN; ing1 has G+; ing1 has B+; ing2 has B-; ing3 has B-; ing4 has R-; ing4 has B-; ing7 has B+; ing8 has B+; cross off Ppn, pNn, pnP from ing1; cross off PPP, pnP from ing2; cross off PPP, pnP from ing3; cross off Nnp, pNn, pnP from ing4; cross off NNN, pNn from ing7; cross off NNN, pNn from ing8.",
+      "so": "ing1 is PPP; ing4 is NNN; ing1 has G+; ing1 has B+; ing2 has B-; ing3 has B-; ing4 has R-; ing4 has B-; ing7 has B+; ing8 has B+; cross off Ppn, pNn, pnP from ing1; cross off PPP, pnP from ing2; cross off PPP, pnP from ing3; cross off Nnp, pNn, pnP from ing4; cross off NNN, pNn from ing7; cross off NNN, pNn from ing8 ing4 is lunar.",
       "highlight": {
         "clue_indices": [
           2

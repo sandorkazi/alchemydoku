@@ -26,7 +26,7 @@ PASS=0
 
 if [ -z "${NO_PUZZLE_CHECK:-}" ]; then
   PUZZLE_FILES=$(printf '%s\n' "$STAGED" \
-    | grep -E '(src/(expanded/)?data/puzzles/.*\.json|src/data/puzzles/index\.ts|src/expanded/data/puzzlesIndex\.ts)' \
+    | grep -E '(src/(base|expanded)/data/puzzles/.*\.json|src/base/data/index\.ts|src/expanded/data/puzzlesIndex\.ts)' \
     || true)
 
   if [ -n "$PUZZLE_FILES" ]; then

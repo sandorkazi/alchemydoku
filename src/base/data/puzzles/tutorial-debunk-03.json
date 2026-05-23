@@ -1,0 +1,70 @@
+{
+  "id": "6457fbae-c412-4b2c-9bcd-c8763dbb1899",
+  "title": "Proof by Contradiction",
+  "description": "A failed debunk tells you what the mix is NOT. Use that, plus the aspect clues, to nail down the answer by elimination.",
+  "difficulty": "tutorial",
+  "clues": [
+    {
+      "kind": "assignment",
+      "ingredient": 4,
+      "alchemical": 7
+    },
+    {
+      "kind": "aspect",
+      "ingredient": 2,
+      "color": "R",
+      "sign": "-"
+    },
+    {
+      "kind": "debunk",
+      "variant": "master",
+      "ingredient1": 2,
+      "ingredient2": 4,
+      "claimedPotion": {
+        "type": "potion",
+        "color": "R",
+        "sign": "-"
+      },
+      "outcome": "failure"
+    }
+  ],
+  "solution": {
+    "1": 2,
+    "2": 5,
+    "3": 8,
+    "4": 7,
+    "5": 6,
+    "6": 4,
+    "7": 3,
+    "8": 1
+  },
+  "hints": [
+    {
+      "level": 1,
+      "text": "Ingredient 4 is a known alchemical. Ingredient 2 has R\u2212. List out all possible results for mix(ing2, ing4) given these two facts."
+    },
+    {
+      "level": 2,
+      "text": "Ingredient 4 is alchemical NNN (all Large Negative). Both ingredient 2 and ingredient 4 have R\u2212, so R is a candidate colour in the result. But G could also dominate depending on ingredient 2's G aspect. The failed debunk eliminates one of the two candidates."
+    },
+    {
+      "level": 3,
+      "text": "With ing2 R\u2212 matching ing4 R\u2212, mix(2,4) can only produce R\u2212 or G\u2212. The failed debunk proves mix(2,4) \u2260 R\u2212. By elimination, the answer must be G\u2212."
+    }
+  ],
+  "questions": [
+    {
+      "kind": "mixing-result",
+      "ingredient1": 2,
+      "ingredient2": 4
+    }
+  ],
+  "complexity": {
+    "score": 31,
+    "raw_score": 15,
+    "clue_score": 0,
+    "question_score": 0,
+    "world_score": 5,
+    "residual_worlds": 720
+  }
+}

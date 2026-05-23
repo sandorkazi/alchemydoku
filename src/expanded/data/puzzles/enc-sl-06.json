@@ -1,5 +1,5 @@
 {
-  "id": "enc-sl-06",
+  "id": "04cd9ffe-9f9d-4833-b29a-3bf1de6e680a",
   "mode": "expanded",
   "title": "The Research Chronicle",
   "description": "A partial encyclopedia article lists three ingredients on the same aspect. Use the supporting clues to identify the fourth.",
@@ -260,7 +260,7 @@
     {
       "look_at": "clue 3: ing1 + ing2 = neutral.",
       "means": "A neutral result means ing1 and ing2 have opposite signs in every color.",
-      "so": "ing1 has G+; ing4 has G-; ing8 has G-; cross off pNn, pnP from ing1; cross off PPP, Ppn from ing4; cross off PPP, Ppn from ing8.",
+      "so": "ing1 has G+; ing4 has G-; ing8 has G-; cross off pNn, pnP from ing1; cross off PPP, Ppn from ing4; cross off PPP, Ppn from ing8 The missing G+ ingredient is ing1.",
       "highlight": {
         "clue_indices": [
           2

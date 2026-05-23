@@ -1,5 +1,5 @@
 {
-  "id": "exp-easy-sl-02",
+  "id": "472652ce-6eb0-4d71-b12c-1f682c98aabf",
   "mode": "expanded",
   "title": "Pending Review",
   "description": "Use the clues to deduce which alchemical belongs to the target ingredient.",
@@ -422,7 +422,7 @@
     {
       "look_at": "clue 5: ing1 + ing7 = R-.",
       "means": "When two ingredients mix to R-, both share R-. Any candidate without R- is impossible for either slot.",
-      "so": "ing7 is nPp; ing5 has R+; ing7 has R-; ing7 has G+; ing8 has R+; cross off nPp from ing5; cross off PPP, pnP from ing7; cross off nPp from ing8.",
+      "so": "ing7 is nPp; ing5 has R+; ing7 has R-; ing7 has G+; ing8 has R+; cross off nPp from ing5; cross off PPP, pnP from ing7; cross off nPp from ing8 ing7 is nPp.",
       "highlight": {
         "clue_indices": [
           4

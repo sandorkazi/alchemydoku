@@ -1,5 +1,5 @@
 {
-  "id": "mixed-exp-mix-47",
+  "id": "bb878c32-de2f-4d19-8f6a-ce8c67c56bd4",
   "mode": "expanded",
   "title": "The Through-Space Interaction",
   "description": "Mixing, selling, and debunking records all point toward a single pair. Deduce what potion they produce.",
@@ -418,7 +418,7 @@
     {
       "look_at": "clue 1: sell constraint among {ing3, ing4, ing5}.",
       "means": "Selling results among {ing3, ing4, ing5} constrain possible alchemicals.",
-      "so": "ing2 is npN; ing4 is NNN; ing5 is Nnp; ing2 has G+; ing4 has G-; ing5 has G-; cross off NNN from ing2; cross off npN from ing4; cross off nPp from ing5; cross off Nnp from ing6; cross off Nnp from ing7.",
+      "so": "ing2 is npN; ing4 is NNN; ing5 is Nnp; ing2 has G+; ing4 has G-; ing5 has G-; cross off NNN from ing2; cross off npN from ing4; cross off nPp from ing5; cross off Nnp from ing6; cross off Nnp from ing7 ing2 + ing3 = G+.",
       "highlight": {
         "clue_indices": [
           0

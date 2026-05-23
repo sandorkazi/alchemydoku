@@ -1,0 +1,122 @@
+{
+  "id": "5c782b42-b518-4b48-9b4d-a78a2c5e7d66",
+  "title": "The Barren Path",
+  "description": "Find all ingredients that can never produce the target potion with any partner in any remaining world.",
+  "difficulty": "easy",
+  "clues": [
+    {
+      "kind": "mixing",
+      "ingredient1": 1,
+      "ingredient2": 2,
+      "result": {
+        "type": "neutral"
+      }
+    },
+    {
+      "kind": "mixing",
+      "ingredient1": 2,
+      "ingredient2": 8,
+      "result": {
+        "color": "R",
+        "sign": "+"
+      }
+    }
+  ],
+  "questions": [
+    {
+      "kind": "guaranteed-non-producer",
+      "potion": {
+        "type": "potion",
+        "color": "R",
+        "sign": "+"
+      }
+    }
+  ],
+  "solution": {
+    "1": 1,
+    "2": 2,
+    "3": 6,
+    "4": 3,
+    "5": 4,
+    "6": 7,
+    "7": 5,
+    "8": 8
+  },
+  "hints": [],
+  "complexity": {
+    "score": 31,
+    "raw_score": 15,
+    "clue_score": 0,
+    "question_score": 5,
+    "world_score": 0,
+    "residual_worlds": 960
+  },
+  "hint_steps": [
+    {
+      "look_at": "clue 2: ing2 + ing8 = R+.",
+      "means": "When two ingredients mix to R+, both share R+. Any candidate without R+ is impossible for either slot.",
+      "so": "ing1 has R-; ing2 has R+; ing8 has R+; cross off PPP, Ppn, pNn, pnP from ing1; cross off NNN, Nnp, nPp, npN from ing2; cross off NNN, Nnp, nPp, npN from ing8",
+      "highlight": {
+        "clue_indices": [
+          1
+        ],
+        "ingredients": [
+          2,
+          8
+        ]
+      },
+      "impact": {
+        "confirmed_alchemicals": [],
+        "confirmed_aspects": [
+          {
+            "ingredient": 1,
+            "color": "R",
+            "sign": "-"
+          },
+          {
+            "ingredient": 2,
+            "color": "R",
+            "sign": "+"
+          },
+          {
+            "ingredient": 8,
+            "color": "R",
+            "sign": "+"
+          }
+        ],
+        "eliminated_cells": [
+          {
+            "ingredient": 1,
+            "alchemicals": [
+              "PPP",
+              "Ppn",
+              "pNn",
+              "pnP"
+            ]
+          },
+          {
+            "ingredient": 2,
+            "alchemicals": [
+              "NNN",
+              "Nnp",
+              "nPp",
+              "npN"
+            ]
+          },
+          {
+            "ingredient": 8,
+            "alchemicals": [
+              "NNN",
+              "Nnp",
+              "nPp",
+              "npN"
+            ]
+          }
+        ]
+      },
+      "reveals_answer": true,
+      "worlds_before": 5760,
+      "worlds_after": 960
+    }
+  ]
+}

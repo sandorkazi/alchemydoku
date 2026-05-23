@@ -1,5 +1,5 @@
 {
-  "id": "enc-06",
+  "id": "1bcdfa4b-c326-40e6-b8c5-fc3df4301924",
   "mode": "expanded",
   "title": "The Waking Stone",
   "description": "A partial encyclopedia article lists three ingredients on the same aspect. Use the supporting clues to identify the fourth.",
@@ -392,7 +392,7 @@
     {
       "look_at": "clue 4: ing3 + ing5 = R+.",
       "means": "When two ingredients mix to R+, both share R+. Any candidate without R+ is impossible for either slot.",
-      "so": "ing3 is pNn; ing4 is Ppn; ing5 is PPP; ing6 is nPp; ing3 has G-; ing4 has G+; ing5 has R+; ing6 has R-; cross off Ppn from ing3; cross off pNn from ing4; cross off nPp from ing5; cross off PPP from ing6.",
+      "so": "ing3 is pNn; ing4 is Ppn; ing5 is PPP; ing6 is nPp; ing3 has G-; ing4 has G+; ing5 has R+; ing6 has R-; cross off Ppn from ing3; cross off pNn from ing4; cross off nPp from ing5; cross off PPP from ing6 The missing G+ ingredient is ing4.",
       "highlight": {
         "clue_indices": [
           3

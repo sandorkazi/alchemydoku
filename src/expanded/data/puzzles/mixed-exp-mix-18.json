@@ -1,5 +1,5 @@
 {
-  "id": "mixed-exp-mix-18",
+  "id": "787158ff-f5c0-47ee-b7e1-91a29a6fc075",
   "mode": "expanded",
   "title": "The Confiscated Notes",
   "description": "Mixing, selling, and debunking records all point toward a single pair. Deduce what potion they produce.",
@@ -479,7 +479,7 @@
     {
       "look_at": "clue 2: exactly 1 of {ing1, ing3, ing7} are lunar.",
       "means": "Exactly 1 ingredient(s) in {ing1, ing3, ing7} must be lunar.",
-      "so": "ing1 is Ppn; ing2 is PPP; ing5 is pnP; ing1 has B-; ing2 has G+; ing4 has R-; ing4 has B+; ing5 has R+; ing6 has R-; ing6 has B+; cross off PPP from ing1; cross off pnP from ing2; cross off Ppn from ing4; cross off Nnp from ing5; cross off Ppn from ing6.",
+      "so": "ing1 is Ppn; ing2 is PPP; ing5 is pnP; ing1 has B-; ing2 has G+; ing4 has R-; ing4 has B+; ing5 has R+; ing6 has R-; ing6 has B+; cross off PPP from ing1; cross off pnP from ing2; cross off Ppn from ing4; cross off Nnp from ing5; cross off Ppn from ing6 ing5 + ing6 = B+.",
       "highlight": {
         "clue_indices": [
           1

@@ -2,7 +2,7 @@ import { describe, it, expect } from 'vitest';
 import {
   isSolar, solarLunarOf, SOLAR_ALCH_IDS, LUNAR_ALCH_IDS,
 } from '../../../src/expanded/logic/solarLunar';
-import { SIGN_TABLE } from '../../../src/logic/worldPack';
+import { SIGN_TABLE } from '@shared/logic/worldPack';
 
 /** Number of minus-sign aspects for a 1-indexed alchemical ID. */
 function minusCount(alchId: number): number {

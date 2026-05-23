@@ -1,0 +1,95 @@
+{
+  "id": "d8a29903-e8fa-42a2-bf69-3ebe300b15ba",
+  "title": "The Slice Genus",
+  "description": "The evidence narrows things down \u2014 but not all the way. Mark every potion this pair could still produce.",
+  "difficulty": "easy",
+  "clues": [
+    {
+      "kind": "debunk",
+      "variant": "master",
+      "ingredient1": 3,
+      "ingredient2": 7,
+      "claimedPotion": {
+        "color": "G",
+        "sign": "-"
+      },
+      "outcome": "success"
+    }
+  ],
+  "questions": [
+    {
+      "kind": "possible-potions",
+      "ingredient1": 4,
+      "ingredient2": 7
+    }
+  ],
+  "solution": {
+    "1": 3,
+    "2": 8,
+    "3": 7,
+    "4": 6,
+    "5": 5,
+    "6": 1,
+    "7": 2,
+    "8": 4
+  },
+  "hints": [],
+  "complexity": {
+    "score": 57,
+    "raw_score": 35,
+    "clue_score": 0,
+    "question_score": 5,
+    "world_score": 20,
+    "residual_worlds": 5760
+  },
+  "hint_steps": [
+    {
+      "look_at": "clue 1.",
+      "means": "Apply this clue to eliminate impossible alchemical assignments.",
+      "so": "ing3 has G-; ing7 has G-; cross off PPP, Ppn, nPp, npN from ing3; cross off PPP, Ppn, nPp, npN from ing7 ing4 + ing7 can produce: B-, B+, G-, R-, R+, neutral.",
+      "highlight": {
+        "clue_indices": [
+          0
+        ]
+      },
+      "impact": {
+        "confirmed_alchemicals": [],
+        "confirmed_aspects": [
+          {
+            "ingredient": 3,
+            "color": "G",
+            "sign": "-"
+          },
+          {
+            "ingredient": 7,
+            "color": "G",
+            "sign": "-"
+          }
+        ],
+        "eliminated_cells": [
+          {
+            "ingredient": 3,
+            "alchemicals": [
+              "PPP",
+              "Ppn",
+              "nPp",
+              "npN"
+            ]
+          },
+          {
+            "ingredient": 7,
+            "alchemicals": [
+              "PPP",
+              "Ppn",
+              "nPp",
+              "npN"
+            ]
+          }
+        ]
+      },
+      "reveals_answer": true,
+      "worlds_before": 40320,
+      "worlds_after": 5760
+    }
+  ]
+}

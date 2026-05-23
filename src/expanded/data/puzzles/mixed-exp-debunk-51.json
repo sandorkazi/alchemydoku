@@ -1,5 +1,5 @@
 {
-  "id": "mixed-exp-debunk-51",
+  "id": "11235ed5-2450-46c5-9a90-d22ebdc5d199",
   "mode": "expanded",
   "kind": "debunk",
   "title": "The General Rule",
@@ -223,7 +223,7 @@
     {
       "look_at": "clue 3: sell constraint among {ing1, ing3, ing6, ing7}.",
       "means": "Selling results among {ing1, ing3, ing6, ing7} constrain possible alchemicals.",
-      "so": "cross off NNN, Nnp, npN, pNn from ing1; cross off PPP, Ppn, nPp, pnP from ing2; cross off NNN, Nnp, npN, pNn from ing3; cross off PPP, Ppn, nPp, pnP from ing4; cross off PPP, Ppn, nPp, pnP from ing5; cross off NNN, Nnp, npN, pNn from ing6; cross off NNN, Nnp, npN, pNn from ing7; cross off PPP, Ppn, nPp, pnP from ing8.",
+      "so": "cross off NNN, Nnp, npN, pNn from ing1; cross off PPP, Ppn, nPp, pnP from ing2; cross off NNN, Nnp, npN, pNn from ing3; cross off PPP, Ppn, nPp, pnP from ing4; cross off PPP, Ppn, nPp, pnP from ing5; cross off NNN, Nnp, npN, pNn from ing6; cross off NNN, Nnp, npN, pNn from ing7; cross off PPP, Ppn, nPp, pnP from ing8",
       "highlight": {
         "clue_indices": [
           2

@@ -1,5 +1,5 @@
 {
-  "id": "mixed-exp-mix-48",
+  "id": "709d6c6b-947b-4779-adcd-89649d5e752e",
   "mode": "expanded",
   "title": "The Fluorescence Test",
   "description": "Mixing, selling, and debunking records all point toward a single pair. Deduce what potion they produce.",
@@ -397,7 +397,7 @@
     {
       "look_at": "clue 6: exactly 1 of {ing1, ing2, ing6} are lunar.",
       "means": "Exactly 1 ingredient(s) in {ing1, ing2, ing6} must be lunar.",
-      "so": "ing4 is Nnp; ing5 is PPP; ing4 has R-; ing4 has G-; ing5 has R+; cross off Nnp, PPP from ing2; cross off PPP from ing4; cross off nPp from ing5.",
+      "so": "ing4 is Nnp; ing5 is PPP; ing4 has R-; ing4 has G-; ing5 has R+; cross off Nnp, PPP from ing2; cross off PPP from ing4; cross off nPp from ing5 ing4 + ing5 = B+.",
       "highlight": {
         "clue_indices": [
           5

@@ -1,5 +1,5 @@
 {
-  "id": "mixed-exp-mix-17",
+  "id": "8fb7ee4c-faa8-4d0a-8a83-b43717ad02be",
   "mode": "expanded",
   "title": "The Unique Rectangle",
   "description": "Mixing, selling, and debunking records all point toward a single pair. Deduce what potion they produce.",
@@ -499,7 +499,7 @@
     {
       "look_at": "clue 1: sell constraint among {ing3, ing7, ing8}.",
       "means": "Selling results among {ing3, ing7, ing8} constrain possible alchemicals.",
-      "so": "ing4 is pnP; ing8 is pNn; ing4 has B+; ing8 has B-; cross off pNn from ing4; cross off pnP from ing8.",
+      "so": "ing4 is pnP; ing8 is pNn; ing4 has B+; ing8 has B-; cross off pNn from ing4; cross off pnP from ing8 ing2 + ing4 = B+.",
       "highlight": {
         "clue_indices": [
           0

@@ -1,0 +1,1517 @@
+{
+  "id": "b755609a-92de-4789-ae9c-c7c1fc2dc31c",
+  "title": "The Witness Circle",
+  "description": "You watched the other players trade and mix across the table \u2014 but never saw whose ingredients were involved. Piece together what you overheard.",
+  "difficulty": "hard",
+  "clues": [
+    {
+      "kind": "mixing_among",
+      "ingredients": [
+        1,
+        2,
+        5
+      ],
+      "result": {
+        "type": "potion",
+        "color": "R",
+        "sign": "+"
+      }
+    },
+    {
+      "kind": "mixing_among",
+      "ingredients": [
+        3,
+        6,
+        8
+      ],
+      "result": {
+        "type": "potion",
+        "color": "R",
+        "sign": "-"
+      }
+    },
+    {
+      "kind": "mixing_among",
+      "ingredients": [
+        4,
+        7,
+        8
+      ],
+      "result": {
+        "type": "potion",
+        "color": "B",
+        "sign": "+"
+      }
+    },
+    {
+      "kind": "mixing_among",
+      "ingredients": [
+        2,
+        3,
+        4
+      ],
+      "result": {
+        "type": "potion",
+        "color": "G",
+        "sign": "+"
+      }
+    },
+    {
+      "kind": "mixing_among",
+      "ingredients": [
+        5,
+        6,
+        7
+      ],
+      "result": {
+        "type": "potion",
+        "color": "G",
+        "sign": "-"
+      }
+    },
+    {
+      "kind": "mixing_among",
+      "ingredients": [
+        2,
+        7,
+        8
+      ],
+      "result": {
+        "type": "potion",
+        "color": "R",
+        "sign": "-"
+      }
+    },
+    {
+      "kind": "mixing_among",
+      "ingredients": [
+        3,
+        5,
+        8
+      ],
+      "result": {
+        "type": "potion",
+        "color": "B",
+        "sign": "+"
+      }
+    },
+    {
+      "kind": "aspect",
+      "ingredient": 1,
+      "color": "R",
+      "sign": "+"
+    },
+    {
+      "kind": "aspect",
+      "ingredient": 5,
+      "color": "R",
+      "sign": "+"
+    },
+    {
+      "kind": "aspect",
+      "ingredient": 6,
+      "color": "G",
+      "sign": "-"
+    },
+    {
+      "kind": "aspect",
+      "ingredient": 1,
+      "color": "B",
+      "sign": "-"
+    },
+    {
+      "kind": "aspect",
+      "ingredient": 3,
+      "color": "B",
+      "sign": "-"
+    },
+    {
+      "kind": "aspect",
+      "ingredient": 2,
+      "color": "R",
+      "sign": "+"
+    },
+    {
+      "kind": "aspect",
+      "ingredient": 2,
+      "color": "G",
+      "sign": "+"
+    }
+  ],
+  "questions": [
+    {
+      "kind": "mixing-result",
+      "ingredient1": 2,
+      "ingredient2": 4
+    },
+    {
+      "kind": "mixing-result",
+      "ingredient1": 4,
+      "ingredient2": 8
+    },
+    {
+      "kind": "mixing-result",
+      "ingredient1": 7,
+      "ingredient2": 8
+    }
+  ],
+  "solution": {
+    "1": 3,
+    "2": 6,
+    "3": 1,
+    "4": 8,
+    "5": 2,
+    "6": 7,
+    "7": 4,
+    "8": 5
+  },
+  "complexity": {
+    "score": 80,
+    "raw_score": 65,
+    "clue_score": 35,
+    "question_score": 0,
+    "world_score": 20,
+    "residual_worlds": 3
+  },
+  "hints": [],
+  "hint_steps": [
+    {
+      "look_at": "clue 6: at least one pair among {ing2, ing7, ing8} mixes to R-.",
+      "means": "Every world must contain at least one pair in {ing2, ing7, ing8} whose mix result is R-.",
+      "so": "cross off PPP, pnP from ing2.",
+      "highlight": {
+        "clue_indices": [
+          5
+        ],
+        "ingredients": [
+          2,
+          7,
+          8
+        ]
+      },
+      "impact": {
+        "confirmed_alchemicals": [],
+        "confirmed_aspects": [],
+        "eliminated_cells": [
+          {
+            "ingredient": 2,
+            "alchemicals": [
+              "PPP",
+              "pnP"
+            ]
+          }
+        ]
+      },
+      "reveals_answer": false,
+      "worlds_before": 1472,
+      "worlds_after": 424
+    },
+    {
+      "look_at": "clue 12: ing3 has B-.",
+      "means": "This directly tells us the B sign of ing3.",
+      "so": "ing3 has B-; ing5 has R+; ing5 has B+; ing8 has R-; ing8 has B+; cross off PPP, pnP from ing1; cross off Nnp, PPP, nPp, pnP from ing3; cross off NNN, Nnp, Ppn, nPp, npN, pNn from ing5; cross off PPP, pnP from ing6; cross off NNN, PPP, Ppn, npN, pNn, pnP from ing8.",
+      "highlight": {
+        "clue_indices": [
+          11
+        ],
+        "ingredients": [
+          3
+        ]
+      },
+      "impact": {
+        "confirmed_alchemicals": [],
+        "confirmed_aspects": [
+          {
+            "ingredient": 3,
+            "color": "B",
+            "sign": "-"
+          },
+          {
+            "ingredient": 5,
+            "color": "R",
+            "sign": "+"
+          },
+          {
+            "ingredient": 5,
+            "color": "B",
+            "sign": "+"
+          },
+          {
+            "ingredient": 8,
+            "color": "R",
+            "sign": "-"
+          },
+          {
+            "ingredient": 8,
+            "color": "B",
+            "sign": "+"
+          }
+        ],
+        "eliminated_cells": [
+          {
+            "ingredient": 1,
+            "alchemicals": [
+              "PPP",
+              "pnP"
+            ]
+          },
+          {
+            "ingredient": 3,
+            "alchemicals": [
+              "Nnp",
+              "PPP",
+              "nPp",
+              "pnP"
+            ]
+          },
+          {
+            "ingredient": 5,
+            "alchemicals": [
+              "NNN",
+              "Nnp",
+              "Ppn",
+              "nPp",
+              "npN",
+              "pNn"
+            ]
+          },
+          {
+            "ingredient": 6,
+            "alchemicals": [
+              "PPP",
+              "pnP"
+            ]
+          },
+          {
+            "ingredient": 8,
+            "alchemicals": [
+              "NNN",
+              "PPP",
+              "Ppn",
+              "npN",
+              "pNn",
+              "pnP"
+            ]
+          }
+        ]
+      },
+      "reveals_answer": false,
+      "worlds_before": 424,
+      "worlds_after": 144
+    },
+    {
+      "look_at": "clue 13: ing2 has R+.",
+      "means": "This directly tells us the R sign of ing2.",
+      "so": "ing2 has R+; ing2 has B-; ing4 has R+; ing4 has B+; ing7 has R-; cross off NNN, Nnp, nPp, npN from ing2; cross off NNN, Nnp, Ppn, nPp, npN, pNn from ing4; cross off PPP, Ppn, pNn, pnP from ing7.",
+      "highlight": {
+        "clue_indices": [
+          12
+        ],
+        "ingredients": [
+          2
+        ]
+      },
+      "impact": {
+        "confirmed_alchemicals": [],
+        "confirmed_aspects": [
+          {
+            "ingredient": 2,
+            "color": "R",
+            "sign": "+"
+          },
+          {
+            "ingredient": 2,
+            "color": "B",
+            "sign": "-"
+          },
+          {
+            "ingredient": 4,
+            "color": "R",
+            "sign": "+"
+          },
+          {
+            "ingredient": 4,
+            "color": "B",
+            "sign": "+"
+          },
+          {
+            "ingredient": 7,
+            "color": "R",
+            "sign": "-"
+          }
+        ],
+        "eliminated_cells": [
+          {
+            "ingredient": 2,
+            "alchemicals": [
+              "NNN",
+              "Nnp",
+              "nPp",
+              "npN"
+            ]
+          },
+          {
+            "ingredient": 4,
+            "alchemicals": [
+              "NNN",
+              "Nnp",
+              "Ppn",
+              "nPp",
+              "npN",
+              "pNn"
+            ]
+          },
+          {
+            "ingredient": 7,
+            "alchemicals": [
+              "PPP",
+              "Ppn",
+              "pNn",
+              "pnP"
+            ]
+          }
+        ]
+      },
+      "reveals_answer": false,
+      "worlds_before": 144,
+      "worlds_after": 52
+    },
+    {
+      "look_at": "clue 4: at least one pair among {ing2, ing3, ing4} mixes to G+.",
+      "means": "Every world must contain at least one pair in {ing2, ing3, ing4} whose mix result is G+.",
+      "so": "ing4 is PPP; ing5 is pnP; ing4 has G+; ing5 has G-; cross off Ppn from ing3; cross off pnP from ing4; cross off PPP from ing5; cross off Ppn from ing6.",
+      "highlight": {
+        "clue_indices": [
+          3
+        ],
+        "ingredients": [
+          2,
+          3,
+          4
+        ]
+      },
+      "impact": {
+        "confirmed_alchemicals": [
+          {
+            "ingredient": 4,
+            "alchemical": "PPP"
+          },
+          {
+            "ingredient": 5,
+            "alchemical": "pnP"
+          }
+        ],
+        "confirmed_aspects": [
+          {
+            "ingredient": 4,
+            "color": "G",
+            "sign": "+"
+          },
+          {
+            "ingredient": 5,
+            "color": "G",
+            "sign": "-"
+          }
+        ],
+        "eliminated_cells": [
+          {
+            "ingredient": 3,
+            "alchemicals": [
+              "Ppn"
+            ]
+          },
+          {
+            "ingredient": 4,
+            "alchemicals": [
+              "pnP"
+            ]
+          },
+          {
+            "ingredient": 5,
+            "alchemicals": [
+              "PPP"
+            ]
+          },
+          {
+            "ingredient": 6,
+            "alchemicals": [
+              "Ppn"
+            ]
+          }
+        ]
+      },
+      "reveals_answer": false,
+      "worlds_before": 52,
+      "worlds_after": 23
+    },
+    {
+      "look_at": "clue 8: ing1 has R+.",
+      "means": "This directly tells us the R sign of ing1.",
+      "so": "ing1 has R+; ing1 has B-; ing3 has R-; ing6 has R-; cross off NNN, Nnp, nPp, npN from ing1; cross off pNn from ing3; cross off pNn from ing6.",
+      "highlight": {
+        "clue_indices": [
+          7
+        ],
+        "ingredients": [
+          1
+        ]
+      },
+      "impact": {
+        "confirmed_alchemicals": [],
+        "confirmed_aspects": [
+          {
+            "ingredient": 1,
+            "color": "R",
+            "sign": "+"
+          },
+          {
+            "ingredient": 1,
+            "color": "B",
+            "sign": "-"
+          },
+          {
+            "ingredient": 3,
+            "color": "R",
+            "sign": "-"
+          },
+          {
+            "ingredient": 6,
+            "color": "R",
+            "sign": "-"
+          }
+        ],
+        "eliminated_cells": [
+          {
+            "ingredient": 1,
+            "alchemicals": [
+              "NNN",
+              "Nnp",
+              "nPp",
+              "npN"
+            ]
+          },
+          {
+            "ingredient": 3,
+            "alchemicals": [
+              "pNn"
+            ]
+          },
+          {
+            "ingredient": 6,
+            "alchemicals": [
+              "pNn"
+            ]
+          }
+        ]
+      },
+      "reveals_answer": false,
+      "worlds_before": 23,
+      "worlds_after": 9
+    },
+    {
+      "look_at": "clue 5: at least one pair among {ing5, ing6, ing7} mixes to G-.",
+      "means": "Every world must contain at least one pair in {ing5, ing6, ing7} whose mix result is G-.",
+      "so": "ing3 is npN; ing3 has G+; ing6 has G-; cross off NNN from ing3; cross off nPp, npN from ing6; cross off npN from ing7.",
+      "highlight": {
+        "clue_indices": [
+          4
+        ],
+        "ingredients": [
+          5,
+          6,
+          7
+        ]
+      },
+      "impact": {
+        "confirmed_alchemicals": [
+          {
+            "ingredient": 3,
+            "alchemical": "npN"
+          }
+        ],
+        "confirmed_aspects": [
+          {
+            "ingredient": 3,
+            "color": "G",
+            "sign": "+"
+          },
+          {
+            "ingredient": 6,
+            "color": "G",
+            "sign": "-"
+          }
+        ],
+        "eliminated_cells": [
+          {
+            "ingredient": 3,
+            "alchemicals": [
+              "NNN"
+            ]
+          },
+          {
+            "ingredient": 6,
+            "alchemicals": [
+              "nPp",
+              "npN"
+            ]
+          },
+          {
+            "ingredient": 7,
+            "alchemicals": [
+              "npN"
+            ]
+          }
+        ]
+      },
+      "reveals_answer": false,
+      "worlds_before": 9,
+      "worlds_after": 6
+    },
+    {
+      "look_at": "clue 14: ing2 has G+.",
+      "means": "This directly tells us the G sign of ing2.",
+      "so": "ing1 is pNn; ing2 is Ppn; ing1 has G-; ing2 has G+; cross off Ppn from ing1; cross off pNn from ing2 ing2 + ing4 = G+.",
+      "highlight": {
+        "clue_indices": [
+          13
+        ],
+        "ingredients": [
+          2
+        ]
+      },
+      "impact": {
+        "confirmed_alchemicals": [
+          {
+            "ingredient": 1,
+            "alchemical": "pNn"
+          },
+          {
+            "ingredient": 2,
+            "alchemical": "Ppn"
+          }
+        ],
+        "confirmed_aspects": [
+          {
+            "ingredient": 1,
+            "color": "G",
+            "sign": "-"
+          },
+          {
+            "ingredient": 2,
+            "color": "G",
+            "sign": "+"
+          }
+        ],
+        "eliminated_cells": [
+          {
+            "ingredient": 1,
+            "alchemicals": [
+              "Ppn"
+            ]
+          },
+          {
+            "ingredient": 2,
+            "alchemicals": [
+              "pNn"
+            ]
+          }
+        ]
+      },
+      "reveals_answer": true,
+      "worlds_before": 6,
+      "worlds_after": 3
+    },
+    {
+      "look_at": "clue 6: at least one pair among {ing2, ing7, ing8} mixes to R-.",
+      "means": "Every world must contain at least one pair in {ing2, ing7, ing8} whose mix result is R-.",
+      "so": "cross off PPP, pnP from ing2.",
+      "highlight": {
+        "clue_indices": [
+          5
+        ],
+        "ingredients": [
+          2,
+          7,
+          8
+        ]
+      },
+      "impact": {
+        "confirmed_alchemicals": [],
+        "confirmed_aspects": [],
+        "eliminated_cells": [
+          {
+            "ingredient": 2,
+            "alchemicals": [
+              "PPP",
+              "pnP"
+            ]
+          }
+        ]
+      },
+      "reveals_answer": false,
+      "worlds_before": 1472,
+      "worlds_after": 424
+    },
+    {
+      "look_at": "clue 12: ing3 has B-.",
+      "means": "This directly tells us the B sign of ing3.",
+      "so": "ing3 has B-; ing5 has R+; ing5 has B+; ing8 has R-; ing8 has B+; cross off PPP, pnP from ing1; cross off Nnp, PPP, nPp, pnP from ing3; cross off NNN, Nnp, Ppn, nPp, npN, pNn from ing5; cross off PPP, pnP from ing6; cross off NNN, PPP, Ppn, npN, pNn, pnP from ing8.",
+      "highlight": {
+        "clue_indices": [
+          11
+        ],
+        "ingredients": [
+          3
+        ]
+      },
+      "impact": {
+        "confirmed_alchemicals": [],
+        "confirmed_aspects": [
+          {
+            "ingredient": 3,
+            "color": "B",
+            "sign": "-"
+          },
+          {
+            "ingredient": 5,
+            "color": "R",
+            "sign": "+"
+          },
+          {
+            "ingredient": 5,
+            "color": "B",
+            "sign": "+"
+          },
+          {
+            "ingredient": 8,
+            "color": "R",
+            "sign": "-"
+          },
+          {
+            "ingredient": 8,
+            "color": "B",
+            "sign": "+"
+          }
+        ],
+        "eliminated_cells": [
+          {
+            "ingredient": 1,
+            "alchemicals": [
+              "PPP",
+              "pnP"
+            ]
+          },
+          {
+            "ingredient": 3,
+            "alchemicals": [
+              "Nnp",
+              "PPP",
+              "nPp",
+              "pnP"
+            ]
+          },
+          {
+            "ingredient": 5,
+            "alchemicals": [
+              "NNN",
+              "Nnp",
+              "Ppn",
+              "nPp",
+              "npN",
+              "pNn"
+            ]
+          },
+          {
+            "ingredient": 6,
+            "alchemicals": [
+              "PPP",
+              "pnP"
+            ]
+          },
+          {
+            "ingredient": 8,
+            "alchemicals": [
+              "NNN",
+              "PPP",
+              "Ppn",
+              "npN",
+              "pNn",
+              "pnP"
+            ]
+          }
+        ]
+      },
+      "reveals_answer": false,
+      "worlds_before": 424,
+      "worlds_after": 144
+    },
+    {
+      "look_at": "clue 13: ing2 has R+.",
+      "means": "This directly tells us the R sign of ing2.",
+      "so": "ing2 has R+; ing2 has B-; ing4 has R+; ing4 has B+; ing7 has R-; cross off NNN, Nnp, nPp, npN from ing2; cross off NNN, Nnp, Ppn, nPp, npN, pNn from ing4; cross off PPP, Ppn, pNn, pnP from ing7 ing4 + ing8 = B+.",
+      "highlight": {
+        "clue_indices": [
+          12
+        ],
+        "ingredients": [
+          2
+        ]
+      },
+      "impact": {
+        "confirmed_alchemicals": [],
+        "confirmed_aspects": [
+          {
+            "ingredient": 2,
+            "color": "R",
+            "sign": "+"
+          },
+          {
+            "ingredient": 2,
+            "color": "B",
+            "sign": "-"
+          },
+          {
+            "ingredient": 4,
+            "color": "R",
+            "sign": "+"
+          },
+          {
+            "ingredient": 4,
+            "color": "B",
+            "sign": "+"
+          },
+          {
+            "ingredient": 7,
+            "color": "R",
+            "sign": "-"
+          }
+        ],
+        "eliminated_cells": [
+          {
+            "ingredient": 2,
+            "alchemicals": [
+              "NNN",
+              "Nnp",
+              "nPp",
+              "npN"
+            ]
+          },
+          {
+            "ingredient": 4,
+            "alchemicals": [
+              "NNN",
+              "Nnp",
+              "Ppn",
+              "nPp",
+              "npN",
+              "pNn"
+            ]
+          },
+          {
+            "ingredient": 7,
+            "alchemicals": [
+              "PPP",
+              "Ppn",
+              "pNn",
+              "pnP"
+            ]
+          }
+        ]
+      },
+      "reveals_answer": true,
+      "worlds_before": 144,
+      "worlds_after": 52
+    },
+    {
+      "look_at": "clue 4: at least one pair among {ing2, ing3, ing4} mixes to G+.",
+      "means": "Every world must contain at least one pair in {ing2, ing3, ing4} whose mix result is G+.",
+      "so": "ing4 is PPP; ing5 is pnP; ing4 has G+; ing5 has G-; cross off Ppn from ing3; cross off pnP from ing4; cross off PPP from ing5; cross off Ppn from ing6.",
+      "highlight": {
+        "clue_indices": [
+          3
+        ],
+        "ingredients": [
+          2,
+          3,
+          4
+        ]
+      },
+      "impact": {
+        "confirmed_alchemicals": [
+          {
+            "ingredient": 4,
+            "alchemical": "PPP"
+          },
+          {
+            "ingredient": 5,
+            "alchemical": "pnP"
+          }
+        ],
+        "confirmed_aspects": [
+          {
+            "ingredient": 4,
+            "color": "G",
+            "sign": "+"
+          },
+          {
+            "ingredient": 5,
+            "color": "G",
+            "sign": "-"
+          }
+        ],
+        "eliminated_cells": [
+          {
+            "ingredient": 3,
+            "alchemicals": [
+              "Ppn"
+            ]
+          },
+          {
+            "ingredient": 4,
+            "alchemicals": [
+              "pnP"
+            ]
+          },
+          {
+            "ingredient": 5,
+            "alchemicals": [
+              "PPP"
+            ]
+          },
+          {
+            "ingredient": 6,
+            "alchemicals": [
+              "Ppn"
+            ]
+          }
+        ]
+      },
+      "reveals_answer": false,
+      "worlds_before": 52,
+      "worlds_after": 23
+    },
+    {
+      "look_at": "clue 8: ing1 has R+.",
+      "means": "This directly tells us the R sign of ing1.",
+      "so": "ing1 has R+; ing1 has B-; ing3 has R-; ing6 has R-; cross off NNN, Nnp, nPp, npN from ing1; cross off pNn from ing3; cross off pNn from ing6.",
+      "highlight": {
+        "clue_indices": [
+          7
+        ],
+        "ingredients": [
+          1
+        ]
+      },
+      "impact": {
+        "confirmed_alchemicals": [],
+        "confirmed_aspects": [
+          {
+            "ingredient": 1,
+            "color": "R",
+            "sign": "+"
+          },
+          {
+            "ingredient": 1,
+            "color": "B",
+            "sign": "-"
+          },
+          {
+            "ingredient": 3,
+            "color": "R",
+            "sign": "-"
+          },
+          {
+            "ingredient": 6,
+            "color": "R",
+            "sign": "-"
+          }
+        ],
+        "eliminated_cells": [
+          {
+            "ingredient": 1,
+            "alchemicals": [
+              "NNN",
+              "Nnp",
+              "nPp",
+              "npN"
+            ]
+          },
+          {
+            "ingredient": 3,
+            "alchemicals": [
+              "pNn"
+            ]
+          },
+          {
+            "ingredient": 6,
+            "alchemicals": [
+              "pNn"
+            ]
+          }
+        ]
+      },
+      "reveals_answer": false,
+      "worlds_before": 23,
+      "worlds_after": 9
+    },
+    {
+      "look_at": "clue 5: at least one pair among {ing5, ing6, ing7} mixes to G-.",
+      "means": "Every world must contain at least one pair in {ing5, ing6, ing7} whose mix result is G-.",
+      "so": "ing3 is npN; ing3 has G+; ing6 has G-; cross off NNN from ing3; cross off nPp, npN from ing6; cross off npN from ing7.",
+      "highlight": {
+        "clue_indices": [
+          4
+        ],
+        "ingredients": [
+          5,
+          6,
+          7
+        ]
+      },
+      "impact": {
+        "confirmed_alchemicals": [
+          {
+            "ingredient": 3,
+            "alchemical": "npN"
+          }
+        ],
+        "confirmed_aspects": [
+          {
+            "ingredient": 3,
+            "color": "G",
+            "sign": "+"
+          },
+          {
+            "ingredient": 6,
+            "color": "G",
+            "sign": "-"
+          }
+        ],
+        "eliminated_cells": [
+          {
+            "ingredient": 3,
+            "alchemicals": [
+              "NNN"
+            ]
+          },
+          {
+            "ingredient": 6,
+            "alchemicals": [
+              "nPp",
+              "npN"
+            ]
+          },
+          {
+            "ingredient": 7,
+            "alchemicals": [
+              "npN"
+            ]
+          }
+        ]
+      },
+      "reveals_answer": false,
+      "worlds_before": 9,
+      "worlds_after": 6
+    },
+    {
+      "look_at": "clue 14: ing2 has G+.",
+      "means": "This directly tells us the G sign of ing2.",
+      "so": "ing1 is pNn; ing2 is Ppn; ing1 has G-; ing2 has G+; cross off Ppn from ing1; cross off pNn from ing2.",
+      "highlight": {
+        "clue_indices": [
+          13
+        ],
+        "ingredients": [
+          2
+        ]
+      },
+      "impact": {
+        "confirmed_alchemicals": [
+          {
+            "ingredient": 1,
+            "alchemical": "pNn"
+          },
+          {
+            "ingredient": 2,
+            "alchemical": "Ppn"
+          }
+        ],
+        "confirmed_aspects": [
+          {
+            "ingredient": 1,
+            "color": "G",
+            "sign": "-"
+          },
+          {
+            "ingredient": 2,
+            "color": "G",
+            "sign": "+"
+          }
+        ],
+        "eliminated_cells": [
+          {
+            "ingredient": 1,
+            "alchemicals": [
+              "Ppn"
+            ]
+          },
+          {
+            "ingredient": 2,
+            "alchemicals": [
+              "pNn"
+            ]
+          }
+        ]
+      },
+      "reveals_answer": false,
+      "worlds_before": 6,
+      "worlds_after": 3
+    },
+    {
+      "look_at": "clue 6: at least one pair among {ing2, ing7, ing8} mixes to R-.",
+      "means": "Every world must contain at least one pair in {ing2, ing7, ing8} whose mix result is R-.",
+      "so": "cross off PPP, pnP from ing2.",
+      "highlight": {
+        "clue_indices": [
+          5
+        ],
+        "ingredients": [
+          2,
+          7,
+          8
+        ]
+      },
+      "impact": {
+        "confirmed_alchemicals": [],
+        "confirmed_aspects": [],
+        "eliminated_cells": [
+          {
+            "ingredient": 2,
+            "alchemicals": [
+              "PPP",
+              "pnP"
+            ]
+          }
+        ]
+      },
+      "reveals_answer": false,
+      "worlds_before": 1472,
+      "worlds_after": 424
+    },
+    {
+      "look_at": "clue 12: ing3 has B-.",
+      "means": "This directly tells us the B sign of ing3.",
+      "so": "ing3 has B-; ing5 has R+; ing5 has B+; ing8 has R-; ing8 has B+; cross off PPP, pnP from ing1; cross off Nnp, PPP, nPp, pnP from ing3; cross off NNN, Nnp, Ppn, nPp, npN, pNn from ing5; cross off PPP, pnP from ing6; cross off NNN, PPP, Ppn, npN, pNn, pnP from ing8.",
+      "highlight": {
+        "clue_indices": [
+          11
+        ],
+        "ingredients": [
+          3
+        ]
+      },
+      "impact": {
+        "confirmed_alchemicals": [],
+        "confirmed_aspects": [
+          {
+            "ingredient": 3,
+            "color": "B",
+            "sign": "-"
+          },
+          {
+            "ingredient": 5,
+            "color": "R",
+            "sign": "+"
+          },
+          {
+            "ingredient": 5,
+            "color": "B",
+            "sign": "+"
+          },
+          {
+            "ingredient": 8,
+            "color": "R",
+            "sign": "-"
+          },
+          {
+            "ingredient": 8,
+            "color": "B",
+            "sign": "+"
+          }
+        ],
+        "eliminated_cells": [
+          {
+            "ingredient": 1,
+            "alchemicals": [
+              "PPP",
+              "pnP"
+            ]
+          },
+          {
+            "ingredient": 3,
+            "alchemicals": [
+              "Nnp",
+              "PPP",
+              "nPp",
+              "pnP"
+            ]
+          },
+          {
+            "ingredient": 5,
+            "alchemicals": [
+              "NNN",
+              "Nnp",
+              "Ppn",
+              "nPp",
+              "npN",
+              "pNn"
+            ]
+          },
+          {
+            "ingredient": 6,
+            "alchemicals": [
+              "PPP",
+              "pnP"
+            ]
+          },
+          {
+            "ingredient": 8,
+            "alchemicals": [
+              "NNN",
+              "PPP",
+              "Ppn",
+              "npN",
+              "pNn",
+              "pnP"
+            ]
+          }
+        ]
+      },
+      "reveals_answer": false,
+      "worlds_before": 424,
+      "worlds_after": 144
+    },
+    {
+      "look_at": "clue 13: ing2 has R+.",
+      "means": "This directly tells us the R sign of ing2.",
+      "so": "ing2 has R+; ing2 has B-; ing4 has R+; ing4 has B+; ing7 has R-; cross off NNN, Nnp, nPp, npN from ing2; cross off NNN, Nnp, Ppn, nPp, npN, pNn from ing4; cross off PPP, Ppn, pNn, pnP from ing7 ing7 + ing8 = R-.",
+      "highlight": {
+        "clue_indices": [
+          12
+        ],
+        "ingredients": [
+          2
+        ]
+      },
+      "impact": {
+        "confirmed_alchemicals": [],
+        "confirmed_aspects": [
+          {
+            "ingredient": 2,
+            "color": "R",
+            "sign": "+"
+          },
+          {
+            "ingredient": 2,
+            "color": "B",
+            "sign": "-"
+          },
+          {
+            "ingredient": 4,
+            "color": "R",
+            "sign": "+"
+          },
+          {
+            "ingredient": 4,
+            "color": "B",
+            "sign": "+"
+          },
+          {
+            "ingredient": 7,
+            "color": "R",
+            "sign": "-"
+          }
+        ],
+        "eliminated_cells": [
+          {
+            "ingredient": 2,
+            "alchemicals": [
+              "NNN",
+              "Nnp",
+              "nPp",
+              "npN"
+            ]
+          },
+          {
+            "ingredient": 4,
+            "alchemicals": [
+              "NNN",
+              "Nnp",
+              "Ppn",
+              "nPp",
+              "npN",
+              "pNn"
+            ]
+          },
+          {
+            "ingredient": 7,
+            "alchemicals": [
+              "PPP",
+              "Ppn",
+              "pNn",
+              "pnP"
+            ]
+          }
+        ]
+      },
+      "reveals_answer": true,
+      "worlds_before": 144,
+      "worlds_after": 52
+    },
+    {
+      "look_at": "clue 4: at least one pair among {ing2, ing3, ing4} mixes to G+.",
+      "means": "Every world must contain at least one pair in {ing2, ing3, ing4} whose mix result is G+.",
+      "so": "ing4 is PPP; ing5 is pnP; ing4 has G+; ing5 has G-; cross off Ppn from ing3; cross off pnP from ing4; cross off PPP from ing5; cross off Ppn from ing6.",
+      "highlight": {
+        "clue_indices": [
+          3
+        ],
+        "ingredients": [
+          2,
+          3,
+          4
+        ]
+      },
+      "impact": {
+        "confirmed_alchemicals": [
+          {
+            "ingredient": 4,
+            "alchemical": "PPP"
+          },
+          {
+            "ingredient": 5,
+            "alchemical": "pnP"
+          }
+        ],
+        "confirmed_aspects": [
+          {
+            "ingredient": 4,
+            "color": "G",
+            "sign": "+"
+          },
+          {
+            "ingredient": 5,
+            "color": "G",
+            "sign": "-"
+          }
+        ],
+        "eliminated_cells": [
+          {
+            "ingredient": 3,
+            "alchemicals": [
+              "Ppn"
+            ]
+          },
+          {
+            "ingredient": 4,
+            "alchemicals": [
+              "pnP"
+            ]
+          },
+          {
+            "ingredient": 5,
+            "alchemicals": [
+              "PPP"
+            ]
+          },
+          {
+            "ingredient": 6,
+            "alchemicals": [
+              "Ppn"
+            ]
+          }
+        ]
+      },
+      "reveals_answer": false,
+      "worlds_before": 52,
+      "worlds_after": 23
+    },
+    {
+      "look_at": "clue 8: ing1 has R+.",
+      "means": "This directly tells us the R sign of ing1.",
+      "so": "ing1 has R+; ing1 has B-; ing3 has R-; ing6 has R-; cross off NNN, Nnp, nPp, npN from ing1; cross off pNn from ing3; cross off pNn from ing6.",
+      "highlight": {
+        "clue_indices": [
+          7
+        ],
+        "ingredients": [
+          1
+        ]
+      },
+      "impact": {
+        "confirmed_alchemicals": [],
+        "confirmed_aspects": [
+          {
+            "ingredient": 1,
+            "color": "R",
+            "sign": "+"
+          },
+          {
+            "ingredient": 1,
+            "color": "B",
+            "sign": "-"
+          },
+          {
+            "ingredient": 3,
+            "color": "R",
+            "sign": "-"
+          },
+          {
+            "ingredient": 6,
+            "color": "R",
+            "sign": "-"
+          }
+        ],
+        "eliminated_cells": [
+          {
+            "ingredient": 1,
+            "alchemicals": [
+              "NNN",
+              "Nnp",
+              "nPp",
+              "npN"
+            ]
+          },
+          {
+            "ingredient": 3,
+            "alchemicals": [
+              "pNn"
+            ]
+          },
+          {
+            "ingredient": 6,
+            "alchemicals": [
+              "pNn"
+            ]
+          }
+        ]
+      },
+      "reveals_answer": false,
+      "worlds_before": 23,
+      "worlds_after": 9
+    },
+    {
+      "look_at": "clue 5: at least one pair among {ing5, ing6, ing7} mixes to G-.",
+      "means": "Every world must contain at least one pair in {ing5, ing6, ing7} whose mix result is G-.",
+      "so": "ing3 is npN; ing3 has G+; ing6 has G-; cross off NNN from ing3; cross off nPp, npN from ing6; cross off npN from ing7.",
+      "highlight": {
+        "clue_indices": [
+          4
+        ],
+        "ingredients": [
+          5,
+          6,
+          7
+        ]
+      },
+      "impact": {
+        "confirmed_alchemicals": [
+          {
+            "ingredient": 3,
+            "alchemical": "npN"
+          }
+        ],
+        "confirmed_aspects": [
+          {
+            "ingredient": 3,
+            "color": "G",
+            "sign": "+"
+          },
+          {
+            "ingredient": 6,
+            "color": "G",
+            "sign": "-"
+          }
+        ],
+        "eliminated_cells": [
+          {
+            "ingredient": 3,
+            "alchemicals": [
+              "NNN"
+            ]
+          },
+          {
+            "ingredient": 6,
+            "alchemicals": [
+              "nPp",
+              "npN"
+            ]
+          },
+          {
+            "ingredient": 7,
+            "alchemicals": [
+              "npN"
+            ]
+          }
+        ]
+      },
+      "reveals_answer": false,
+      "worlds_before": 9,
+      "worlds_after": 6
+    },
+    {
+      "look_at": "clue 14: ing2 has G+.",
+      "means": "This directly tells us the G sign of ing2.",
+      "so": "ing1 is pNn; ing2 is Ppn; ing1 has G-; ing2 has G+; cross off Ppn from ing1; cross off pNn from ing2.",
+      "highlight": {
+        "clue_indices": [
+          13
+        ],
+        "ingredients": [
+          2
+        ]
+      },
+      "impact": {
+        "confirmed_alchemicals": [
+          {
+            "ingredient": 1,
+            "alchemical": "pNn"
+          },
+          {
+            "ingredient": 2,
+            "alchemical": "Ppn"
+          }
+        ],
+        "confirmed_aspects": [
+          {
+            "ingredient": 1,
+            "color": "G",
+            "sign": "-"
+          },
+          {
+            "ingredient": 2,
+            "color": "G",
+            "sign": "+"
+          }
+        ],
+        "eliminated_cells": [
+          {
+            "ingredient": 1,
+            "alchemicals": [
+              "Ppn"
+            ]
+          },
+          {
+            "ingredient": 2,
+            "alchemicals": [
+              "pNn"
+            ]
+          }
+        ]
+      },
+      "reveals_answer": false,
+      "worlds_before": 6,
+      "worlds_after": 3
+    }
+  ]
+}

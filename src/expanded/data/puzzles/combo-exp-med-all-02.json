@@ -1,5 +1,5 @@
 {
-  "id": "combo-exp-med-all-02",
+  "id": "022b5a56-d074-4a1b-977f-c667c5d05cad",
   "mode": "expanded",
   "title": "The Special Case",
   "description": "A partial encyclopedia article lists three ingredients on the same aspect. Use the supporting clues to identify the fourth.",
@@ -509,7 +509,7 @@
     {
       "look_at": "clue 5.",
       "means": "Apply this clue to eliminate impossible alchemical assignments.",
-      "so": "ing2 is npN; ing3 is pNn; ing2 has R-; ing2 has G+; ing3 has R+; ing3 has G-; cross off pNn from ing2; cross off npN from ing3.",
+      "so": "ing2 is npN; ing3 is pNn; ing2 has R-; ing2 has G+; ing3 has R+; ing3 has G-; cross off pNn from ing2; cross off npN from ing3 The missing G+ ingredient is ing2.",
       "highlight": {
         "clue_indices": [
           4

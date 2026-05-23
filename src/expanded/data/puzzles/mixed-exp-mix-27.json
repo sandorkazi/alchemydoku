@@ -1,5 +1,5 @@
 {
-  "id": "mixed-exp-mix-27",
+  "id": "17084830-2e8b-49e2-a9a5-6292caa6b44d",
   "mode": "expanded",
   "title": "The Metastable Trap",
   "description": "Mixing, selling, and debunking records all point toward a single pair. Deduce what potion they produce.",
@@ -536,7 +536,7 @@
     {
       "look_at": "clue 5: exactly 1 of {ing2, ing3, ing6, ing8} are lunar.",
       "means": "Exactly 1 ingredient(s) in {ing2, ing3, ing6, ing8} must be lunar.",
-      "so": "ing1 is npN; ing3 is nPp; ing1 has B-; ing3 has B+; cross off nPp from ing1; cross off npN from ing3.",
+      "so": "ing1 is npN; ing3 is nPp; ing1 has B-; ing3 has B+; cross off nPp from ing1; cross off npN from ing3 ing1 + ing8 = B-.",
       "highlight": {
         "clue_indices": [
           4

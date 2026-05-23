@@ -1,0 +1,484 @@
+{
+  "id": "0d446718-af41-468a-b638-e48a8f99f762",
+  "title": "The Crossroads Merchant",
+  "description": "Deduce the mixing result from the clues.",
+  "difficulty": "easy",
+  "clues": [
+    {
+      "kind": "mixing",
+      "ingredient1": 4,
+      "ingredient2": 5,
+      "result": {
+        "type": "potion",
+        "color": "B",
+        "sign": "+"
+      }
+    },
+    {
+      "kind": "mixing",
+      "ingredient1": 2,
+      "ingredient2": 6,
+      "result": {
+        "type": "potion",
+        "color": "G",
+        "sign": "-"
+      }
+    },
+    {
+      "kind": "mixing",
+      "ingredient1": 2,
+      "ingredient2": 7,
+      "result": {
+        "type": "potion",
+        "color": "G",
+        "sign": "-"
+      }
+    },
+    {
+      "kind": "mixing",
+      "ingredient1": 3,
+      "ingredient2": 4,
+      "result": {
+        "type": "neutral"
+      }
+    },
+    {
+      "kind": "mixing",
+      "ingredient1": 3,
+      "ingredient2": 6,
+      "result": {
+        "type": "potion",
+        "color": "R",
+        "sign": "-"
+      }
+    }
+  ],
+  "questions": [
+    {
+      "kind": "mixing-result",
+      "ingredient1": 2,
+      "ingredient2": 4
+    }
+  ],
+  "solution": {
+    "1": 8,
+    "2": 5,
+    "3": 1,
+    "4": 2,
+    "5": 4,
+    "6": 7,
+    "7": 3,
+    "8": 6
+  },
+  "complexity": {
+    "score": 47,
+    "raw_score": 25,
+    "clue_score": 0,
+    "question_score": 0,
+    "world_score": 15,
+    "residual_worlds": 2
+  },
+  "hints": [],
+  "hint_steps": [
+    {
+      "look_at": "clue 1: ing4 + ing5 = B+.",
+      "means": "When two ingredients mix to B+, both share B+. Any candidate without B+ is impossible for either slot.",
+      "so": "ing4 has B+; ing5 has B+; cross off NNN, Ppn, npN, pNn from ing4; cross off NNN, Ppn, npN, pNn from ing5.",
+      "highlight": {
+        "clue_indices": [
+          0
+        ],
+        "ingredients": [
+          4,
+          5
+        ]
+      },
+      "impact": {
+        "confirmed_alchemicals": [],
+        "confirmed_aspects": [
+          {
+            "ingredient": 4,
+            "color": "B",
+            "sign": "+"
+          },
+          {
+            "ingredient": 5,
+            "color": "B",
+            "sign": "+"
+          }
+        ],
+        "eliminated_cells": [
+          {
+            "ingredient": 4,
+            "alchemicals": [
+              "NNN",
+              "Ppn",
+              "npN",
+              "pNn"
+            ]
+          },
+          {
+            "ingredient": 5,
+            "alchemicals": [
+              "NNN",
+              "Ppn",
+              "npN",
+              "pNn"
+            ]
+          }
+        ]
+      },
+      "reveals_answer": false,
+      "worlds_before": 40320,
+      "worlds_after": 5760
+    },
+    {
+      "look_at": "clue 2: ing2 + ing6 = G-.",
+      "means": "When two ingredients mix to G-, both share G-. Any candidate without G- is impossible for either slot.",
+      "so": "ing2 has G-; ing6 has G-; cross off PPP, Ppn, nPp, npN from ing2; cross off PPP, Ppn, nPp, npN from ing6.",
+      "highlight": {
+        "clue_indices": [
+          1
+        ],
+        "ingredients": [
+          2,
+          6
+        ]
+      },
+      "impact": {
+        "confirmed_alchemicals": [],
+        "confirmed_aspects": [
+          {
+            "ingredient": 2,
+            "color": "G",
+            "sign": "-"
+          },
+          {
+            "ingredient": 6,
+            "color": "G",
+            "sign": "-"
+          }
+        ],
+        "eliminated_cells": [
+          {
+            "ingredient": 2,
+            "alchemicals": [
+              "PPP",
+              "Ppn",
+              "nPp",
+              "npN"
+            ]
+          },
+          {
+            "ingredient": 6,
+            "alchemicals": [
+              "PPP",
+              "Ppn",
+              "nPp",
+              "npN"
+            ]
+          }
+        ]
+      },
+      "reveals_answer": false,
+      "worlds_before": 5760,
+      "worlds_after": 768
+    },
+    {
+      "look_at": "clue 5: ing3 + ing6 = R-.",
+      "means": "When two ingredients mix to R-, both share R-. Any candidate without R- is impossible for either slot.",
+      "so": "ing3 has R-; ing3 has G+; ing6 has R-; cross off NNN, Nnp, PPP, Ppn, pNn, pnP from ing3; cross off pNn, pnP from ing6.",
+      "highlight": {
+        "clue_indices": [
+          4
+        ],
+        "ingredients": [
+          3,
+          6
+        ]
+      },
+      "impact": {
+        "confirmed_alchemicals": [],
+        "confirmed_aspects": [
+          {
+            "ingredient": 3,
+            "color": "R",
+            "sign": "-"
+          },
+          {
+            "ingredient": 3,
+            "color": "G",
+            "sign": "+"
+          },
+          {
+            "ingredient": 6,
+            "color": "R",
+            "sign": "-"
+          }
+        ],
+        "eliminated_cells": [
+          {
+            "ingredient": 3,
+            "alchemicals": [
+              "NNN",
+              "Nnp",
+              "PPP",
+              "Ppn",
+              "pNn",
+              "pnP"
+            ]
+          },
+          {
+            "ingredient": 6,
+            "alchemicals": [
+              "pNn",
+              "pnP"
+            ]
+          }
+        ]
+      },
+      "reveals_answer": false,
+      "worlds_before": 768,
+      "worlds_after": 108
+    },
+    {
+      "look_at": "clue 4: ing3 + ing4 = neutral.",
+      "means": "A neutral result means ing3 and ing4 have opposite signs in every color.",
+      "so": "ing3 is npN; ing4 is pnP; ing5 is nPp; ing3 has B-; ing4 has R+; ing4 has G-; ing5 has R-; ing5 has G+; cross off Nnp, nPp, npN, pnP from ing1; cross off pnP from ing2; cross off nPp from ing3; cross off Nnp, PPP, nPp from ing4; cross off Nnp, PPP, pnP from ing5; cross off Nnp, nPp, npN, pnP from ing7; cross off Nnp, nPp, npN, pnP from ing8.",
+      "highlight": {
+        "clue_indices": [
+          3
+        ],
+        "ingredients": [
+          3,
+          4
+        ]
+      },
+      "impact": {
+        "confirmed_alchemicals": [
+          {
+            "ingredient": 3,
+            "alchemical": "npN"
+          },
+          {
+            "ingredient": 4,
+            "alchemical": "pnP"
+          },
+          {
+            "ingredient": 5,
+            "alchemical": "nPp"
+          }
+        ],
+        "confirmed_aspects": [
+          {
+            "ingredient": 3,
+            "color": "B",
+            "sign": "-"
+          },
+          {
+            "ingredient": 4,
+            "color": "R",
+            "sign": "+"
+          },
+          {
+            "ingredient": 4,
+            "color": "G",
+            "sign": "-"
+          },
+          {
+            "ingredient": 5,
+            "color": "R",
+            "sign": "-"
+          },
+          {
+            "ingredient": 5,
+            "color": "G",
+            "sign": "+"
+          }
+        ],
+        "eliminated_cells": [
+          {
+            "ingredient": 1,
+            "alchemicals": [
+              "Nnp",
+              "nPp",
+              "npN",
+              "pnP"
+            ]
+          },
+          {
+            "ingredient": 2,
+            "alchemicals": [
+              "pnP"
+            ]
+          },
+          {
+            "ingredient": 3,
+            "alchemicals": [
+              "nPp"
+            ]
+          },
+          {
+            "ingredient": 4,
+            "alchemicals": [
+              "Nnp",
+              "PPP",
+              "nPp"
+            ]
+          },
+          {
+            "ingredient": 5,
+            "alchemicals": [
+              "Nnp",
+              "PPP",
+              "pnP"
+            ]
+          },
+          {
+            "ingredient": 7,
+            "alchemicals": [
+              "Nnp",
+              "nPp",
+              "npN",
+              "pnP"
+            ]
+          },
+          {
+            "ingredient": 8,
+            "alchemicals": [
+              "Nnp",
+              "nPp",
+              "npN",
+              "pnP"
+            ]
+          }
+        ]
+      },
+      "reveals_answer": false,
+      "worlds_before": 108,
+      "worlds_after": 18
+    },
+    {
+      "look_at": "clue 3: ing2 + ing7 = G-.",
+      "means": "When two ingredients mix to G-, both share G-. Any candidate without G- is impossible for either slot.",
+      "so": "ing2 is Nnp; ing6 is NNN; ing7 is pNn; ing1 has R+; ing1 has G+; ing2 has R-; ing2 has B+; ing6 has B-; ing7 has R+; ing7 has G-; ing7 has B-; ing8 has R+; ing8 has G+; cross off NNN, pNn from ing1; cross off NNN, pNn from ing2; cross off Nnp from ing6; cross off NNN, PPP, Ppn from ing7; cross off NNN, pNn from ing8 ing2 + ing4 = B+.",
+      "highlight": {
+        "clue_indices": [
+          2
+        ],
+        "ingredients": [
+          2,
+          7
+        ]
+      },
+      "impact": {
+        "confirmed_alchemicals": [
+          {
+            "ingredient": 2,
+            "alchemical": "Nnp"
+          },
+          {
+            "ingredient": 6,
+            "alchemical": "NNN"
+          },
+          {
+            "ingredient": 7,
+            "alchemical": "pNn"
+          }
+        ],
+        "confirmed_aspects": [
+          {
+            "ingredient": 1,
+            "color": "R",
+            "sign": "+"
+          },
+          {
+            "ingredient": 1,
+            "color": "G",
+            "sign": "+"
+          },
+          {
+            "ingredient": 2,
+            "color": "R",
+            "sign": "-"
+          },
+          {
+            "ingredient": 2,
+            "color": "B",
+            "sign": "+"
+          },
+          {
+            "ingredient": 6,
+            "color": "B",
+            "sign": "-"
+          },
+          {
+            "ingredient": 7,
+            "color": "R",
+            "sign": "+"
+          },
+          {
+            "ingredient": 7,
+            "color": "G",
+            "sign": "-"
+          },
+          {
+            "ingredient": 7,
+            "color": "B",
+            "sign": "-"
+          },
+          {
+            "ingredient": 8,
+            "color": "R",
+            "sign": "+"
+          },
+          {
+            "ingredient": 8,
+            "color": "G",
+            "sign": "+"
+          }
+        ],
+        "eliminated_cells": [
+          {
+            "ingredient": 1,
+            "alchemicals": [
+              "NNN",
+              "pNn"
+            ]
+          },
+          {
+            "ingredient": 2,
+            "alchemicals": [
+              "NNN",
+              "pNn"
+            ]
+          },
+          {
+            "ingredient": 6,
+            "alchemicals": [
+              "Nnp"
+            ]
+          },
+          {
+            "ingredient": 7,
+            "alchemicals": [
+              "NNN",
+              "PPP",
+              "Ppn"
+            ]
+          },
+          {
+            "ingredient": 8,
+            "alchemicals": [
+              "NNN",
+              "pNn"
+            ]
+          }
+        ]
+      },
+      "reveals_answer": true,
+      "worlds_before": 18,
+      "worlds_after": 2
+    }
+  ]
+}

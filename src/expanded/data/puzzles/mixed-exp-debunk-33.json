@@ -1,5 +1,5 @@
 {
-  "id": "mixed-exp-debunk-33",
+  "id": "ba1ca342-8bf8-42bc-8e5d-a7ee30d4b935",
   "mode": "expanded",
   "kind": "debunk",
   "title": "The Fixation",
@@ -212,7 +212,7 @@
     {
       "look_at": "clue 3: exactly 4 pairs among {ing2, ing5, ing7, ing8} mix to R-.",
       "means": "Exactly 4 pair(s) in {ing2, ing5, ing7, ing8} must mix to R-; any world with a different count is impossible.",
-      "so": "ing1 has R+; ing2 has R-; ing3 has R+; ing4 has R+; ing5 has R-; ing6 has R+; ing7 has R-; ing8 has R-; cross off NNN, Nnp, nPp, npN from ing1; cross off PPP, Ppn, pNn, pnP from ing2; cross off NNN, Nnp, nPp, npN from ing3; cross off NNN, Nnp, nPp, npN from ing4; cross off PPP, Ppn, pNn, pnP from ing5; cross off NNN, Nnp, nPp, npN from ing6; cross off PPP, Ppn, pNn, pnP from ing7; cross off PPP, Ppn, pNn, pnP from ing8.",
+      "so": "ing1 has R+; ing2 has R-; ing3 has R+; ing4 has R+; ing5 has R-; ing6 has R+; ing7 has R-; ing8 has R-; cross off NNN, Nnp, nPp, npN from ing1; cross off PPP, Ppn, pNn, pnP from ing2; cross off NNN, Nnp, nPp, npN from ing3; cross off NNN, Nnp, nPp, npN from ing4; cross off PPP, Ppn, pNn, pnP from ing5; cross off NNN, Nnp, nPp, npN from ing6; cross off PPP, Ppn, pNn, pnP from ing7; cross off PPP, Ppn, pNn, pnP from ing8",
       "highlight": {
         "clue_indices": [
           2

@@ -1,5 +1,5 @@
 {
-  "id": "combo-exp-06",
+  "id": "01eea135-750b-46cf-bf41-eb5a8611d492",
   "mode": "expanded",
   "title": "The Anti Conformation",
   "description": "A partial encyclopedia article lists three ingredients on the same aspect. Use the supporting clues to identify the fourth.",
@@ -388,7 +388,7 @@
     {
       "look_at": "clue 4: ing4 is lunar.",
       "means": "Solar/lunar status constrains which alchemicals ing4 can be.",
-      "so": "ing4 is pNn; ing8 is Ppn; ing4 has G-; ing8 has G+; cross off Ppn from ing4; cross off pNn from ing8.",
+      "so": "ing4 is pNn; ing8 is Ppn; ing4 has G-; ing8 has G+; cross off Ppn from ing4; cross off pNn from ing8 The missing G+ ingredient is ing8.",
       "highlight": {
         "clue_indices": [
           3

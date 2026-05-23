@@ -1,0 +1,277 @@
+{
+  "id": "7959630c-0574-43ed-ba44-5890b88e8d47",
+  "title": "The Red Half",
+  "description": "Four ingredients have the R\u2212 aspect. There are only 4 R\u2212 alchemicals in total \u2014 what does that mean for the rest?",
+  "difficulty": "tutorial",
+  "clues": [
+    {
+      "kind": "aspect",
+      "ingredient": 1,
+      "color": "R",
+      "sign": "-"
+    },
+    {
+      "kind": "aspect",
+      "ingredient": 2,
+      "color": "R",
+      "sign": "-"
+    },
+    {
+      "kind": "aspect",
+      "ingredient": 3,
+      "color": "R",
+      "sign": "-"
+    },
+    {
+      "kind": "aspect",
+      "ingredient": 4,
+      "color": "R",
+      "sign": "-"
+    }
+  ],
+  "solution": {
+    "1": 1,
+    "2": 4,
+    "3": 5,
+    "4": 7,
+    "5": 2,
+    "6": 3,
+    "7": 6,
+    "8": 8
+  },
+  "questions": [
+    {
+      "kind": "aspect",
+      "ingredient": 5,
+      "color": "R"
+    }
+  ],
+  "hints": [
+    {
+      "level": 1,
+      "text": "Your clues tell you ing1, ing2, ing3, and ing4 are all R-. How many R- alchemicals exist in the game in total?"
+    },
+    {
+      "level": 2,
+      "text": "There are exactly 4 R- alchemicals: npN, nPp, Nnp, NNN. All four are already committed to ing1, ing2, ing3, and ing4. No R- alchemical is left for ing5. What sign must ing5 have?"
+    },
+    {
+      "level": 3,
+      "text": "The four R- alchemicals (npN, nPp, Nnp, NNN) are fully used by ing1, ing2, ing3, and ing4. The remaining four alchemicals \u2014 pnP, pNn, Ppn, PPP \u2014 are all R+. So ing5 must be R+."
+    }
+  ],
+  "complexity": {
+    "score": 40,
+    "raw_score": 20,
+    "clue_score": 0,
+    "question_score": 0,
+    "world_score": 10,
+    "residual_worlds": 576
+  },
+  "hint_steps": [
+    {
+      "look_at": "clue 1: ing1 has R-.",
+      "means": "This directly tells us the R sign of ing1.",
+      "so": "ing1 has R-; cross off PPP, Ppn, pNn, pnP from ing1.",
+      "highlight": {
+        "clue_indices": [
+          0
+        ],
+        "ingredients": [
+          1
+        ]
+      },
+      "impact": {
+        "confirmed_alchemicals": [],
+        "confirmed_aspects": [
+          {
+            "ingredient": 1,
+            "color": "R",
+            "sign": "-"
+          }
+        ],
+        "eliminated_cells": [
+          {
+            "ingredient": 1,
+            "alchemicals": [
+              "PPP",
+              "Ppn",
+              "pNn",
+              "pnP"
+            ]
+          }
+        ]
+      },
+      "reveals_answer": false,
+      "worlds_before": 40320,
+      "worlds_after": 20160
+    },
+    {
+      "look_at": "clue 2: ing2 has R-.",
+      "means": "This directly tells us the R sign of ing2.",
+      "so": "ing2 has R-; cross off PPP, Ppn, pNn, pnP from ing2.",
+      "highlight": {
+        "clue_indices": [
+          1
+        ],
+        "ingredients": [
+          2
+        ]
+      },
+      "impact": {
+        "confirmed_alchemicals": [],
+        "confirmed_aspects": [
+          {
+            "ingredient": 2,
+            "color": "R",
+            "sign": "-"
+          }
+        ],
+        "eliminated_cells": [
+          {
+            "ingredient": 2,
+            "alchemicals": [
+              "PPP",
+              "Ppn",
+              "pNn",
+              "pnP"
+            ]
+          }
+        ]
+      },
+      "reveals_answer": false,
+      "worlds_before": 20160,
+      "worlds_after": 8640
+    },
+    {
+      "look_at": "clue 3: ing3 has R-.",
+      "means": "This directly tells us the R sign of ing3.",
+      "so": "ing3 has R-; cross off PPP, Ppn, pNn, pnP from ing3.",
+      "highlight": {
+        "clue_indices": [
+          2
+        ],
+        "ingredients": [
+          3
+        ]
+      },
+      "impact": {
+        "confirmed_alchemicals": [],
+        "confirmed_aspects": [
+          {
+            "ingredient": 3,
+            "color": "R",
+            "sign": "-"
+          }
+        ],
+        "eliminated_cells": [
+          {
+            "ingredient": 3,
+            "alchemicals": [
+              "PPP",
+              "Ppn",
+              "pNn",
+              "pnP"
+            ]
+          }
+        ]
+      },
+      "reveals_answer": false,
+      "worlds_before": 8640,
+      "worlds_after": 2880
+    },
+    {
+      "look_at": "clue 4: ing4 has R-.",
+      "means": "This directly tells us the R sign of ing4.",
+      "so": "ing4 has R-; ing5 has R+; ing6 has R+; ing7 has R+; ing8 has R+; cross off PPP, Ppn, pNn, pnP from ing4; cross off NNN, Nnp, nPp, npN from ing5; cross off NNN, Nnp, nPp, npN from ing6; cross off NNN, Nnp, nPp, npN from ing7; cross off NNN, Nnp, nPp, npN from ing8.",
+      "highlight": {
+        "clue_indices": [
+          3
+        ],
+        "ingredients": [
+          4
+        ]
+      },
+      "impact": {
+        "confirmed_alchemicals": [],
+        "confirmed_aspects": [
+          {
+            "ingredient": 4,
+            "color": "R",
+            "sign": "-"
+          },
+          {
+            "ingredient": 5,
+            "color": "R",
+            "sign": "+"
+          },
+          {
+            "ingredient": 6,
+            "color": "R",
+            "sign": "+"
+          },
+          {
+            "ingredient": 7,
+            "color": "R",
+            "sign": "+"
+          },
+          {
+            "ingredient": 8,
+            "color": "R",
+            "sign": "+"
+          }
+        ],
+        "eliminated_cells": [
+          {
+            "ingredient": 4,
+            "alchemicals": [
+              "PPP",
+              "Ppn",
+              "pNn",
+              "pnP"
+            ]
+          },
+          {
+            "ingredient": 5,
+            "alchemicals": [
+              "NNN",
+              "Nnp",
+              "nPp",
+              "npN"
+            ]
+          },
+          {
+            "ingredient": 6,
+            "alchemicals": [
+              "NNN",
+              "Nnp",
+              "nPp",
+              "npN"
+            ]
+          },
+          {
+            "ingredient": 7,
+            "alchemicals": [
+              "NNN",
+              "Nnp",
+              "nPp",
+              "npN"
+            ]
+          },
+          {
+            "ingredient": 8,
+            "alchemicals": [
+              "NNN",
+              "Nnp",
+              "nPp",
+              "npN"
+            ]
+          }
+        ]
+      },
+      "reveals_answer": true,
+      "worlds_before": 2880,
+      "worlds_after": 576
+    }
+  ]
+}

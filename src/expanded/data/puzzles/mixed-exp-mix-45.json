@@ -1,5 +1,5 @@
 {
-  "id": "mixed-exp-mix-45",
+  "id": "bbab24b4-8caf-4e87-b350-3d283acc7d3f",
   "mode": "expanded",
   "title": "The Residual Evidence",
   "description": "Mixing, selling, and debunking records all point toward a single pair. Deduce what potion they produce.",
@@ -503,7 +503,7 @@
     {
       "look_at": "clue 2: exactly 1 of {ing4, ing5, ing7} are lunar.",
       "means": "Exactly 1 ingredient(s) in {ing4, ing5, ing7} must be lunar.",
-      "so": "ing1 is pNn; ing4 is pnP; ing1 has B-; ing4 has B+; cross off pnP from ing1; cross off pNn from ing4.",
+      "so": "ing1 is pNn; ing4 is pnP; ing1 has B-; ing4 has B+; cross off pnP from ing1; cross off pNn from ing4 ing1 + ing2 = G-.",
       "highlight": {
         "clue_indices": [
           1

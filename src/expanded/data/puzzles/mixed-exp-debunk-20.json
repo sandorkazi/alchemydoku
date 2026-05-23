@@ -1,5 +1,5 @@
 {
-  "id": "mixed-exp-debunk-20",
+  "id": "6556f7a9-27b5-4599-8557-5b23f89e8a9a",
   "mode": "expanded",
   "kind": "debunk",
   "title": "The Relaxed Assumption",
@@ -211,7 +211,7 @@
     {
       "look_at": "clue 4: sell constraint among {ing4, ing6, ing7, ing8}.",
       "means": "Selling results among {ing4, ing6, ing7, ing8} constrain possible alchemicals.",
-      "so": "cross off NNN, Nnp, npN, pNn from ing1; cross off NNN, Nnp, npN, pNn from ing2; cross off NNN, Nnp, npN, pNn from ing3; cross off PPP, Ppn, nPp, pnP from ing4; cross off NNN, Nnp, npN, pNn from ing5; cross off PPP, Ppn, nPp, pnP from ing6; cross off PPP, Ppn, nPp, pnP from ing7; cross off PPP, Ppn, nPp, pnP from ing8.",
+      "so": "cross off NNN, Nnp, npN, pNn from ing1; cross off NNN, Nnp, npN, pNn from ing2; cross off NNN, Nnp, npN, pNn from ing3; cross off PPP, Ppn, nPp, pnP from ing4; cross off NNN, Nnp, npN, pNn from ing5; cross off PPP, Ppn, nPp, pnP from ing6; cross off PPP, Ppn, nPp, pnP from ing7; cross off PPP, Ppn, nPp, pnP from ing8",
       "highlight": {
         "clue_indices": [
           3

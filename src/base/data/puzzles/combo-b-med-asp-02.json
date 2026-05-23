@@ -1,0 +1,164 @@
+{
+  "id": "2874a54e-55eb-479e-8117-baa9f4a0824c",
+  "title": "The Water-Stained Record",
+  "description": "Multiple clue types constrain the world. Identify the sign of the target colour aspect.",
+  "difficulty": "easy",
+  "clues": [
+    {
+      "kind": "debunk",
+      "variant": "master",
+      "ingredient1": 1,
+      "ingredient2": 8,
+      "claimedPotion": {
+        "color": "R",
+        "sign": "-"
+      },
+      "outcome": "success"
+    },
+    {
+      "kind": "sell",
+      "ingredient1": 2,
+      "ingredient2": 8,
+      "claimedResult": {
+        "type": "potion",
+        "color": "B",
+        "sign": "+"
+      },
+      "sellResult": "sign_ok"
+    }
+  ],
+  "questions": [
+    {
+      "kind": "aspect",
+      "ingredient": 1,
+      "color": "G"
+    }
+  ],
+  "solution": {
+    "1": 5,
+    "2": 8,
+    "3": 7,
+    "4": 2,
+    "5": 6,
+    "6": 4,
+    "7": 3,
+    "8": 1
+  },
+  "hints": [],
+  "complexity": {
+    "score": 43,
+    "raw_score": 22,
+    "clue_score": 2,
+    "question_score": 0,
+    "world_score": 10,
+    "residual_worlds": 960
+  },
+  "hint_steps": [
+    {
+      "look_at": "clue 1.",
+      "means": "Apply this clue to eliminate impossible alchemical assignments.",
+      "so": "ing1 has R-; ing8 has R-; cross off PPP, Ppn, pNn, pnP from ing1; cross off PPP, Ppn, pNn, pnP from ing8.",
+      "highlight": {
+        "clue_indices": [
+          0
+        ]
+      },
+      "impact": {
+        "confirmed_alchemicals": [],
+        "confirmed_aspects": [
+          {
+            "ingredient": 1,
+            "color": "R",
+            "sign": "-"
+          },
+          {
+            "ingredient": 8,
+            "color": "R",
+            "sign": "-"
+          }
+        ],
+        "eliminated_cells": [
+          {
+            "ingredient": 1,
+            "alchemicals": [
+              "PPP",
+              "Ppn",
+              "pNn",
+              "pnP"
+            ]
+          },
+          {
+            "ingredient": 8,
+            "alchemicals": [
+              "PPP",
+              "Ppn",
+              "pNn",
+              "pnP"
+            ]
+          }
+        ]
+      },
+      "reveals_answer": false,
+      "worlds_before": 40320,
+      "worlds_after": 5760
+    },
+    {
+      "look_at": "clue 2.",
+      "means": "Apply this clue to eliminate impossible alchemical assignments.",
+      "so": "ing1 has G-; ing2 has G+; ing8 has G+; cross off nPp, npN from ing1; cross off NNN, Nnp, pNn, pnP from ing2; cross off NNN, Nnp from ing8 ing1 has G-.",
+      "highlight": {
+        "clue_indices": [
+          1
+        ]
+      },
+      "impact": {
+        "confirmed_alchemicals": [],
+        "confirmed_aspects": [
+          {
+            "ingredient": 1,
+            "color": "G",
+            "sign": "-"
+          },
+          {
+            "ingredient": 2,
+            "color": "G",
+            "sign": "+"
+          },
+          {
+            "ingredient": 8,
+            "color": "G",
+            "sign": "+"
+          }
+        ],
+        "eliminated_cells": [
+          {
+            "ingredient": 1,
+            "alchemicals": [
+              "nPp",
+              "npN"
+            ]
+          },
+          {
+            "ingredient": 2,
+            "alchemicals": [
+              "NNN",
+              "Nnp",
+              "pNn",
+              "pnP"
+            ]
+          },
+          {
+            "ingredient": 8,
+            "alchemicals": [
+              "NNN",
+              "Nnp"
+            ]
+          }
+        ]
+      },
+      "reveals_answer": true,
+      "worlds_before": 5760,
+      "worlds_after": 960
+    }
+  ]
+}

@@ -1,5 +1,5 @@
 {
-  "id": "mixed-exp-mix-03",
+  "id": "6fe6841b-31b6-47ec-987e-0c361ab13563",
   "mode": "expanded",
   "title": "The Revised Edition",
   "description": "Mixing, selling, and debunking records all point toward a single pair. Deduce what potion they produce.",
@@ -351,7 +351,7 @@
     {
       "look_at": "clue 5: sell constraint among {ing1, ing3, ing4, ing5}.",
       "means": "Selling results among {ing1, ing3, ing4, ing5} constrain possible alchemicals.",
-      "so": "ing2 is npN; ing3 is Nnp; ing6 is Ppn; ing2 has R-; ing2 has G+; ing2 has B-; ing3 has R-; ing3 has G-; ing3 has B+; ing4 has B+; ing5 has B+; ing6 has B-; ing7 has G-; ing8 has G-; cross off Nnp, pNn from ing2; cross off npN, pNn from ing3; cross off npN from ing4; cross off npN from ing5; cross off PPP from ing6; cross off Ppn from ing7; cross off Ppn from ing8.",
+      "so": "ing2 is npN; ing3 is Nnp; ing6 is Ppn; ing2 has R-; ing2 has G+; ing2 has B-; ing3 has R-; ing3 has G-; ing3 has B+; ing4 has B+; ing5 has B+; ing6 has B-; ing7 has G-; ing8 has G-; cross off Nnp, pNn from ing2; cross off npN, pNn from ing3; cross off npN from ing4; cross off npN from ing5; cross off PPP from ing6; cross off Ppn from ing7; cross off Ppn from ing8 ing2 + ing5 = G+.",
       "highlight": {
         "clue_indices": [
           4

@@ -14,15 +14,15 @@ import { ExpandedPuzzleSolverPage } from './pages/ExpandedPuzzleSolverPage';
 import { clearExpandedPuzzleState } from './contexts/ExpandedSolverContext';
 import type { ExpandedPuzzle } from './types';
 import type { ExpandedCollection } from './data/puzzlesIndex';
-import { WhatsNewBanner } from '../components/WhatsNewBanner';
-import { getCurrentReleaseEntry } from '../utils/releaseNotes';
-import { SettingsModal } from '../components/SettingsModal';
-import { clearBaseProgress } from '../utils/saveProgress';
-import { BuildStamp } from '../components/BuildStamp';
-import type { Settings } from '../utils/settings';
-import { isPuzzleNonCompliant } from '../compliance';
-import { hashToDisplayMap } from '../utils/permalink';
-import { DriveSync } from '../components/DriveSync';
+import { WhatsNewBanner } from '@shared/components/WhatsNewBanner';
+import { getCurrentReleaseEntry } from '@shared/utils/releaseNotes';
+import { SettingsModal } from '@shared/components/SettingsModal';
+import { clearBaseProgress } from '@shared/utils/saveProgress';
+import { BuildStamp } from '@shared/components/BuildStamp';
+import type { Settings } from '@shared/utils/settings';
+import { isPuzzleNonCompliant } from '@shared/compliance';
+import { hashToDisplayMap } from '@shared/utils/permalink';
+import { DriveSync } from '@shared/components/DriveSync';
 
 // ─── Progress persistence ─────────────────────────────────────────────────────
 

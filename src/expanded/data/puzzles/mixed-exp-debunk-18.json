@@ -1,5 +1,5 @@
 {
-  "id": "mixed-exp-debunk-18",
+  "id": "1dba2646-b085-49ed-87b1-19f70c86b50d",
   "mode": "expanded",
   "kind": "debunk",
   "title": "The Transcritical Point",
@@ -227,7 +227,7 @@
     {
       "look_at": "clue 3: sell constraint among {ing1, ing4, ing5}.",
       "means": "Selling results among {ing1, ing4, ing5} constrain possible alchemicals.",
-      "so": "ing1 has G+; ing4 has G+; ing5 has G+; cross off NNN, Nnp, pNn, pnP from ing1; cross off PPP, nPp from ing2; cross off PPP, nPp from ing3; cross off NNN, Nnp, pNn, pnP from ing4; cross off NNN, Nnp, pNn, pnP from ing5; cross off PPP, nPp from ing6; cross off PPP, nPp from ing7; cross off PPP, nPp from ing8.",
+      "so": "ing1 has G+; ing4 has G+; ing5 has G+; cross off NNN, Nnp, pNn, pnP from ing1; cross off PPP, nPp from ing2; cross off PPP, nPp from ing3; cross off NNN, Nnp, pNn, pnP from ing4; cross off NNN, Nnp, pNn, pnP from ing5; cross off PPP, nPp from ing6; cross off PPP, nPp from ing7; cross off PPP, nPp from ing8",
       "highlight": {
         "clue_indices": [
           2

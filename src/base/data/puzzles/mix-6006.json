@@ -1,0 +1,314 @@
+{
+  "id": "b0b5cf4c-1827-4fae-a85b-0d0f6a44bff8",
+  "title": "The Cursed Batch",
+  "description": "Deduce the mixing result from the clues.",
+  "difficulty": "easy",
+  "clues": [
+    {
+      "kind": "mixing",
+      "ingredient1": 3,
+      "ingredient2": 6,
+      "result": {
+        "type": "potion",
+        "color": "R",
+        "sign": "-"
+      }
+    },
+    {
+      "kind": "mixing",
+      "ingredient1": 3,
+      "ingredient2": 4,
+      "result": {
+        "type": "neutral"
+      }
+    },
+    {
+      "kind": "mixing",
+      "ingredient1": 4,
+      "ingredient2": 8,
+      "result": {
+        "type": "potion",
+        "color": "R",
+        "sign": "+"
+      }
+    },
+    {
+      "kind": "mixing",
+      "ingredient1": 1,
+      "ingredient2": 6,
+      "result": {
+        "type": "neutral"
+      }
+    },
+    {
+      "kind": "mixing",
+      "ingredient1": 1,
+      "ingredient2": 7,
+      "result": {
+        "type": "potion",
+        "color": "R",
+        "sign": "+"
+      }
+    }
+  ],
+  "questions": [
+    {
+      "kind": "mixing-result",
+      "ingredient1": 2,
+      "ingredient2": 5
+    }
+  ],
+  "hints": [],
+  "solution": {
+    "1": 8,
+    "2": 5,
+    "3": 1,
+    "4": 2,
+    "5": 4,
+    "6": 7,
+    "7": 3,
+    "8": 6
+  },
+  "complexity": {
+    "score": 52,
+    "raw_score": 30,
+    "clue_score": 0,
+    "question_score": 0,
+    "world_score": 20,
+    "residual_worlds": 16
+  },
+  "hint_steps": [
+    {
+      "look_at": "clue 1: ing3 + ing6 = R-.",
+      "means": "When two ingredients mix to R-, both share R-. Any candidate without R- is impossible for either slot.",
+      "so": "ing3 has R-; ing6 has R-; cross off PPP, Ppn, pNn, pnP from ing3; cross off PPP, Ppn, pNn, pnP from ing6.",
+      "highlight": {
+        "clue_indices": [
+          0
+        ],
+        "ingredients": [
+          3,
+          6
+        ]
+      },
+      "impact": {
+        "confirmed_alchemicals": [],
+        "confirmed_aspects": [
+          {
+            "ingredient": 3,
+            "color": "R",
+            "sign": "-"
+          },
+          {
+            "ingredient": 6,
+            "color": "R",
+            "sign": "-"
+          }
+        ],
+        "eliminated_cells": [
+          {
+            "ingredient": 3,
+            "alchemicals": [
+              "PPP",
+              "Ppn",
+              "pNn",
+              "pnP"
+            ]
+          },
+          {
+            "ingredient": 6,
+            "alchemicals": [
+              "PPP",
+              "Ppn",
+              "pNn",
+              "pnP"
+            ]
+          }
+        ]
+      },
+      "reveals_answer": false,
+      "worlds_before": 40320,
+      "worlds_after": 5760
+    },
+    {
+      "look_at": "clue 2: ing3 + ing4 = neutral.",
+      "means": "A neutral result means ing3 and ing4 have opposite signs in every color.",
+      "so": "ing4 has R+; cross off NNN, Nnp, nPp, npN from ing4.",
+      "highlight": {
+        "clue_indices": [
+          1
+        ],
+        "ingredients": [
+          3,
+          4
+        ]
+      },
+      "impact": {
+        "confirmed_alchemicals": [],
+        "confirmed_aspects": [
+          {
+            "ingredient": 4,
+            "color": "R",
+            "sign": "+"
+          }
+        ],
+        "eliminated_cells": [
+          {
+            "ingredient": 4,
+            "alchemicals": [
+              "NNN",
+              "Nnp",
+              "nPp",
+              "npN"
+            ]
+          }
+        ]
+      },
+      "reveals_answer": false,
+      "worlds_before": 5760,
+      "worlds_after": 960
+    },
+    {
+      "look_at": "clue 4: ing1 + ing6 = neutral.",
+      "means": "A neutral result means ing1 and ing6 have opposite signs in every color.",
+      "so": "ing1 has R+; cross off NNN, Nnp, nPp, npN from ing1.",
+      "highlight": {
+        "clue_indices": [
+          3
+        ],
+        "ingredients": [
+          1,
+          6
+        ]
+      },
+      "impact": {
+        "confirmed_alchemicals": [],
+        "confirmed_aspects": [
+          {
+            "ingredient": 1,
+            "color": "R",
+            "sign": "+"
+          }
+        ],
+        "eliminated_cells": [
+          {
+            "ingredient": 1,
+            "alchemicals": [
+              "NNN",
+              "Nnp",
+              "nPp",
+              "npN"
+            ]
+          }
+        ]
+      },
+      "reveals_answer": false,
+      "worlds_before": 960,
+      "worlds_after": 192
+    },
+    {
+      "look_at": "clue 3: ing4 + ing8 = R+.",
+      "means": "When two ingredients mix to R+, both share R+. Any candidate without R+ is impossible for either slot.",
+      "so": "ing8 has R+; cross off NNN, Nnp, nPp, npN from ing8.",
+      "highlight": {
+        "clue_indices": [
+          2
+        ],
+        "ingredients": [
+          4,
+          8
+        ]
+      },
+      "impact": {
+        "confirmed_alchemicals": [],
+        "confirmed_aspects": [
+          {
+            "ingredient": 8,
+            "color": "R",
+            "sign": "+"
+          }
+        ],
+        "eliminated_cells": [
+          {
+            "ingredient": 8,
+            "alchemicals": [
+              "NNN",
+              "Nnp",
+              "nPp",
+              "npN"
+            ]
+          }
+        ]
+      },
+      "reveals_answer": false,
+      "worlds_before": 192,
+      "worlds_after": 48
+    },
+    {
+      "look_at": "clue 5: ing1 + ing7 = R+.",
+      "means": "When two ingredients mix to R+, both share R+. Any candidate without R+ is impossible for either slot.",
+      "so": "ing2 has R-; ing5 has R-; ing7 has R+; cross off PPP, Ppn, pNn, pnP from ing2; cross off PPP, Ppn, pNn, pnP from ing5; cross off NNN, Nnp, nPp, npN from ing7 ing2 + ing5 = R-.",
+      "highlight": {
+        "clue_indices": [
+          4
+        ],
+        "ingredients": [
+          1,
+          7
+        ]
+      },
+      "impact": {
+        "confirmed_alchemicals": [],
+        "confirmed_aspects": [
+          {
+            "ingredient": 2,
+            "color": "R",
+            "sign": "-"
+          },
+          {
+            "ingredient": 5,
+            "color": "R",
+            "sign": "-"
+          },
+          {
+            "ingredient": 7,
+            "color": "R",
+            "sign": "+"
+          }
+        ],
+        "eliminated_cells": [
+          {
+            "ingredient": 2,
+            "alchemicals": [
+              "PPP",
+              "Ppn",
+              "pNn",
+              "pnP"
+            ]
+          },
+          {
+            "ingredient": 5,
+            "alchemicals": [
+              "PPP",
+              "Ppn",
+              "pNn",
+              "pnP"
+            ]
+          },
+          {
+            "ingredient": 7,
+            "alchemicals": [
+              "NNN",
+              "Nnp",
+              "nPp",
+              "npN"
+            ]
+          }
+        ]
+      },
+      "reveals_answer": true,
+      "worlds_before": 48,
+      "worlds_after": 16
+    }
+  ]
+}

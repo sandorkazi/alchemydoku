@@ -1,5 +1,5 @@
 {
-  "id": "mixed-exp-mix-24",
+  "id": "64283d9e-392f-4638-afe8-6a626f10e8f4",
   "mode": "expanded",
   "title": "The Chiral Centre",
   "description": "Mixing, selling, and debunking records all point toward a single pair. Deduce what potion they produce.",
@@ -476,7 +476,7 @@
     {
       "look_at": "clue 2: exactly 1 of {ing1, ing3, ing6, ing8} are lunar.",
       "means": "Exactly 1 ingredient(s) in {ing1, ing3, ing6, ing8} must be lunar.",
-      "so": "ing2 is PPP; ing3 is nPp; ing4 is pNn; ing7 is Ppn; ing2 has G+; ing2 has B+; ing3 has R-; ing4 has G-; ing7 has R+; ing7 has B-; cross off pNn from ing2; cross off PPP from ing3; cross off Ppn from ing4; cross off nPp from ing7.",
+      "so": "ing2 is PPP; ing3 is nPp; ing4 is pNn; ing7 is Ppn; ing2 has G+; ing2 has B+; ing3 has R-; ing4 has G-; ing7 has R+; ing7 has B-; cross off pNn from ing2; cross off PPP from ing3; cross off Ppn from ing4; cross off nPp from ing7 ing4 + ing8 = G-.",
       "highlight": {
         "clue_indices": [
           1

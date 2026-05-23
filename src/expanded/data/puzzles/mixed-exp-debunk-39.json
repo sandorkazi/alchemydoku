@@ -1,5 +1,5 @@
 {
-  "id": "mixed-exp-debunk-39",
+  "id": "81d582a9-fc07-4995-bb59-08332268bb01",
   "mode": "expanded",
   "kind": "debunk",
   "title": "The Surviving Fragment",
@@ -216,7 +216,7 @@
     {
       "look_at": "clue 3: sell constraint among {ing2, ing4, ing6, ing8}.",
       "means": "Selling results among {ing2, ing4, ing6, ing8} constrain possible alchemicals.",
-      "so": "cross off NNN, Nnp, npN, pNn from ing1; cross off PPP, Ppn, nPp, pnP from ing2; cross off NNN, Nnp, npN, pNn from ing3; cross off PPP, Ppn, nPp, pnP from ing4; cross off NNN, Nnp, npN, pNn from ing5; cross off PPP, Ppn, nPp, pnP from ing6; cross off NNN, Nnp, npN, pNn from ing7; cross off PPP, Ppn, nPp, pnP from ing8.",
+      "so": "cross off NNN, Nnp, npN, pNn from ing1; cross off PPP, Ppn, nPp, pnP from ing2; cross off NNN, Nnp, npN, pNn from ing3; cross off PPP, Ppn, nPp, pnP from ing4; cross off NNN, Nnp, npN, pNn from ing5; cross off PPP, Ppn, nPp, pnP from ing6; cross off NNN, Nnp, npN, pNn from ing7; cross off PPP, Ppn, nPp, pnP from ing8",
       "highlight": {
         "clue_indices": [
           2

@@ -1,5 +1,5 @@
 {
-  "id": "combo-exp-xsl-04",
+  "id": "0a722b81-fa01-4893-b647-a9ff22179d67",
   "mode": "expanded",
   "title": "The Reaction Coordinate",
   "description": "Use the clues to determine whether the target ingredient is Solar or Lunar.",
@@ -255,7 +255,7 @@
     {
       "look_at": "clue 3.",
       "means": "Apply this clue to eliminate impossible alchemical assignments.",
-      "so": "ing1 is nPp; ing7 is pNn; ing1 has R-; ing1 has G+; ing2 has G-; ing3 has G+; ing5 has G+; ing6 has G-; ing7 has G-; ing7 has B-; cross off Nnp, PPP, pnP from ing1; cross off PPP, nPp from ing2; cross off pNn, pnP from ing3; cross off pNn, pnP from ing5; cross off PPP, nPp from ing6; cross off PPP, Ppn, pnP from ing7.",
+      "so": "ing1 is nPp; ing7 is pNn; ing1 has R-; ing1 has G+; ing2 has G-; ing3 has G+; ing5 has G+; ing6 has G-; ing7 has G-; ing7 has B-; cross off Nnp, PPP, pnP from ing1; cross off PPP, nPp from ing2; cross off pNn, pnP from ing3; cross off pNn, pnP from ing5; cross off PPP, nPp from ing6; cross off PPP, Ppn, pnP from ing7 ing1 is lunar.",
       "highlight": {
         "clue_indices": [
           2

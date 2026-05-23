@@ -1,5 +1,5 @@
 {
-  "id": "mixed-exp-06",
+  "id": "67c2bb01-e768-4b45-934d-3f135a8c1bce",
   "mode": "expanded",
   "title": "The Inference Engine",
   "description": "Use the clues to decide which ingredient reveals the most information when consulted in the Royal Society book.",
@@ -57,7 +57,7 @@
     {
       "look_at": "Suppose ing1 were pnP.",
       "means": "If ing1 = pnP, then after applying all clues, the answer becomes deducible.",
-      "so": "Under this assumption, the answer is 3.",
+      "so": "Under this assumption the answer is deducible.",
       "highlight": {
         "clue_indices": [],
         "ingredients": [

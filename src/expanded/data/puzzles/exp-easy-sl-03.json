@@ -1,5 +1,5 @@
 {
-  "id": "exp-easy-sl-03",
+  "id": "c04e68b4-c318-4e5c-a628-b7b677b123e4",
   "mode": "expanded",
   "title": "The Chromatograph",
   "description": "Use the clues to deduce which alchemical belongs to the target ingredient.",
@@ -408,7 +408,7 @@
     {
       "look_at": "clue 5: exactly 1 of {ing5, ing6, ing7, ing8} are lunar.",
       "means": "Exactly 1 ingredient(s) in {ing5, ing6, ing7, ing8} must be lunar.",
-      "so": "ing1 is nPp; ing2 is pnP; ing5 is Nnp; ing1 has R-; ing1 has B+; ing2 has R+; ing5 has R-; cross off PPP, npN from ing1; cross off Nnp from ing2; cross off pnP from ing5; cross off nPp from ing6; cross off nPp from ing8.",
+      "so": "ing1 is nPp; ing2 is pnP; ing5 is Nnp; ing1 has R-; ing1 has B+; ing2 has R+; ing5 has R-; cross off PPP, npN from ing1; cross off Nnp from ing2; cross off pnP from ing5; cross off nPp from ing6; cross off nPp from ing8 ing1 is nPp.",
       "highlight": {
         "clue_indices": [
           4

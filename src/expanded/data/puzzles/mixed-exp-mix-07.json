@@ -1,5 +1,5 @@
 {
-  "id": "mixed-exp-mix-07",
+  "id": "372aef7d-1ded-4849-98d8-647b7abc7ab0",
   "mode": "expanded",
   "title": "The Hopf Bifurcation",
   "description": "Mixing, selling, and debunking records all point toward a single pair. Deduce what potion they produce.",
@@ -416,7 +416,7 @@
     {
       "look_at": "clue 6: exactly 1 of {ing2, ing3, ing8} are lunar.",
       "means": "Exactly 1 ingredient(s) in {ing2, ing3, ing8} must be lunar.",
-      "so": "ing1 is npN; ing2 is Ppn; ing5 is PPP; ing7 is pnP; ing8 is nPp; ing1 has R-; ing1 has B-; ing2 has G+; ing2 has B-; ing3 has G-; ing4 has G-; ing5 has R+; ing5 has G+; ing7 has R+; ing7 has G-; ing8 has B+; cross off PPP from ing1; cross off pNn, pnP from ing2; cross off Ppn, pnP from ing3; cross off Ppn, pnP from ing4; cross off Nnp, pnP from ing5; cross off nPp from ing7; cross off npN from ing8.",
+      "so": "ing1 is npN; ing2 is Ppn; ing5 is PPP; ing7 is pnP; ing8 is nPp; ing1 has R-; ing1 has B-; ing2 has G+; ing2 has B-; ing3 has G-; ing4 has G-; ing5 has R+; ing5 has G+; ing7 has R+; ing7 has G-; ing8 has B+; cross off PPP from ing1; cross off pNn, pnP from ing2; cross off Ppn, pnP from ing3; cross off Ppn, pnP from ing4; cross off Nnp, pnP from ing5; cross off nPp from ing7; cross off npN from ing8 ing1 + ing6 = R-.",
       "highlight": {
         "clue_indices": [
           5

@@ -1,5 +1,5 @@
 {
-  "id": "combo-exp-04",
+  "id": "05eda9e5-eb28-473e-96ab-9cba72778516",
   "mode": "expanded",
   "title": "The Steady State",
   "description": "A partial encyclopedia article lists three ingredients on the same aspect. Use the supporting clues to identify the fourth.",
@@ -388,7 +388,7 @@
     {
       "look_at": "clue 4: ing6 is lunar.",
       "means": "Solar/lunar status constrains which alchemicals ing6 can be.",
-      "so": "ing6 is pNn; ing7 is Ppn; ing6 has G-; ing7 has G+; cross off Ppn from ing6; cross off pNn from ing7.",
+      "so": "ing6 is pNn; ing7 is Ppn; ing6 has G-; ing7 has G+; cross off Ppn from ing6; cross off pNn from ing7 The missing G+ ingredient is ing7.",
       "highlight": {
         "clue_indices": [
           3

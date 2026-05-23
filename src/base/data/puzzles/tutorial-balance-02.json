@@ -1,0 +1,71 @@
+{
+  "id": "b20b922b-8fb5-4c71-b35d-2b58306d7391",
+  "title": "The Green Half",
+  "description": "Four ingredients have the G\u2212 aspect. All four G\u2212 alchemicals are accounted for \u2014 what sign must the remaining ingredients have?",
+  "difficulty": "tutorial",
+  "clues": [
+    {
+      "kind": "aspect",
+      "ingredient": 1,
+      "color": "G",
+      "sign": "-"
+    },
+    {
+      "kind": "aspect",
+      "ingredient": 2,
+      "color": "G",
+      "sign": "-"
+    },
+    {
+      "kind": "aspect",
+      "ingredient": 3,
+      "color": "G",
+      "sign": "-"
+    },
+    {
+      "kind": "aspect",
+      "ingredient": 4,
+      "color": "G",
+      "sign": "-"
+    }
+  ],
+  "solution": {
+    "1": 2,
+    "2": 3,
+    "3": 5,
+    "4": 7,
+    "5": 1,
+    "6": 4,
+    "7": 6,
+    "8": 8
+  },
+  "questions": [
+    {
+      "kind": "aspect",
+      "ingredient": 6,
+      "color": "G"
+    }
+  ],
+  "hints": [
+    {
+      "level": 1,
+      "text": "Your clues tell you ing1, ing2, ing3, and ing4 are all G-. How many G- alchemicals exist in the game in total?"
+    },
+    {
+      "level": 2,
+      "text": "There are exactly 4 G- alchemicals: pnP, pNn, Nnp, NNN. All four are already committed to ing1, ing2, ing3, and ing4. No G- alchemical is left for ing6. What sign must ing6 have?"
+    },
+    {
+      "level": 3,
+      "text": "The four G- alchemicals (pnP, pNn, Nnp, NNN) are fully used by ing1, ing2, ing3, and ing4. The remaining four alchemicals \u2014 npN, nPp, Ppn, PPP \u2014 are all G+. So ing6 must be G+."
+    }
+  ],
+  "complexity": {
+    "score": 40,
+    "raw_score": 20,
+    "clue_score": 0,
+    "question_score": 0,
+    "world_score": 10,
+    "residual_worlds": 576
+  }
+}

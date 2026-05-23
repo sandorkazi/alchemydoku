@@ -1,5 +1,5 @@
 {
-  "id": "combo-exp-xsl-02",
+  "id": "eb039517-f02e-4e6c-a4f6-aaf89e428c56",
   "mode": "expanded",
   "title": "The Unimolecular Collapse",
   "description": "Use the clues to determine whether the target ingredient is Solar or Lunar.",
@@ -248,7 +248,7 @@
     {
       "look_at": "clue 3: exactly 1 of {ing1, ing2, ing3, ing4} are lunar.",
       "means": "Exactly 1 ingredient(s) in {ing1, ing2, ing3, ing4} must be lunar.",
-      "so": "cross off NNN, Ppn from ing6; cross off Ppn, pnP from ing7.",
+      "so": "cross off NNN, Ppn from ing6; cross off Ppn, pnP from ing7 ing7 is solar.",
       "highlight": {
         "clue_indices": [
           2

@@ -1,5 +1,5 @@
 {
-  "id": "mixed-exp-mix-37",
+  "id": "5bc6551e-672a-4072-82ad-d368e0fefc15",
   "mode": "expanded",
   "title": "The Eclipsed State",
   "description": "Mixing, selling, and debunking records all point toward a single pair. Deduce what potion they produce.",
@@ -480,7 +480,7 @@
     {
       "look_at": "clue 1: sell constraint among {ing2, ing4, ing8}.",
       "means": "Selling results among {ing2, ing4, ing8} constrain possible alchemicals.",
-      "so": "ing1 is npN; ing2 is PPP; ing3 is Ppn; ing7 is Nnp; ing8 is pnP; ing1 has R-; ing1 has B-; ing2 has R+; ing2 has B+; ing3 has B-; ing7 has R-; ing8 has R+; cross off PPP, Ppn from ing1; cross off Ppn, npN from ing2; cross off PPP from ing3; cross off pnP from ing7; cross off Nnp from ing8.",
+      "so": "ing1 is npN; ing2 is PPP; ing3 is Ppn; ing7 is Nnp; ing8 is pnP; ing1 has R-; ing1 has B-; ing2 has R+; ing2 has B+; ing3 has B-; ing7 has R-; ing8 has R+; cross off PPP, Ppn from ing1; cross off Ppn, npN from ing2; cross off PPP from ing3; cross off pnP from ing7; cross off Nnp from ing8 ing5 + ing8 = B+.",
       "highlight": {
         "clue_indices": [
           0

@@ -7,12 +7,12 @@
  */
 
 import { useState, useMemo } from 'react';
-import { INGREDIENTS } from '../../data/ingredients';
-import { getPossibleResults, deduceMixingResult } from '../../logic/deducer';
-import { WORLD_DATA, FULL_INDICES } from '../../logic/worldPack';
-import { PotionImage } from '../../components/GameSprites';
+import { INGREDIENTS } from '@shared/data/ingredients';
+import { getPossibleResults, deduceMixingResult } from '@shared/logic/deducer';
+import { WORLD_DATA, FULL_INDICES } from '@shared/logic/worldPack';
+import { PotionImage } from '@shared/components/GameSprites';
 import { useExpandedSolver, useExpandedIngredient } from '../contexts/ExpandedSolverContext';
-import type { IngredientId, PotionResult, WorldSet } from '../../types';
+import type { IngredientId, PotionResult, WorldSet } from '@shared/types';
 
 type SimMode = 'grid' | 'truth';
 

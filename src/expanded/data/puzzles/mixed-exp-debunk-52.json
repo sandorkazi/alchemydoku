@@ -1,5 +1,5 @@
 {
-  "id": "mixed-exp-debunk-52",
+  "id": "f61b56f9-8403-497d-8f5f-5bd83fbe7df6",
   "mode": "expanded",
   "kind": "debunk",
   "title": "An Unresolved Citation",
@@ -212,7 +212,7 @@
     {
       "look_at": "clue 3: sell constraint among {ing1, ing2, ing4, ing7}.",
       "means": "Selling results among {ing1, ing2, ing4, ing7} constrain possible alchemicals.",
-      "so": "cross off PPP, Ppn from ing1; cross off PPP, Ppn from ing2; cross off NNN, Nnp from ing3; cross off PPP, Ppn from ing4; cross off NNN, Nnp from ing5; cross off NNN, Nnp from ing6; cross off PPP, Ppn from ing7; cross off NNN, Nnp from ing8.",
+      "so": "cross off PPP, Ppn from ing1; cross off PPP, Ppn from ing2; cross off NNN, Nnp from ing3; cross off PPP, Ppn from ing4; cross off NNN, Nnp from ing5; cross off NNN, Nnp from ing6; cross off PPP, Ppn from ing7; cross off NNN, Nnp from ing8",
       "highlight": {
         "clue_indices": [
           2

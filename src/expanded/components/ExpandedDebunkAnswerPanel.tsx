@@ -8,11 +8,12 @@
 
 import { useState } from 'react';
 import { useExpandedSolver, useExpandedIngredient } from '../contexts/ExpandedSolverContext';
-import { IngredientIcon, AlchemicalImage, ElemImage, SignedElemImage, PotionImage, CorrectIcon, IncorrectIcon } from '../../components/GameSprites';
-import { PotionPicker } from '../../components/AnswerPickers';
+import { useCheatMode } from '@shared/contexts/CheatContext';
+import { IngredientIcon, AlchemicalImage, ElemImage, SignedElemImage, PotionImage, CorrectIcon, IncorrectIcon } from '@shared/components/GameSprites';
+import { PotionPicker } from '@base/components/AnswerPickers';
 import { simulateExpandedPlan, simulateExpandedPlanForDisplay } from '../logic/debunkExpanded';
-import { isPublicationDefinitelyFalse } from '../../logic/debunk';
-import type { DebunkStep, IngredientId, Color, Publication, PotionResult } from '../../types';
+import { isPublicationDefinitelyFalse } from '@base/logic/debunk';
+import type { DebunkStep, IngredientId, Color, Publication, PotionResult } from '@shared/types';
 import type { DebunkArticle } from '../types';
 
 // ─── Ingredient picker ────────────────────────────────────────────────────────
@@ -413,6 +414,8 @@ export function ExpandedDebunkAnswerPanel({ onNext, isTutorial = false }: {
 }) {
   const { state, dispatch } = useExpandedSolver();
   const { puzzle, completed, wrongAttempts, showSolution, worlds } = state;
+  const cheatMode = useCheatMode();
+  const reveal = showSolution || cheatMode;
 
   const publications: Publication[] = (puzzle.publications ?? []).filter(Boolean) as Publication[];
   const articles: DebunkArticle[] = puzzle.articles ?? [];
@@ -503,7 +506,7 @@ export function ExpandedDebunkAnswerPanel({ onNext, isTutorial = false }: {
       )}
 
       {/* One plan section per debunk question */}
-      {!completed && !showSolution && plans.map((plan, qi) => {
+      {!completed && !reveal && plans.map((plan, qi) => {
         const sim = simulations[qi];
         const completedSteps = plan.drafts.filter(isComplete) as DebunkStep[];
         const refAnswer = plan.isConflictOnly
@@ -604,7 +607,7 @@ export function ExpandedDebunkAnswerPanel({ onNext, isTutorial = false }: {
             </button>
 
             {/* Wrong attempt hint for this question */}
-            {!completed && wrongAttempts > 0 && !showSolution && (
+            {!completed && wrongAttempts > 0 && !reveal && (
               <p className="text-[10px] text-red-400">
                 {plan.isConflictOnly
                   ? (plan.drafts.length < refLen
@@ -621,7 +624,7 @@ export function ExpandedDebunkAnswerPanel({ onNext, isTutorial = false }: {
       })}
 
       {/* Solution reveal */}
-      {showSolution && (
+      {reveal && (
         <div className="bg-indigo-50 border border-indigo-200 rounded-xl px-4 py-3 space-y-3">
           {debunkQuestions.map((_q, qi) => {
             const plan = plans[qi];
@@ -668,22 +671,16 @@ export function ExpandedDebunkAnswerPanel({ onNext, isTutorial = false }: {
       )}
 
       {/* Wrong attempt */}
-      {!completed && wrongAttempts > 0 && !showSolution && (
-        <div className="rounded-xl bg-red-50 border border-red-200 p-4 space-y-2 animate-fadein">
+      {!completed && wrongAttempts > 0 && !reveal && (
+        <div className="rounded-xl bg-red-50 border border-red-200 p-4 animate-fadein">
           <div className="flex items-center gap-2 text-red-700 font-semibold">
             <IncorrectIcon width={24} /> One or more plans are incorrect — review each plan above.
           </div>
-          {wrongAttempts >= 3 && (
-            <button onClick={() => dispatch({ type: 'REVEAL_SOLUTION' })}
-              className="text-xs text-red-600 underline hover:no-underline">
-              Show solution
-            </button>
-          )}
         </div>
       )}
 
       {/* Submit */}
-      {!completed && !showSolution && (
+      {!completed && !reveal && (
         <button
           onClick={handleSubmit}
           disabled={!allStepsComplete}

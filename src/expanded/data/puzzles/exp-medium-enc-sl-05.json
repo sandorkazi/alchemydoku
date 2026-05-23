@@ -1,5 +1,5 @@
 {
-  "id": "exp-medium-enc-sl-05",
+  "id": "e3e7e8b0-17d0-4980-a804-8d84fb2e2bda",
   "mode": "expanded",
   "title": "The Flagged Formula",
   "description": "A partial encyclopedia article lists three ingredients on the same aspect. Use the supporting clues to identify the fourth.",
@@ -394,7 +394,7 @@
     {
       "look_at": "clue 4: exactly 1 of {ing1, ing2, ing3, ing8} are lunar.",
       "means": "Exactly 1 ingredient(s) in {ing1, ing2, ing3, ing8} must be lunar.",
-      "so": "ing1 is Ppn; ing2 is nPp; ing5 is PPP; ing6 is pNn; ing7 is Nnp; ing8 is NNN; ing1 has G+; ing2 has R-; ing5 has R+; ing6 has G-; ing7 has B+; ing8 has B-; cross off pNn from ing1; cross off PPP from ing2; cross off nPp from ing5; cross off Ppn from ing6; cross off NNN from ing7; cross off Nnp from ing8.",
+      "so": "ing1 is Ppn; ing2 is nPp; ing5 is PPP; ing6 is pNn; ing7 is Nnp; ing8 is NNN; ing1 has G+; ing2 has R-; ing5 has R+; ing6 has G-; ing7 has B+; ing8 has B-; cross off pNn from ing1; cross off PPP from ing2; cross off nPp from ing5; cross off Ppn from ing6; cross off NNN from ing7; cross off Nnp from ing8 The missing G+ ingredient is ing1.",
       "highlight": {
         "clue_indices": [
           3

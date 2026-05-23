@@ -4,7 +4,7 @@ scripts/check_puzzles.py — Alchemydoku puzzle integrity checker.
 
 Checks performed (always, ~0.1 s):
   1. registration   — every *.json in puzzle dirs is imported in index files
-  2. id-filename    — puzzle 'id' field matches filename stem
+  2. id-uuid        — puzzle 'id' field is a valid UUID v4
   3. duplicates     — no two puzzles share an id; warns on identical titles
   4. similar-titles — warns when titles share ≥80 % of their word tokens
   5. required-fields— id, title, difficulty, clues, questions, solution present
@@ -35,7 +35,7 @@ Additional checks with --deep (~2–5 s per puzzle, runs world simulation):
 Usage:
   python scripts/check_puzzles.py           # structural checks (fast)
   python scripts/check_puzzles.py --deep    # + logical validation (slow)
-  python scripts/check_puzzles.py --files src/data/puzzles/easy-2000.json
+  python scripts/check_puzzles.py --files src/base/data/puzzles/easy-2000.json
 
 Exit codes: 0 = pass (warnings may appear), 1 = one or more errors.
 """
@@ -51,9 +51,9 @@ from pathlib import Path
 # ── Paths ──────────────────────────────────────────────────────────────────────
 
 ROOT     = Path(__file__).resolve().parent.parent
-BASE_DIR = ROOT / "src" / "data" / "puzzles"
+BASE_DIR = ROOT / "src" / "base" / "data" / "puzzles"
 EXP_DIR  = ROOT / "src" / "expanded" / "data" / "puzzles"
-BASE_IDX = ROOT / "src" / "data" / "puzzles" / "index.ts"
+BASE_IDX = ROOT / "src" / "base" / "data" / "index.ts"
 EXP_IDX  = ROOT / "src" / "expanded" / "data" / "puzzlesIndex.ts"
 
 REQUIRED_BASE = {"id", "title", "difficulty", "clues", "questions", "solution", "complexity"}
@@ -128,11 +128,13 @@ def check_structure(path: Path, puz: dict, is_expanded: bool, r: Results):
     if missing:
         r.error(f"[required-fields] {name}: missing {', '.join(sorted(missing))}")
 
-    # ID must match filename stem
-    pid  = puz.get("id", "")
-    stem = path.stem
-    if pid != stem:
-        r.error(f"[id-filename] {name}: id='{pid}' does not match filename stem '{stem}'")
+    # ID must be a valid UUID v4
+    pid = puz.get("id", "")
+    _UUID_RE = re.compile(
+        r'^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$'
+    )
+    if not _UUID_RE.match(pid):
+        r.error(f"[id-uuid] {name}: id='{pid}' is not a valid UUID v4")
 
     # Expanded puzzles must declare mode
     if is_expanded and puz.get("mode") != "expanded":
@@ -512,7 +514,7 @@ def check_permalink_uniqueness(all_puzzles: list, r: Results):
 
     # ── Base: collections.json ───────────────────────────────────────────────
     base_pid_to_col: dict[str, str] = {}
-    collections_json = BASE_DIR / "collections.json"
+    collections_json = BASE_DIR.parent / "collections.json"
     if collections_json.exists():
         try:
             data = json.loads(collections_json.read_text(encoding="utf-8"))

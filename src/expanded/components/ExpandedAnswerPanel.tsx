@@ -9,10 +9,11 @@
  */
 
 import { useState } from 'react';
-import { PotionImage, AlchemicalImage, ElemImage, CorrectIcon, IncorrectIcon, IngredientIcon, SignedElemImage } from '../../components/GameSprites';
-import { PotionPicker, AlchemicalPicker, AspectPicker, PossiblePotionsPicker, LOGICAL_POTIONS, potionKey } from '../../components/AnswerPickers';
+import { PotionImage, AlchemicalImage, ElemImage, CorrectIcon, IncorrectIcon, IngredientIcon, SignedElemImage } from '@shared/components/GameSprites';
+import { PotionPicker, AlchemicalPicker, AspectPicker, PossiblePotionsPicker, LOGICAL_POTIONS, potionKey } from '@base/components/AnswerPickers';
 import { useExpandedSolver, useExpandedIngredient, computeAllExpandedAnswers } from '../contexts/ExpandedSolverContext';
-import type { PotionResult, AlchemicalId, Color, Size, IngredientId } from '../../types';
+import { useCheatMode } from '@shared/contexts/CheatContext';
+import type { PotionResult, AlchemicalId, Color, Size, IngredientId } from '@shared/types';
 import type {
   AnyQuestion, AnyAnswer,
   AspectColorAnswer, SolarLunarAnswer, IngredientSetAnswer,
@@ -721,6 +722,7 @@ function StandardExpandedAnswerPanel({ onNext, isTutorial = false }: {
 }) {
   const { state, dispatch } = useExpandedSolver();
   const { puzzle, completed, wrongAttempts, showSolution } = state;
+  const cheatMode = useCheatMode();
   const qs = puzzle.questions;
 
   const [pending, setPending] = useState<(AnyAnswer | null)[]>(() => qs.map(() => null));
@@ -728,7 +730,8 @@ function StandardExpandedAnswerPanel({ onNext, isTutorial = false }: {
     setPending((prev: (AnyAnswer|null)[]) => prev.map((x: AnyAnswer|null, j: number) => j===i ? a : x));
 
   const allAnswered = pending.every((a: AnyAnswer|null) => a !== null);
-  const correctAnswers = (showSolution || completed) ? computeAllExpandedAnswers(puzzle) : null;
+  const reveal = showSolution || completed || cheatMode;
+  const correctAnswers = reveal ? computeAllExpandedAnswers(puzzle) : null;
 
   return (
     <div className="space-y-4">
@@ -739,7 +742,7 @@ function StandardExpandedAnswerPanel({ onNext, isTutorial = false }: {
             value={pending[i]}
             onChange={a => setPendingAt(i, a)}
             correctAnswer={correctAnswers ? correctAnswers[i] : null}
-            showSolution={showSolution || completed}
+            showSolution={reveal}
           />
         ))}
       </div>
@@ -758,15 +761,11 @@ function StandardExpandedAnswerPanel({ onNext, isTutorial = false }: {
         </div>
       )}
 
-      {!completed && wrongAttempts>0 && !showSolution && (
-        <div className="rounded-xl bg-red-50 border border-red-200 p-4 space-y-2 animate-fadein">
+      {!completed && wrongAttempts>0 && !reveal && (
+        <div className="rounded-xl bg-red-50 border border-red-200 p-4 animate-fadein">
           <div className="flex items-center gap-2 text-red-700 font-semibold">
             <IncorrectIcon width={24} /> Not quite — try again.
           </div>
-          {wrongAttempts>=3 && (
-            <button onClick={() => dispatch({ type:'REVEAL_SOLUTION' })}
-              className="text-xs text-red-600 underline hover:no-underline">Show solution</button>
-          )}
         </div>
       )}
 

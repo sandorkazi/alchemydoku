@@ -1,5 +1,5 @@
 {
-  "id": "mixed-exp-mix-20",
+  "id": "582703c8-62ae-4d6a-a94a-86329d21d575",
   "mode": "expanded",
   "title": "The Kinetic Glass",
   "description": "Mixing, selling, and debunking records all point toward a single pair. Deduce what potion they produce.",
@@ -452,7 +452,7 @@
     {
       "look_at": "clue 6: sell constraint among {ing3, ing4, ing6}.",
       "means": "Selling results among {ing3, ing4, ing6} constrain possible alchemicals.",
-      "so": "ing3 is npN; ing8 is pNn; ing3 has R-; ing3 has G+; ing8 has R+; ing8 has G-; cross off pNn from ing3; cross off npN from ing8.",
+      "so": "ing3 is npN; ing8 is pNn; ing3 has R-; ing3 has G+; ing8 has R+; ing8 has G-; cross off pNn from ing3; cross off npN from ing8 ing3 + ing4 = R-.",
       "highlight": {
         "clue_indices": [
           5

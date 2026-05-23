@@ -1,5 +1,5 @@
 {
-  "id": "combo-exp-wha-03",
+  "id": "4cd3196b-0fa2-41f8-a6b5-195ba1d81469",
   "mode": "expanded",
   "title": "The Marginal Direction",
   "description": "Four ingredient\u2013sign pairs form a valid encyclopedia article. All the clue types are in play \u2014 deduce which aspect colour they share.",
@@ -501,7 +501,7 @@
     {
       "look_at": "clue 5.",
       "means": "Apply this clue to eliminate impossible alchemical assignments.",
-      "so": "ing1 is pnP; ing6 is NNN; ing1 has R+; ing1 has B+; ing6 has R-; ing6 has B-; cross off NNN from ing1; cross off pnP from ing6.",
+      "so": "ing1 is pnP; ing6 is NNN; ing1 has R+; ing1 has B+; ing6 has R-; ing6 has B-; cross off NNN from ing1; cross off pnP from ing6 The matching aspect color is R.",
       "highlight": {
         "clue_indices": [
           4

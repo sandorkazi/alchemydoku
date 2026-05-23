@@ -1,5 +1,5 @@
 {
-  "id": "combo-exp-03",
+  "id": "fd8b9194-8fe0-4c8d-a706-9a4f57f985ef",
   "mode": "expanded",
   "title": "Second Opinion",
   "description": "A partial encyclopedia article lists three ingredients on the same aspect. Use the supporting clues to identify the fourth.",
@@ -388,7 +388,7 @@
     {
       "look_at": "clue 4: ing3 is lunar.",
       "means": "Solar/lunar status constrains which alchemicals ing3 can be.",
-      "so": "ing3 is Ppn; ing8 is npN; ing3 has R+; ing8 has R-; cross off npN from ing3; cross off Ppn from ing8.",
+      "so": "ing3 is Ppn; ing8 is npN; ing3 has R+; ing8 has R-; cross off npN from ing3; cross off Ppn from ing8 The missing R+ ingredient is ing3.",
       "highlight": {
         "clue_indices": [
           3

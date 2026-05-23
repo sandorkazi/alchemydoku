@@ -1,5 +1,5 @@
 {
-  "id": "mixed-exp-mix-26",
+  "id": "598a7689-3ecb-40e3-88c4-40c9a972379f",
   "mode": "expanded",
   "title": "The Jellyfish",
   "description": "Mixing, selling, and debunking records all point toward a single pair. Deduce what potion they produce.",
@@ -443,7 +443,7 @@
     {
       "look_at": "clue 2: exactly 1 of {ing3, ing4, ing7, ing8} are lunar.",
       "means": "Exactly 1 ingredient(s) in {ing3, ing4, ing7, ing8} must be lunar.",
-      "so": "ing3 is NNN; ing5 is PPP; ing6 is pNn; ing8 is nPp; ing3 has R-; ing5 has R+; ing6 has R+; ing8 has R-; cross off pNn from ing3; cross off nPp from ing5; cross off NNN from ing6; cross off PPP from ing8.",
+      "so": "ing3 is NNN; ing5 is PPP; ing6 is pNn; ing8 is nPp; ing3 has R-; ing5 has R+; ing6 has R+; ing8 has R-; cross off pNn from ing3; cross off nPp from ing5; cross off NNN from ing6; cross off PPP from ing8 ing3 + ing5 = neutral.",
       "highlight": {
         "clue_indices": [
           1

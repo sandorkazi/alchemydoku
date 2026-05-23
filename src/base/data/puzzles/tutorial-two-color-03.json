@@ -1,0 +1,67 @@
+{
+  "id": "d5d792d4-6764-40e4-849e-bb6bd58ee546",
+  "title": "Reverse Engineering",
+  "description": "You know the mixing result and one alchemical — use the two-colour rule in reverse to identify the other ingredient.",
+  "difficulty": "tutorial",
+  "clues": [
+    {
+      "kind": "aspect",
+      "ingredient": 1,
+      "color": "G",
+      "sign": "-"
+    },
+    {
+      "kind": "assignment",
+      "ingredient": 2,
+      "alchemical": 8
+    },
+    {
+      "kind": "mixing",
+      "ingredient1": 1,
+      "ingredient2": 2,
+      "result": {
+        "type": "potion",
+        "color": "B",
+        "sign": "+"
+      }
+    }
+  ],
+  "questions": [
+    {
+      "kind": "alchemical",
+      "ingredient": 1
+    }
+  ],
+  "solution": {
+    "1": 5,
+    "2": 8,
+    "3": 1,
+    "4": 2,
+    "5": 3,
+    "6": 4,
+    "7": 6,
+    "8": 7
+  },
+  "hints": [
+    {
+      "level": 1,
+      "text": "The result is B+, so Blue resolved. Both ingredients must share B+ sign, with different Blue sizes. ing2 is PPP (R+L, G+L, B+L) — B+Large. So ing1 must be B+Small."
+    },
+    {
+      "level": 2,
+      "text": "ing1 has G- (given) and B+S (deduced). Of the eight alchemicals, which has both G- and B+S? That is Nnp (R-L, G-S, B+S)."
+    },
+    {
+      "level": 3,
+      "text": "Confirm: Nnp mixed with PPP — Red signs differ (R- vs R+), Green signs differ (G- vs G+), Blue signs match with different sizes (B+S vs B+L) → B+. Answer: Nnp."
+    }
+  ],
+  "complexity": {
+    "score": 31,
+    "raw_score": 15,
+    "clue_score": 0,
+    "question_score": 0,
+    "world_score": 5,
+    "residual_worlds": 720
+  }
+}

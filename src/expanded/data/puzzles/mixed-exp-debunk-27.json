@@ -1,5 +1,5 @@
 {
-  "id": "mixed-exp-debunk-27",
+  "id": "326f6880-cb03-4be1-9d59-7b25d737fb53",
   "mode": "expanded",
   "kind": "debunk",
   "title": "The Handle",
@@ -226,7 +226,7 @@
     {
       "look_at": "clue 3: sell constraint among {ing1, ing3, ing7, ing8}.",
       "means": "Selling results among {ing1, ing3, ing7, ing8} constrain possible alchemicals.",
-      "so": "cross off NNN, Nnp, npN, pNn from ing1; cross off PPP, Ppn, nPp, pnP from ing2; cross off NNN, Nnp, npN, pNn from ing3; cross off PPP, Ppn, nPp, pnP from ing4; cross off PPP, Ppn, nPp, pnP from ing5; cross off PPP, Ppn, nPp, pnP from ing6; cross off NNN, Nnp, npN, pNn from ing7; cross off NNN, Nnp, npN, pNn from ing8.",
+      "so": "cross off NNN, Nnp, npN, pNn from ing1; cross off PPP, Ppn, nPp, pnP from ing2; cross off NNN, Nnp, npN, pNn from ing3; cross off PPP, Ppn, nPp, pnP from ing4; cross off PPP, Ppn, nPp, pnP from ing5; cross off PPP, Ppn, nPp, pnP from ing6; cross off NNN, Nnp, npN, pNn from ing7; cross off NNN, Nnp, npN, pNn from ing8",
       "highlight": {
         "clue_indices": [
           2

@@ -1,0 +1,510 @@
+{
+  "id": "6ad44b59-203b-4bd1-babc-bb5617c870eb",
+  "title": "Reaction Chains",
+  "description": "Mixing, selling, and debunking records all point toward a single pair. Deduce what potion they produce.",
+  "difficulty": "easy",
+  "clues": [
+    {
+      "kind": "sell",
+      "ingredient1": 1,
+      "ingredient2": 5,
+      "claimedResult": {
+        "type": "potion",
+        "color": "R",
+        "sign": "-"
+      },
+      "sellResult": "total_match"
+    },
+    {
+      "kind": "sell",
+      "ingredient1": 6,
+      "ingredient2": 8,
+      "claimedResult": {
+        "type": "potion",
+        "color": "R",
+        "sign": "-"
+      },
+      "sellResult": "total_match"
+    },
+    {
+      "kind": "sell",
+      "ingredient1": 1,
+      "ingredient2": 7,
+      "claimedResult": {
+        "type": "potion",
+        "color": "B",
+        "sign": "-"
+      },
+      "sellResult": "sign_ok"
+    },
+    {
+      "kind": "sell",
+      "ingredient1": 3,
+      "ingredient2": 8,
+      "claimedResult": {
+        "type": "potion",
+        "color": "B",
+        "sign": "+"
+      },
+      "sellResult": "sign_ok"
+    },
+    {
+      "kind": "sell",
+      "ingredient1": 2,
+      "ingredient2": 5,
+      "claimedResult": {
+        "type": "potion",
+        "color": "B",
+        "sign": "+"
+      },
+      "sellResult": "total_match"
+    }
+  ],
+  "questions": [
+    {
+      "kind": "mixing-result",
+      "ingredient1": 2,
+      "ingredient2": 7
+    }
+  ],
+  "solution": {
+    "1": 5,
+    "2": 2,
+    "3": 8,
+    "4": 6,
+    "5": 4,
+    "6": 7,
+    "7": 3,
+    "8": 1
+  },
+  "hints": [],
+  "complexity": {
+    "score": 51,
+    "raw_score": 29,
+    "clue_score": 4,
+    "question_score": 0,
+    "world_score": 15,
+    "residual_worlds": 1
+  },
+  "hint_steps": [
+    {
+      "look_at": "clue 1.",
+      "means": "Apply this clue to eliminate impossible alchemical assignments.",
+      "so": "ing1 has R-; ing5 has R-; cross off PPP, Ppn, pNn, pnP from ing1; cross off PPP, Ppn, pNn, pnP from ing5.",
+      "highlight": {
+        "clue_indices": [
+          0
+        ]
+      },
+      "impact": {
+        "confirmed_alchemicals": [],
+        "confirmed_aspects": [
+          {
+            "ingredient": 1,
+            "color": "R",
+            "sign": "-"
+          },
+          {
+            "ingredient": 5,
+            "color": "R",
+            "sign": "-"
+          }
+        ],
+        "eliminated_cells": [
+          {
+            "ingredient": 1,
+            "alchemicals": [
+              "PPP",
+              "Ppn",
+              "pNn",
+              "pnP"
+            ]
+          },
+          {
+            "ingredient": 5,
+            "alchemicals": [
+              "PPP",
+              "Ppn",
+              "pNn",
+              "pnP"
+            ]
+          }
+        ]
+      },
+      "reveals_answer": false,
+      "worlds_before": 40320,
+      "worlds_after": 5760
+    },
+    {
+      "look_at": "clue 2.",
+      "means": "Apply this clue to eliminate impossible alchemical assignments.",
+      "so": "ing2 has R+; ing3 has R+; ing4 has R+; ing6 has R-; ing7 has R+; ing8 has R-; cross off NNN, Nnp, nPp, npN from ing2; cross off NNN, Nnp, nPp, npN from ing3; cross off NNN, Nnp, nPp, npN from ing4; cross off PPP, Ppn, pNn, pnP from ing6; cross off NNN, Nnp, nPp, npN from ing7; cross off PPP, Ppn, pNn, pnP from ing8.",
+      "highlight": {
+        "clue_indices": [
+          1
+        ]
+      },
+      "impact": {
+        "confirmed_alchemicals": [],
+        "confirmed_aspects": [
+          {
+            "ingredient": 2,
+            "color": "R",
+            "sign": "+"
+          },
+          {
+            "ingredient": 3,
+            "color": "R",
+            "sign": "+"
+          },
+          {
+            "ingredient": 4,
+            "color": "R",
+            "sign": "+"
+          },
+          {
+            "ingredient": 6,
+            "color": "R",
+            "sign": "-"
+          },
+          {
+            "ingredient": 7,
+            "color": "R",
+            "sign": "+"
+          },
+          {
+            "ingredient": 8,
+            "color": "R",
+            "sign": "-"
+          }
+        ],
+        "eliminated_cells": [
+          {
+            "ingredient": 2,
+            "alchemicals": [
+              "NNN",
+              "Nnp",
+              "nPp",
+              "npN"
+            ]
+          },
+          {
+            "ingredient": 3,
+            "alchemicals": [
+              "NNN",
+              "Nnp",
+              "nPp",
+              "npN"
+            ]
+          },
+          {
+            "ingredient": 4,
+            "alchemicals": [
+              "NNN",
+              "Nnp",
+              "nPp",
+              "npN"
+            ]
+          },
+          {
+            "ingredient": 6,
+            "alchemicals": [
+              "PPP",
+              "Ppn",
+              "pNn",
+              "pnP"
+            ]
+          },
+          {
+            "ingredient": 7,
+            "alchemicals": [
+              "NNN",
+              "Nnp",
+              "nPp",
+              "npN"
+            ]
+          },
+          {
+            "ingredient": 8,
+            "alchemicals": [
+              "PPP",
+              "Ppn",
+              "pNn",
+              "pnP"
+            ]
+          }
+        ]
+      },
+      "reveals_answer": false,
+      "worlds_before": 5760,
+      "worlds_after": 384
+    },
+    {
+      "look_at": "clue 3.",
+      "means": "Apply this clue to eliminate impossible alchemical assignments.",
+      "so": "ing1 has G-; ing5 has G+; ing7 has G-; cross off nPp, npN from ing1; cross off NNN, Nnp from ing5; cross off PPP, Ppn from ing7.",
+      "highlight": {
+        "clue_indices": [
+          2
+        ]
+      },
+      "impact": {
+        "confirmed_alchemicals": [],
+        "confirmed_aspects": [
+          {
+            "ingredient": 1,
+            "color": "G",
+            "sign": "-"
+          },
+          {
+            "ingredient": 5,
+            "color": "G",
+            "sign": "+"
+          },
+          {
+            "ingredient": 7,
+            "color": "G",
+            "sign": "-"
+          }
+        ],
+        "eliminated_cells": [
+          {
+            "ingredient": 1,
+            "alchemicals": [
+              "nPp",
+              "npN"
+            ]
+          },
+          {
+            "ingredient": 5,
+            "alchemicals": [
+              "NNN",
+              "Nnp"
+            ]
+          },
+          {
+            "ingredient": 7,
+            "alchemicals": [
+              "PPP",
+              "Ppn"
+            ]
+          }
+        ]
+      },
+      "reveals_answer": false,
+      "worlds_before": 384,
+      "worlds_after": 48
+    },
+    {
+      "look_at": "clue 4.",
+      "means": "Apply this clue to eliminate impossible alchemical assignments.",
+      "so": "ing3 has G+; ing6 has G-; ing8 has G+; cross off pNn, pnP from ing3; cross off nPp, npN from ing6; cross off NNN, Nnp from ing8.",
+      "highlight": {
+        "clue_indices": [
+          3
+        ]
+      },
+      "impact": {
+        "confirmed_alchemicals": [],
+        "confirmed_aspects": [
+          {
+            "ingredient": 3,
+            "color": "G",
+            "sign": "+"
+          },
+          {
+            "ingredient": 6,
+            "color": "G",
+            "sign": "-"
+          },
+          {
+            "ingredient": 8,
+            "color": "G",
+            "sign": "+"
+          }
+        ],
+        "eliminated_cells": [
+          {
+            "ingredient": 3,
+            "alchemicals": [
+              "pNn",
+              "pnP"
+            ]
+          },
+          {
+            "ingredient": 6,
+            "alchemicals": [
+              "nPp",
+              "npN"
+            ]
+          },
+          {
+            "ingredient": 8,
+            "alchemicals": [
+              "NNN",
+              "Nnp"
+            ]
+          }
+        ]
+      },
+      "reveals_answer": false,
+      "worlds_before": 48,
+      "worlds_after": 8
+    },
+    {
+      "look_at": "clue 5.",
+      "means": "Apply this clue to eliminate impossible alchemical assignments.",
+      "so": "ing1 is Nnp; ing2 is pnP; ing3 is PPP; ing4 is Ppn; ing5 is nPp; ing6 is NNN; ing7 is pNn; ing8 is npN; ing1 has B+; ing2 has G-; ing2 has B+; ing3 has B+; ing4 has G+; ing4 has B-; ing5 has B+; ing6 has B-; ing7 has B-; ing8 has B-; cross off NNN from ing1; cross off PPP, Ppn, pNn from ing2; cross off Ppn from ing3; cross off PPP, pNn, pnP from ing4; cross off npN from ing5; cross off Nnp from ing6; cross off pnP from ing7; cross off nPp from ing8 ing2 + ing7 = G-.",
+      "highlight": {
+        "clue_indices": [
+          4
+        ]
+      },
+      "impact": {
+        "confirmed_alchemicals": [
+          {
+            "ingredient": 1,
+            "alchemical": "Nnp"
+          },
+          {
+            "ingredient": 2,
+            "alchemical": "pnP"
+          },
+          {
+            "ingredient": 3,
+            "alchemical": "PPP"
+          },
+          {
+            "ingredient": 4,
+            "alchemical": "Ppn"
+          },
+          {
+            "ingredient": 5,
+            "alchemical": "nPp"
+          },
+          {
+            "ingredient": 6,
+            "alchemical": "NNN"
+          },
+          {
+            "ingredient": 7,
+            "alchemical": "pNn"
+          },
+          {
+            "ingredient": 8,
+            "alchemical": "npN"
+          }
+        ],
+        "confirmed_aspects": [
+          {
+            "ingredient": 1,
+            "color": "B",
+            "sign": "+"
+          },
+          {
+            "ingredient": 2,
+            "color": "G",
+            "sign": "-"
+          },
+          {
+            "ingredient": 2,
+            "color": "B",
+            "sign": "+"
+          },
+          {
+            "ingredient": 3,
+            "color": "B",
+            "sign": "+"
+          },
+          {
+            "ingredient": 4,
+            "color": "G",
+            "sign": "+"
+          },
+          {
+            "ingredient": 4,
+            "color": "B",
+            "sign": "-"
+          },
+          {
+            "ingredient": 5,
+            "color": "B",
+            "sign": "+"
+          },
+          {
+            "ingredient": 6,
+            "color": "B",
+            "sign": "-"
+          },
+          {
+            "ingredient": 7,
+            "color": "B",
+            "sign": "-"
+          },
+          {
+            "ingredient": 8,
+            "color": "B",
+            "sign": "-"
+          }
+        ],
+        "eliminated_cells": [
+          {
+            "ingredient": 1,
+            "alchemicals": [
+              "NNN"
+            ]
+          },
+          {
+            "ingredient": 2,
+            "alchemicals": [
+              "PPP",
+              "Ppn",
+              "pNn"
+            ]
+          },
+          {
+            "ingredient": 3,
+            "alchemicals": [
+              "Ppn"
+            ]
+          },
+          {
+            "ingredient": 4,
+            "alchemicals": [
+              "PPP",
+              "pNn",
+              "pnP"
+            ]
+          },
+          {
+            "ingredient": 5,
+            "alchemicals": [
+              "npN"
+            ]
+          },
+          {
+            "ingredient": 6,
+            "alchemicals": [
+              "Nnp"
+            ]
+          },
+          {
+            "ingredient": 7,
+            "alchemicals": [
+              "pnP"
+            ]
+          },
+          {
+            "ingredient": 8,
+            "alchemicals": [
+              "nPp"
+            ]
+          }
+        ]
+      },
+      "reveals_answer": true,
+      "worlds_before": 8,
+      "worlds_after": 1
+    }
+  ]
+}

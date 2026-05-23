@@ -1,5 +1,5 @@
 {
-  "id": "mixed-exp-mix-30",
+  "id": "1aa427a5-28b1-4b3c-922d-a966f1b0fe4d",
   "mode": "expanded",
   "title": "The Putrefaction Record",
   "description": "Mixing, selling, and debunking records all point toward a single pair. Deduce what potion they produce.",
@@ -386,7 +386,7 @@
     {
       "look_at": "clue 1: sell constraint among {ing1, ing4, ing5, ing6}.",
       "means": "Selling results among {ing1, ing4, ing5, ing6} constrain possible alchemicals.",
-      "so": "ing1 is nPp; ing4 is PPP; ing5 is npN; ing6 is Nnp; ing7 is Ppn; ing8 is pnP; ing1 has R-; ing4 has R+; ing5 has R-; ing6 has R-; ing7 has R+; ing8 has R+; cross off PPP from ing1; cross off nPp from ing4; cross off Ppn from ing5; cross off pnP from ing6; cross off npN from ing7; cross off Nnp from ing8.",
+      "so": "ing1 is nPp; ing4 is PPP; ing5 is npN; ing6 is Nnp; ing7 is Ppn; ing8 is pnP; ing1 has R-; ing4 has R+; ing5 has R-; ing6 has R-; ing7 has R+; ing8 has R+; cross off PPP from ing1; cross off nPp from ing4; cross off Ppn from ing5; cross off pnP from ing6; cross off npN from ing7; cross off Nnp from ing8 ing5 + ing6 = R-.",
       "highlight": {
         "clue_indices": [
           0

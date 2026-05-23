@@ -1,5 +1,5 @@
 {
-  "id": "mixed-exp-mix-19",
+  "id": "cb3ea449-c759-4e4c-826b-c4612b1e5f68",
   "mode": "expanded",
   "title": "The Annotated Margin",
   "description": "Mixing, selling, and debunking records all point toward a single pair. Deduce what potion they produce.",
@@ -392,7 +392,7 @@
     {
       "look_at": "clue 6: sell constraint among {ing2, ing4, ing5, ing6}.",
       "means": "Selling results among {ing2, ing4, ing5, ing6} constrain possible alchemicals.",
-      "so": "ing1 is PPP; ing2 is nPp; ing3 is NNN; ing4 is pNn; ing5 is pnP; ing6 is npN; ing7 is Ppn; ing8 is Nnp; ing1 has G+; ing1 has B+; ing2 has G+; ing3 has R-; ing3 has G-; ing4 has G-; ing4 has B-; ing5 has G-; ing5 has B+; ing6 has G+; ing7 has R+; ing7 has G+; ing8 has G-; cross off Ppn, pNn, pnP from ing1; cross off Nnp from ing2; cross off Ppn, npN, pNn from ing3; cross off PPP, Ppn, pnP from ing4; cross off Ppn, pNn from ing5; cross off NNN from ing6; cross off npN, pNn from ing7; cross off nPp from ing8.",
+      "so": "ing1 is PPP; ing2 is nPp; ing3 is NNN; ing4 is pNn; ing5 is pnP; ing6 is npN; ing7 is Ppn; ing8 is Nnp; ing1 has G+; ing1 has B+; ing2 has G+; ing3 has R-; ing3 has G-; ing4 has G-; ing4 has B-; ing5 has G-; ing5 has B+; ing6 has G+; ing7 has R+; ing7 has G+; ing8 has G-; cross off Ppn, pNn, pnP from ing1; cross off Nnp from ing2; cross off Ppn, npN, pNn from ing3; cross off PPP, Ppn, pnP from ing4; cross off Ppn, pNn from ing5; cross off NNN from ing6; cross off npN, pNn from ing7; cross off nPp from ing8 ing1 + ing2 = B+.",
       "highlight": {
         "clue_indices": [
           5

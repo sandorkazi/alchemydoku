@@ -1,5 +1,5 @@
 {
-  "id": "exp-medium-enc-sl-02",
+  "id": "a01c2ab1-578a-40c2-a4c0-df67340662b2",
   "mode": "expanded",
   "title": "The Backtrack",
   "description": "A partial encyclopedia article lists three ingredients on the same aspect. Use the supporting clues to identify the fourth.",
@@ -394,7 +394,7 @@
     {
       "look_at": "clue 4: exactly 1 of {ing1, ing3, ing4, ing7} are lunar.",
       "means": "Exactly 1 ingredient(s) in {ing1, ing3, ing4, ing7} must be lunar.",
-      "so": "ing1 is npN; ing2 is Ppn; ing4 is PPP; ing6 is NNN; ing7 is Nnp; ing8 is pnP; ing1 has R-; ing2 has R+; ing4 has G+; ing6 has B-; ing7 has B+; ing8 has G-; cross off Ppn from ing1; cross off npN from ing2; cross off pnP from ing4; cross off Nnp from ing6; cross off NNN from ing7; cross off PPP from ing8.",
+      "so": "ing1 is npN; ing2 is Ppn; ing4 is PPP; ing6 is NNN; ing7 is Nnp; ing8 is pnP; ing1 has R-; ing2 has R+; ing4 has G+; ing6 has B-; ing7 has B+; ing8 has G-; cross off Ppn from ing1; cross off npN from ing2; cross off pnP from ing4; cross off Nnp from ing6; cross off NNN from ing7; cross off PPP from ing8 The missing G+ ingredient is ing4.",
       "highlight": {
         "clue_indices": [
           3

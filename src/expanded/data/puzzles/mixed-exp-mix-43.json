@@ -1,5 +1,5 @@
 {
-  "id": "mixed-exp-mix-43",
+  "id": "6e1d1b51-f289-42c9-99cd-6f5c6e745368",
   "mode": "expanded",
   "title": "The X-Wing",
   "description": "Mixing, selling, and debunking records all point toward a single pair. Deduce what potion they produce.",
@@ -451,7 +451,7 @@
     {
       "look_at": "clue 2: exactly 1 of {ing5, ing7, ing8} are lunar.",
       "means": "Exactly 1 ingredient(s) in {ing5, ing7, ing8} must be lunar.",
-      "so": "ing8 is PPP; ing8 has R+; ing8 has G+; cross off Ppn from ing5; cross off PPP from ing6; cross off nPp, pnP from ing8.",
+      "so": "ing8 is PPP; ing8 has R+; ing8 has G+; cross off Ppn from ing5; cross off PPP from ing6; cross off nPp, pnP from ing8 ing1 + ing8 = neutral.",
       "highlight": {
         "clue_indices": [
           1

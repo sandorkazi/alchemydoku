@@ -5,8 +5,8 @@
  * Base question types are delegated to the original schema module.
  */
 
-import { generateAllWorlds } from '../../logic/worldSet';
-import { computeAnswerFromWorlds as baseComputeAnswer, answersEqual as baseAnswersEqual } from '../../puzzles/schema';
+import { generateAllWorlds } from '@shared/logic/worldSet';
+import { computeAnswerFromWorlds as baseComputeAnswer, answersEqual as baseAnswersEqual } from '@base/puzzles/schema';
 import { applyAnyClues, applyCluesWithGolemState, buildInitialGolemState } from '../logic/worldSetExpanded';
 import {
   computeGolemGroup, computeGolemAnimatePotion,
@@ -16,9 +16,9 @@ import {
   golemSolverToWorldSet,
 } from '../logic/golem';
 import { isSolar, getMostInformativeBook } from '../logic/solarLunar';
-import { WORLD_DATA, SIGN_TABLE, COLOR_INDEX } from '../../logic/worldPack';
-import type { WorldSet, IngredientId, AlchemicalId, Color } from '../../types';
-import type { PuzzleAnswer } from '../../puzzles/schema';
+import { WORLD_DATA, SIGN_TABLE, COLOR_INDEX } from '@shared/logic/worldPack';
+import type { WorldSet, IngredientId, AlchemicalId, Color } from '@shared/types';
+import type { PuzzleAnswer } from '@base/puzzles/schema';
 import type {
   ExpandedPuzzle, AnyQuestion, AnyAnswer,
   AspectColorAnswer, SolarLunarAnswer, IngredientSetAnswer,

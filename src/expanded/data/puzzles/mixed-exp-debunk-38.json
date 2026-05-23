@@ -1,5 +1,5 @@
 {
-  "id": "mixed-exp-debunk-38",
+  "id": "4890502a-0c94-45ff-8116-bd36d01ae2c2",
   "mode": "expanded",
   "kind": "debunk",
   "title": "The Feedback Loop",
@@ -217,7 +217,7 @@
     {
       "look_at": "clue 3: sell constraint among {ing5, ing7, ing8}.",
       "means": "Selling results among {ing5, ing7, ing8} constrain possible alchemicals.",
-      "so": "ing5 has R+; ing7 has R+; ing8 has R+; cross off PPP, Ppn from ing1; cross off PPP, Ppn from ing2; cross off PPP, Ppn from ing3; cross off PPP, Ppn from ing4; cross off NNN, Nnp, nPp, npN from ing5; cross off PPP, Ppn from ing6; cross off NNN, Nnp, nPp, npN from ing7; cross off NNN, Nnp, nPp, npN from ing8.",
+      "so": "ing5 has R+; ing7 has R+; ing8 has R+; cross off PPP, Ppn from ing1; cross off PPP, Ppn from ing2; cross off PPP, Ppn from ing3; cross off PPP, Ppn from ing4; cross off NNN, Nnp, nPp, npN from ing5; cross off PPP, Ppn from ing6; cross off NNN, Nnp, nPp, npN from ing7; cross off NNN, Nnp, nPp, npN from ing8",
       "highlight": {
         "clue_indices": [
           2

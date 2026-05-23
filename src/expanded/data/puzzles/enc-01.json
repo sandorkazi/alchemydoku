@@ -1,5 +1,5 @@
 {
-  "id": "enc-01",
+  "id": "d566d228-3170-4fb3-a1ad-095f84ec03cc",
   "mode": "expanded",
   "title": "The Transmuted Stone",
   "description": "A G+ article lists three ingredients. Use the aspect clues to identify which ingredient fills the fourth slot.",
@@ -661,7 +661,7 @@
     {
       "look_at": "clue 13: ing7 has G-.",
       "means": "This directly tells us the G sign of ing7.",
-      "so": "ing1 is npN; ing7 is NNN; ing1 has G+; ing7 has G-; cross off NNN from ing1; cross off npN from ing7.",
+      "so": "ing1 is npN; ing7 is NNN; ing1 has G+; ing7 has G-; cross off NNN from ing1; cross off npN from ing7 The missing G+ ingredient is ing1.",
       "highlight": {
         "clue_indices": [
           12

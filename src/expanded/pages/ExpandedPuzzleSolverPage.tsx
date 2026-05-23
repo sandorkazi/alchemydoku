@@ -13,12 +13,12 @@ import { ExpandedIngredientGrid, GolemPanel } from '../components/ExpandedIngred
 import { ExpandedAnswerPanel } from '../components/ExpandedAnswerPanel';
 import { ExpandedMixSimulator } from '../components/ExpandedMixSimulator';
 import { ExpandedHintDrawer } from '../components/ExpandedHintDrawer';
-import { PuzzleToolbar } from '../../components/PuzzleToolbar';
-import { ShufflePickerModal } from '../../components/ShufflePickerModal';
-import { downloadBothFiles, uploadExpandedProgress } from '../../utils/saveProgress';
-import { applyPermalink } from '../../utils/permalink';
-import { loadSettings } from '../../utils/settings';
-import { BuildStamp } from '../../components/BuildStamp';
+import { PuzzleToolbar } from '@shared/components/PuzzleToolbar';
+import { ShufflePickerModal } from '@base/components/ShufflePickerModal';
+import { downloadBothFiles, uploadExpandedProgress } from '@shared/utils/saveProgress';
+import { applyPermalink } from '@shared/utils/permalink';
+import { loadSettings } from '@shared/utils/settings';
+import { BuildStamp } from '@shared/components/BuildStamp';
 import type { ExpandedPuzzle } from '../types';
 
 function fmtTimer(s: number): string {
@@ -257,7 +257,7 @@ function SolverInner({ onBack, onNext, isTutorial = false }: {
 
 export function ExpandedPuzzleSolverPage({ puzzle, onBack, onNext, isTutorial = false, initialDisplayMap }: {
   puzzle: ExpandedPuzzle; onBack: () => void; onNext?: () => void; isTutorial?: boolean;
-  initialDisplayMap?: import('../../utils/solverStorage').DisplayMap;
+  initialDisplayMap?: import('@shared/utils/solverStorage').DisplayMap;
 }) {
   return (
     <ExpandedSolverProvider key={puzzle.id} puzzle={puzzle} initialDisplayMap={initialDisplayMap}>

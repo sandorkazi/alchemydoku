@@ -1,5 +1,5 @@
 {
-  "id": "mixed-exp-mix-51",
+  "id": "1d65dd69-13a9-47a2-82dd-bf4c119ad5d6",
   "mode": "expanded",
   "title": "The Termolecular Rarity",
   "description": "Mixing, selling, and debunking records all point toward a single pair. Deduce what potion they produce.",
@@ -398,7 +398,7 @@
     {
       "look_at": "clue 1: sell constraint among {ing1, ing6, ing8}.",
       "means": "Selling results among {ing1, ing6, ing8} constrain possible alchemicals.",
-      "so": "ing1 is NNN; ing5 is pnP; ing1 has R-; ing1 has B-; ing5 has R+; ing5 has B+; cross off pnP from ing1; cross off NNN from ing5.",
+      "so": "ing1 is NNN; ing5 is pnP; ing1 has R-; ing1 has B-; ing5 has R+; ing5 has B+; cross off pnP from ing1; cross off NNN from ing5 ing3 + ing5 = neutral.",
       "highlight": {
         "clue_indices": [
           0

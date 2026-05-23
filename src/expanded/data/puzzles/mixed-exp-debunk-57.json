@@ -1,5 +1,5 @@
 {
-  "id": "mixed-exp-debunk-57",
+  "id": "429840bb-deb8-48d9-a0ed-baf43b683e97",
   "mode": "expanded",
   "kind": "debunk",
   "title": "The Firm Deduction",
@@ -218,7 +218,7 @@
     {
       "look_at": "clue 4: sell constraint among {ing2, ing4, ing8}.",
       "means": "Selling results among {ing2, ing4, ing8} constrain possible alchemicals.",
-      "so": "ing2 has B-; ing4 has B-; ing8 has B-; cross off NNN, npN from ing1; cross off Nnp, PPP, nPp, pnP from ing2; cross off NNN, npN from ing3; cross off Nnp, PPP, nPp, pnP from ing4; cross off NNN, npN from ing5; cross off NNN, npN from ing6; cross off NNN, npN from ing7; cross off Nnp, PPP, nPp, pnP from ing8.",
+      "so": "ing2 has B-; ing4 has B-; ing8 has B-; cross off NNN, npN from ing1; cross off Nnp, PPP, nPp, pnP from ing2; cross off NNN, npN from ing3; cross off Nnp, PPP, nPp, pnP from ing4; cross off NNN, npN from ing5; cross off NNN, npN from ing6; cross off NNN, npN from ing7; cross off Nnp, PPP, nPp, pnP from ing8",
       "highlight": {
         "clue_indices": [
           3

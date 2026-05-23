@@ -1,5 +1,5 @@
 {
-  "id": "combo-exp-med-all-05",
+  "id": "b0c9a2ca-b048-4f26-938a-c11ec0b09ff0",
   "mode": "expanded",
   "title": "The Limit Cycle",
   "description": "A partial encyclopedia article lists three ingredients on the same aspect. Use the supporting clues to identify the fourth.",
@@ -512,7 +512,7 @@
     {
       "look_at": "clue 5.",
       "means": "Apply this clue to eliminate impossible alchemical assignments.",
-      "so": "ing1 is pnP; ing7 is Ppn; ing1 has G-; ing1 has B+; ing7 has G+; ing7 has B-; cross off Ppn from ing1; cross off pnP from ing7.",
+      "so": "ing1 is pnP; ing7 is Ppn; ing1 has G-; ing1 has B+; ing7 has G+; ing7 has B-; cross off Ppn from ing1; cross off pnP from ing7 The missing G+ ingredient is ing7.",
       "highlight": {
         "clue_indices": [
           4

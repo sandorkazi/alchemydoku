@@ -1,5 +1,5 @@
 {
-  "id": "mixed-exp-11",
+  "id": "515cf6a5-a5f7-4609-a44d-9061ff7e969e",
   "mode": "expanded",
   "title": "The Sublimation Point",
   "description": "Use the clues to decide which ingredient reveals the most information when consulted in the Royal Society book.",
@@ -138,7 +138,7 @@
     {
       "look_at": "Suppose ing1 were pnP.",
       "means": "If ing1 = pnP, then after applying all clues, the answer becomes deducible.",
-      "so": "Under this assumption, the answer is 7.",
+      "so": "Under this assumption the answer is deducible.",
       "highlight": {
         "clue_indices": [],
         "ingredients": [

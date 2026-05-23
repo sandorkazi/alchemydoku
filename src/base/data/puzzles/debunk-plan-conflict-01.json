@@ -1,0 +1,401 @@
+{
+  "id": "9193dabe-b122-477a-af3d-d55a16124249",
+  "title": "Mutual Suspicion",
+  "description": "Two theories have been published. Your aspect clues reveal the truth about both ingredients. Find a master mix involving ing1 that puts both publications under simultaneous suspicion \u2014 without removing either one.",
+  "difficulty": "medium",
+  "clues": [
+    {
+      "kind": "aspect",
+      "ingredient": 1,
+      "color": "R",
+      "sign": "-"
+    },
+    {
+      "kind": "aspect",
+      "ingredient": 1,
+      "color": "G",
+      "sign": "+"
+    },
+    {
+      "kind": "aspect",
+      "ingredient": 1,
+      "color": "B",
+      "sign": "-"
+    },
+    {
+      "kind": "aspect",
+      "ingredient": 2,
+      "color": "R",
+      "sign": "+"
+    },
+    {
+      "kind": "aspect",
+      "ingredient": 2,
+      "color": "G",
+      "sign": "-"
+    },
+    {
+      "kind": "aspect",
+      "ingredient": 2,
+      "color": "B",
+      "sign": "+"
+    }
+  ],
+  "publications": [
+    {
+      "ingredient": 1,
+      "claimedAlchemical": 3
+    },
+    {
+      "ingredient": 2,
+      "claimedAlchemical": 5
+    },
+    null,
+    {
+      "ingredient": 4,
+      "claimedAlchemical": 4
+    },
+    null,
+    {
+      "ingredient": 6,
+      "claimedAlchemical": 6
+    },
+    null,
+    null
+  ],
+  "questions": [
+    {
+      "kind": "debunk_conflict_only",
+      "fixedIngredient": 1
+    }
+  ],
+  "solution": {
+    "1": 1,
+    "2": 2,
+    "3": 3,
+    "4": 4,
+    "5": 5,
+    "6": 6,
+    "7": 7,
+    "8": 8
+  },
+  "debunk_answers": {
+    "debunk_conflict_only": [
+      {
+        "kind": "master",
+        "ingredient1": 1,
+        "ingredient2": 2
+      }
+    ]
+  },
+  "hints": [],
+  "complexity": {
+    "score": 62,
+    "raw_score": 40,
+    "clue_score": 0,
+    "question_score": 15,
+    "world_score": 15,
+    "residual_worlds": 720
+  },
+  "hint_steps": [
+    {
+      "look_at": "clue 1: ing1 has R-.",
+      "means": "This directly tells us the R sign of ing1.",
+      "so": "ing1 has R-; cross off PPP, Ppn, pNn, pnP from ing1",
+      "highlight": {
+        "clue_indices": [
+          0
+        ],
+        "ingredients": [
+          1
+        ]
+      },
+      "impact": {
+        "confirmed_alchemicals": [],
+        "confirmed_aspects": [
+          {
+            "ingredient": 1,
+            "color": "R",
+            "sign": "-"
+          }
+        ],
+        "eliminated_cells": [
+          {
+            "ingredient": 1,
+            "alchemicals": [
+              "PPP",
+              "Ppn",
+              "pNn",
+              "pnP"
+            ]
+          }
+        ]
+      },
+      "reveals_answer": true,
+      "worlds_before": 40320,
+      "worlds_after": 20160
+    },
+    {
+      "look_at": "clue 2: ing1 has G+.",
+      "means": "This directly tells us the G sign of ing1.",
+      "so": "ing1 has G+; cross off NNN, Nnp from ing1.",
+      "highlight": {
+        "clue_indices": [
+          1
+        ],
+        "ingredients": [
+          1
+        ]
+      },
+      "impact": {
+        "confirmed_alchemicals": [],
+        "confirmed_aspects": [
+          {
+            "ingredient": 1,
+            "color": "G",
+            "sign": "+"
+          }
+        ],
+        "eliminated_cells": [
+          {
+            "ingredient": 1,
+            "alchemicals": [
+              "NNN",
+              "Nnp"
+            ]
+          }
+        ]
+      },
+      "reveals_answer": false,
+      "worlds_before": 20160,
+      "worlds_after": 10080
+    },
+    {
+      "look_at": "clue 3: ing1 has B-.",
+      "means": "This directly tells us the B sign of ing1.",
+      "so": "ing1 is npN; ing1 has B-; cross off nPp from ing1; cross off npN from ing2; cross off npN from ing3; cross off npN from ing4; cross off npN from ing5; cross off npN from ing6; cross off npN from ing7; cross off npN from ing8.",
+      "highlight": {
+        "clue_indices": [
+          2
+        ],
+        "ingredients": [
+          1
+        ]
+      },
+      "impact": {
+        "confirmed_alchemicals": [
+          {
+            "ingredient": 1,
+            "alchemical": "npN"
+          }
+        ],
+        "confirmed_aspects": [
+          {
+            "ingredient": 1,
+            "color": "B",
+            "sign": "-"
+          }
+        ],
+        "eliminated_cells": [
+          {
+            "ingredient": 1,
+            "alchemicals": [
+              "nPp"
+            ]
+          },
+          {
+            "ingredient": 2,
+            "alchemicals": [
+              "npN"
+            ]
+          },
+          {
+            "ingredient": 3,
+            "alchemicals": [
+              "npN"
+            ]
+          },
+          {
+            "ingredient": 4,
+            "alchemicals": [
+              "npN"
+            ]
+          },
+          {
+            "ingredient": 5,
+            "alchemicals": [
+              "npN"
+            ]
+          },
+          {
+            "ingredient": 6,
+            "alchemicals": [
+              "npN"
+            ]
+          },
+          {
+            "ingredient": 7,
+            "alchemicals": [
+              "npN"
+            ]
+          },
+          {
+            "ingredient": 8,
+            "alchemicals": [
+              "npN"
+            ]
+          }
+        ]
+      },
+      "reveals_answer": false,
+      "worlds_before": 10080,
+      "worlds_after": 5040
+    },
+    {
+      "look_at": "clue 4: ing2 has R+.",
+      "means": "This directly tells us the R sign of ing2.",
+      "so": "ing2 has R+; cross off NNN, Nnp, nPp from ing2.",
+      "highlight": {
+        "clue_indices": [
+          3
+        ],
+        "ingredients": [
+          2
+        ]
+      },
+      "impact": {
+        "confirmed_alchemicals": [],
+        "confirmed_aspects": [
+          {
+            "ingredient": 2,
+            "color": "R",
+            "sign": "+"
+          }
+        ],
+        "eliminated_cells": [
+          {
+            "ingredient": 2,
+            "alchemicals": [
+              "NNN",
+              "Nnp",
+              "nPp"
+            ]
+          }
+        ]
+      },
+      "reveals_answer": false,
+      "worlds_before": 5040,
+      "worlds_after": 2880
+    },
+    {
+      "look_at": "clue 5: ing2 has G-.",
+      "means": "This directly tells us the G sign of ing2.",
+      "so": "ing2 has G-; cross off PPP, Ppn from ing2.",
+      "highlight": {
+        "clue_indices": [
+          4
+        ],
+        "ingredients": [
+          2
+        ]
+      },
+      "impact": {
+        "confirmed_alchemicals": [],
+        "confirmed_aspects": [
+          {
+            "ingredient": 2,
+            "color": "G",
+            "sign": "-"
+          }
+        ],
+        "eliminated_cells": [
+          {
+            "ingredient": 2,
+            "alchemicals": [
+              "PPP",
+              "Ppn"
+            ]
+          }
+        ]
+      },
+      "reveals_answer": false,
+      "worlds_before": 2880,
+      "worlds_after": 1440
+    },
+    {
+      "look_at": "clue 6: ing2 has B+.",
+      "means": "This directly tells us the B sign of ing2.",
+      "so": "ing2 is pnP; ing2 has B+; cross off pNn from ing2; cross off pnP from ing3; cross off pnP from ing4; cross off pnP from ing5; cross off pnP from ing6; cross off pnP from ing7; cross off pnP from ing8.",
+      "highlight": {
+        "clue_indices": [
+          5
+        ],
+        "ingredients": [
+          2
+        ]
+      },
+      "impact": {
+        "confirmed_alchemicals": [
+          {
+            "ingredient": 2,
+            "alchemical": "pnP"
+          }
+        ],
+        "confirmed_aspects": [
+          {
+            "ingredient": 2,
+            "color": "B",
+            "sign": "+"
+          }
+        ],
+        "eliminated_cells": [
+          {
+            "ingredient": 2,
+            "alchemicals": [
+              "pNn"
+            ]
+          },
+          {
+            "ingredient": 3,
+            "alchemicals": [
+              "pnP"
+            ]
+          },
+          {
+            "ingredient": 4,
+            "alchemicals": [
+              "pnP"
+            ]
+          },
+          {
+            "ingredient": 5,
+            "alchemicals": [
+              "pnP"
+            ]
+          },
+          {
+            "ingredient": 6,
+            "alchemicals": [
+              "pnP"
+            ]
+          },
+          {
+            "ingredient": 7,
+            "alchemicals": [
+              "pnP"
+            ]
+          },
+          {
+            "ingredient": 8,
+            "alchemicals": [
+              "pnP"
+            ]
+          }
+        ]
+      },
+      "reveals_answer": false,
+      "worlds_before": 1440,
+      "worlds_after": 720
+    }
+  ]
+}

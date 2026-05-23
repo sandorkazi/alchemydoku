@@ -1,5 +1,5 @@
 {
-  "id": "mixed-exp-debunk-40",
+  "id": "890b0d80-4557-48ae-8bb9-044c426f77ae",
   "mode": "expanded",
   "kind": "debunk",
   "title": "The Ring Topology",
@@ -222,7 +222,7 @@
     {
       "look_at": "clue 3: exactly 2 pairs among {ing3, ing4, ing8} mix to B+.",
       "means": "Exactly 2 pair(s) in {ing3, ing4, ing8} must mix to B+; any world with a different count is impossible.",
-      "so": "ing3 has B+; ing4 has B+; ing8 has B+; cross off NNN, Ppn, npN, pNn from ing3; cross off NNN, Ppn, npN, pNn from ing4; cross off NNN, Ppn, npN, pNn from ing8.",
+      "so": "ing3 has B+; ing4 has B+; ing8 has B+; cross off NNN, Ppn, npN, pNn from ing3; cross off NNN, Ppn, npN, pNn from ing4; cross off NNN, Ppn, npN, pNn from ing8",
       "highlight": {
         "clue_indices": [
           2

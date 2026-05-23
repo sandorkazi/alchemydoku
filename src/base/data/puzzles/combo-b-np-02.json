@@ -1,0 +1,65 @@
+{
+  "id": "677e8c50-8e65-459e-9280-3fdee2a3bec3",
+  "title": "The Substitutional Defect",
+  "description": "Use the clues to identify the one ingredient that always mixes to neutral with the target ingredient.",
+  "difficulty": "easy",
+  "clues": [
+    {
+      "kind": "debunk",
+      "variant": "master",
+      "ingredient1": 2,
+      "ingredient2": 3,
+      "claimedPotion": {
+        "type": "neutral"
+      },
+      "outcome": "success"
+    }
+  ],
+  "questions": [
+    {
+      "kind": "neutral-partner",
+      "ingredient": 2
+    }
+  ],
+  "solution": {
+    "1": 7,
+    "2": 2,
+    "3": 1,
+    "4": 6,
+    "5": 4,
+    "6": 8,
+    "7": 3,
+    "8": 5
+  },
+  "hints": [],
+  "complexity": {
+    "score": 40,
+    "raw_score": 20,
+    "clue_score": 0,
+    "question_score": 0,
+    "world_score": 10,
+    "residual_worlds": 5760
+  },
+  "hint_steps": [
+    {
+      "look_at": "Suppose ing1 were npN.",
+      "means": "If ing1 = npN, then after applying all clues, the answer becomes deducible.",
+      "so": "Under this assumption the answer is deducible. ing2 and ing3 always mix neutrally.",
+      "highlight": {
+        "clue_indices": [],
+        "ingredients": [
+          1
+        ]
+      },
+      "impact": {
+        "confirmed_alchemicals": [],
+        "confirmed_aspects": [],
+        "eliminated_cells": []
+      },
+      "reveals_answer": true,
+      "bifurcation": true,
+      "worlds_before": 5760,
+      "worlds_after": 720
+    }
+  ]
+}

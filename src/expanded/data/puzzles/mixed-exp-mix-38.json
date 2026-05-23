@@ -1,5 +1,5 @@
 {
-  "id": "mixed-exp-mix-38",
+  "id": "c613ccf4-dc35-4197-b3ae-a5490c41b64e",
   "mode": "expanded",
   "title": "The Final Footnote",
   "description": "Mixing, selling, and debunking records all point toward a single pair. Deduce what potion they produce.",
@@ -447,7 +447,7 @@
     {
       "look_at": "clue 2: exactly 1 of {ing5, ing7, ing8} are lunar.",
       "means": "Exactly 1 ingredient(s) in {ing5, ing7, ing8} must be lunar.",
-      "so": "ing2 is NNN; ing3 is nPp; ing5 is pNn; ing8 is PPP; ing2 has R-; ing3 has R-; ing5 has R+; ing8 has R+; cross off pNn from ing2; cross off PPP from ing3; cross off NNN from ing5; cross off nPp from ing8.",
+      "so": "ing2 is NNN; ing3 is nPp; ing5 is pNn; ing8 is PPP; ing2 has R-; ing3 has R-; ing5 has R+; ing8 has R+; cross off pNn from ing2; cross off PPP from ing3; cross off NNN from ing5; cross off nPp from ing8 ing3 + ing4 = R-.",
       "highlight": {
         "clue_indices": [
           1

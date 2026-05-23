@@ -7,17 +7,17 @@
  */
 
 import { useExpandedIngredient, useExpandedSolver } from '../contexts/ExpandedSolverContext';
-import { INGREDIENTS } from '../../data/ingredients';
-import { ALCHEMICALS } from '../../data/alchemicals';
-import { IngredientIcon, ElemImage, SignedElemImage, PotionImage, SellResultIcon, AlchemicalImage } from '../../components/GameSprites';
-import type { AlchemicalId } from '../../types';
+import { INGREDIENTS } from '@shared/data/ingredients';
+import { ALCHEMICALS } from '@shared/data/alchemicals';
+import { IngredientIcon, ElemImage, SignedElemImage, PotionImage, SellResultIcon, AlchemicalImage } from '@shared/components/GameSprites';
+import type { AlchemicalId } from '@shared/types';
 import type {
   AnyClue, EncyclopediaUncertainClue,
   DebunkApprenticeClue, DebunkMasterClue,
   BookClue, BookAmongClue,
   GolemTestClue, GolemAnimationClue, GolemHintColorClue, GolemHintSizeClue, GolemReactionAmongClue, GolemReactionGroup,
 } from '../types';
-import type { Color, MixingAmongClue, SellAmongClue, MixingCountAmongClue, SellResultAmongClue, SellResult } from '../../types';
+import type { Color, MixingAmongClue, SellAmongClue, MixingCountAmongClue, SellResultAmongClue, SellResult } from '@shared/types';
 
 const ING_W = 28;
 

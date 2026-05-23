@@ -1,5 +1,5 @@
 {
-  "id": "combo-exp-med-all-06",
+  "id": "fe5fe5e2-7ce2-4ad3-b99f-09871439e212",
   "mode": "expanded",
   "title": "The HOMFLY Polynomial",
   "description": "A partial encyclopedia article lists three ingredients on the same aspect. Use the supporting clues to identify the fourth.",
@@ -388,7 +388,7 @@
     {
       "look_at": "clue 4: ing1 is lunar.",
       "means": "Solar/lunar status constrains which alchemicals ing1 can be.",
-      "so": "ing1 is NNN; ing3 is pNn; ing1 has R-; ing3 has R+; cross off pNn from ing1; cross off NNN from ing3.",
+      "so": "ing1 is NNN; ing3 is pNn; ing1 has R-; ing3 has R+; cross off pNn from ing1; cross off NNN from ing3 The missing R+ ingredient is ing3.",
       "highlight": {
         "clue_indices": [
           3

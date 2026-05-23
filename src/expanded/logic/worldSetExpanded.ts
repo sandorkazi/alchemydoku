@@ -5,9 +5,9 @@
  * Delegates base clue types to the original worldSet module.
  */
 
-import { filterByClue, applyClues } from '../../logic/worldSet';
-import { WORLD_DATA, SIGN_TABLE, COLOR_INDEX, FULL_INDICES, filterWorlds } from '../../logic/worldPack';
-import { deduceMixingResult } from '../../logic/deducer';
+import { filterByClue, applyClues } from '@shared/logic/worldSet';
+import { WORLD_DATA, SIGN_TABLE, COLOR_INDEX, FULL_INDICES, filterWorlds } from '@shared/logic/worldPack';
+import { deduceMixingResult } from '@shared/logic/deducer';
 import { isSolar } from './solarLunar';
 import {
   filterByGolemTest, getReactionGroup0,
@@ -15,8 +15,8 @@ import {
   filterGolemSolverByHintColor, filterGolemSolverByHintSize,
   applyWorldFilterToGolemState, initGolemSolverState,
 } from './golem';
-import type { WorldSet } from '../../types';
-import type { AlchemicalId } from '../../types';
+import type { WorldSet } from '@shared/types';
+import type { AlchemicalId } from '@shared/types';
 import type {
   AnyClue, ExpandedClue,
   BookClue, BookAmongClue, EncyclopediaClue, EncyclopediaUncertainClue,

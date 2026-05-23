@@ -1,5 +1,5 @@
 {
-  "id": "mixed-exp-debunk-13",
+  "id": "00d7704f-ed69-4d84-a98a-eaaf56331b19",
   "mode": "expanded",
   "kind": "debunk",
   "title": "The Eight-Alchemical Limit",
@@ -208,7 +208,7 @@
     {
       "look_at": "clue 4: sell constraint among {ing1, ing6, ing7, ing8}.",
       "means": "Selling results among {ing1, ing6, ing7, ing8} constrain possible alchemicals.",
-      "so": "ing1 has B+; ing2 has B-; ing3 has B-; ing4 has B-; ing5 has B-; ing6 has B+; ing7 has B+; ing8 has B+; cross off NNN, Ppn, npN, pNn from ing1; cross off Nnp, PPP, nPp, pnP from ing2; cross off Nnp, PPP, nPp, pnP from ing3; cross off Nnp, PPP, nPp, pnP from ing4; cross off Nnp, PPP, nPp, pnP from ing5; cross off NNN, Ppn, npN, pNn from ing6; cross off NNN, Ppn, npN, pNn from ing7; cross off NNN, Ppn, npN, pNn from ing8.",
+      "so": "ing1 has B+; ing2 has B-; ing3 has B-; ing4 has B-; ing5 has B-; ing6 has B+; ing7 has B+; ing8 has B+; cross off NNN, Ppn, npN, pNn from ing1; cross off Nnp, PPP, nPp, pnP from ing2; cross off Nnp, PPP, nPp, pnP from ing3; cross off Nnp, PPP, nPp, pnP from ing4; cross off Nnp, PPP, nPp, pnP from ing5; cross off NNN, Ppn, npN, pNn from ing6; cross off NNN, Ppn, npN, pNn from ing7; cross off NNN, Ppn, npN, pNn from ing8",
       "highlight": {
         "clue_indices": [
           3

@@ -1,5 +1,5 @@
 {
-  "id": "combo-exp-xsl-03",
+  "id": "9d7fad9a-112c-4176-a668-152bd14a4960",
   "mode": "expanded",
   "title": "The Saddle Node",
   "description": "Use the clues to determine whether the target ingredient is Solar or Lunar.",
@@ -379,7 +379,7 @@
     {
       "look_at": "clue 4: exactly 1 of {ing1, ing3, ing6, ing7} are lunar.",
       "means": "Exactly 1 ingredient(s) in {ing1, ing3, ing6, ing7} must be lunar.",
-      "so": "ing3 is pnP; ing4 is PPP; ing5 is pNn; ing6 is NNN; ing7 is nPp; ing8 is npN; ing3 has G-; ing4 has G+; ing5 has R+; ing6 has R-; ing7 has B+; ing8 has B-; cross off PPP from ing3; cross off pnP from ing4; cross off NNN from ing5; cross off pNn from ing6; cross off npN from ing7; cross off nPp from ing8.",
+      "so": "ing3 is pnP; ing4 is PPP; ing5 is pNn; ing6 is NNN; ing7 is nPp; ing8 is npN; ing3 has G-; ing4 has G+; ing5 has R+; ing6 has R-; ing7 has B+; ing8 has B-; cross off PPP from ing3; cross off pnP from ing4; cross off NNN from ing5; cross off pNn from ing6; cross off npN from ing7; cross off nPp from ing8 ing4 is solar.",
       "highlight": {
         "clue_indices": [
           3

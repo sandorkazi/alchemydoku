@@ -1,0 +1,97 @@
+{
+  "id": "cf045fc9-e6bd-4c0c-9e22-f1d868f14f68",
+  "title": "The Binding Constraint",
+  "description": "The evidence narrows things down \u2014 but not all the way. Mark every potion this pair could still produce.",
+  "difficulty": "easy",
+  "clues": [
+    {
+      "kind": "mixing",
+      "ingredient1": 4,
+      "ingredient2": 5,
+      "result": {
+        "color": "G",
+        "sign": "-"
+      }
+    }
+  ],
+  "questions": [
+    {
+      "kind": "possible-potions",
+      "ingredient1": 4,
+      "ingredient2": 6
+    }
+  ],
+  "solution": {
+    "1": 6,
+    "2": 2,
+    "3": 4,
+    "4": 5,
+    "5": 3,
+    "6": 8,
+    "7": 7,
+    "8": 1
+  },
+  "hints": [],
+  "complexity": {
+    "score": 57,
+    "raw_score": 35,
+    "clue_score": 0,
+    "question_score": 5,
+    "world_score": 20,
+    "residual_worlds": 5760
+  },
+  "hint_steps": [
+    {
+      "look_at": "clue 1: ing4 + ing5 = G-.",
+      "means": "When two ingredients mix to G-, both share G-. Any candidate without G- is impossible for either slot.",
+      "so": "ing4 has G-; ing5 has G-; cross off PPP, Ppn, nPp, npN from ing4; cross off PPP, Ppn, nPp, npN from ing5 ing4 + ing6 can produce: B-, B+, G-, R-, R+, neutral.",
+      "highlight": {
+        "clue_indices": [
+          0
+        ],
+        "ingredients": [
+          4,
+          5
+        ]
+      },
+      "impact": {
+        "confirmed_alchemicals": [],
+        "confirmed_aspects": [
+          {
+            "ingredient": 4,
+            "color": "G",
+            "sign": "-"
+          },
+          {
+            "ingredient": 5,
+            "color": "G",
+            "sign": "-"
+          }
+        ],
+        "eliminated_cells": [
+          {
+            "ingredient": 4,
+            "alchemicals": [
+              "PPP",
+              "Ppn",
+              "nPp",
+              "npN"
+            ]
+          },
+          {
+            "ingredient": 5,
+            "alchemicals": [
+              "PPP",
+              "Ppn",
+              "nPp",
+              "npN"
+            ]
+          }
+        ]
+      },
+      "reveals_answer": true,
+      "worlds_before": 40320,
+      "worlds_after": 5760
+    }
+  ]
+}

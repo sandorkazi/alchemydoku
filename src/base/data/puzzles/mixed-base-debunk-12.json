@@ -1,0 +1,633 @@
+{
+  "id": "be8f089f-e56b-4ef9-90f6-1f95253508a5",
+  "title": "The Outlier",
+  "description": "Mixed evidence surrounds several suspicious publications. Use master debunking to expose the lies.",
+  "difficulty": "extreme",
+  "clues": [
+    {
+      "kind": "sell_result_among",
+      "ingredients": [
+        2,
+        4,
+        5,
+        6
+      ],
+      "claimedPotion": {
+        "color": "B",
+        "sign": "-"
+      },
+      "sellResult": "opposite"
+    },
+    {
+      "kind": "mixing_count_among",
+      "ingredients": [
+        1,
+        5,
+        6,
+        7
+      ],
+      "result": {
+        "color": "R",
+        "sign": "+"
+      },
+      "count": 1
+    },
+    {
+      "kind": "mixing_among",
+      "ingredients": [
+        1,
+        4,
+        5
+      ],
+      "result": {
+        "color": "G",
+        "sign": "+"
+      }
+    },
+    {
+      "kind": "mixing_count_among",
+      "ingredients": [
+        3,
+        7,
+        8
+      ],
+      "result": {
+        "color": "B",
+        "sign": "-"
+      },
+      "count": 2
+    },
+    {
+      "kind": "sell_among",
+      "ingredients": [
+        1,
+        2,
+        4,
+        7
+      ],
+      "claimedPotion": {
+        "color": "B",
+        "sign": "+"
+      },
+      "result": "sign_ok",
+      "count": 5
+    },
+    {
+      "kind": "sell_among",
+      "ingredients": [
+        1,
+        3,
+        4,
+        7
+      ],
+      "claimedPotion": {
+        "color": "B",
+        "sign": "-"
+      },
+      "result": "sign_ok",
+      "count": 1
+    }
+  ],
+  "questions": [
+    {
+      "kind": "debunk_min_steps"
+    }
+  ],
+  "solution": {
+    "1": 6,
+    "2": 8,
+    "3": 1,
+    "4": 2,
+    "5": 4,
+    "6": 5,
+    "7": 3,
+    "8": 7
+  },
+  "hints": [],
+  "complexity": {
+    "score": 92,
+    "raw_score": 85,
+    "clue_score": 50,
+    "question_score": 10,
+    "world_score": 15,
+    "residual_worlds": 1
+  },
+  "publications": [
+    {
+      "ingredient": 1,
+      "claimedAlchemical": 6
+    },
+    {
+      "ingredient": 2,
+      "claimedAlchemical": 8
+    },
+    {
+      "ingredient": 3,
+      "claimedAlchemical": 2
+    },
+    null,
+    {
+      "ingredient": 5,
+      "claimedAlchemical": 7
+    },
+    {
+      "ingredient": 6,
+      "claimedAlchemical": 7
+    },
+    {
+      "ingredient": 7,
+      "claimedAlchemical": 5
+    },
+    null
+  ],
+  "debunk_answers": {
+    "debunk_min_steps": [
+      {
+        "kind": "master",
+        "ingredient1": 1,
+        "ingredient2": 5
+      },
+      {
+        "kind": "master",
+        "ingredient1": 1,
+        "ingredient2": 6
+      },
+      {
+        "kind": "master",
+        "ingredient1": 3,
+        "ingredient2": 7
+      }
+    ]
+  },
+  "hint_steps": [
+    {
+      "look_at": "clue 5: sell constraint among {ing1, ing2, ing4, ing7}.",
+      "means": "Selling results among {ing1, ing2, ing4, ing7} constrain possible alchemicals.",
+      "so": "ing1 has R+; ing2 has R+; ing3 has R-; ing4 has R+; ing5 has R-; ing6 has R-; ing7 has R+; ing8 has R-; cross off NNN, Nnp, nPp, npN from ing1; cross off NNN, Nnp, nPp, npN from ing2; cross off PPP, Ppn, pNn, pnP from ing3; cross off NNN, Nnp, nPp, npN from ing4; cross off PPP, Ppn, pNn, pnP from ing5; cross off PPP, Ppn, pNn, pnP from ing6; cross off NNN, Nnp, nPp, npN from ing7; cross off PPP, Ppn, pNn, pnP from ing8",
+      "highlight": {
+        "clue_indices": [
+          4
+        ],
+        "ingredients": [
+          1,
+          2,
+          4,
+          7
+        ]
+      },
+      "impact": {
+        "confirmed_alchemicals": [],
+        "confirmed_aspects": [
+          {
+            "ingredient": 1,
+            "color": "R",
+            "sign": "+"
+          },
+          {
+            "ingredient": 2,
+            "color": "R",
+            "sign": "+"
+          },
+          {
+            "ingredient": 3,
+            "color": "R",
+            "sign": "-"
+          },
+          {
+            "ingredient": 4,
+            "color": "R",
+            "sign": "+"
+          },
+          {
+            "ingredient": 5,
+            "color": "R",
+            "sign": "-"
+          },
+          {
+            "ingredient": 6,
+            "color": "R",
+            "sign": "-"
+          },
+          {
+            "ingredient": 7,
+            "color": "R",
+            "sign": "+"
+          },
+          {
+            "ingredient": 8,
+            "color": "R",
+            "sign": "-"
+          }
+        ],
+        "eliminated_cells": [
+          {
+            "ingredient": 1,
+            "alchemicals": [
+              "NNN",
+              "Nnp",
+              "nPp",
+              "npN"
+            ]
+          },
+          {
+            "ingredient": 2,
+            "alchemicals": [
+              "NNN",
+              "Nnp",
+              "nPp",
+              "npN"
+            ]
+          },
+          {
+            "ingredient": 3,
+            "alchemicals": [
+              "PPP",
+              "Ppn",
+              "pNn",
+              "pnP"
+            ]
+          },
+          {
+            "ingredient": 4,
+            "alchemicals": [
+              "NNN",
+              "Nnp",
+              "nPp",
+              "npN"
+            ]
+          },
+          {
+            "ingredient": 5,
+            "alchemicals": [
+              "PPP",
+              "Ppn",
+              "pNn",
+              "pnP"
+            ]
+          },
+          {
+            "ingredient": 6,
+            "alchemicals": [
+              "PPP",
+              "Ppn",
+              "pNn",
+              "pnP"
+            ]
+          },
+          {
+            "ingredient": 7,
+            "alchemicals": [
+              "NNN",
+              "Nnp",
+              "nPp",
+              "npN"
+            ]
+          },
+          {
+            "ingredient": 8,
+            "alchemicals": [
+              "PPP",
+              "Ppn",
+              "pNn",
+              "pnP"
+            ]
+          }
+        ]
+      },
+      "reveals_answer": true,
+      "worlds_before": 40320,
+      "worlds_after": 576
+    },
+    {
+      "look_at": "clue 4: exactly 2 pairs among {ing3, ing7, ing8} mix to B-.",
+      "means": "Exactly 2 pair(s) in {ing3, ing7, ing8} must mix to B-; any world with a different count is impossible.",
+      "so": "ing3 has B-; ing5 has B+; ing6 has B+; ing7 has B-; ing8 has B-; cross off Nnp, nPp from ing3; cross off NNN, npN from ing5; cross off NNN, npN from ing6; cross off PPP, pnP from ing7; cross off Nnp, nPp from ing8.",
+      "highlight": {
+        "clue_indices": [
+          3
+        ],
+        "ingredients": [
+          3,
+          7,
+          8
+        ]
+      },
+      "impact": {
+        "confirmed_alchemicals": [],
+        "confirmed_aspects": [
+          {
+            "ingredient": 3,
+            "color": "B",
+            "sign": "-"
+          },
+          {
+            "ingredient": 5,
+            "color": "B",
+            "sign": "+"
+          },
+          {
+            "ingredient": 6,
+            "color": "B",
+            "sign": "+"
+          },
+          {
+            "ingredient": 7,
+            "color": "B",
+            "sign": "-"
+          },
+          {
+            "ingredient": 8,
+            "color": "B",
+            "sign": "-"
+          }
+        ],
+        "eliminated_cells": [
+          {
+            "ingredient": 3,
+            "alchemicals": [
+              "Nnp",
+              "nPp"
+            ]
+          },
+          {
+            "ingredient": 5,
+            "alchemicals": [
+              "NNN",
+              "npN"
+            ]
+          },
+          {
+            "ingredient": 6,
+            "alchemicals": [
+              "NNN",
+              "npN"
+            ]
+          },
+          {
+            "ingredient": 7,
+            "alchemicals": [
+              "PPP",
+              "pnP"
+            ]
+          },
+          {
+            "ingredient": 8,
+            "alchemicals": [
+              "Nnp",
+              "nPp"
+            ]
+          }
+        ]
+      },
+      "reveals_answer": false,
+      "worlds_before": 576,
+      "worlds_after": 48
+    },
+    {
+      "look_at": "clue 3: at least one pair among {ing1, ing4, ing5} mixes to G+.",
+      "means": "Every world must contain at least one pair in {ing1, ing4, ing5} whose mix result is G+.",
+      "so": "ing7 is pNn; ing2 has B+; ing7 has G-; cross off pNn from ing1; cross off Ppn, pNn from ing2; cross off pNn from ing4; cross off Ppn from ing7.",
+      "highlight": {
+        "clue_indices": [
+          2
+        ],
+        "ingredients": [
+          1,
+          4,
+          5
+        ]
+      },
+      "impact": {
+        "confirmed_alchemicals": [
+          {
+            "ingredient": 7,
+            "alchemical": "pNn"
+          }
+        ],
+        "confirmed_aspects": [
+          {
+            "ingredient": 2,
+            "color": "B",
+            "sign": "+"
+          },
+          {
+            "ingredient": 7,
+            "color": "G",
+            "sign": "-"
+          }
+        ],
+        "eliminated_cells": [
+          {
+            "ingredient": 1,
+            "alchemicals": [
+              "pNn"
+            ]
+          },
+          {
+            "ingredient": 2,
+            "alchemicals": [
+              "Ppn",
+              "pNn"
+            ]
+          },
+          {
+            "ingredient": 4,
+            "alchemicals": [
+              "pNn"
+            ]
+          },
+          {
+            "ingredient": 7,
+            "alchemicals": [
+              "Ppn"
+            ]
+          }
+        ]
+      },
+      "reveals_answer": false,
+      "worlds_before": 48,
+      "worlds_after": 12
+    },
+    {
+      "look_at": "clue 6: sell constraint among {ing1, ing3, ing4, ing7}.",
+      "means": "Selling results among {ing1, ing3, ing4, ing7} constrain possible alchemicals.",
+      "so": "ing2 is PPP; ing3 is npN; ing5 is nPp; ing6 is Nnp; ing8 is NNN; ing2 has G+; ing3 has G+; ing5 has G+; ing6 has G-; ing8 has G-; cross off PPP from ing1; cross off pnP from ing2; cross off NNN from ing3; cross off PPP from ing4; cross off Nnp from ing5; cross off nPp from ing6; cross off npN from ing8.",
+      "highlight": {
+        "clue_indices": [
+          5
+        ],
+        "ingredients": [
+          1,
+          3,
+          4,
+          7
+        ]
+      },
+      "impact": {
+        "confirmed_alchemicals": [
+          {
+            "ingredient": 2,
+            "alchemical": "PPP"
+          },
+          {
+            "ingredient": 3,
+            "alchemical": "npN"
+          },
+          {
+            "ingredient": 5,
+            "alchemical": "nPp"
+          },
+          {
+            "ingredient": 6,
+            "alchemical": "Nnp"
+          },
+          {
+            "ingredient": 8,
+            "alchemical": "NNN"
+          }
+        ],
+        "confirmed_aspects": [
+          {
+            "ingredient": 2,
+            "color": "G",
+            "sign": "+"
+          },
+          {
+            "ingredient": 3,
+            "color": "G",
+            "sign": "+"
+          },
+          {
+            "ingredient": 5,
+            "color": "G",
+            "sign": "+"
+          },
+          {
+            "ingredient": 6,
+            "color": "G",
+            "sign": "-"
+          },
+          {
+            "ingredient": 8,
+            "color": "G",
+            "sign": "-"
+          }
+        ],
+        "eliminated_cells": [
+          {
+            "ingredient": 1,
+            "alchemicals": [
+              "PPP"
+            ]
+          },
+          {
+            "ingredient": 2,
+            "alchemicals": [
+              "pnP"
+            ]
+          },
+          {
+            "ingredient": 3,
+            "alchemicals": [
+              "NNN"
+            ]
+          },
+          {
+            "ingredient": 4,
+            "alchemicals": [
+              "PPP"
+            ]
+          },
+          {
+            "ingredient": 5,
+            "alchemicals": [
+              "Nnp"
+            ]
+          },
+          {
+            "ingredient": 6,
+            "alchemicals": [
+              "nPp"
+            ]
+          },
+          {
+            "ingredient": 8,
+            "alchemicals": [
+              "npN"
+            ]
+          }
+        ]
+      },
+      "reveals_answer": false,
+      "worlds_before": 12,
+      "worlds_after": 2
+    },
+    {
+      "look_at": "clue 2: exactly 1 pairs among {ing1, ing5, ing6, ing7} mix to R+.",
+      "means": "Exactly 1 pair(s) in {ing1, ing5, ing6, ing7} must mix to R+; any world with a different count is impossible.",
+      "so": "ing1 is Ppn; ing4 is pnP; ing1 has G+; ing1 has B-; ing4 has G-; ing4 has B+; cross off pnP from ing1; cross off Ppn from ing4.",
+      "highlight": {
+        "clue_indices": [
+          1
+        ],
+        "ingredients": [
+          1,
+          5,
+          6,
+          7
+        ]
+      },
+      "impact": {
+        "confirmed_alchemicals": [
+          {
+            "ingredient": 1,
+            "alchemical": "Ppn"
+          },
+          {
+            "ingredient": 4,
+            "alchemical": "pnP"
+          }
+        ],
+        "confirmed_aspects": [
+          {
+            "ingredient": 1,
+            "color": "G",
+            "sign": "+"
+          },
+          {
+            "ingredient": 1,
+            "color": "B",
+            "sign": "-"
+          },
+          {
+            "ingredient": 4,
+            "color": "G",
+            "sign": "-"
+          },
+          {
+            "ingredient": 4,
+            "color": "B",
+            "sign": "+"
+          }
+        ],
+        "eliminated_cells": [
+          {
+            "ingredient": 1,
+            "alchemicals": [
+              "pnP"
+            ]
+          },
+          {
+            "ingredient": 4,
+            "alchemicals": [
+              "Ppn"
+            ]
+          }
+        ]
+      },
+      "reveals_answer": false,
+      "worlds_before": 2,
+      "worlds_after": 1
+    }
+  ]
+}

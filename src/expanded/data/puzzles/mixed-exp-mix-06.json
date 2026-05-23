@@ -1,5 +1,5 @@
 {
-  "id": "mixed-exp-mix-06",
+  "id": "a9abfc6c-e0fa-48e5-833f-85f8e1a6cf96",
   "mode": "expanded",
   "title": "The Counterexample",
   "description": "Mixing, selling, and debunking records all point toward a single pair. Deduce what potion they produce.",
@@ -431,7 +431,7 @@
     {
       "look_at": "clue 6: sell constraint among {ing2, ing4, ing7, ing8}.",
       "means": "Selling results among {ing2, ing4, ing7, ing8} constrain possible alchemicals.",
-      "so": "ing7 is Ppn; ing3 has G-; ing6 has G-; ing7 has G+; ing7 has B-; cross off Ppn from ing3; cross off Ppn from ing6; cross off pnP from ing7.",
+      "so": "ing7 is Ppn; ing3 has G-; ing6 has G-; ing7 has G+; ing7 has B-; cross off Ppn from ing3; cross off Ppn from ing6; cross off pnP from ing7 ing5 + ing7 = neutral.",
       "highlight": {
         "clue_indices": [
           5

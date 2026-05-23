@@ -1,5 +1,5 @@
 {
-  "id": "mixed-exp-mix-46",
+  "id": "358bc1d6-7622-4967-adcb-458ef4a69fea",
   "mode": "expanded",
   "title": "The Private Collection",
   "description": "Mixing, selling, and debunking records all point toward a single pair. Deduce what potion they produce.",
@@ -559,7 +559,7 @@
     {
       "look_at": "clue 6: exactly 1 of {ing3, ing5, ing7} are lunar.",
       "means": "Exactly 1 ingredient(s) in {ing3, ing5, ing7} must be lunar.",
-      "so": "ing3 is Nnp; ing8 is NNN; ing3 has B+; ing8 has B-; cross off NNN from ing3; cross off Nnp from ing8.",
+      "so": "ing3 is Nnp; ing8 is NNN; ing3 has B+; ing8 has B-; cross off NNN from ing3; cross off Nnp from ing8 ing3 + ing6 = B+.",
       "highlight": {
         "clue_indices": [
           5

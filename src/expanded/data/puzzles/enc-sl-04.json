@@ -1,5 +1,5 @@
 {
-  "id": "enc-sl-04",
+  "id": "d23c65e4-59d2-4a40-9fbb-f8f64dce8483",
   "mode": "expanded",
   "title": "The Coded Result",
   "description": "A partial encyclopedia article lists three ingredients on the same aspect. Use the supporting clues to identify the fourth.",
@@ -139,7 +139,7 @@
     {
       "look_at": "clue 2: ing1 + ing2 = G+.",
       "means": "When two ingredients mix to G+, both share G+. Any candidate without G+ is impossible for either slot.",
-      "so": "ing1 has G+; ing3 has G-; ing4 has G-; ing7 has G-; ing8 has G-; cross off NNN, Nnp, pNn, pnP from ing1; cross off PPP, Ppn, nPp, npN from ing3; cross off PPP, Ppn, nPp, npN from ing4; cross off PPP, Ppn, nPp, npN from ing7; cross off PPP, Ppn, nPp, npN from ing8.",
+      "so": "ing1 has G+; ing3 has G-; ing4 has G-; ing7 has G-; ing8 has G-; cross off NNN, Nnp, pNn, pnP from ing1; cross off PPP, Ppn, nPp, npN from ing3; cross off PPP, Ppn, nPp, npN from ing4; cross off PPP, Ppn, nPp, npN from ing7; cross off PPP, Ppn, nPp, npN from ing8 The missing G+ ingredient is ing1.",
       "highlight": {
         "clue_indices": [
           1

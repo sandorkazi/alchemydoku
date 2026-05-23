@@ -1,5 +1,5 @@
 {
-  "id": "enc-sl-03",
+  "id": "ace5f58c-b0c0-4cbc-b478-3561ad0162c0",
   "mode": "expanded",
   "title": "The Scholar's Deduction",
   "description": "A partial encyclopedia article lists three ingredients on the same aspect. Use the supporting clues to identify the fourth.",
@@ -388,7 +388,7 @@
     {
       "look_at": "clue 4: ing5 is lunar.",
       "means": "Solar/lunar status constrains which alchemicals ing5 can be.",
-      "so": "ing5 is pnP; ing8 is pNn; ing5 has B+; ing8 has B-; cross off pNn from ing5; cross off pnP from ing8.",
+      "so": "ing5 is pnP; ing8 is pNn; ing5 has B+; ing8 has B-; cross off pNn from ing5; cross off pnP from ing8 The missing B+ ingredient is ing5.",
       "highlight": {
         "clue_indices": [
           3

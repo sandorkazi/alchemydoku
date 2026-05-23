@@ -1,5 +1,5 @@
 {
-  "id": "mixed-exp-debunk-59",
+  "id": "a495d564-8d09-48f8-a98a-224aac185c0d",
   "mode": "expanded",
   "kind": "debunk",
   "title": "The Seifert Surface",
@@ -216,7 +216,7 @@
     {
       "look_at": "clue 3: sell constraint among {ing1, ing4, ing5}.",
       "means": "Selling results among {ing1, ing4, ing5} constrain possible alchemicals.",
-      "so": "ing1 has R+; ing4 has R+; ing5 has R+; cross off NNN, Nnp, nPp, npN from ing1; cross off NNN, Nnp, nPp, npN from ing4; cross off NNN, Nnp, nPp, npN from ing5.",
+      "so": "ing1 has R+; ing4 has R+; ing5 has R+; cross off NNN, Nnp, nPp, npN from ing1; cross off NNN, Nnp, nPp, npN from ing4; cross off NNN, Nnp, nPp, npN from ing5",
       "highlight": {
         "clue_indices": [
           2

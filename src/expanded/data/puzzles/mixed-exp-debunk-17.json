@@ -1,5 +1,5 @@
 {
-  "id": "mixed-exp-debunk-17",
+  "id": "f1def917-ec05-4d2e-8080-f9cfb61acd68",
   "mode": "expanded",
   "kind": "debunk",
   "title": "The Thermodynamic Sink",
@@ -228,7 +228,7 @@
     {
       "look_at": "clue 4: sell constraint among {ing4, ing6, ing7, ing8}.",
       "means": "Selling results among {ing4, ing6, ing7, ing8} constrain possible alchemicals.",
-      "so": "cross off NNN, Nnp, npN, pNn from ing1; cross off NNN, Nnp, npN, pNn from ing2; cross off NNN, Nnp, npN, pNn from ing3; cross off PPP, Ppn, nPp, pnP from ing4; cross off NNN, Nnp, npN, pNn from ing5; cross off PPP, Ppn, nPp, pnP from ing6; cross off PPP, Ppn, nPp, pnP from ing7; cross off PPP, Ppn, nPp, pnP from ing8.",
+      "so": "cross off NNN, Nnp, npN, pNn from ing1; cross off NNN, Nnp, npN, pNn from ing2; cross off NNN, Nnp, npN, pNn from ing3; cross off PPP, Ppn, nPp, pnP from ing4; cross off NNN, Nnp, npN, pNn from ing5; cross off PPP, Ppn, nPp, pnP from ing6; cross off PPP, Ppn, nPp, pnP from ing7; cross off PPP, Ppn, nPp, pnP from ing8",
       "highlight": {
         "clue_indices": [
           3

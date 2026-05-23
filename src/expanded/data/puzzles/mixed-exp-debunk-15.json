@@ -1,5 +1,5 @@
 {
-  "id": "mixed-exp-debunk-15",
+  "id": "7f93d5ef-42ed-4728-ba6a-d9c19bed1635",
   "mode": "expanded",
   "kind": "debunk",
   "title": "The Spin Glass",
@@ -212,7 +212,7 @@
     {
       "look_at": "clue 3: sell constraint among {ing2, ing4, ing5, ing7}.",
       "means": "Selling results among {ing2, ing4, ing5, ing7} constrain possible alchemicals.",
-      "so": "ing1 has R-; ing2 has R+; ing3 has R-; ing4 has R+; ing5 has R+; ing6 has R-; ing7 has R+; ing8 has R-; cross off PPP, Ppn, pNn, pnP from ing1; cross off NNN, Nnp, nPp, npN from ing2; cross off PPP, Ppn, pNn, pnP from ing3; cross off NNN, Nnp, nPp, npN from ing4; cross off NNN, Nnp, nPp, npN from ing5; cross off PPP, Ppn, pNn, pnP from ing6; cross off NNN, Nnp, nPp, npN from ing7; cross off PPP, Ppn, pNn, pnP from ing8.",
+      "so": "ing1 has R-; ing2 has R+; ing3 has R-; ing4 has R+; ing5 has R+; ing6 has R-; ing7 has R+; ing8 has R-; cross off PPP, Ppn, pNn, pnP from ing1; cross off NNN, Nnp, nPp, npN from ing2; cross off PPP, Ppn, pNn, pnP from ing3; cross off NNN, Nnp, nPp, npN from ing4; cross off NNN, Nnp, nPp, npN from ing5; cross off PPP, Ppn, pNn, pnP from ing6; cross off NNN, Nnp, nPp, npN from ing7; cross off PPP, Ppn, pNn, pnP from ing8",
       "highlight": {
         "clue_indices": [
           2

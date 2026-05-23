@@ -1,5 +1,5 @@
 {
-  "id": "debunk-01",
+  "id": "203723c8-dfe6-4e36-8959-e12dfe16320c",
   "kind": "debunk",
   "mode": "expanded",
   "title": "The Unwitting Witness",
@@ -169,7 +169,7 @@
     {
       "look_at": "clue 1: ing1 has G+.",
       "means": "This directly tells us the G sign of ing1.",
-      "so": "ing1 has G+; cross off NNN, Nnp, pNn, pnP from ing1.",
+      "so": "ing1 has G+; cross off NNN, Nnp, pNn, pnP from ing1",
       "highlight": {
         "clue_indices": [
           0

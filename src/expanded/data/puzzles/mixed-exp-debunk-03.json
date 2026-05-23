@@ -1,5 +1,5 @@
 {
-  "id": "mixed-exp-debunk-03",
+  "id": "d573a892-03ce-456f-b790-77a63fbb14c9",
   "mode": "expanded",
   "kind": "debunk",
   "title": "The Isomer",
@@ -225,7 +225,7 @@
     {
       "look_at": "clue 3: sell constraint among {ing2, ing4, ing5, ing8}.",
       "means": "Selling results among {ing2, ing4, ing5, ing8} constrain possible alchemicals.",
-      "so": "cross off NNN, npN from ing1; cross off PPP, pnP from ing2; cross off NNN, npN from ing3; cross off PPP, pnP from ing4; cross off PPP, pnP from ing5; cross off NNN, npN from ing6; cross off NNN, npN from ing7; cross off PPP, pnP from ing8.",
+      "so": "cross off NNN, npN from ing1; cross off PPP, pnP from ing2; cross off NNN, npN from ing3; cross off PPP, pnP from ing4; cross off PPP, pnP from ing5; cross off NNN, npN from ing6; cross off NNN, npN from ing7; cross off PPP, pnP from ing8",
       "highlight": {
         "clue_indices": [
           2
@@ -635,7 +635,7 @@
     {
       "look_at": "clue 3: sell constraint among {ing2, ing4, ing5, ing8}.",
       "means": "Selling results among {ing2, ing4, ing5, ing8} constrain possible alchemicals.",
-      "so": "cross off NNN, npN from ing1; cross off PPP, pnP from ing2; cross off NNN, npN from ing3; cross off PPP, pnP from ing4; cross off PPP, pnP from ing5; cross off NNN, npN from ing6; cross off NNN, npN from ing7; cross off PPP, pnP from ing8.",
+      "so": "cross off NNN, npN from ing1; cross off PPP, pnP from ing2; cross off NNN, npN from ing3; cross off PPP, pnP from ing4; cross off PPP, pnP from ing5; cross off NNN, npN from ing6; cross off NNN, npN from ing7; cross off PPP, pnP from ing8",
       "highlight": {
         "clue_indices": [
           2

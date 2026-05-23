@@ -1,5 +1,5 @@
 {
-  "id": "exp-medium-enc-sl-04",
+  "id": "47fc0fe6-e4c2-4350-a70f-68301d5522d5",
   "mode": "expanded",
   "title": "The Four-Ball Genus",
   "description": "A partial encyclopedia article lists three ingredients on the same aspect. Use the supporting clues to identify the fourth.",
@@ -394,7 +394,7 @@
     {
       "look_at": "clue 4: exactly 1 of {ing3, ing4, ing5, ing6} are lunar.",
       "means": "Exactly 1 ingredient(s) in {ing3, ing4, ing5, ing6} must be lunar.",
-      "so": "ing1 is nPp; ing2 is NNN; ing3 is Nnp; ing4 is PPP; ing6 is pNn; ing8 is Ppn; ing1 has G+; ing2 has R-; ing3 has G-; ing4 has B+; ing6 has R+; ing8 has B-; cross off Nnp from ing1; cross off pNn from ing2; cross off nPp from ing3; cross off Ppn from ing4; cross off NNN from ing6; cross off PPP from ing8.",
+      "so": "ing1 is nPp; ing2 is NNN; ing3 is Nnp; ing4 is PPP; ing6 is pNn; ing8 is Ppn; ing1 has G+; ing2 has R-; ing3 has G-; ing4 has B+; ing6 has R+; ing8 has B-; cross off Nnp from ing1; cross off pNn from ing2; cross off nPp from ing3; cross off Ppn from ing4; cross off NNN from ing6; cross off PPP from ing8 The missing B+ ingredient is ing4.",
       "highlight": {
         "clue_indices": [
           3

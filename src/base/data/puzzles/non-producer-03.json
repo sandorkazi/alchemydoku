@@ -1,0 +1,250 @@
+{
+  "id": "c1f5539e-50ac-4a7d-93a7-21c43c66a473",
+  "title": "The Dead End",
+  "description": "Find all ingredients that can never produce the target potion with any partner in any remaining world.",
+  "difficulty": "easy",
+  "clues": [
+    {
+      "kind": "mixing",
+      "ingredient1": 1,
+      "ingredient2": 5,
+      "result": {
+        "color": "B",
+        "sign": "-"
+      }
+    },
+    {
+      "kind": "mixing",
+      "ingredient1": 4,
+      "ingredient2": 6,
+      "result": {
+        "color": "B",
+        "sign": "+"
+      }
+    },
+    {
+      "kind": "mixing",
+      "ingredient1": 2,
+      "ingredient2": 8,
+      "result": {
+        "color": "R",
+        "sign": "+"
+      }
+    }
+  ],
+  "questions": [
+    {
+      "kind": "guaranteed-non-producer",
+      "potion": {
+        "type": "potion",
+        "color": "R",
+        "sign": "+"
+      }
+    }
+  ],
+  "solution": {
+    "1": 3,
+    "2": 2,
+    "3": 4,
+    "4": 8,
+    "5": 1,
+    "6": 5,
+    "7": 7,
+    "8": 6
+  },
+  "hints": [],
+  "complexity": {
+    "score": 31,
+    "raw_score": 15,
+    "clue_score": 0,
+    "question_score": 5,
+    "world_score": 0,
+    "residual_worlds": 128
+  },
+  "hint_steps": [
+    {
+      "look_at": "clue 1: ing1 + ing5 = B-.",
+      "means": "When two ingredients mix to B-, both share B-. Any candidate without B- is impossible for either slot.",
+      "so": "ing1 has B-; ing5 has B-; cross off Nnp, PPP, nPp, pnP from ing1; cross off Nnp, PPP, nPp, pnP from ing5.",
+      "highlight": {
+        "clue_indices": [
+          0
+        ],
+        "ingredients": [
+          1,
+          5
+        ]
+      },
+      "impact": {
+        "confirmed_alchemicals": [],
+        "confirmed_aspects": [
+          {
+            "ingredient": 1,
+            "color": "B",
+            "sign": "-"
+          },
+          {
+            "ingredient": 5,
+            "color": "B",
+            "sign": "-"
+          }
+        ],
+        "eliminated_cells": [
+          {
+            "ingredient": 1,
+            "alchemicals": [
+              "Nnp",
+              "PPP",
+              "nPp",
+              "pnP"
+            ]
+          },
+          {
+            "ingredient": 5,
+            "alchemicals": [
+              "Nnp",
+              "PPP",
+              "nPp",
+              "pnP"
+            ]
+          }
+        ]
+      },
+      "reveals_answer": false,
+      "worlds_before": 40320,
+      "worlds_after": 5760
+    },
+    {
+      "look_at": "clue 3: ing2 + ing8 = R+.",
+      "means": "When two ingredients mix to R+, both share R+. Any candidate without R+ is impossible for either slot.",
+      "so": "ing2 has R+; ing8 has R+; cross off NNN, Nnp, nPp, npN from ing2; cross off NNN, Nnp, nPp, npN from ing8.",
+      "highlight": {
+        "clue_indices": [
+          2
+        ],
+        "ingredients": [
+          2,
+          8
+        ]
+      },
+      "impact": {
+        "confirmed_alchemicals": [],
+        "confirmed_aspects": [
+          {
+            "ingredient": 2,
+            "color": "R",
+            "sign": "+"
+          },
+          {
+            "ingredient": 8,
+            "color": "R",
+            "sign": "+"
+          }
+        ],
+        "eliminated_cells": [
+          {
+            "ingredient": 2,
+            "alchemicals": [
+              "NNN",
+              "Nnp",
+              "nPp",
+              "npN"
+            ]
+          },
+          {
+            "ingredient": 8,
+            "alchemicals": [
+              "NNN",
+              "Nnp",
+              "nPp",
+              "npN"
+            ]
+          }
+        ]
+      },
+      "reveals_answer": false,
+      "worlds_before": 5760,
+      "worlds_after": 768
+    },
+    {
+      "look_at": "clue 2: ing4 + ing6 = B+.",
+      "means": "When two ingredients mix to B+, both share B+. Any candidate without B+ is impossible for either slot.",
+      "so": "ing3 has R-; ing4 has B+; ing6 has B+; ing7 has R-; cross off PPP, Ppn, pNn, pnP from ing3; cross off NNN, Ppn, npN, pNn from ing4; cross off NNN, Ppn, npN, pNn from ing6; cross off PPP, Ppn, pNn, pnP from ing7",
+      "highlight": {
+        "clue_indices": [
+          1
+        ],
+        "ingredients": [
+          4,
+          6
+        ]
+      },
+      "impact": {
+        "confirmed_alchemicals": [],
+        "confirmed_aspects": [
+          {
+            "ingredient": 3,
+            "color": "R",
+            "sign": "-"
+          },
+          {
+            "ingredient": 4,
+            "color": "B",
+            "sign": "+"
+          },
+          {
+            "ingredient": 6,
+            "color": "B",
+            "sign": "+"
+          },
+          {
+            "ingredient": 7,
+            "color": "R",
+            "sign": "-"
+          }
+        ],
+        "eliminated_cells": [
+          {
+            "ingredient": 3,
+            "alchemicals": [
+              "PPP",
+              "Ppn",
+              "pNn",
+              "pnP"
+            ]
+          },
+          {
+            "ingredient": 4,
+            "alchemicals": [
+              "NNN",
+              "Ppn",
+              "npN",
+              "pNn"
+            ]
+          },
+          {
+            "ingredient": 6,
+            "alchemicals": [
+              "NNN",
+              "Ppn",
+              "npN",
+              "pNn"
+            ]
+          },
+          {
+            "ingredient": 7,
+            "alchemicals": [
+              "PPP",
+              "Ppn",
+              "pNn",
+              "pnP"
+            ]
+          }
+        ]
+      },
+      "reveals_answer": true,
+      "worlds_before": 768,
+      "worlds_after": 128
+    }
+  ]
+}

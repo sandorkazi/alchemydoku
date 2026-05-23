@@ -1,5 +1,5 @@
 {
-  "id": "mixed-exp-debunk-43",
+  "id": "ecc8e08e-0df4-4f9d-80de-50139ee20223",
   "mode": "expanded",
   "kind": "debunk",
   "title": "The Open Chain",
@@ -213,7 +213,7 @@
     {
       "look_at": "clue 3: sell constraint among {ing1, ing2, ing6}.",
       "means": "Selling results among {ing1, ing2, ing6} constrain possible alchemicals.",
-      "so": "ing1 has R+; ing2 has R+; ing6 has R+; cross off NNN, Nnp, nPp, npN from ing1; cross off NNN, Nnp, nPp, npN from ing2; cross off PPP, Ppn from ing3; cross off PPP, Ppn from ing4; cross off PPP, Ppn from ing5; cross off NNN, Nnp, nPp, npN from ing6; cross off PPP, Ppn from ing7; cross off PPP, Ppn from ing8.",
+      "so": "ing1 has R+; ing2 has R+; ing6 has R+; cross off NNN, Nnp, nPp, npN from ing1; cross off NNN, Nnp, nPp, npN from ing2; cross off PPP, Ppn from ing3; cross off PPP, Ppn from ing4; cross off PPP, Ppn from ing5; cross off NNN, Nnp, nPp, npN from ing6; cross off PPP, Ppn from ing7; cross off PPP, Ppn from ing8",
       "highlight": {
         "clue_indices": [
           2

@@ -1,0 +1,352 @@
+{
+  "id": "373ffb3d-5239-4004-b36f-867c5152a2bb",
+  "title": "The Duplicate Volume",
+  "description": "Mixing, selling, and debunking records all point toward a single pair. Deduce what potion they produce.",
+  "difficulty": "easy",
+  "clues": [
+    {
+      "kind": "mixing",
+      "ingredient1": 1,
+      "ingredient2": 2,
+      "result": {
+        "color": "R",
+        "sign": "+"
+      }
+    },
+    {
+      "kind": "mixing",
+      "ingredient1": 3,
+      "ingredient2": 4,
+      "result": {
+        "color": "R",
+        "sign": "+"
+      }
+    },
+    {
+      "kind": "mixing",
+      "ingredient1": 1,
+      "ingredient2": 7,
+      "result": {
+        "color": "G",
+        "sign": "+"
+      }
+    },
+    {
+      "kind": "mixing",
+      "ingredient1": 3,
+      "ingredient2": 6,
+      "result": {
+        "color": "G",
+        "sign": "-"
+      }
+    }
+  ],
+  "questions": [
+    {
+      "kind": "mixing-result",
+      "ingredient1": 6,
+      "ingredient2": 7
+    }
+  ],
+  "solution": {
+    "1": 8,
+    "2": 2,
+    "3": 3,
+    "4": 6,
+    "5": 4,
+    "6": 5,
+    "7": 1,
+    "8": 7
+  },
+  "hints": [],
+  "complexity": {
+    "score": 52,
+    "raw_score": 30,
+    "clue_score": 0,
+    "question_score": 0,
+    "world_score": 20,
+    "residual_worlds": 8
+  },
+  "hint_steps": [
+    {
+      "look_at": "clue 1: ing1 + ing2 = R+.",
+      "means": "When two ingredients mix to R+, both share R+. Any candidate without R+ is impossible for either slot.",
+      "so": "ing1 has R+; ing2 has R+; cross off NNN, Nnp, nPp, npN from ing1; cross off NNN, Nnp, nPp, npN from ing2.",
+      "highlight": {
+        "clue_indices": [
+          0
+        ],
+        "ingredients": [
+          1,
+          2
+        ]
+      },
+      "impact": {
+        "confirmed_alchemicals": [],
+        "confirmed_aspects": [
+          {
+            "ingredient": 1,
+            "color": "R",
+            "sign": "+"
+          },
+          {
+            "ingredient": 2,
+            "color": "R",
+            "sign": "+"
+          }
+        ],
+        "eliminated_cells": [
+          {
+            "ingredient": 1,
+            "alchemicals": [
+              "NNN",
+              "Nnp",
+              "nPp",
+              "npN"
+            ]
+          },
+          {
+            "ingredient": 2,
+            "alchemicals": [
+              "NNN",
+              "Nnp",
+              "nPp",
+              "npN"
+            ]
+          }
+        ]
+      },
+      "reveals_answer": false,
+      "worlds_before": 40320,
+      "worlds_after": 5760
+    },
+    {
+      "look_at": "clue 2: ing3 + ing4 = R+.",
+      "means": "When two ingredients mix to R+, both share R+. Any candidate without R+ is impossible for either slot.",
+      "so": "ing3 has R+; ing4 has R+; ing5 has R-; ing6 has R-; ing7 has R-; ing8 has R-; cross off NNN, Nnp, nPp, npN from ing3; cross off NNN, Nnp, nPp, npN from ing4; cross off PPP, Ppn, pNn, pnP from ing5; cross off PPP, Ppn, pNn, pnP from ing6; cross off PPP, Ppn, pNn, pnP from ing7; cross off PPP, Ppn, pNn, pnP from ing8.",
+      "highlight": {
+        "clue_indices": [
+          1
+        ],
+        "ingredients": [
+          3,
+          4
+        ]
+      },
+      "impact": {
+        "confirmed_alchemicals": [],
+        "confirmed_aspects": [
+          {
+            "ingredient": 3,
+            "color": "R",
+            "sign": "+"
+          },
+          {
+            "ingredient": 4,
+            "color": "R",
+            "sign": "+"
+          },
+          {
+            "ingredient": 5,
+            "color": "R",
+            "sign": "-"
+          },
+          {
+            "ingredient": 6,
+            "color": "R",
+            "sign": "-"
+          },
+          {
+            "ingredient": 7,
+            "color": "R",
+            "sign": "-"
+          },
+          {
+            "ingredient": 8,
+            "color": "R",
+            "sign": "-"
+          }
+        ],
+        "eliminated_cells": [
+          {
+            "ingredient": 3,
+            "alchemicals": [
+              "NNN",
+              "Nnp",
+              "nPp",
+              "npN"
+            ]
+          },
+          {
+            "ingredient": 4,
+            "alchemicals": [
+              "NNN",
+              "Nnp",
+              "nPp",
+              "npN"
+            ]
+          },
+          {
+            "ingredient": 5,
+            "alchemicals": [
+              "PPP",
+              "Ppn",
+              "pNn",
+              "pnP"
+            ]
+          },
+          {
+            "ingredient": 6,
+            "alchemicals": [
+              "PPP",
+              "Ppn",
+              "pNn",
+              "pnP"
+            ]
+          },
+          {
+            "ingredient": 7,
+            "alchemicals": [
+              "PPP",
+              "Ppn",
+              "pNn",
+              "pnP"
+            ]
+          },
+          {
+            "ingredient": 8,
+            "alchemicals": [
+              "PPP",
+              "Ppn",
+              "pNn",
+              "pnP"
+            ]
+          }
+        ]
+      },
+      "reveals_answer": false,
+      "worlds_before": 5760,
+      "worlds_after": 384
+    },
+    {
+      "look_at": "clue 3: ing1 + ing7 = G+.",
+      "means": "When two ingredients mix to G+, both share G+. Any candidate without G+ is impossible for either slot.",
+      "so": "ing1 has G+; ing2 has G-; ing7 has G+; cross off pNn, pnP from ing1; cross off PPP, Ppn from ing2; cross off NNN, Nnp from ing7.",
+      "highlight": {
+        "clue_indices": [
+          2
+        ],
+        "ingredients": [
+          1,
+          7
+        ]
+      },
+      "impact": {
+        "confirmed_alchemicals": [],
+        "confirmed_aspects": [
+          {
+            "ingredient": 1,
+            "color": "G",
+            "sign": "+"
+          },
+          {
+            "ingredient": 2,
+            "color": "G",
+            "sign": "-"
+          },
+          {
+            "ingredient": 7,
+            "color": "G",
+            "sign": "+"
+          }
+        ],
+        "eliminated_cells": [
+          {
+            "ingredient": 1,
+            "alchemicals": [
+              "pNn",
+              "pnP"
+            ]
+          },
+          {
+            "ingredient": 2,
+            "alchemicals": [
+              "PPP",
+              "Ppn"
+            ]
+          },
+          {
+            "ingredient": 7,
+            "alchemicals": [
+              "NNN",
+              "Nnp"
+            ]
+          }
+        ]
+      },
+      "reveals_answer": false,
+      "worlds_before": 384,
+      "worlds_after": 48
+    },
+    {
+      "look_at": "clue 4: ing3 + ing6 = G-.",
+      "means": "When two ingredients mix to G-, both share G-. Any candidate without G- is impossible for either slot.",
+      "so": "ing3 has G-; ing4 has G+; ing6 has G-; cross off PPP, Ppn from ing3; cross off pNn, pnP from ing4; cross off nPp, npN from ing6 ing6 + ing7 = R-.",
+      "highlight": {
+        "clue_indices": [
+          3
+        ],
+        "ingredients": [
+          3,
+          6
+        ]
+      },
+      "impact": {
+        "confirmed_alchemicals": [],
+        "confirmed_aspects": [
+          {
+            "ingredient": 3,
+            "color": "G",
+            "sign": "-"
+          },
+          {
+            "ingredient": 4,
+            "color": "G",
+            "sign": "+"
+          },
+          {
+            "ingredient": 6,
+            "color": "G",
+            "sign": "-"
+          }
+        ],
+        "eliminated_cells": [
+          {
+            "ingredient": 3,
+            "alchemicals": [
+              "PPP",
+              "Ppn"
+            ]
+          },
+          {
+            "ingredient": 4,
+            "alchemicals": [
+              "pNn",
+              "pnP"
+            ]
+          },
+          {
+            "ingredient": 6,
+            "alchemicals": [
+              "nPp",
+              "npN"
+            ]
+          }
+        ]
+      },
+      "reveals_answer": true,
+      "worlds_before": 48,
+      "worlds_after": 8
+    }
+  ]
+}

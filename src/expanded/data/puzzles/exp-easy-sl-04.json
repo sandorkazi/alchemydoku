@@ -1,5 +1,5 @@
 {
-  "id": "exp-easy-sl-04",
+  "id": "184a6585-2f41-40b2-9f13-401df688b1f8",
   "mode": "expanded",
   "title": "The Finite-Size Effect",
   "description": "Use the clues to deduce which alchemical belongs to the target ingredient.",
@@ -183,7 +183,7 @@
     {
       "look_at": "clue 4: ing8 is lunar.",
       "means": "Solar/lunar status constrains which alchemicals ing8 can be.",
-      "so": "ing7 is NNN; ing3 has G+; ing7 has R-; cross off Nnp, PPP from ing2; cross off NNN, Nnp, PPP, npN, pNn, pnP from ing3; cross off NNN, pnP from ing4; cross off NNN, pnP from ing5; cross off NNN, pnP from ing6; cross off pNn from ing7; cross off NNN, Ppn, nPp, pnP from ing8.",
+      "so": "ing7 is NNN; ing3 has G+; ing7 has R-; cross off Nnp, PPP from ing2; cross off NNN, Nnp, PPP, npN, pNn, pnP from ing3; cross off NNN, pnP from ing4; cross off NNN, pnP from ing5; cross off NNN, pnP from ing6; cross off pNn from ing7; cross off NNN, Ppn, nPp, pnP from ing8 ing7 is NNN.",
       "highlight": {
         "clue_indices": [
           3

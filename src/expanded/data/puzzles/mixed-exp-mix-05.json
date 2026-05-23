@@ -1,5 +1,5 @@
 {
-  "id": "mixed-exp-mix-05",
+  "id": "c4eaae16-cd30-4ca4-a149-230c909b0cc3",
   "mode": "expanded",
   "title": "The Triple Point",
   "description": "Mixing, selling, and debunking records all point toward a single pair. Deduce what potion they produce.",
@@ -301,7 +301,7 @@
     {
       "look_at": "clue 5: ing5 is lunar.",
       "means": "Solar/lunar status constrains which alchemicals ing5 can be.",
-      "so": "ing6 is NNN; ing6 has R-; ing6 has G-; ing6 has B-; cross off NNN from ing5; cross off Nnp, npN, pNn from ing6.",
+      "so": "ing6 is NNN; ing6 has R-; ing6 has G-; ing6 has B-; cross off NNN from ing5; cross off Nnp, npN, pNn from ing6 ing3 + ing6 = neutral.",
       "highlight": {
         "clue_indices": [
           4

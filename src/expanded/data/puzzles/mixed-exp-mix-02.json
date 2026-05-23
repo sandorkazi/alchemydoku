@@ -1,5 +1,5 @@
 {
-  "id": "mixed-exp-mix-02",
+  "id": "9a42da06-6230-4b53-86bf-5a41117dc874",
   "mode": "expanded",
   "title": "The Torsional Strain",
   "description": "Mixing, selling, and debunking records all point toward a single pair. Deduce what potion they produce.",
@@ -493,7 +493,7 @@
     {
       "look_at": "clue 6: sell constraint among {ing2, ing5, ing6}.",
       "means": "Selling results among {ing2, ing5, ing6} constrain possible alchemicals.",
-      "so": "ing2 is nPp; ing7 is Ppn; ing2 has R-; ing2 has B+; ing7 has R+; ing7 has B-; cross off Ppn from ing2; cross off nPp from ing7.",
+      "so": "ing2 is nPp; ing7 is Ppn; ing2 has R-; ing2 has B+; ing7 has R+; ing7 has B-; cross off Ppn from ing2; cross off nPp from ing7 ing2 + ing5 = B+.",
       "highlight": {
         "clue_indices": [
           5

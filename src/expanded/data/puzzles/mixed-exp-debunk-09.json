@@ -1,5 +1,5 @@
 {
-  "id": "mixed-exp-debunk-09",
+  "id": "7d7d1fb5-1c99-4272-a8cf-e1fe8e07e0b9",
   "mode": "expanded",
   "kind": "debunk",
   "title": "The Incomplete Article",
@@ -213,7 +213,7 @@
     {
       "look_at": "clue 3: sell constraint among {ing1, ing2, ing3, ing5}.",
       "means": "Selling results among {ing1, ing2, ing3, ing5} constrain possible alchemicals.",
-      "so": "ing1 has B-; ing2 has B-; ing3 has B-; ing4 has B+; ing5 has B-; ing6 has B+; ing7 has B+; ing8 has B+; cross off Nnp, PPP, nPp, pnP from ing1; cross off Nnp, PPP, nPp, pnP from ing2; cross off Nnp, PPP, nPp, pnP from ing3; cross off NNN, Ppn, npN, pNn from ing4; cross off Nnp, PPP, nPp, pnP from ing5; cross off NNN, Ppn, npN, pNn from ing6; cross off NNN, Ppn, npN, pNn from ing7; cross off NNN, Ppn, npN, pNn from ing8.",
+      "so": "ing1 has B-; ing2 has B-; ing3 has B-; ing4 has B+; ing5 has B-; ing6 has B+; ing7 has B+; ing8 has B+; cross off Nnp, PPP, nPp, pnP from ing1; cross off Nnp, PPP, nPp, pnP from ing2; cross off Nnp, PPP, nPp, pnP from ing3; cross off NNN, Ppn, npN, pNn from ing4; cross off Nnp, PPP, nPp, pnP from ing5; cross off NNN, Ppn, npN, pNn from ing6; cross off NNN, Ppn, npN, pNn from ing7; cross off NNN, Ppn, npN, pNn from ing8",
       "highlight": {
         "clue_indices": [
           2

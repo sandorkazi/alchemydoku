@@ -1,5 +1,5 @@
 {
-  "id": "mixed-exp-debunk-58",
+  "id": "46e22eef-2f3f-449b-9ed3-b926cad4a3aa",
   "mode": "expanded",
   "kind": "debunk",
   "title": "The Crossing Number",
@@ -216,7 +216,7 @@
     {
       "look_at": "clue 4: sell constraint among {ing2, ing3, ing5, ing7}.",
       "means": "Selling results among {ing2, ing3, ing5, ing7} constrain possible alchemicals.",
-      "so": "cross off NNN, Nnp, npN, pNn from ing1; cross off PPP, Ppn, nPp, pnP from ing2; cross off PPP, Ppn, nPp, pnP from ing3; cross off NNN, Nnp, npN, pNn from ing4; cross off PPP, Ppn, nPp, pnP from ing5; cross off NNN, Nnp, npN, pNn from ing6; cross off PPP, Ppn, nPp, pnP from ing7; cross off NNN, Nnp, npN, pNn from ing8.",
+      "so": "cross off NNN, Nnp, npN, pNn from ing1; cross off PPP, Ppn, nPp, pnP from ing2; cross off PPP, Ppn, nPp, pnP from ing3; cross off NNN, Nnp, npN, pNn from ing4; cross off PPP, Ppn, nPp, pnP from ing5; cross off NNN, Nnp, npN, pNn from ing6; cross off PPP, Ppn, nPp, pnP from ing7; cross off NNN, Nnp, npN, pNn from ing8",
       "highlight": {
         "clue_indices": [
           3

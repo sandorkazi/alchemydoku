@@ -1,5 +1,5 @@
 {
-  "id": "enc-09",
+  "id": "f5a5111a-d065-4352-a094-752653f77627",
   "mode": "expanded",
   "title": "The Burning Record",
   "description": "A partial encyclopedia article lists three ingredients on the same aspect. Use the supporting clues to identify the fourth.",
@@ -139,7 +139,7 @@
     {
       "look_at": "clue 2: ing1 + ing3 = G+.",
       "means": "When two ingredients mix to G+, both share G+. Any candidate without G+ is impossible for either slot.",
-      "so": "ing1 has G+; ing4 has G-; ing5 has G-; ing6 has G-; ing7 has G-; cross off NNN, Nnp, pNn, pnP from ing1; cross off PPP, Ppn, nPp, npN from ing4; cross off PPP, Ppn, nPp, npN from ing5; cross off PPP, Ppn, nPp, npN from ing6; cross off PPP, Ppn, nPp, npN from ing7.",
+      "so": "ing1 has G+; ing4 has G-; ing5 has G-; ing6 has G-; ing7 has G-; cross off NNN, Nnp, pNn, pnP from ing1; cross off PPP, Ppn, nPp, npN from ing4; cross off PPP, Ppn, nPp, npN from ing5; cross off PPP, Ppn, nPp, npN from ing6; cross off PPP, Ppn, nPp, npN from ing7 The missing G+ ingredient is ing1.",
       "highlight": {
         "clue_indices": [
           1
