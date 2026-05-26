@@ -122,7 +122,10 @@ export function TutorialPage({
   const step = steps[stepIndex];
 
   function handleNext() {
-    if (step?.kind === 'puzzle') onPuzzleDone?.(step.puzzleId);
+    if (step?.kind === 'puzzle') {
+      const puzzle = PUZZLE_MAP[step.puzzleId];
+      onPuzzleDone?.(puzzle?.id ?? step.puzzleId);
+    }
     const next = stepIndex + 1;
     if (next >= steps.length) {
       markTutorialDone(tutorialId);

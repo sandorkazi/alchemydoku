@@ -239,15 +239,19 @@ export function runMigrations(): void {
     // Migrate the completed-set.
     // • Only invalidate BASE_QUESTIONS_CHANGED entries when coming from v2
     //   (they were validly re-completed by v3 users and must survive as-is).
-    // • Always apply ID_RENAMES and LEGACY_ID_TO_UUID (both idempotent).
+    // • Always apply ID_RENAMES and LEGACY_ID_TO_UUID (both idempotent) —
+    //   run unconditionally so phantom human-readable IDs written by a bug
+    //   in TutorialPage (pre-fix) are also cleaned up on v6 saves.
     const raw2 = localStorage.getItem('alch-completed-base');
-    if (raw2 && originalVersion < SAVE_VERSION) {
+    if (raw2) {
       const ids: string[] = JSON.parse(raw2);
       const renamed = ids
         .filter(id => originalVersion >= 3 || !BASE_QUESTIONS_CHANGED.has(id))
         .map(id => ID_RENAMES[id] ?? id)
         .map(id => LEGACY_ID_TO_UUID[id] ?? id);
-      localStorage.setItem('alch-completed-base', JSON.stringify(renamed));
+      if (renamed.some((id, i) => id !== ids[i]) || ids.length !== renamed.length) {
+        localStorage.setItem('alch-completed-base', JSON.stringify(renamed));
+      }
     }
     // Rename last-puzzle key
     const lastRaw = localStorage.getItem('alch-last-puzzle-base');
@@ -302,17 +306,19 @@ export function runMigrations(): void {
       }
     }
 
-    // Migrate both expanded completed keys
+    // Migrate both expanded completed keys — run unconditionally (idempotent).
     for (const key of ['alch-completed-expanded', 'alch-exp-completed']) {
       const raw2 = localStorage.getItem(key);
-      if (raw2 && originalVersion < SAVE_VERSION) {
+      if (raw2) {
         const ids: string[] = JSON.parse(raw2);
         const renamed = ids
           .filter(id => originalVersion >= 3 || !EXPANDED_QUESTIONS_CHANGED.has(id))
           .map(id => ID_RENAMES[id] ?? id)
           .filter(id => !DELETED_IN_V5_EXPANDED.has(id))
           .map(id => LEGACY_ID_TO_UUID[id] ?? id);
-        localStorage.setItem(key, JSON.stringify(renamed));
+        if (renamed.some((id, i) => id !== ids[i]) || ids.length !== renamed.length) {
+          localStorage.setItem(key, JSON.stringify(renamed));
+        }
       }
     }
     // Rename last-puzzle key
