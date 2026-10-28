@@ -1,0 +1,37 @@
+{
+  "id": "/alchemydoku/",
+  "name": "Alchemydoku — Alchemy Sudoku Training",
+  "short_name": "Alchemydoku",
+  "description": "Train your deduction skills with alchemical logic puzzles. Solve mixing clues, identify alchemicals, and master the art of logical deduction.",
+  "start_url": "/alchemydoku/",
+  "scope": "/alchemydoku/",
+  "display": "standalone",
+  "orientation": "any",
+  "theme_color": "#202019",
+  "background_color": "#202019",
+  "lang": "en",
+  "categories": [
+    "games",
+    "education"
+  ],
+  "icons": [
+    {
+      "src": "/alchemydoku/icons/icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "/alchemydoku/icons/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "/alchemydoku/icons/icon-512-maskable.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "maskable"
+    }
+  ]
+}

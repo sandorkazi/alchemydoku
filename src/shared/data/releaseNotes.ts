@@ -11,6 +11,19 @@ export interface ReleaseEntry {
 
 export const RELEASE_NOTES: ReleaseEntry[] = [
   {
+    version: '2026-10-28',
+    title: 'Offline play',
+    sections: [
+      {
+        heading: 'New',
+        items: [
+          'Alchemydoku now works offline: after one visit with a connection, the whole app is cached on your device',
+          'Added install icons so the app can be added to your home screen',
+        ],
+      },
+    ],
+  },
+  {
     version: '2026-05-22',
     title: 'Save reliability & tutorial fixes',
     sections: [
